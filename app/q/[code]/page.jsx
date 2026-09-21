@@ -52,11 +52,11 @@ export default async function VisitorQrPage({ params }) {
           </div>
           <h2 className="text-xl font-bold text-slate-900 mb-2">QR Tidak Aktif</h2>
           <p className="text-sm text-slate-500 mb-6 leading-relaxed">
-            QR Code ini sedang dinonaktifkan sementara oleh pemilik atau administrator. Silakan hubungi pengelola kafe/bisnis.
+            QR ini sedang dinonaktifkan. Silakan hubungi pemilik bisnis.
           </p>
           <Link href="/">
             <Button variant="outline" className="w-full">
-              Kembali
+              Kembali ke Beranda
             </Button>
           </Link>
         </div>
@@ -72,17 +72,19 @@ export default async function VisitorQrPage({ params }) {
           <div className="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 border border-brand-100 flex items-center justify-center mx-auto mb-4">
             <Sparkles className="w-7 h-7" />
           </div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold mb-3">
-            <span>Status: {qr.status.toUpperCase()}</span>
-          </div>
+          {qr.batchCode && (
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-mono font-semibold mb-2">
+              <span>Paket: {qr.batchCode}</span>
+            </div>
+          )}
           <h2 className="text-2xl font-extrabold text-slate-900 mb-2">QR Belum Diaktifkan</h2>
           <p className="text-sm text-slate-500 mb-6 leading-relaxed">
-            Aktifkan QR Code ini untuk bisnis atau kafe Anda. Masuk dengan akun Google untuk memulai aktivasi instan.
+            QR ini belum diaktifkan. Jika Anda pemilik produk, silakan lakukan aktivasi.
           </p>
           <div className="space-y-3">
             <Link href={`/activate/${code}`}>
               <Button size="lg" className="w-full shadow-md shadow-brand-600/20">
-                Aktivasi QR Ini Sekarang
+                Aktivasi
                 <ArrowRight className="w-4 h-4 ml-1.5" />
               </Button>
             </Link>

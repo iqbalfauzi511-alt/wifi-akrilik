@@ -47,7 +47,7 @@ export default async function ActivateQrPage({ params }) {
     );
   }
 
-  // Check 2: QR already active
+  // Check 2: QR already active (Enforce ownership security - no sensitive owner data)
   if (qr.status === 'active') {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
@@ -55,10 +55,9 @@ export default async function ActivateQrPage({ params }) {
           <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center mx-auto mb-4">
             <ShieldAlert className="w-7 h-7" />
           </div>
-          <h2 className="text-xl font-bold text-slate-900 mb-2">QR Sudah Diaktifkan</h2>
+          <h2 className="text-xl font-bold text-slate-900 mb-2">QR sudah diaktifkan.</h2>
           <p className="text-sm text-slate-500 mb-6 leading-relaxed">
-            QR Code <span className="font-mono font-semibold">{code}</span> sudah aktif dan terhubung ke bisnis <strong className="text-slate-800">{qr.businessName || 'lain'}</strong>.
-            Satu QR tidak dapat diaktivasi ulang demi keamanan kepemilikan.
+            QR ini sudah terhubung dengan bisnis lain.
           </p>
           <div className="space-y-2">
             <Link href={`/q/${code}`}>
@@ -121,11 +120,18 @@ export default async function ActivateQrPage({ params }) {
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-50 border border-brand-200/80 text-brand-700 text-xs font-semibold mb-2">
             <span>Kode QR: <strong className="font-mono font-bold">{code}</strong></span>
           </div>
+
+          {qr.batchCode && (
+            <div className="my-2 p-3 rounded-2xl bg-indigo-50/80 border border-indigo-200 text-xs text-indigo-900 leading-relaxed max-w-sm mx-auto">
+              📦 QR ini adalah bagian dari <strong>Paket {qr.batchCode}</strong>. Mengaktifkan QR ini akan otomatis mengaktifkan seluruh QR dalam paket yang sama untuk bisnis Anda.
+            </div>
+          )}
+
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Aktifkan Smart Wi-Fi
+            Aktivasi Smart Wi-Fi
           </h1>
           <p className="mt-1.5 text-xs sm:text-sm text-slate-500 max-w-sm mx-auto">
-            Lengkapi data bisnis dan Wi-Fi Anda. Setelah disimpan, akrilik QR Anda langsung siap digunakan pelanggan!
+            Lengkapi data bisnis dan Wi-Fi Anda. Setelah disimpan, seluruh akrilik QR dalam paket langsung aktif seketika!
           </p>
         </div>
 

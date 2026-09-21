@@ -14,14 +14,21 @@ import {
   CheckCircle2,
   AlertTriangle,
   RotateCw,
+  RotateCcw,
   Archive,
+  Layers,
 } from 'lucide-react';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Modal from '@/components/ui/Modal';
 import QRCodeViewer from '@/components/qr/QRCodeViewer';
-import { massGenerateQrAction, updateQrStatusAction } from '@/lib/actions/qr-actions';
+import {
+  massGenerateQrAction,
+  updateQrStatusAction,
+  resetQrAction,
+  resetBatchAction,
+} from '@/lib/actions/qr-actions';
 
 export default function AdminQrManager({ initialQrs = [] }) {
   const router = useRouter();
@@ -31,10 +38,14 @@ export default function AdminQrManager({ initialQrs = [] }) {
   const [notification, setNotification] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [batchFilter, setBatchFilter] = useState('all');
   const [selectedQr, setSelectedQr] = useState(null);
+  const [qrToReset, setQrToReset] = useState(null);
+  const [batchToReset, setBatchToReset] = useState(null);
   const [isGenerateOpen, setIsGenerateOpen] = useState(false);
-  const [generateQuantity, setGenerateQuantity] = useState('10');
+  const [generateQuantity, setGenerateQuantity] = useState('5');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
   const [isDownloadingZip, setIsDownloadingZip] = useState(false);
   const [statusUpdatingId, setStatusUpdatingId] = useState(null);
 
@@ -48,20 +59,32 @@ export default function AdminQrManager({ initialQrs = [] }) {
     }
   }, [initialQrs]);
 
+  // Unique batches for filtering
+  const availableBatches = useMemo(() => {
+    const set = new Set();
+    qrList.forEach((q) => {
+      if (q.batchCode) set.add(q.batchCode);
+    });
+    return Array.from(set).sort();
+  }, [qrList]);
+
   // Filtered and Searched QRs
   const filteredQrs = useMemo(() => {
     return qrList.filter((qr) => {
       const matchesStatus =
         statusFilter === 'all' || qr.status.toLowerCase() === statusFilter.toLowerCase();
+      const matchesBatch =
+        batchFilter === 'all' || (qr.batchCode && qr.batchCode === batchFilter);
       const matchesSearch =
         !searchTerm.trim() ||
         qr.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (qr.batchCode && qr.batchCode.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (qr.businessName && qr.businessName.toLowerCase().includes(searchTerm.toLowerCase()));
-      return matchesStatus && matchesSearch;
+      return matchesStatus && matchesBatch && matchesSearch;
     });
-  }, [qrList, statusFilter, searchTerm]);
+  }, [qrList, statusFilter, batchFilter, searchTerm]);
 
-  // Mass Generate handler
+  // Mass Generate handler (Creates 1 batch + X QRs)
   const handleMassGenerate = async (e) => {
     e.preventDefault();
     setIsGenerating(true);
@@ -74,18 +97,12 @@ export default function AdminQrManager({ initialQrs = [] }) {
 
     if (result?.success) {
       if (result.newQrs && result.newQrs.length > 0) {
-        const mappedNew = result.newQrs.map((item) => ({
-          ...item,
-          businessName: null,
-          ownerEmail: null,
-          scanCount: 0,
-        }));
-        setQrList((prev) => [...mappedNew, ...prev]);
+        setQrList((prev) => [...result.newQrs, ...prev]);
       }
       setIsGenerateOpen(false);
       setNotification({
         type: 'success',
-        message: `Berhasil membuat ${result.count || generateQuantity} QR Code baru!`,
+        message: `Berhasil membuat Batch ${result.batch?.batchCode || ''} berisi ${result.count || generateQuantity} QR Code baru!`,
       });
       router.refresh();
     } else {
@@ -114,6 +131,96 @@ export default function AdminQrManager({ initialQrs = [] }) {
     }
   };
 
+  // Reset single QR handler
+  const handleConfirmResetQr = async () => {
+    if (!qrToReset) return;
+    try {
+      setIsResetting(true);
+      const targetId = qrToReset.id;
+      const targetCode = qrToReset.code;
+
+      // Optimistic update
+      setQrList((prev) =>
+        prev.map((item) =>
+          item.id === targetId
+            ? {
+                ...item,
+                status: 'blank',
+                businessName: null,
+                ownerEmail: null,
+                activatedAt: null,
+                soldAt: null,
+              }
+            : item
+        )
+      );
+
+      const result = await resetQrAction(targetId);
+      setIsResetting(false);
+      setQrToReset(null);
+
+      if (result?.success) {
+        setNotification({
+          type: 'success',
+          message: `QR ${targetCode} berhasil di-reset ke status BLANK dan dapat digunakan kembali.`,
+        });
+        router.refresh();
+      } else {
+        setQrList(initialQrs);
+        alert(result?.error || 'Gagal mereset QR');
+      }
+    } catch (err) {
+      setIsResetting(false);
+      setQrList(initialQrs);
+      alert('Terjadi kendala saat mereset QR');
+    }
+  };
+
+  // Reset entire Batch handler
+  const handleConfirmResetBatch = async () => {
+    if (!batchToReset) return;
+    try {
+      setIsResetting(true);
+      const targetBatchId = batchToReset.batchId;
+      const targetBatchCode = batchToReset.batchCode;
+
+      // Optimistic update
+      setQrList((prev) =>
+        prev.map((item) =>
+          item.batchId === targetBatchId
+            ? {
+                ...item,
+                status: 'blank',
+                businessName: null,
+                ownerEmail: null,
+                activatedAt: null,
+                soldAt: null,
+              }
+            : item
+        )
+      );
+
+      const result = await resetBatchAction(targetBatchId);
+      setIsResetting(false);
+      setBatchToReset(null);
+
+      if (result?.success) {
+        setNotification({
+          type: 'success',
+          message: `Seluruh QR dalam paket ${targetBatchCode} berhasil di-reset ke status BLANK.`,
+        });
+        router.refresh();
+      } else {
+        setQrList(initialQrs);
+        alert(result?.error || 'Gagal mereset batch');
+      }
+    } catch (err) {
+      setIsResetting(false);
+      setQrList(initialQrs);
+      alert('Terjadi kendala saat mereset batch');
+    }
+  };
+
   // Bulk ZIP Download handler
   const handleBulkDownload = async () => {
     if (filteredQrs.length === 0) {
@@ -125,10 +232,13 @@ export default function AdminQrManager({ initialQrs = [] }) {
       setIsDownloadingZip(true);
       const zip = new JSZip();
       const folder = zip.folder('smartwifi-qr-codes');
-      const origin = window.location.origin;
+      const appUrl =
+        process.env.NEXT_PUBLIC_APP_URL ||
+        (typeof window !== 'undefined' ? window.location.origin : 'https://wifi-akrilik.vercel.app');
+      const cleanOrigin = appUrl.replace(/\/$/, '');
 
       for (const qr of filteredQrs) {
-        const targetUrl = `${origin}/q/${qr.code}`;
+        const targetUrl = `${cleanOrigin}/q/${qr.code}`;
         const dataUrl = await QRCode.toDataURL(targetUrl, {
           width: 800,
           margin: 2,
@@ -163,7 +273,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
         <div>
           <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Manajemen QR Code</h2>
           <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Kelola inventori, cetak akrilik, dan pantau status seluruh QR platform.
+            Kelola paket batch QR, cetak akrilik, aktivasi, dan reset inventori platform.
           </p>
         </div>
 
@@ -186,7 +296,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
             className="text-xs gap-1.5"
           >
             <Plus className="w-3.5 h-3.5" />
-            Generate QR Massal
+            Generate QR Batch
           </Button>
         </div>
       </div>
@@ -220,22 +330,64 @@ export default function AdminQrManager({ initialQrs = [] }) {
 
       {/* Filter and Search Bar */}
       <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
-        {/* Status Tabs */}
-        <div className="flex items-center gap-1 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
-          {['all', 'blank', 'sold', 'active', 'disabled'].map((st) => (
-            <button
-              key={st}
-              type="button"
-              onClick={() => setStatusFilter(st)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-colors ${
-                statusFilter === st
-                  ? 'bg-slate-900 text-white shadow-xs'
-                  : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
-              }`}
-            >
-              {st}
-            </button>
-          ))}
+        {/* Status Tabs & Batch Dropdown */}
+        <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
+          <div className="flex items-center gap-1">
+            {['all', 'blank', 'sold', 'active', 'disabled'].map((st) => (
+              <button
+                key={st}
+                type="button"
+                onClick={() => setStatusFilter(st)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-colors ${
+                  statusFilter === st
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
+                }`}
+              >
+                {st}
+              </button>
+            ))}
+          </div>
+
+          {/* Batch Filter Dropdown */}
+          {availableBatches.length > 0 && (
+            <div className="flex items-center gap-1.5 ml-2 pl-2 border-l border-slate-200">
+              <Layers className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              <select
+                value={batchFilter}
+                onChange={(e) => setBatchFilter(e.target.value)}
+                className="text-xs py-1.5 px-2.5 rounded-xl border border-slate-200 bg-white font-mono text-slate-700 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              >
+                <option value="all">Semua Batch</option>
+                {availableBatches.map((b) => (
+                  <option key={b} value={b}>
+                    {b}
+                  </option>
+                ))}
+              </select>
+
+              {batchFilter !== 'all' && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const firstMatch = qrList.find((q) => q.batchCode === batchFilter);
+                    if (firstMatch) {
+                      setBatchToReset({
+                        batchId: firstMatch.batchId,
+                        batchCode: batchFilter,
+                      });
+                    }
+                  }}
+                  className="text-[11px] py-1 px-2 text-rose-600 border-rose-200 hover:bg-rose-50"
+                  title="Reset semua QR di batch ini"
+                >
+                  <RotateCcw className="w-3 h-3 mr-1" />
+                  Reset Batch
+                </Button>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Search Input */}
@@ -243,7 +395,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Cari kode QR atau nama bisnis..."
+            placeholder="Cari kode QR, batch, atau bisnis..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
@@ -258,6 +410,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
             <thead className="bg-slate-50 text-[11px] uppercase tracking-wider text-slate-400 border-b border-slate-200/80">
               <tr>
                 <th className="py-3.5 px-4 font-semibold">Kode QR</th>
+                <th className="py-3.5 px-4 font-semibold">Batch</th>
                 <th className="py-3.5 px-4 font-semibold">Status</th>
                 <th className="py-3.5 px-4 font-semibold">Bisnis / Kafe</th>
                 <th className="py-3.5 px-4 font-semibold text-center">Total Scan</th>
@@ -269,7 +422,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
             <tbody className="divide-y divide-slate-100">
               {filteredQrs.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center text-xs text-slate-400">
+                  <td colSpan={8} className="py-12 text-center text-xs text-slate-400">
                     Tidak ditemukan QR Code yang cocok dengan filter atau pencarian.
                   </td>
                 </tr>
@@ -279,6 +432,17 @@ export default function AdminQrManager({ initialQrs = [] }) {
                     {/* Code */}
                     <td className="py-3.5 px-4">
                       <span className="font-mono font-bold text-slate-900">{qr.code}</span>
+                    </td>
+
+                    {/* Batch */}
+                    <td className="py-3.5 px-4">
+                      {qr.batchCode ? (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono text-[11px] font-semibold">
+                          {qr.batchCode}
+                        </span>
+                      ) : (
+                        <span className="text-slate-300 font-mono text-xs">-</span>
+                      )}
                     </td>
 
                     {/* Status Badge */}
@@ -375,6 +539,20 @@ export default function AdminQrManager({ initialQrs = [] }) {
                           </Button>
                         )}
 
+                        {/* Reset QR Button (For active, sold, or disabled QRs) */}
+                        {(qr.status !== 'blank' || qr.businessName) && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setQrToReset(qr)}
+                            className="text-[11px] py-1 px-2 text-rose-600 hover:bg-rose-50 border-rose-200"
+                            title="Reset QR ini ke status BLANK"
+                          >
+                            <RotateCcw className="w-3 h-3 mr-1" />
+                            Reset
+                          </Button>
+                        )}
+
                         <a
                           href={`/q/${qr.code}`}
                           target="_blank"
@@ -394,32 +572,32 @@ export default function AdminQrManager({ initialQrs = [] }) {
         </div>
       </div>
 
-      {/* Mass QR Generator Modal */}
+      {/* Mass QR Batch Generator Modal */}
       <Modal
         isOpen={isGenerateOpen}
         onClose={() => setIsGenerateOpen(false)}
-        title="Generate QR Massal"
-        description="Buat batch QR Code unik baru dengan status BLANK (belum terjual)."
+        title="Generate QR Batch Baru"
+        description="Buat satu paket batch QR Code unik baru dengan status BLANK (siap jual/cetak)."
       >
         <form onSubmit={handleMassGenerate} className="space-y-4">
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-1">
-              Jumlah QR Code yang Dibuat:
+              Jumlah QR Code dalam Batch:
             </label>
             <select
               value={generateQuantity}
               onChange={(e) => setGenerateQuantity(e.target.value)}
               className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm font-medium focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
             >
-              <option value="5">5 QR Code (Uji Coba)</option>
+              <option value="5">5 QR Code (Paket Standar Kafe)</option>
               <option value="10">10 QR Code</option>
               <option value="25">25 QR Code</option>
               <option value="50">50 QR Code</option>
-              <option value="100">100 QR Code (Batch Akrilik)</option>
+              <option value="100">100 QR Code (Batch Akrilik Besar)</option>
               <option value="250">250 QR Code</option>
             </select>
-            <p className="text-xs text-slate-400 mt-1.5">
-              Setiap QR otomatis memiliki kode unik acak aman berformat <span className="font-mono">SW-XXXXXX</span>.
+            <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+              Sistem akan otomatis membuat Batch baru (contoh: <span className="font-mono">BATCH-001</span>) dan seluruh QR di dalamnya berstatus <span className="font-semibold text-slate-700">BLANK</span>. Ketika customer mengaktifkan 1 QR dalam batch ini, seluruh QR lainnya otomatis terhubung ke bisnis yang sama.
             </p>
           </div>
 
@@ -439,18 +617,92 @@ export default function AdminQrManager({ initialQrs = [] }) {
         </form>
       </Modal>
 
+      {/* Reset Single QR Confirmation Modal */}
+      <Modal
+        isOpen={!!qrToReset}
+        onClose={() => setQrToReset(null)}
+        title="Reset QR?"
+        description="QR ini akan dilepaskan dari business saat ini dan dapat digunakan kembali."
+      >
+        {qrToReset && (
+          <div className="space-y-4">
+            <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 leading-relaxed">
+              Kode QR <strong className="font-mono">{qrToReset.code}</strong> akan dikembalikan ke status <strong>BLANK</strong>. Tautan dengan bisnis <strong className="font-semibold">{qrToReset.businessName || 'sebelumnya'}</strong> akan dihapus. Record QR fisik tetap ada dan dapat langsung diaktivasi ulang oleh pemilik baru.
+            </div>
+
+            <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                disabled={isResetting}
+                onClick={() => setQrToReset(null)}
+              >
+                Batal
+              </Button>
+              <Button
+                type="button"
+                variant="danger"
+                size="sm"
+                isLoading={isResetting}
+                onClick={handleConfirmResetQr}
+              >
+                Reset QR
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* Reset Entire Batch Confirmation Modal */}
+      <Modal
+        isOpen={!!batchToReset}
+        onClose={() => setBatchToReset(null)}
+        title="Reset Seluruh Batch?"
+        description="Semua QR dalam batch ini akan dilepaskan dari bisnis dan dikembalikan ke status BLANK."
+      >
+        {batchToReset && (
+          <div className="space-y-4">
+            <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 leading-relaxed">
+              Seluruh QR Code di dalam <strong className="font-mono">{batchToReset.batchCode}</strong> akan dikembalikan ke status <strong>BLANK</strong>. Record batch tetap tersimpan untuk riwayat inventori.
+            </div>
+
+            <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                disabled={isResetting}
+                onClick={() => setBatchToReset(null)}
+              >
+                Batal
+              </Button>
+              <Button
+                type="button"
+                variant="danger"
+                size="sm"
+                isLoading={isResetting}
+                onClick={handleConfirmResetBatch}
+              >
+                Reset Batch
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
+
       {/* QR Preview & Download Modal */}
       <Modal
         isOpen={!!selectedQr}
         onClose={() => setSelectedQr(null)}
         title={`QR Code ${selectedQr?.code || ''}`}
-        description={`Status: ${selectedQr?.status?.toUpperCase() || ''}`}
+        description={`Batch: ${selectedQr?.batchCode || '-'} | Status: ${selectedQr?.status?.toUpperCase() || ''}`}
       >
         {selectedQr && (
           <div className="pt-2">
             <QRCodeViewer
               code={selectedQr.code}
-              subtitle={selectedQr.businessName || 'Belum Terhubung ke Kafe'}
+              subtitle={selectedQr.businessName || `Batch ${selectedQr.batchCode || ''} — Siap Cetak`}
               size={220}
               showActions={true}
             />

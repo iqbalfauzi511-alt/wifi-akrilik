@@ -28,20 +28,28 @@ CREATE TABLE IF NOT EXISTS businesses (
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
 
--- 3. QR Codes Table
+-- 3. QR Batches Table (packages of QRs)
+CREATE TABLE IF NOT EXISTS qr_batches (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    batch_code VARCHAR(64) NOT NULL UNIQUE,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+-- 4. QR Codes Table
 -- Status values: 'blank', 'sold', 'active', 'disabled'
 CREATE TABLE IF NOT EXISTS qr_codes (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     code VARCHAR(64) NOT NULL UNIQUE,
     status VARCHAR(32) NOT NULL DEFAULT 'blank',
     business_id UUID REFERENCES businesses(id) ON DELETE SET NULL,
+    batch_id UUID REFERENCES qr_batches(id) ON DELETE SET NULL,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     sold_at TIMESTAMP WITH TIME ZONE,
     activated_at TIMESTAMP WITH TIME ZONE
 );
 
--- 4. Scan Logs Table
+-- 5. Scan Logs Table
 CREATE TABLE IF NOT EXISTS scan_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     qr_id UUID NOT NULL REFERENCES qr_codes(id) ON DELETE CASCADE,
@@ -55,5 +63,6 @@ CREATE INDEX IF NOT EXISTS idx_businesses_owner ON businesses(owner_id);
 CREATE INDEX IF NOT EXISTS idx_qr_codes_code ON qr_codes(code);
 CREATE INDEX IF NOT EXISTS idx_qr_codes_status ON qr_codes(status);
 CREATE INDEX IF NOT EXISTS idx_qr_codes_business ON qr_codes(business_id);
+CREATE INDEX IF NOT EXISTS idx_qr_codes_batch_id ON qr_codes(batch_id);
 CREATE INDEX IF NOT EXISTS idx_scan_logs_qr_id ON scan_logs(qr_id);
 CREATE INDEX IF NOT EXISTS idx_scan_logs_scanned_at ON scan_logs(scanned_at);
