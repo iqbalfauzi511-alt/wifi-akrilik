@@ -19,7 +19,7 @@ export default function DashboardSidebar({ role = 'customer', businessName }) {
   const customerNav = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, exact: true },
     { name: 'QR Code Saya', href: '/dashboard/qr', icon: QrCode },
-    { name: 'Pengaturan Wi-Fi', href: '/dashboard/settings', icon: Settings },
+    { name: 'Business Settings', href: '/dashboard/settings', icon: Settings },
   ];
 
   const adminNav = [

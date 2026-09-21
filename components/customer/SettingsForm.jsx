@@ -35,9 +35,9 @@ export default function SettingsForm({ business }) {
 
     setIsSubmitting(false);
     if (result?.success) {
-      setStatusMessage({ type: 'success', text: result.message || 'Perubahan berhasil disimpan!' });
+      setStatusMessage({ type: 'success', text: result.message || '✓ Perubahan berhasil disimpan.' });
     } else {
-      setStatusMessage({ type: 'error', text: result?.error || 'Gagal menyimpan perubahan' });
+      setStatusMessage({ type: 'error', text: result?.error || 'Perubahan gagal disimpan. Silakan coba lagi.' });
       if (result?.errors) {
         setFieldErrors(result.errors);
       }
