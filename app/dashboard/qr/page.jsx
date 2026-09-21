@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { QrCode, PlusCircle } from 'lucide-react';
 import { getCurrentSession } from '@/lib/auth/session';
-import { getQrsByBusinessId } from '@/lib/db/queries/qr';
+import { getQrsByBusinessId, getQrsByOwnerUserId } from '@/lib/db/queries/qr';
 import CustomerQrTable from '@/components/customer/CustomerQrTable';
 import Card, { CardHeader } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
@@ -15,8 +15,12 @@ export const metadata = {
 
 export default async function CustomerQrPage() {
   const session = await getCurrentSession();
-  const business = session?.business;
-  const myQrs = business ? await getQrsByBusinessId(business.id) : [];
+  const userId = session?.user?.id;
+  const myQrs = userId ? await getQrsByOwnerUserId(userId) : [];
+  const business = session?.business || (myQrs.length > 0 ? {
+    businessName: myQrs[0].businessName,
+    wifiEnabled: myQrs[0].wifiEnabled,
+  } : null);
 
   return (
     <div className="space-y-6">

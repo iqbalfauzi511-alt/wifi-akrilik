@@ -20,14 +20,27 @@ import Card from '@/components/ui/Card';
 import QRCodeViewer from '@/components/qr/QRCodeViewer';
 import { activateQrAction } from '@/lib/actions/qr-actions';
 
-export default function ActivationForm({ code }) {
+export default function ActivationForm({
+  code,
+  initialBusiness = null,
+  userEmail = '',
+  batchCode = '',
+}) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
   const [isSuccess, setIsSuccess] = useState(false);
   const [savedBusinessName, setSavedBusinessName] = useState('');
-  const [isWifiEnabled, setIsWifiEnabled] = useState(false);
+
+  // Pre-populate with existing business if user already registered one
+  const [businessNameVal, setBusinessNameVal] = useState(initialBusiness?.businessName || '');
+  const [mapsUrlVal, setMapsUrlVal] = useState(
+    initialBusiness?.googleMapsReviewUrl || initialBusiness?.googleMapsUrl || ''
+  );
+  const [isWifiEnabled, setIsWifiEnabled] = useState(Boolean(initialBusiness?.wifiEnabled));
+  const [wifiNameVal, setWifiNameVal] = useState(initialBusiness?.wifiName || '');
+  const [wifiPasswordVal, setWifiPasswordVal] = useState(initialBusiness?.wifiPassword || '');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -66,6 +79,12 @@ export default function ActivationForm({ code }) {
           <strong className="text-slate-900">{savedBusinessName || 'Bisnis Anda'}</strong>.
         </p>
 
+        {batchCode && (
+          <div className="mb-4 p-3 rounded-2xl bg-indigo-50 border border-indigo-200 text-xs text-indigo-900 max-w-sm mx-auto">
+            ✨ Seluruh perangkat dalam <strong>Paket {batchCode}</strong> telah otomatis aktif dan terdaftar di dashboard akun Anda.
+          </div>
+        )}
+
         {/* Barcode Viewer with Download & Copy actions */}
         <div className="flex justify-center my-3">
           <QRCodeViewer
@@ -100,6 +119,28 @@ export default function ActivationForm({ code }) {
 
   return (
     <Card className="shadow-lg border-slate-200/90">
+      {/* Account linking header */}
+      {userEmail && (
+        <div className="mb-5 p-3 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-emerald-500" />
+            <span className="text-slate-500">Akun terhubung:</span>
+            <strong className="font-mono text-slate-800">{userEmail}</strong>
+          </div>
+          {initialBusiness && (
+            <span className="text-[11px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold border border-emerald-200">
+              Profil Terdaftar
+            </span>
+          )}
+        </div>
+      )}
+
+      {initialBusiness && (
+        <div className="mb-5 p-3 rounded-xl bg-brand-50/70 border border-brand-200 text-xs text-brand-900 leading-relaxed">
+          💡 Data bisnis Anda (<strong>{initialBusiness.businessName}</strong>) telah otomatis terisi di bawah. Anda bisa langsung klik <strong>Aktifkan Cobascan</strong> untuk menautkan perangkat baru ini, atau sesuaikan data jika diperlukan.
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="space-y-4">
         {errorMessage && (
           <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium leading-relaxed">
@@ -113,7 +154,8 @@ export default function ActivationForm({ code }) {
             label="Nama Bisnis"
             name="businessName"
             placeholder="Contoh: Kopi Senja / Toko Berkah"
-            defaultValue=""
+            value={businessNameVal}
+            onChange={(e) => setBusinessNameVal(e.target.value)}
             autoComplete="off"
             error={fieldErrors.businessName}
             required
@@ -129,7 +171,8 @@ export default function ActivationForm({ code }) {
             name="googleMapsReviewUrl"
             type="url"
             placeholder="https://maps.app.goo.gl/... atau https://maps.google.com/..."
-            defaultValue=""
+            value={mapsUrlVal}
+            onChange={(e) => setMapsUrlVal(e.target.value)}
             autoComplete="off"
             error={fieldErrors.googleMapsReviewUrl || fieldErrors.googleMapsUrl}
             required
@@ -210,7 +253,8 @@ export default function ActivationForm({ code }) {
                 label="Nama Wi-Fi"
                 name="wifiName"
                 placeholder="Contoh: KAFE-TAMU"
-                defaultValue=""
+                value={wifiNameVal}
+                onChange={(e) => setWifiNameVal(e.target.value)}
                 autoComplete="off"
                 error={fieldErrors.wifiName}
                 required={isWifiEnabled}
@@ -225,7 +269,8 @@ export default function ActivationForm({ code }) {
                 name="wifiPassword"
                 type="text"
                 placeholder="Contoh: password123"
-                defaultValue=""
+                value={wifiPasswordVal}
+                onChange={(e) => setWifiPasswordVal(e.target.value)}
                 autoComplete="off"
                 error={fieldErrors.wifiPassword}
                 required={isWifiEnabled}

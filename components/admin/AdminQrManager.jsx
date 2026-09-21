@@ -21,6 +21,11 @@ import {
   Wifi,
   MapPin,
   Trash2,
+  CheckSquare,
+  Square,
+  MinusSquare,
+  ToggleLeft,
+  ToggleRight,
 } from 'lucide-react';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
@@ -34,6 +39,9 @@ import {
   resetBatchAction,
   deleteQrAction,
   deleteBatchAction,
+  bulkUpdateQrStatusAction,
+  bulkDeleteQrsAction,
+  bulkResetQrsAction,
 } from '@/lib/actions/qr-actions';
 
 export default function AdminQrManager({ initialQrs = [] }) {
@@ -46,6 +54,14 @@ export default function AdminQrManager({ initialQrs = [] }) {
   const [statusFilter, setStatusFilter] = useState('all');
   const [batchFilter, setBatchFilter] = useState('all');
   const [selectedQr, setSelectedQr] = useState(null);
+
+  // Multi-select state
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [isBulkProcessing, setIsBulkProcessing] = useState(false);
+  const [bulkStatusModal, setBulkStatusModal] = useState(false);
+  const [bulkDeleteModal, setBulkDeleteModal] = useState(false);
+  const [bulkResetModal, setBulkResetModal] = useState(false);
+  const [bulkNewStatus, setBulkNewStatus] = useState('active');
   const [qrToReset, setQrToReset] = useState(null);
   const [batchToReset, setBatchToReset] = useState(null);
   const [qrToDelete, setQrToDelete] = useState(null);
@@ -343,6 +359,170 @@ export default function AdminQrManager({ initialQrs = [] }) {
     }
   };
 
+  // Multi-select toggle helpers
+  const allSelected = filteredQrs.length > 0 && selectedIds.size === filteredQrs.length;
+  const isIndeterminate = selectedIds.size > 0 && selectedIds.size < filteredQrs.length;
+
+  const handleToggleSelectAll = () => {
+    if (allSelected) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(filteredQrs.map((q) => q.id)));
+    }
+  };
+
+  const handleToggleSelect = (id) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  // Handle Bulk Status Change
+  const handleBulkStatusChange = async () => {
+    if (selectedIds.size === 0) return;
+    try {
+      setIsBulkProcessing(true);
+      const targetIds = Array.from(selectedIds);
+      const result = await bulkUpdateQrStatusAction(targetIds, bulkNewStatus);
+      setIsBulkProcessing(false);
+      setBulkStatusModal(false);
+
+      if (result?.success) {
+        setQrList((prev) =>
+          prev.map((q) => (selectedIds.has(q.id) ? { ...q, status: bulkNewStatus } : q))
+        );
+        setNotification({
+          type: 'success',
+          message: `Berhasil mengubah status ${result.count || targetIds.length} QR terpilih menjadi ${bulkNewStatus}.`,
+        });
+        setSelectedIds(new Set());
+        router.refresh();
+      } else {
+        alert(result?.error || 'Gagal mengubah status massal');
+      }
+    } catch (err) {
+      setIsBulkProcessing(false);
+      alert('Terjadi kesalahan saat mengubah status massal');
+    }
+  };
+
+  // Handle Bulk Reset to Blank
+  const handleBulkReset = async () => {
+    if (selectedIds.size === 0) return;
+    try {
+      setIsBulkProcessing(true);
+      const targetIds = Array.from(selectedIds);
+      const result = await bulkResetQrsAction(targetIds);
+      setIsBulkProcessing(false);
+      setBulkResetModal(false);
+
+      if (result?.success) {
+        setQrList((prev) =>
+          prev.map((q) =>
+            selectedIds.has(q.id)
+              ? {
+                  ...q,
+                  status: 'blank',
+                  businessId: null,
+                  businessName: null,
+                  ownerEmail: null,
+                  activatedAt: null,
+                }
+              : q
+          )
+        );
+        setNotification({
+          type: 'success',
+          message: `Berhasil mereset ${result.count || targetIds.length} QR terpilih ke status blank (tersedia).`,
+        });
+        setSelectedIds(new Set());
+        router.refresh();
+      } else {
+        alert(result?.error || 'Gagal mereset massal');
+      }
+    } catch (err) {
+      setIsBulkProcessing(false);
+      alert('Terjadi kesalahan saat mereset massal');
+    }
+  };
+
+  // Handle Bulk Delete Permanently
+  const handleBulkDelete = async () => {
+    if (selectedIds.size === 0) return;
+    try {
+      setIsBulkProcessing(true);
+      const targetIds = Array.from(selectedIds);
+      const result = await bulkDeleteQrsAction(targetIds);
+      setIsBulkProcessing(false);
+      setBulkDeleteModal(false);
+
+      if (result?.success) {
+        setQrList((prev) => prev.filter((q) => !selectedIds.has(q.id)));
+        setNotification({
+          type: 'success',
+          message: `Berhasil menghapus permanen ${result.count || targetIds.length} QR terpilih dari sistem.`,
+        });
+        setSelectedIds(new Set());
+        router.refresh();
+      } else {
+        alert(result?.error || 'Gagal menghapus massal');
+      }
+    } catch (err) {
+      setIsBulkProcessing(false);
+      alert('Terjadi kesalahan saat menghapus massal');
+    }
+  };
+
+  // Handle Bulk Zip Download for Selected
+  const handleBulkZipSelected = async () => {
+    if (selectedIds.size === 0) return;
+    try {
+      setIsDownloadingZip(true);
+      const zip = new JSZip();
+      const folder = zip.folder('cobascan-qr-codes');
+      const appUrl =
+        typeof window !== 'undefined' && window.location.origin
+          ? window.location.origin
+          : 'https://wifi-akrilik.vercel.app';
+      const cleanOrigin = appUrl.replace(/\/$/, '');
+
+      const items = qrList.filter((q) => selectedIds.has(q.id));
+      for (const qr of items) {
+        const targetUrl = `${cleanOrigin}/q/${qr.code}`;
+        const dataUrl = await QRCode.toDataURL(targetUrl, {
+          width: 800,
+          margin: 2,
+          errorCorrectionLevel: 'H',
+          color: { dark: '#0f172a', light: '#ffffff' },
+        });
+        const base64Data = dataUrl.replace(/^data:image\/png;base64,/, '');
+        folder.file(`${qr.code}.png`, base64Data, { base64: true });
+      }
+
+      const content = await zip.generateAsync({ type: 'blob' });
+      const downloadUrl = URL.createObjectURL(content);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = `Cobascan_Terpilih_${items.length}_QR.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(downloadUrl);
+
+      setIsDownloadingZip(false);
+      setNotification({
+        type: 'success',
+        message: `Berhasil mengunduh ZIP untuk ${items.length} QR Code terpilih.`,
+      });
+    } catch (err) {
+      setIsDownloadingZip(false);
+      alert('Gagal mengunduh ZIP');
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Top Action Toolbar */}
@@ -500,12 +680,97 @@ export default function AdminQrManager({ initialQrs = [] }) {
         </div>
       </div>
 
+      {/* Floating Batch Action Bar when items selected */}
+      {selectedIds.size > 0 && (
+        <div className="p-4 rounded-2xl bg-slate-900 text-white shadow-xl border border-slate-800 flex flex-wrap items-center justify-between gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="flex items-center gap-2.5">
+            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-brand-500 text-white text-xs font-black">
+              {selectedIds.size}
+            </span>
+            <span className="text-xs font-bold text-slate-200">
+              QR Code Dipilih
+            </span>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={isBulkProcessing}
+              onClick={() => setBulkStatusModal(true)}
+              className="text-xs bg-indigo-600 hover:bg-indigo-700 text-white border-transparent py-1 px-3"
+            >
+              <ToggleRight className="w-3.5 h-3.5 mr-1" />
+              Ubah Status
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={isBulkProcessing}
+              onClick={handleBulkZipSelected}
+              className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700 py-1 px-3"
+            >
+              <Download className="w-3.5 h-3.5 mr-1" />
+              Download ZIP
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={isBulkProcessing}
+              onClick={() => setBulkResetModal(true)}
+              className="text-xs bg-amber-600 hover:bg-amber-700 text-white border-transparent py-1 px-3"
+            >
+              <RotateCcw className="w-3.5 h-3.5 mr-1" />
+              Reset ke Blank
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={isBulkProcessing}
+              onClick={() => setBulkDeleteModal(true)}
+              className="text-xs bg-rose-600 hover:bg-rose-700 text-white border-transparent py-1 px-3"
+            >
+              <Trash2 className="w-3.5 h-3.5 mr-1" />
+              Hapus Permanen
+            </Button>
+
+            <button
+              type="button"
+              onClick={() => setSelectedIds(new Set())}
+              className="text-xs text-slate-400 hover:text-white px-2 py-1 transition-colors"
+            >
+              Batal
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Table of QR Codes */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-slate-600">
             <thead className="bg-slate-50 text-[11px] uppercase tracking-wider text-slate-400 border-b border-slate-200/80">
               <tr>
+                {/* Checkbox Header */}
+                <th className="py-3.5 px-3 w-10 text-center">
+                  <button
+                    type="button"
+                    onClick={handleToggleSelectAll}
+                    className="flex items-center justify-center p-1 rounded hover:bg-slate-200 transition-colors text-slate-600"
+                    title={allSelected ? 'Batal pilih semua' : 'Pilih semua'}
+                  >
+                    {allSelected ? (
+                      <CheckSquare className="w-4 h-4 text-brand-600" />
+                    ) : isIndeterminate ? (
+                      <MinusSquare className="w-4 h-4 text-brand-600" />
+                    ) : (
+                      <Square className="w-4 h-4 text-slate-400" />
+                    )}
+                  </button>
+                </th>
                 <th className="py-3.5 px-4 font-semibold">Kode QR</th>
                 <th className="py-3.5 px-4 font-semibold">Batch</th>
                 <th className="py-3.5 px-4 font-semibold">Status</th>
@@ -521,17 +786,39 @@ export default function AdminQrManager({ initialQrs = [] }) {
             <tbody className="divide-y divide-slate-100">
               {filteredQrs.length === 0 ? (
                 <tr>
-                  <td colSpan={10} className="py-12 text-center text-xs text-slate-400">
+                  <td colSpan={11} className="py-12 text-center text-xs text-slate-400">
                     Tidak ditemukan QR Code yang cocok dengan filter atau pencarian.
                   </td>
                 </tr>
               ) : (
-                filteredQrs.map((qr) => (
-                  <tr key={qr.id} className="hover:bg-slate-50/60 transition-colors">
-                    {/* Code */}
-                    <td className="py-3.5 px-4">
-                      <span className="font-mono font-bold text-slate-900">{qr.code}</span>
-                    </td>
+                filteredQrs.map((qr) => {
+                  const isSelected = selectedIds.has(qr.id);
+                  return (
+                    <tr
+                      key={qr.id}
+                      className={`transition-colors ${
+                        isSelected ? 'bg-brand-50/50 hover:bg-brand-50/70' : 'hover:bg-slate-50/60'
+                      }`}
+                    >
+                      {/* Checkbox Column */}
+                      <td className="py-3.5 px-3 text-center">
+                        <button
+                          type="button"
+                          onClick={() => handleToggleSelect(qr.id)}
+                          className="flex items-center justify-center p-1 rounded hover:bg-slate-200 transition-colors text-slate-600"
+                        >
+                          {isSelected ? (
+                            <CheckSquare className="w-4 h-4 text-brand-600" />
+                          ) : (
+                            <Square className="w-4 h-4 text-slate-400" />
+                          )}
+                        </button>
+                      </td>
+
+                      {/* Code */}
+                      <td className="py-3.5 px-4">
+                        <span className="font-mono font-bold text-slate-900">{qr.code}</span>
+                      </td>
 
                     {/* Batch */}
                     <td className="py-3.5 px-4">
@@ -708,9 +995,10 @@ export default function AdminQrManager({ initialQrs = [] }) {
                       </div>
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
+                );
+              })
+            )}
+          </tbody>
           </table>
         </div>
       </div>
@@ -1000,6 +1288,146 @@ export default function AdminQrManager({ initialQrs = [] }) {
             </div>
           </div>
         )}
+      </Modal>
+
+      {/* Modal: Bulk Status Update */}
+      <Modal
+        isOpen={bulkStatusModal}
+        onClose={() => setBulkStatusModal(false)}
+        title="Ubah Status QR Terpilih"
+        description={`Terapkan status baru untuk ${selectedIds.size} QR code yang dipilih.`}
+      >
+        <div className="space-y-4 pt-2">
+          <div>
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+              Pilih Status Baru:
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { id: 'blank', label: 'Tersedia (Blank)', desc: 'Siap cetak / dijual' },
+                { id: 'sold', label: 'Terjual (Sold)', desc: 'Menunggu aktivasi' },
+                { id: 'active', label: 'Aktif (Active)', desc: 'Aktif digunakan kafe' },
+                { id: 'disabled', label: 'Nonaktif (Disabled)', desc: 'Dinonaktifkan sementara' },
+              ].map((s) => (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => setBulkNewStatus(s.id)}
+                  className={`p-3 rounded-xl border text-left transition-all ${
+                    bulkNewStatus === s.id
+                      ? 'border-brand-600 bg-brand-50/60 ring-2 ring-brand-500/20'
+                      : 'border-slate-200 hover:border-slate-300'
+                  }`}
+                >
+                  <div className="text-xs font-bold text-slate-900">{s.label}</div>
+                  <div className="text-[10px] text-slate-500 mt-0.5">{s.desc}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setBulkStatusModal(false)}
+              disabled={isBulkProcessing}
+            >
+              Batal
+            </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              isLoading={isBulkProcessing}
+              onClick={handleBulkStatusChange}
+            >
+              Terapkan ke {selectedIds.size} QR
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Modal: Bulk Reset to Blank */}
+      <Modal
+        isOpen={bulkResetModal}
+        onClose={() => setBulkResetModal(false)}
+        title="Reset QR Terpilih ke Blank?"
+        description={`Konfirmasi reset untuk ${selectedIds.size} QR code.`}
+      >
+        <div className="space-y-4 pt-2">
+          <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 text-amber-900 text-xs flex items-start gap-3">
+            <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+            <div>
+              <p className="font-bold text-sm text-amber-900">
+                Reset {selectedIds.size} QR ke status Blank (Kosong)?
+              </p>
+              <p className="mt-1 leading-relaxed text-amber-800">
+                Hubungan QR dengan kafe/bisnis akan dilepas, status kembali menjadi Blank, dan siap diaktivasi ulang oleh bisnis baru. Kode fisik QR tetap tersimpan.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-end gap-2 pt-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setBulkResetModal(false)}
+              disabled={isBulkProcessing}
+            >
+              Batal
+            </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              isLoading={isBulkProcessing}
+              onClick={handleBulkReset}
+              className="bg-amber-600 hover:bg-amber-700 text-white"
+            >
+              Ya, Reset {selectedIds.size} QR
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Modal: Bulk Delete Permanently */}
+      <Modal
+        isOpen={bulkDeleteModal}
+        onClose={() => setBulkDeleteModal(false)}
+        title="Hapus Permanen QR Terpilih?"
+        description={`Tindakan ini akan menghapus ${selectedIds.size} QR code dari database secara permanen.`}
+      >
+        <div className="space-y-4 pt-2">
+          <div className="p-4 bg-rose-50 rounded-2xl border border-rose-200 text-rose-800 text-xs flex items-start gap-3">
+            <AlertTriangle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+            <div>
+              <p className="font-bold text-sm text-rose-900">
+                Hapus {selectedIds.size} QR Code secara permanen?
+              </p>
+              <p className="mt-1 leading-relaxed text-rose-700">
+                QR code yang terhapus beserta log scan-nya tidak dapat dikembalikan lagi.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-end gap-2 pt-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setBulkDeleteModal(false)}
+              disabled={isBulkProcessing}
+            >
+              Batal
+            </Button>
+            <Button
+              variant="danger"
+              size="sm"
+              isLoading={isBulkProcessing}
+              onClick={handleBulkDelete}
+            >
+              Ya, Hapus {selectedIds.size} QR
+            </Button>
+          </div>
+        </div>
       </Modal>
     </div>
   );

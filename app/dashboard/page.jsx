@@ -17,8 +17,8 @@ import {
   Smartphone,
 } from 'lucide-react';
 import { getCurrentSession } from '@/lib/auth/session';
-import { getCustomerStats } from '@/lib/db/queries/stats';
-import { getQrsByBusinessId } from '@/lib/db/queries/qr';
+import { getCustomerStats, getCustomerStatsByUserId } from '@/lib/db/queries/stats';
+import { getQrsByBusinessId, getQrsByOwnerUserId } from '@/lib/db/queries/qr';
 import StatCard from '@/components/ui/StatCard';
 import Card, { CardHeader } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
@@ -40,10 +40,16 @@ export default async function CustomerDashboardPage() {
     redirect('/admin');
   }
 
-  const business = session?.business;
-
-  const stats = await getCustomerStats(business?.id);
-  const myQrs = business ? await getQrsByBusinessId(business.id) : [];
+  const userId = session?.user?.id;
+  const myQrs = userId ? await getQrsByOwnerUserId(userId) : [];
+  const stats = userId ? await getCustomerStatsByUserId(userId) : { activeQrCount: 0, totalScans: 0 };
+  const business = session?.business || (myQrs.length > 0 ? {
+    id: myQrs[0].businessId,
+    businessName: myQrs[0].businessName,
+    googleMapsReviewUrl: myQrs[0].googleMapsReviewUrl || myQrs[0].googleMapsUrl,
+    googleMapsUrl: myQrs[0].googleMapsUrl,
+    wifiEnabled: myQrs[0].wifiEnabled,
+  } : null);
 
   const userName = session?.user?.name || session?.user?.email?.split('@')[0] || 'Partner';
 
