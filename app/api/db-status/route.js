@@ -2,10 +2,20 @@ import { NextResponse } from 'next/server';
 import { db, getDb, ensureDatabaseInitialized } from '@/lib/db';
 import { qrCodes, qrBatches, users, businesses } from '@/lib/db/schema';
 import { sql } from 'drizzle-orm';
+import { getCurrentSession } from '@/lib/auth/session';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
+  // Enforce Administrator-only access to prevent internal infrastructure disclosure
+  const session = await getCurrentSession();
+  if (session?.role !== 'admin') {
+    return NextResponse.json(
+      { error: 'Forbidden. Akses khusus Administrator Cobascan.' },
+      { status: 403 }
+    );
+  }
+
   const rawUrl = process.env.DATABASE_URL || '';
   const hasDbUrl = Boolean(rawUrl);
   const startsWithPostgres = rawUrl.startsWith('postgres');

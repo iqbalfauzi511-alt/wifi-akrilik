@@ -1,9 +1,22 @@
 import { NextResponse } from 'next/server';
 import { updateSession } from '@/lib/supabase/middleware';
 
+const ADMIN_EMAILS = [
+  'distrapness@gmail.com',
+  'admin@smartwifi.com',
+];
+
+function isUserAdmin(email) {
+  if (!email) return false;
+  const clean = email.trim().toLowerCase();
+  return ADMIN_EMAILS.includes(clean) || clean.startsWith('admin@');
+}
+
 export async function middleware(request) {
   // First run Supabase session updater
-  const res = await updateSession(request);
+  const sessionResult = await updateSession(request);
+  const res = sessionResult?.response || sessionResult;
+  const supabaseUser = sessionResult?.user || null;
 
   const { pathname } = request.nextUrl;
 
@@ -21,13 +34,31 @@ export async function middleware(request) {
   const devCookie = request.cookies.get('smartwifi_session')?.value;
   const hasSupabaseCookie = request.cookies.getAll().some((c) => c.name.startsWith('sb-'));
 
-  let isAuthenticated = !!devCookie || hasSupabaseCookie;
+  let isAuthenticated = !!supabaseUser || !!devCookie || hasSupabaseCookie;
   let userRole = 'customer';
 
-  if (devCookie) {
+  // Check role from authenticated Supabase user first
+  if (supabaseUser && supabaseUser.email) {
+    if (isUserAdmin(supabaseUser.email)) {
+      userRole = 'admin';
+    }
+  }
+
+  // Check role from verified dev session cookie
+  if (devCookie && userRole !== 'admin') {
     try {
-      const parsed = JSON.parse(decodeURIComponent(devCookie));
-      userRole = parsed.role || 'customer';
+      let parsed = null;
+      if (devCookie.includes('.')) {
+        const payloadBase64 = devCookie.split('.')[0];
+        const payloadJson = Buffer.from(payloadBase64, 'base64url').toString('utf8');
+        parsed = JSON.parse(payloadJson);
+      } else {
+        parsed = JSON.parse(decodeURIComponent(devCookie));
+      }
+
+      if (parsed && parsed.email && isUserAdmin(parsed.email)) {
+        userRole = 'admin';
+      }
     } catch {
       // ignore
     }

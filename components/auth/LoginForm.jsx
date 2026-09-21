@@ -68,7 +68,6 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
       await devLoginAction({
         email: emailTrim,
         name: emailTrim.split('@')[0],
-        role: isAdmin ? 'admin' : 'customer',
         nextUrl: nextUrl || (isAdmin ? '/admin' : '/dashboard'),
       });
     } catch (err) {
@@ -215,7 +214,6 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
                 await devLoginAction({
                   email: 'owner@cobascan.com',
                   name: 'Pemilik Bisnis (Demo)',
-                  role: 'customer',
                   nextUrl,
                 });
               }}
@@ -243,7 +241,6 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
                 await devLoginAction({
                   email: 'admin@smartwifi.com',
                   name: 'Administrator Cobascan',
-                  role: 'admin',
                   nextUrl: nextUrl.startsWith('/admin') ? nextUrl : '/admin',
                 });
               }}

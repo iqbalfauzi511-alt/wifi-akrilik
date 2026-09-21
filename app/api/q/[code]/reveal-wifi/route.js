@@ -9,15 +9,58 @@ export const dynamic = 'force-dynamic';
  * Strictly returns wifi_name and wifi_password ONLY upon request when wifi_enabled is true.
  * No user login, registration, or Google API check required.
  */
+// In-memory sliding window rate limiter for Wi-Fi reveal protection
+const rateLimitMap = new Map();
+
+function isRateLimited(ip, limit = 10, windowMs = 60000) {
+  const now = Date.now();
+  const record = rateLimitMap.get(ip);
+
+  // Clean old entries periodically
+  if (rateLimitMap.size > 5000) {
+    for (const [key, val] of rateLimitMap.entries()) {
+      if (now > val.resetAt) rateLimitMap.delete(key);
+    }
+  }
+
+  if (!record || now > record.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + windowMs });
+    return false;
+  }
+
+  if (record.count >= limit) {
+    return true;
+  }
+
+  record.count++;
+  return false;
+}
+
 export async function POST(request, { params }) {
   try {
-    const code = params?.code;
-    if (!code) {
+    const rawCode = params?.code;
+    const clientIp =
+      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+      request.headers.get('x-real-ip') ||
+      'anonymous';
+
+    // 1. Rate limiting check (max 10 reveal attempts per minute per IP)
+    if (isRateLimited(clientIp)) {
       return NextResponse.json(
-        { success: false, error: 'QR tidak ditemukan.' },
-        { status: 404 }
+        { success: false, error: 'Terlalu banyak permintaan. Silakan tunggu 1 menit lalu coba lagi.' },
+        { status: 429 }
       );
     }
+
+    // 2. Validate and sanitize code parameter
+    if (!rawCode || typeof rawCode !== 'string' || rawCode.length > 64) {
+      return NextResponse.json(
+        { success: false, error: 'Kode QR tidak valid.' },
+        { status: 400 }
+      );
+    }
+
+    const code = rawCode.trim().toUpperCase();
 
     const result = await getQrWifiCredentials(code);
 
