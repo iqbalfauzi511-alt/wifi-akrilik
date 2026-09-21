@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import JSZip from 'jszip';
 import QRCode from 'qrcode';
@@ -27,6 +27,8 @@ export default function AdminQrManager({ initialQrs = [] }) {
   const router = useRouter();
 
   // State
+  const [qrList, setQrList] = useState(initialQrs);
+  const [notification, setNotification] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedQr, setSelectedQr] = useState(null);
@@ -36,9 +38,14 @@ export default function AdminQrManager({ initialQrs = [] }) {
   const [isDownloadingZip, setIsDownloadingZip] = useState(false);
   const [statusUpdatingId, setStatusUpdatingId] = useState(null);
 
+  // Synchronize when server updates initialQrs
+  useEffect(() => {
+    setQrList(initialQrs);
+  }, [initialQrs]);
+
   // Filtered and Searched QRs
   const filteredQrs = useMemo(() => {
-    return initialQrs.filter((qr) => {
+    return qrList.filter((qr) => {
       const matchesStatus =
         statusFilter === 'all' || qr.status.toLowerCase() === statusFilter.toLowerCase();
       const matchesSearch =
@@ -47,12 +54,13 @@ export default function AdminQrManager({ initialQrs = [] }) {
         (qr.businessName && qr.businessName.toLowerCase().includes(searchTerm.toLowerCase()));
       return matchesStatus && matchesSearch;
     });
-  }, [initialQrs, statusFilter, searchTerm]);
+  }, [qrList, statusFilter, searchTerm]);
 
   // Mass Generate handler
   const handleMassGenerate = async (e) => {
     e.preventDefault();
     setIsGenerating(true);
+    setNotification(null);
     const formData = new FormData();
     formData.set('quantity', generateQuantity);
 
@@ -60,22 +68,44 @@ export default function AdminQrManager({ initialQrs = [] }) {
     setIsGenerating(false);
 
     if (result?.success) {
+      if (result.newQrs && result.newQrs.length > 0) {
+        const mappedNew = result.newQrs.map((item) => ({
+          ...item,
+          businessName: null,
+          ownerEmail: null,
+          scanCount: 0,
+        }));
+        setQrList((prev) => [...mappedNew, ...prev]);
+      }
       setIsGenerateOpen(false);
+      setNotification({
+        type: 'success',
+        message: `Berhasil membuat ${result.count || generateQuantity} QR Code baru!`,
+      });
       router.refresh();
     } else {
-      alert(result?.error || 'Gagal generate QR');
+      const errorMsg = result?.error || 'Gagal generate QR';
+      setNotification({
+        type: 'error',
+        message: errorMsg,
+      });
+      alert(errorMsg);
     }
   };
 
   // Status toggle handler
   const handleStatusChange = async (qrId, newStatus) => {
     setStatusUpdatingId(qrId);
+    setQrList((prev) =>
+      prev.map((item) => (item.id === qrId ? { ...item, status: newStatus } : item))
+    );
     const result = await updateQrStatusAction(qrId, newStatus);
     setStatusUpdatingId(null);
-    if (result?.success) {
-      router.refresh();
-    } else {
+    if (!result?.success) {
+      setQrList(initialQrs);
       alert(result?.error || 'Gagal mengubah status');
+    } else {
+      router.refresh();
     }
   };
 
@@ -155,6 +185,33 @@ export default function AdminQrManager({ initialQrs = [] }) {
           </Button>
         </div>
       </div>
+
+      {/* Alert / Notification Banner */}
+      {notification && (
+        <div
+          className={`p-4 rounded-2xl flex items-center justify-between text-xs font-medium transition-all ${
+            notification.type === 'success'
+              ? 'bg-emerald-50 border border-emerald-200 text-emerald-800'
+              : 'bg-rose-50 border border-rose-200 text-rose-800'
+          }`}
+        >
+          <div className="flex items-center gap-2.5">
+            {notification.type === 'success' ? (
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            ) : (
+              <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+            )}
+            <span>{notification.message}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setNotification(null)}
+            className="text-slate-400 hover:text-slate-700 text-sm font-bold ml-4 p-1 rounded-lg hover:bg-black/5"
+          >
+            &times;
+          </button>
+        </div>
+      )}
 
       {/* Filter and Search Bar */}
       <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">

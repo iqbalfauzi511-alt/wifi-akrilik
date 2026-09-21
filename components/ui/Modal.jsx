@@ -31,9 +31,9 @@ export default function Modal({ isOpen, onClose, title, description, children, m
       />
 
       {/* Modal Dialog */}
-      <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+      <div className="relative z-10 flex min-h-full items-center justify-center p-4 text-center sm:p-0 pointer-events-none">
         <div
-          className={`relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all w-full ${maxWidth} border border-slate-200/80 p-6`}
+          className={`relative pointer-events-auto transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all w-full ${maxWidth} border border-slate-200/80 p-6`}
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-start justify-between pb-4 border-b border-slate-100">

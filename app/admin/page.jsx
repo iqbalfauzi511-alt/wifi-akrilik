@@ -45,12 +45,10 @@ export default async function AdminDashboardPage() {
         </div>
 
         <div className="flex items-center gap-2.5">
-          <Link href="/admin/qr">
-            <Button size="sm" className="gap-1.5 text-xs">
-              <Sparkles className="w-3.5 h-3.5" />
-              Kelola & Generate QR
-            </Button>
-          </Link>
+          <Button href="/admin/qr" size="sm" className="gap-1.5 text-xs">
+            <Sparkles className="w-3.5 h-3.5" />
+            Kelola & Generate QR
+          </Button>
         </div>
       </div>
 
@@ -113,11 +111,9 @@ export default async function AdminDashboardPage() {
           title="QR Code Terbaru"
           subtitle="5 QR Code terakhir yang dibuat di platform"
           action={
-            <Link href="/admin/qr">
-              <Button variant="ghost" size="sm" className="text-xs">
-                Lihat Seluruh QR ({stats.totalQr}) &rarr;
-              </Button>
-            </Link>
+            <Button href="/admin/qr" variant="ghost" size="sm" className="text-xs">
+              Lihat Seluruh QR ({stats.totalQr}) &rarr;
+            </Button>
           }
         />
 
