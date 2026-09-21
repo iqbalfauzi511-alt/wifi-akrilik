@@ -771,16 +771,13 @@ export default function AdminQrManager({ initialQrs = [] }) {
                     )}
                   </button>
                 </th>
-                <th className="py-3.5 px-4 font-semibold">Kode QR</th>
-                <th className="py-3.5 px-4 font-semibold">Batch</th>
-                <th className="py-3.5 px-4 font-semibold">Status</th>
-                <th className="py-3.5 px-4 font-semibold">Bisnis / Kafe</th>
-                <th className="py-3.5 px-3 font-semibold text-center">Maps</th>
-                <th className="py-3.5 px-3 font-semibold text-center">Wi-Fi</th>
-                <th className="py-3.5 px-4 font-semibold text-center">Total Scan</th>
-                <th className="py-3.5 px-4 font-semibold">Dibuat</th>
-                <th className="py-3.5 px-4 font-semibold">Diaktifkan</th>
-                <th className="py-3.5 px-4 font-semibold text-right">Aksi</th>
+                <th className="py-3 px-4 font-semibold font-mono text-[10px]">HARDWARE CODE</th>
+                <th className="py-3 px-3 font-semibold font-mono text-[10px]">BATCH ID</th>
+                <th className="py-3 px-3 font-semibold font-mono text-[10px]">FLEET STATUS</th>
+                <th className="py-3 px-4 font-semibold font-mono text-[10px]">ASSIGNED PARTNER</th>
+                <th className="py-3 px-3 font-semibold font-mono text-[10px] text-center">SCANS</th>
+                <th className="py-3 px-3 font-semibold font-mono text-[10px]">CREATED DATE</th>
+                <th className="py-3 px-4 font-semibold font-mono text-[10px] text-right">HARDWARE ACTIONS</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -815,185 +812,144 @@ export default function AdminQrManager({ initialQrs = [] }) {
                         </button>
                       </td>
 
-                      {/* Code */}
-                      <td className="py-3.5 px-4">
-                        <span className="font-mono font-bold text-slate-900">{qr.code}</span>
+                      {/* Hardware Code */}
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-2">
+                          <QrCode className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                          <span className="font-mono font-bold text-slate-900 text-xs">{qr.code}</span>
+                        </div>
                       </td>
 
-                    {/* Batch */}
-                    <td className="py-3.5 px-4">
-                      {qr.batchCode ? (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-100 font-mono text-[11px] font-semibold">
-                          {qr.batchCode}
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
-                          Satuan
-                        </span>
-                      )}
-                    </td>
+                      {/* Batch ID */}
+                      <td className="py-3 px-3">
+                        {qr.batchCode ? (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200 font-mono text-[10px] font-bold">
+                            {qr.batchCode}
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-slate-50 text-slate-500 text-[10px] font-mono">
+                            SINGLE
+                          </span>
+                        )}
+                      </td>
 
-                    {/* Status Badge */}
-                    <td className="py-3.5 px-4">
-                      <Badge status={qr.status} />
-                    </td>
+                      {/* Fleet Status Pill */}
+                      <td className="py-3 px-3">
+                        {qr.status === 'active' && (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            Active
+                          </span>
+                        )}
+                        {qr.status === 'blank' && (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                            Available
+                          </span>
+                        )}
+                        {qr.status === 'sold' && (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                            <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                            Packaged
+                          </span>
+                        )}
+                        {qr.status === 'disabled' && (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                            <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                            Disabled
+                          </span>
+                        )}
+                      </td>
 
-                    {/* Business */}
-                    <td className="py-3.5 px-4">
-                      {qr.businessName ? (
-                        <div>
-                          <div className="font-semibold text-slate-900">{qr.businessName}</div>
-                          {qr.ownerEmail && (
-                            <div className="text-[11px] text-slate-400">{qr.ownerEmail}</div>
+                      {/* Assigned Partner */}
+                      <td className="py-3 px-4">
+                        {qr.businessName ? (
+                          <div>
+                            <div className="font-bold text-slate-900 text-xs">{qr.businessName}</div>
+                            <div className="text-[10px] text-slate-400">Café &amp; Specialty Venue</div>
+                          </div>
+                        ) : (
+                          <span className="text-slate-400 italic text-[11px] font-mono">Unassigned (In Warehouse Stock)</span>
+                        )}
+                      </td>
+
+                      {/* Scans */}
+                      <td className="py-3 px-3 text-center">
+                        <span className="font-mono font-bold text-slate-900 text-xs">{qr.scanCount}</span>
+                      </td>
+
+                      {/* Created Date */}
+                      <td className="py-3 px-3 text-xs text-slate-500 font-mono">
+                        {new Date(qr.createdAt).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric',
+                        })}
+                      </td>
+
+                      {/* Hardware Actions */}
+                      <td className="py-3 px-4 text-right">
+                        <div className="flex items-center justify-end gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => setSelectedQr(qr)}
+                            className="px-2 py-1 rounded-md text-[11px] font-semibold border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-colors shadow-2xs"
+                          >
+                            Preview
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleDownloadSinglePng(qr)}
+                            className="px-2 py-1 rounded-md text-[11px] font-semibold border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-colors shadow-2xs"
+                          >
+                            Download
+                          </button>
+
+                          {(qr.status !== 'blank' || qr.businessName) && (
+                            <button
+                              type="button"
+                              onClick={() => setQrToReset(qr)}
+                              className="px-2 py-1 rounded-md text-[11px] font-semibold border border-slate-200 hover:border-rose-200 bg-white hover:bg-rose-50 text-rose-600 transition-colors shadow-2xs"
+                            >
+                              Reset
+                            </button>
+                          )}
+
+                          {qr.status === 'active' && (
+                            <button
+                              type="button"
+                              disabled={statusUpdatingId === qr.id}
+                              onClick={() => handleStatusChange(qr.id, 'disabled')}
+                              className="px-2 py-1 rounded-md text-[11px] font-semibold border border-rose-200 bg-rose-50/60 hover:bg-rose-100 text-rose-700 transition-colors shadow-2xs"
+                            >
+                              Disable
+                            </button>
+                          )}
+
+                          {qr.status === 'disabled' && (
+                            <button
+                              type="button"
+                              disabled={statusUpdatingId === qr.id}
+                              onClick={() => handleStatusChange(qr.id, 'active')}
+                              className="px-2 py-1 rounded-md text-[11px] font-semibold border border-emerald-200 bg-emerald-50/60 hover:bg-emerald-100 text-emerald-700 transition-colors shadow-2xs"
+                            >
+                              Activate
+                            </button>
+                          )}
+
+                          {qr.status === 'blank' && (
+                            <button
+                              type="button"
+                              disabled={statusUpdatingId === qr.id}
+                              onClick={() => handleStatusChange(qr.id, 'sold')}
+                              className="px-2 py-1 rounded-md text-[11px] font-semibold border border-blue-200 bg-blue-50/60 hover:bg-blue-100 text-blue-700 transition-colors shadow-2xs"
+                            >
+                              Packaged
+                            </button>
                           )}
                         </div>
-                      ) : (
-                        <span className="text-slate-400 italic text-xs">Belum dihubungkan</span>
-                      )}
-                    </td>
-
-                    {/* Google Maps Feature Status */}
-                    <td className="py-3.5 px-3 text-center">
-                      {(qr.googleMapsReviewUrl || qr.googleMapsUrl) ? (
-                        <a
-                          href={qr.googleMapsReviewUrl || qr.googleMapsUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors mx-auto"
-                          title={`Review Google Maps: ${qr.googleMapsReviewUrl || qr.googleMapsUrl}`}
-                        >
-                          <span className="text-xs font-bold">✓</span>
-                        </a>
-                      ) : (
-                        <span className="text-slate-300 font-bold">—</span>
-                      )}
-                    </td>
-
-                    {/* Wi-Fi Feature Status */}
-                    <td className="py-3.5 px-3 text-center">
-                      {qr.wifiEnabled ? (
-                        <span
-                          className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-brand-50 text-brand-700 font-bold text-xs mx-auto"
-                          title="Akses Wi-Fi Aktif"
-                        >
-                          ✓
-                        </span>
-                      ) : (
-                        <span className="text-slate-300 font-bold">—</span>
-                      )}
-                    </td>
-
-                    {/* Scans */}
-                    <td className="py-3.5 px-4 text-center font-bold text-slate-800">
-                      {qr.scanCount}
-                    </td>
-
-                    {/* Created */}
-                    <td className="py-3.5 px-4 text-xs text-slate-500">
-                      {new Date(qr.createdAt).toLocaleDateString('id-ID', {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric',
-                      })}
-                    </td>
-
-                    {/* Activated */}
-                    <td className="py-3.5 px-4 text-xs text-slate-500">
-                      {qr.activatedAt
-                        ? new Date(qr.activatedAt).toLocaleDateString('id-ID', {
-                            day: 'numeric',
-                            month: 'short',
-                            year: 'numeric',
-                          })
-                        : '-'}
-                    </td>
-
-                    {/* Actions */}
-                    <td className="py-3.5 px-4 text-right">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setSelectedQr(qr)}
-                          className="text-xs p-1.5"
-                          title="Lihat / Unduh QR"
-                        >
-                          <Eye className="w-4 h-4 text-slate-500" />
-                        </Button>
-
-                        {/* Status Switcher Actions */}
-                        {qr.status === 'blank' && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            disabled={statusUpdatingId === qr.id}
-                            onClick={() => handleStatusChange(qr.id, 'sold')}
-                            className="text-[11px] py-1 px-2 text-amber-700 hover:bg-amber-50"
-                          >
-                            Set SOLD
-                          </Button>
-                        )}
-
-                        {qr.status === 'active' && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            disabled={statusUpdatingId === qr.id}
-                            onClick={() => handleStatusChange(qr.id, 'disabled')}
-                            className="text-[11px] py-1 px-2 text-rose-700 hover:bg-rose-50"
-                          >
-                            Disable
-                          </Button>
-                        )}
-
-                        {qr.status === 'disabled' && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            disabled={statusUpdatingId === qr.id}
-                            onClick={() => handleStatusChange(qr.id, 'active')}
-                            className="text-[11px] py-1 px-2 text-emerald-700 hover:bg-emerald-50"
-                          >
-                            Activate
-                          </Button>
-                        )}
-
-                        {/* Reset QR Button (For active, sold, or disabled QRs) */}
-                        {(qr.status !== 'blank' || qr.businessName) && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setQrToReset(qr)}
-                            className="text-[11px] py-1 px-2 text-rose-600 hover:bg-rose-50 border-rose-200"
-                            title="Reset QR ini ke status BLANK"
-                          >
-                            <RotateCcw className="w-3 h-3 mr-1" />
-                            Reset
-                          </Button>
-                        )}
-
-                        <a
-                          href={`/q/${qr.code}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 transition-colors"
-                          title="Buka halaman scan"
-                        >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                        </a>
-
-                        {/* Delete QR Button */}
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setQrToDelete(qr)}
-                          className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50"
-                          title="Hapus QR Code permanen"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </Button>
-                      </div>
-                    </td>
+                      </td>
                   </tr>
                 );
               })
