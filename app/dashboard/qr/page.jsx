@@ -10,7 +10,7 @@ import Button from '@/components/ui/Button';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'QR Code Saya — Smart Wi-Fi',
+  title: 'Perangkat Cobascan — Cobascan',
 };
 
 export default async function CustomerQrPage() {
@@ -22,17 +22,17 @@ export default async function CustomerQrPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">QR Code Bisnis</h2>
+          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Perangkat Cobascan (QR &amp; NFC)</h2>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Daftar seluruh QR Code akrilik yang aktif dan terhubung dengan {business?.businessName || 'bisnis Anda'}.
+            Daftar seluruh perangkat Cobascan yang aktif dan terhubung dengan {business?.businessName || 'bisnis Anda'}.
           </p>
         </div>
       </div>
 
       <Card>
         <CardHeader
-          title={`Total ${myQrs.length} QR Code`}
-          subtitle="Setiap QR Code memiliki URL unik dan menghitung scan secara otomatis"
+          title={`Total ${myQrs.length} Perangkat Cobascan`}
+          subtitle="Setiap perangkat memiliki kode unik untuk scan kamera atau tap smartphone via NFC"
         />
         <CustomerQrTable
           qrList={myQrs}

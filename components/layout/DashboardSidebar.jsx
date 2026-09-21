@@ -18,13 +18,13 @@ export default function DashboardSidebar({ role = 'customer', businessName }) {
 
   const customerNav = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, exact: true },
-    { name: 'QR Code Saya', href: '/dashboard/qr', icon: QrCode },
-    { name: 'Business Settings', href: '/dashboard/settings', icon: Settings },
+    { name: 'Cobascan Saya', href: '/dashboard/qr', icon: QrCode },
+    { name: 'Pengaturan Bisnis', href: '/dashboard/settings', icon: Settings },
   ];
 
   const adminNav = [
     { name: 'Ringkasan Platform', href: '/admin', icon: LayoutDashboard, exact: true },
-    { name: 'Kelola Seluruh QR', href: '/admin/qr', icon: QrCode },
+    { name: 'Kelola Cobascan', href: '/admin/qr', icon: QrCode },
     { name: 'Pengguna & Bisnis', href: '/admin/users', icon: Users },
   ];
 
@@ -35,15 +35,15 @@ export default function DashboardSidebar({ role = 'customer', businessName }) {
       {/* Brand */}
       <div className="p-6 border-b border-slate-100 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-brand-600 flex items-center justify-center text-white shadow-sm shadow-brand-500/20">
-            <Wifi className="w-4 h-4" />
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-700 to-indigo-600 flex items-center justify-center text-white shadow-sm shadow-brand-500/20">
+            <QrCode className="w-4 h-4" />
           </div>
           <div>
             <div className="font-bold text-slate-900 text-sm tracking-tight leading-none">
-              Smart Wi-Fi
+              Cobascan
             </div>
             <div className="text-[10px] uppercase font-bold tracking-wider text-brand-600 mt-1">
-              {role === 'admin' ? 'Admin Portal' : 'Customer Area'}
+              {role === 'admin' ? 'Admin Portal' : 'QR + NFC Platform'}
             </div>
           </div>
         </Link>

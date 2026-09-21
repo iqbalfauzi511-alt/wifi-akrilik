@@ -21,7 +21,7 @@ export default async function AdminLayout({ children }) {
       <DashboardSidebar role="admin" />
       <div className="flex-1 flex flex-col min-w-0">
         <DashboardHeader
-          title="Smart Wi-Fi Admin Portal"
+          title="Cobascan Admin Portal"
           session={session}
         />
         <main className="flex-1 p-3.5 sm:p-6 lg:p-8 pb-24 lg:pb-8 max-w-7xl w-full mx-auto">

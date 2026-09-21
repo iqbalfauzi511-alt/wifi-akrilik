@@ -4,8 +4,8 @@ import LoginForm from '@/components/auth/LoginForm';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Masuk — Smart Wi-Fi',
-  description: 'Kelola Wi-Fi dan QR bisnis Anda dengan mudah.',
+  title: 'Masuk — Cobascan',
+  description: 'Platform QR + NFC untuk bisnis. Kelola ulasan Google Review dan fasilitas Wi-Fi.',
 };
 
 export default function LoginPage({ searchParams }) {

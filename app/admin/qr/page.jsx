@@ -5,7 +5,7 @@ import AdminQrManager from '@/components/admin/AdminQrManager';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Manajemen QR — Smart Wi-Fi Admin',
+  title: 'Manajemen Cobascan — Cobascan Admin',
 };
 
 export default async function AdminQrPage() {

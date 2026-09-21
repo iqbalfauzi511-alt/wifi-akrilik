@@ -13,8 +13,8 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }) {
   const { code } = params;
   return {
-    title: `Smart QR & NFC — ${code}`,
-    description: 'Rating review Google Maps bisnis.',
+    title: `Cobascan — ${code}`,
+    description: 'Cobascan: Google Review & akses bisnis.',
   };
 }
 
@@ -30,9 +30,9 @@ export default async function VisitorQrPage({ params }) {
           <div className="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center mx-auto mb-4">
             <AlertTriangle className="w-7 h-7" />
           </div>
-          <h2 className="text-xl font-bold text-slate-900 mb-2">QR Tidak Ditemukan</h2>
+          <h2 className="text-xl font-bold text-slate-900 mb-2">Cobascan Tidak Ditemukan</h2>
           <p className="text-sm text-slate-500 mb-6 leading-relaxed">
-            QR / NFC Code yang Anda akses (<span className="font-mono font-semibold">{code}</span>) tidak terdaftar pada sistem Smart QR.
+            Kode yang Anda akses (<span className="font-mono font-semibold">{code}</span>) tidak terdaftar pada sistem Cobascan.
           </p>
           <Link href="/">
             <Button variant="outline" className="w-full">
@@ -79,9 +79,9 @@ export default async function VisitorQrPage({ params }) {
               <span>Paket: {qr.batchCode}</span>
             </div>
           )}
-          <h2 className="text-2xl font-extrabold text-slate-900 mb-2">QR Belum Diaktifkan</h2>
+          <h2 className="text-2xl font-extrabold text-slate-900 mb-2">Cobascan Belum Diaktifkan</h2>
           <p className="text-sm text-slate-500 mb-6 leading-relaxed">
-            QR / NFC ini belum diaktifkan. Jika Anda pemilik produk, silakan lakukan aktivasi bisnis.
+            Perangkat Cobascan (QR &amp; NFC) ini belum diaktifkan. Jika Anda pemilik produk, silakan lakukan aktivasi bisnis.
           </p>
           <div className="space-y-3">
             <Link href={`/activate/${code}`}>
@@ -92,7 +92,7 @@ export default async function VisitorQrPage({ params }) {
             </Link>
             <Link href="/">
               <Button variant="ghost" size="sm" className="w-full text-xs">
-                Tentang Smart QR + NFC
+                Tentang Cobascan
               </Button>
             </Link>
           </div>

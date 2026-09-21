@@ -8,7 +8,7 @@ import AdminUsersManager from '@/components/admin/AdminUsersManager';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Pengguna & Bisnis — Smart Wi-Fi Admin',
+  title: 'Pengguna & Bisnis — Cobascan Admin',
 };
 
 export default async function AdminUsersPage() {

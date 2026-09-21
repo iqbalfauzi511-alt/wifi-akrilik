@@ -15,8 +15,8 @@ export default function CustomerQrTable({ qrList = [], businessName, wifiEnabled
   if (qrList.length === 0) {
     return (
       <EmptyState
-        title="Belum Ada QR Terhubung"
-        description="Scan QR Code fisik pada akrilik meja Anda untuk mengaktifkan dan menghubungkannya dengan kafe ini."
+        title="Belum Ada Perangkat Cobascan"
+        description="Scan QR Code atau tap chip NFC pada produk fisik Cobascan untuk mengaktifkan dan menghubungkannya dengan bisnis ini."
       />
     );
   }
@@ -27,9 +27,9 @@ export default function CustomerQrTable({ qrList = [], businessName, wifiEnabled
         <table className="w-full text-left text-sm text-slate-600">
           <thead className="bg-slate-50 text-[11px] uppercase tracking-wider text-slate-400 border-y border-slate-200/80">
             <tr>
-              <th className="py-3.5 px-4 font-semibold">Kode QR</th>
+              <th className="py-3.5 px-4 font-semibold">Perangkat Cobascan</th>
               <th className="py-3.5 px-4 font-semibold">Status</th>
-              <th className="py-3.5 px-4 font-semibold text-center">Total Scan</th>
+              <th className="py-3.5 px-4 font-semibold text-center">Total Scan &amp; Tap</th>
               <th className="py-3.5 px-4 font-semibold">Tanggal Aktivasi</th>
               <th className="py-3.5 px-4 font-semibold text-right">Aksi</th>
             </tr>
@@ -93,7 +93,7 @@ export default function CustomerQrTable({ qrList = [], businessName, wifiEnabled
           setSelectedQr(null);
           setActiveTab('review');
         }}
-        title={`QR Code ${selectedQr?.code || ''}`}
+        title={`Perangkat Cobascan ${selectedQr?.code || ''}`}
         description={`Terhubung ke ${businessName || 'Bisnis Anda'}`}
       >
         {selectedQr && (
@@ -111,7 +111,7 @@ export default function CustomerQrTable({ qrList = [], businessName, wifiEnabled
                   }`}
                 >
                   <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
-                  <span>QR Review Maps</span>
+                  <span>Google Review (Direct)</span>
                 </button>
                 <button
                   type="button"
@@ -123,7 +123,7 @@ export default function CustomerQrTable({ qrList = [], businessName, wifiEnabled
                   }`}
                 >
                   <Wifi className="w-3.5 h-3.5 text-brand-600" />
-                  <span>QR Akses Wi-Fi</span>
+                  <span>Google Review &amp; Wi-Fi</span>
                 </button>
               </div>
             )}
@@ -131,7 +131,7 @@ export default function CustomerQrTable({ qrList = [], businessName, wifiEnabled
             {activeTab === 'review' ? (
               <div>
                 <p className="text-xs text-center text-slate-500 mb-3">
-                  📍 <strong>Tujuan:</strong> Langsung membuka link Google Maps Review saat di-scan atau di-tap NFC.
+                  📍 <strong>Tujuan:</strong> Mengarahkan langsung ke ulasan Google Review saat pelanggan scan QR atau tap NFC.
                 </p>
                 <QRCodeViewer
                   code={selectedQr.code}
@@ -144,7 +144,7 @@ export default function CustomerQrTable({ qrList = [], businessName, wifiEnabled
             ) : (
               <div>
                 <p className="text-xs text-center text-slate-500 mb-3">
-                  📶 <strong>Tujuan:</strong> Akses Wi-Fi tamu. Pengunjung wajib klik review Google Maps terlebih dahulu sebelum password Wi-Fi ditampilkan.
+                  📶 <strong>Tujuan:</strong> Akses Wi-Fi tamu. Pengunjung diarahkan membuka Google Review sebelum password Wi-Fi dapat dibuka.
                 </p>
                 <QRCodeViewer
                   code={selectedQr.code}

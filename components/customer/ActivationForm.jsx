@@ -47,7 +47,7 @@ export default function ActivationForm({ code }) {
       setIsSuccess(true);
     } else {
       setIsSubmitting(false);
-      setErrorMessage(result?.error || 'Gagal mengaktifkan Smart QR + NFC');
+      setErrorMessage(result?.error || 'Gagal mengaktifkan Cobascan');
       if (result?.errors) {
         setFieldErrors(result.errors);
       }
@@ -60,9 +60,9 @@ export default function ActivationForm({ code }) {
         <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3">
           <CheckCircle2 className="w-8 h-8" />
         </div>
-        <h3 className="text-2xl font-extrabold text-slate-900 mb-1">Aktivasi Berhasil!</h3>
+        <h3 className="text-2xl font-extrabold text-slate-900 mb-1">Cobascan Anda Aktif!</h3>
         <p className="text-sm text-slate-600 mb-4">
-          Produk Smart QR &amp; NFC <span className="font-mono font-bold text-slate-900">{code}</span> kini telah aktif dan terhubung ke{' '}
+          Produk Cobascan (QR + NFC) <span className="font-mono font-bold text-slate-900">{code}</span> kini telah aktif dan siap digunakan pelanggan untuk{' '}
           <strong className="text-slate-900">{savedBusinessName || 'Bisnis Anda'}</strong>.
         </p>
 
@@ -79,7 +79,7 @@ export default function ActivationForm({ code }) {
         <div className="mt-6 pt-5 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-2.5">
           <Link href="/dashboard" className="w-full sm:flex-1">
             <Button variant="outline" className="w-full text-xs">
-              Ke Dashboard Bisnis
+              Ke Dashboard Cobascan
             </Button>
           </Link>
           <a
@@ -110,9 +110,9 @@ export default function ActivationForm({ code }) {
         {/* Business Name */}
         <div>
           <Input
-            label="Nama Bisnis / Toko / Kafe"
+            label="Nama Bisnis"
             name="businessName"
-            placeholder="Contoh: Kopi Senja / Bengkel Maju / Klinik Sehat"
+            placeholder="Contoh: Kopi Senja / Toko Berkah"
             defaultValue=""
             autoComplete="off"
             error={fieldErrors.businessName}
@@ -122,10 +122,10 @@ export default function ActivationForm({ code }) {
           />
         </div>
 
-        {/* Google Maps Review URL */}
+        {/* Google Review Link */}
         <div>
           <Input
-            label="Link Review Google Maps"
+            label="Google Review Link"
             name="googleMapsReviewUrl"
             type="url"
             placeholder="https://maps.app.goo.gl/... atau https://maps.google.com/..."
@@ -133,36 +133,36 @@ export default function ActivationForm({ code }) {
             autoComplete="off"
             error={fieldErrors.googleMapsReviewUrl || fieldErrors.googleMapsUrl}
             required
-            prefix={<MapPin className="w-4 h-4 text-emerald-600" />}
-            helperText="Masukkan link Google Maps yang mengarahkan pelanggan ke halaman untuk memberikan rating/review."
+            prefix={<Star className="w-4 h-4 text-amber-500 fill-amber-400" />}
+            helperText="Arahkan pelanggan langsung ke halaman review bisnis Anda di Google."
           />
         </div>
 
-        {/* Features Toggle Section */}
+        {/* Features Priority Section */}
         <div className="pt-3 pb-1 border-t border-slate-100 space-y-3">
           <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">
-            Fitur Produk Smart QR + NFC
+            Fitur Cobascan
           </label>
 
-          {/* Feature 1: Google Maps Rating (Always Active) */}
-          <div className="flex items-start gap-3 p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200/80">
-            <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
-              <Star className="w-4 h-4 fill-emerald-600 text-emerald-600" />
+          {/* Feature 1: Google Review (Fungsi Utama) */}
+          <div className="flex items-start gap-3 p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/80">
+            <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 mt-0.5">
+              <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
             </div>
             <div className="flex-1 text-xs">
               <div className="flex items-center gap-2">
-                <span className="font-bold text-slate-900">Google Maps Rating</span>
-                <span className="px-2 py-0.5 rounded-md bg-emerald-200/70 text-emerald-800 text-[10px] font-bold">
-                  Utama &amp; Aktif
+                <span className="font-bold text-slate-900">Google Review</span>
+                <span className="px-2 py-0.5 rounded-md bg-amber-200/70 text-amber-900 text-[10px] font-bold">
+                  Fungsi Utama
                 </span>
               </div>
               <p className="text-slate-600 mt-0.5 leading-relaxed">
-                Customer diarahkan untuk memberikan ulasan &amp; bintang 5 di Google Maps bisnis Anda.
+                Arahkan pelanggan langsung ke halaman review bisnis.
               </p>
             </div>
           </div>
 
-          {/* Feature 2: Wi-Fi Access (Optional) */}
+          {/* Feature 2: Wi-Fi Access (Fitur Tambahan) */}
           <div
             onClick={() => setIsWifiEnabled((prev) => !prev)}
             className={`flex items-start gap-3 p-3.5 rounded-xl border transition-all cursor-pointer select-none ${
@@ -182,16 +182,16 @@ export default function ActivationForm({ code }) {
             <div className="flex-1 text-xs">
               <div className="flex items-center gap-2">
                 <label htmlFor="wifiEnabledCheckbox" className="font-bold text-slate-900 cursor-pointer">
-                  Akses Wi-Fi Gratis
+                  Wi-Fi Access
                 </label>
                 <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
                   isWifiEnabled ? 'bg-brand-200/80 text-brand-800' : 'bg-slate-100 text-slate-500'
                 }`}>
-                  {isWifiEnabled ? 'Diaktifkan' : 'Opsional'}
+                  {isWifiEnabled ? 'Aktif' : 'Fitur Tambahan'}
                 </span>
               </div>
               <p className="text-slate-500 mt-0.5 leading-relaxed">
-                Cocok untuk kafe, restoran, hotel, atau coworking. Password baru diberikan setelah customer mengonfirmasi rating.
+                Berikan akses Wi-Fi kepada pelanggan melalui Cobascan.
               </p>
             </div>
           </div>
@@ -207,15 +207,15 @@ export default function ActivationForm({ code }) {
 
             <div>
               <Input
-                label="Nama Wi-Fi (SSID)"
+                label="Nama Wi-Fi"
                 name="wifiName"
-                placeholder="Contoh: KOPI SENJA"
+                placeholder="Contoh: KAFE-TAMU"
                 defaultValue=""
                 autoComplete="off"
                 error={fieldErrors.wifiName}
                 required={isWifiEnabled}
                 prefix={<Wifi className="w-4 h-4 text-slate-400" />}
-                helperText="Nama jaringan Wi-Fi yang dicari customer di ponsel mereka."
+                helperText="Nama SSID jaringan Wi-Fi bisnis Anda."
               />
             </div>
 
@@ -224,13 +224,13 @@ export default function ActivationForm({ code }) {
                 label="Password Wi-Fi"
                 name="wifiPassword"
                 type="text"
-                placeholder="Contoh: kopisenja123"
+                placeholder="Contoh: password123"
                 defaultValue=""
                 autoComplete="off"
                 error={fieldErrors.wifiPassword}
                 required={isWifiEnabled}
                 prefix={<KeyRound className="w-4 h-4 text-slate-400" />}
-                helperText="Password ini aman dan disembunyikan sampai customer menekan tombol Saya Sudah Memberikan Rating."
+                helperText="Password ini disembunyikan sampai customer selesai membuka Google Review."
               />
             </div>
           </div>
@@ -243,7 +243,7 @@ export default function ActivationForm({ code }) {
             isLoading={isSubmitting}
             className="w-full shadow-md shadow-brand-600/20"
           >
-            <span>Aktifkan Smart QR + NFC</span>
+            <span>Aktifkan Cobascan</span>
             <ArrowRight className="w-4 h-4 ml-1.5" />
           </Button>
         </div>

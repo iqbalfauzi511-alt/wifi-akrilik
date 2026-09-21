@@ -15,13 +15,13 @@ export default function MobileBottomNav({ role = 'customer' }) {
 
   const customerNav = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, exact: true },
-    { name: 'QR Bisnis', href: '/dashboard/qr', icon: QrCode },
+    { name: 'Cobascan', href: '/dashboard/qr', icon: QrCode },
     { name: 'Pengaturan', href: '/dashboard/settings', icon: Settings },
   ];
 
   const adminNav = [
     { name: 'Ringkasan', href: '/admin', icon: LayoutDashboard, exact: true },
-    { name: 'Kelola QR', href: '/admin/qr', icon: QrCode },
+    { name: 'Cobascan', href: '/admin/qr', icon: QrCode },
     { name: 'Users', href: '/admin/users', icon: Users },
   ];
 

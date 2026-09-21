@@ -9,7 +9,7 @@ import Button from '@/components/ui/Button';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Pengaturan — Smart QR + NFC',
+  title: 'Pengaturan — Cobascan',
 };
 
 export default async function CustomerSettingsPage() {
@@ -24,16 +24,16 @@ export default async function CustomerSettingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Pengaturan Smart QR + NFC</h2>
+        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Pengaturan Cobascan</h2>
         <p className="text-xs sm:text-sm text-slate-500 mt-1">
-          Kelola link Google Maps rating dan opsi akses Wi-Fi bisnis Anda.
+          Kelola link Google Review dan opsi akses Wi-Fi bisnis Anda.
         </p>
       </div>
 
       {!business ? (
         <Card className="p-8 text-center max-w-lg">
           <p className="text-sm text-slate-600 mb-4">
-            Anda belum memiliki data bisnis. Silakan atur profil bisnis terlebih dahulu.
+            Anda belum memiliki data bisnis. Silakan lengkapi profil bisnis terlebih dahulu.
           </p>
           <Link href="/dashboard/setup">
             <Button size="sm">Atur Profil Bisnis</Button>

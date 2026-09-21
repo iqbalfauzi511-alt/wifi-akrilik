@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Wifi } from 'lucide-react';
+import { QrCode } from 'lucide-react';
 import Card from '@/components/ui/Card';
 import { createClient } from '@/lib/supabase/client';
 
@@ -50,15 +50,15 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
         {/* Brand */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2.5 group">
-            <div className="w-12 h-12 rounded-2xl bg-brand-600 flex items-center justify-center text-white shadow-md shadow-brand-500/25 group-hover:scale-105 transition-transform">
-              <Wifi className="w-6 h-6" />
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-700 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-brand-500/25 group-hover:scale-105 transition-transform">
+              <QrCode className="w-6 h-6" />
             </div>
           </Link>
           <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Smart Wi-Fi
+            Cobascan
           </h2>
           <p className="mt-2 text-sm text-slate-500">
-            Kelola Wi-Fi dan QR bisnis Anda dengan mudah.
+            Platform QR + NFC untuk bisnis. Scan. Tap. Connect. Review.
           </p>
         </div>
 
@@ -100,7 +100,7 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
           </button>
 
           <p className="mt-4 text-center text-[12px] text-slate-400 leading-relaxed">
-            Masuk dengan akun Google Anda untuk mengaktifkan QR dan mengelola pengaturan Wi-Fi kafe secara instan.
+            Masuk dengan akun Google Anda untuk mengaktifkan perangkat Cobascan dan mengelola ulasan Google Review serta akses Wi-Fi bisnis.
           </p>
         </Card>
 

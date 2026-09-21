@@ -66,7 +66,7 @@ export default function QRCodeViewer({
   const handleDownloadPng = () => {
     if (!dataUrl) return;
     const link = document.createElement('a');
-    link.download = `SmartQR-${code}${cleanSuffix}.png`;
+    link.download = `Cobascan-${code}${cleanSuffix}.png`;
     link.href = dataUrl;
     link.click();
   };
@@ -85,7 +85,7 @@ export default function QRCodeViewer({
       const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.download = `SmartQR-${code}${cleanSuffix}.svg`;
+      link.download = `Cobascan-${code}${cleanSuffix}.svg`;
       link.href = url;
       link.click();
       URL.revokeObjectURL(url);
@@ -100,7 +100,7 @@ export default function QRCodeViewer({
       <div className="relative p-5 bg-white rounded-3xl border-2 border-slate-200/90 shadow-xl transition-transform hover:scale-[1.01]">
         <div className="text-center mb-3">
           <p className="text-[10px] uppercase font-bold tracking-widest text-slate-400">
-            SMART WI-FI QR
+            COBASCAN QR &bull; NFC
           </p>
           <p className="text-xs font-mono font-bold text-slate-700 mt-0.5">{code}</p>
         </div>
@@ -124,7 +124,7 @@ export default function QRCodeViewer({
 
         <div className="text-center mt-3 pt-2.5 border-t border-slate-100">
           <p className="text-[11px] font-medium text-slate-500">
-            {subtitle || 'Scan untuk Terhubung ke Wi-Fi'}
+            {subtitle || 'Scan QR atau Tap NFC'}
           </p>
         </div>
       </div>
@@ -167,7 +167,7 @@ export default function QRCodeViewer({
               ) : (
                 <>
                   <Copy className="w-3.5 h-3.5" />
-                  Salin URL QR
+                  Salin URL Cobascan
                 </>
               )}
             </Button>

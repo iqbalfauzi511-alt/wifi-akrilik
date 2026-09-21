@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { Wifi, AlertCircle, ArrowLeft, ShieldAlert, CheckCircle2, ExternalLink } from 'lucide-react';
+import { QrCode, Radio, AlertCircle, ArrowLeft, ShieldAlert, CheckCircle2, ExternalLink } from 'lucide-react';
 import { getCurrentSession } from '@/lib/auth/session';
 import { getQrByCode } from '@/lib/db/queries/qr';
 import ActivationForm from '@/components/customer/ActivationForm';
@@ -11,8 +11,8 @@ import Button from '@/components/ui/Button';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Aktivasi Smart QR + NFC',
-  description: 'Aktifkan produk Smart QR & NFC fisik untuk bisnis Anda.',
+  title: 'Aktifkan Cobascan',
+  description: 'Hubungkan QR & NFC Anda dengan Google Review dan fitur bisnis lainnya.',
 };
 
 export default async function ActivateQrPage({ params }) {
@@ -67,18 +67,17 @@ export default async function ActivateQrPage({ params }) {
           <div className="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 sm:p-8 text-center">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200 mb-3">
               <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>QR SUDAH AKTIF</span>
+              <span>COBASCAN SUDAH AKTIF</span>
             </div>
 
             <h2 className="text-2xl font-extrabold text-slate-900 mb-1">
               {qr.businessName || 'Bisnis Anda'}
             </h2>
             <p className="text-xs text-slate-500 mb-5">
+              ⭐ Fitur Utama: <strong className="text-emerald-700 font-semibold">Google Review</strong> •{' '}
               {qr.wifiEnabled ? (
                 <>Wi-Fi: <strong className="text-slate-800 font-semibold">{qr.wifiName}</strong> • </>
-              ) : (
-                <>Fitur: <strong className="text-emerald-700 font-semibold">Google Maps Rating</strong> • </>
-              )}
+              ) : null}
               {qr.batchCode ? (
                 <span>Paket: <strong className="font-mono text-slate-800 font-semibold">{qr.batchCode}</strong></span>
               ) : (
@@ -159,24 +158,24 @@ export default async function ActivateQrPage({ params }) {
 
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-12 h-12 rounded-2xl bg-brand-600 flex items-center justify-center text-white shadow-md shadow-brand-500/25 mx-auto mb-3">
-            <Wifi className="w-6 h-6" />
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-700 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-brand-500/25 mx-auto mb-3">
+            <QrCode className="w-6 h-6" />
           </div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-50 border border-brand-200/80 text-brand-700 text-xs font-semibold mb-2">
-            <span>Kode Produk: <strong className="font-mono font-bold">{code}</strong></span>
+            <span>Kode Cobascan: <strong className="font-mono font-bold">{code}</strong></span>
           </div>
 
           {qr.batchCode && (
             <div className="my-2 p-3 rounded-2xl bg-indigo-50/80 border border-indigo-200 text-xs text-indigo-900 leading-relaxed max-w-sm mx-auto">
-              📦 QR ini adalah bagian dari <strong>Paket {qr.batchCode}</strong>. Mengaktifkan QR ini akan otomatis mengaktifkan seluruh QR dalam paket yang sama untuk bisnis Anda.
+              📦 Perangkat ini adalah bagian dari <strong>Paket {qr.batchCode}</strong>. Mengaktifkan kode ini akan otomatis mengaktifkan seluruh perangkat Cobascan dalam paket untuk bisnis Anda.
             </div>
           )}
 
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Aktivasi Smart QR + NFC
+            Aktifkan Cobascan
           </h1>
           <p className="mt-1.5 text-xs sm:text-sm text-slate-500 max-w-sm mx-auto">
-            Lengkapi data bisnis Anda. Setelah disimpan, seluruh akrilik QR dan NFC dalam paket langsung aktif seketika!
+            Hubungkan QR &amp; NFC Anda dengan Google Review dan fitur bisnis lainnya.
           </p>
         </div>
 

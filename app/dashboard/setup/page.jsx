@@ -7,7 +7,7 @@ import Card, { CardHeader } from '@/components/ui/Card';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Setup Profil Bisnis — Smart QR + NFC',
+  title: 'Setup Profil Bisnis — Cobascan',
 };
 
 export default async function BusinessSetupPage() {
@@ -28,7 +28,7 @@ export default async function BusinessSetupPage() {
           Lengkapi Profil Bisnis Anda
         </h2>
         <p className="text-xs sm:text-sm text-slate-500 mt-1">
-          Daftarkan informasi bisnis, link Google Maps review, dan fasilitas akses Wi-Fi Anda.
+          Daftarkan informasi bisnis, link Google Review, dan opsi akses Wi-Fi Anda.
         </p>
       </div>
 

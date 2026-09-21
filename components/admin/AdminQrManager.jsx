@@ -305,7 +305,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
     try {
       setIsDownloadingZip(true);
       const zip = new JSZip();
-      const folder = zip.folder('smartwifi-qr-codes');
+      const folder = zip.folder('cobascan-qr-codes');
       const appUrl =
         (typeof window !== 'undefined' && window.location.origin)
           ? window.location.origin
@@ -332,7 +332,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
       const downloadUrl = URL.createObjectURL(content);
       const a = document.createElement('a');
       a.href = downloadUrl;
-      a.download = `smartwifi-qr-batch-${Date.now()}.zip`;
+      a.download = `cobascan-qr-batch-${Date.now()}.zip`;
       a.click();
       URL.revokeObjectURL(downloadUrl);
       setIsDownloadingZip(false);

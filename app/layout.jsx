@@ -8,10 +8,10 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: 'Smart Wi-Fi QR — Scan QR, Follow Instagram, Dapatkan Wi-Fi',
+  title: 'Cobascan — Scan. Tap. Connect. Review.',
   description:
-    'Solusi akrilik QR Code modern untuk kafe dan bisnis. Pengunjung scan QR, follow Instagram Anda, dan dapatkan password Wi-Fi secara instan.',
-  keywords: 'smart wifi, qr wifi, instagram marketing, wifi cafe, qr code akrilik',
+    'Platform QR + NFC untuk bisnis. Hubungkan pelanggan langsung ke Google Review bisnis Anda dan sediakan akses Wi-Fi dalam satu scan atau tap.',
+  keywords: 'cobascan, qr nfc bisnis, google review qr, nfc review, qr wifi, tap nfc, smart qr',
 };
 
 export default function RootLayout({ children }) {

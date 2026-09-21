@@ -135,7 +135,7 @@ export default function VisitorScanExperience({
 
           <div className="inline-flex items-center gap-1.5 mt-2 px-3 py-1 rounded-full bg-white/10 text-slate-300 text-[11px] sm:text-xs font-medium">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-            <span>Smart QR • Tap NFC</span>
+            <span>Cobascan &bull; QR &bull; NFC Tap</span>
           </div>
         </div>
 
@@ -302,7 +302,7 @@ export default function VisitorScanExperience({
 
         {/* Card Footer */}
         <div className="bg-slate-50 px-6 py-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
-          <span>Smart QR + NFC</span>
+          <span>Cobascan &bull; Scan. Tap. Connect. Review.</span>
           <span className="font-mono font-medium">{code}</span>
         </div>
       </div>

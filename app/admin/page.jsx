@@ -21,7 +21,7 @@ import Badge from '@/components/ui/Badge';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Admin Dashboard — Smart Wi-Fi',
+  title: 'Admin Dashboard — Cobascan',
 };
 
 export default async function AdminDashboardPage() {
@@ -37,10 +37,10 @@ export default async function AdminDashboardPage() {
             Platform Owner
           </div>
           <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-            Smart Wi-Fi Admin
+            Cobascan Admin
           </h2>
           <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Pantau inventori QR Code fisik, bisnis terdaftar, dan akumulasi seluruh scan pengunjung.
+            Pantau inventori Cobascan (QR &amp; NFC), bisnis terdaftar, dan akumulasi seluruh scan/tap pengunjung.
           </p>
         </div>
 

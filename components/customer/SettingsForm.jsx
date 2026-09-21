@@ -62,7 +62,7 @@ export default function SettingsForm({ business }) {
 
         <div className="space-y-4">
           <Input
-            label="Nama Bisnis / Toko / Kafe"
+            label="Nama Bisnis"
             name="businessName"
             defaultValue={business?.businessName || ''}
             error={fieldErrors.businessName}
@@ -71,14 +71,14 @@ export default function SettingsForm({ business }) {
           />
 
           <Input
-            label="Link Review Google Maps"
+            label="Google Review Link"
             name="googleMapsReviewUrl"
             type="url"
             defaultValue={business?.googleMapsReviewUrl || business?.googleMapsUrl || ''}
             error={fieldErrors.googleMapsReviewUrl || fieldErrors.googleMapsUrl}
             required
-            prefix={<MapPin className="w-4 h-4 text-emerald-600" />}
-            helperText="Masukkan link Google Maps yang mengarahkan pelanggan ke halaman untuk memberikan rating/review."
+            prefix={<Star className="w-4 h-4 text-amber-500 fill-amber-400" />}
+            helperText="Masukkan link Google Maps review yang mengarahkan pelanggan langsung ke halaman ulasan bisnis Anda."
           />
 
           {/* Wi-Fi Access Toggle */}
@@ -102,16 +102,16 @@ export default function SettingsForm({ business }) {
               <div className="flex-1 text-xs">
                 <div className="flex items-center gap-2">
                   <label htmlFor="settingsWifiToggle" className="font-bold text-slate-900 cursor-pointer">
-                    Sediakan Akses Wi-Fi Pelanggan
+                    Wi-Fi Access
                   </label>
                   <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
                     isWifiEnabled ? 'bg-brand-200/80 text-brand-800' : 'bg-slate-100 text-slate-500'
                   }`}>
-                    {isWifiEnabled ? 'Aktif' : 'Nonaktif'}
+                    {isWifiEnabled ? 'Aktif' : 'Fitur Tambahan (Nonaktif)'}
                   </span>
                 </div>
                 <p className="text-slate-500 mt-0.5 leading-relaxed">
-                  Jika diaktifkan, halaman publik akan menampilkan opsi Wi-Fi setelah pengunjung menekan tombol konfirmasi rating Google Maps. Jika dinonaktifkan, halaman hanya akan menampilkan tombol rating Google Maps.
+                  Berikan akses Wi-Fi kepada pelanggan melalui Cobascan. Jika aktif, pengunjung dapat membuka password setelah melihat halaman ulasan. Jika dinonaktifkan, scan/tap langsung membuka Google Review.
                 </p>
               </div>
             </div>
@@ -126,7 +126,7 @@ export default function SettingsForm({ business }) {
               </div>
 
               <Input
-                label="Nama Wi-Fi (SSID)"
+                label="Nama Wi-Fi"
                 name="wifiName"
                 defaultValue={business?.wifiName || ''}
                 error={fieldErrors.wifiName}
@@ -143,19 +143,19 @@ export default function SettingsForm({ business }) {
                 error={fieldErrors.wifiPassword}
                 required={isWifiEnabled}
                 prefix={<KeyRound className="w-4 h-4 text-slate-400" />}
-                helperText="Password ini disembunyikan sampai pelanggan menekan tombol Saya Sudah Memberikan Rating."
+                helperText="Password ini disembunyikan sampai pelanggan selesai membuka Google Review."
               />
             </div>
           )}
 
           <div className="p-3.5 rounded-xl bg-amber-50/90 border border-amber-200 text-xs text-amber-900 leading-relaxed">
-            💡 <strong>Rekomendasi untuk Pemilik (Owner):</strong> Produk fisik QR dan chip NFC Anda selalu mengarahkan customer ke URL yang sama. Jika Anda mengganti password Wi-Fi atau mengubah link Google Maps di sini, seluruh QR akrilik dan tag NFC di meja <strong>otomatis langsung ter-update seketika tanpa perlu dicetak ulang!</strong>
+            💡 <strong>Satu Perangkat Cobascan (QR + NFC):</strong> Perangkat fisik QR dan chip NFC Anda selalu mengarahkan customer ke URL yang sama. Setiap perubahan Google Review Link atau password Wi-Fi di sini <strong>otomatis langsung aktif di seluruh meja tanpa perlu cetak ulang!</strong>
           </div>
         </div>
 
         <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
           <p className="text-[11px] text-slate-400">
-            Perubahan berlaku instan ke seluruh QR dan NFC aktif.
+            Perubahan berlaku instan ke seluruh perangkat Cobascan (QR &amp; NFC).
           </p>
           <Button type="submit" isLoading={isSubmitting} size="md">
             Simpan Perubahan
