@@ -233,8 +233,11 @@ export default function AdminQrManager({ initialQrs = [] }) {
       const zip = new JSZip();
       const folder = zip.folder('smartwifi-qr-codes');
       const appUrl =
-        process.env.NEXT_PUBLIC_APP_URL ||
-        (typeof window !== 'undefined' ? window.location.origin : 'https://wifi-akrilik.vercel.app');
+        (typeof window !== 'undefined' && window.location.origin)
+          ? window.location.origin
+          : (process.env.NEXT_PUBLIC_APP_URL && !process.env.NEXT_PUBLIC_APP_URL.includes('supabase.co')
+              ? process.env.NEXT_PUBLIC_APP_URL
+              : 'https://wifi-akrilik.vercel.app');
       const cleanOrigin = appUrl.replace(/\/$/, '');
 
       for (const qr of filteredQrs) {

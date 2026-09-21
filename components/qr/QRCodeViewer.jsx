@@ -11,7 +11,12 @@ export default function QRCodeViewer({ code, size = 260, showActions = true, sub
   const [isGenerating, setIsGenerating] = useState(true);
 
   // Compute full target URL
-  const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
+  const origin =
+    typeof window !== 'undefined' && window.location.origin
+      ? window.location.origin
+      : (process.env.NEXT_PUBLIC_APP_URL && !process.env.NEXT_PUBLIC_APP_URL.includes('supabase.co')
+          ? process.env.NEXT_PUBLIC_APP_URL
+          : 'https://wifi-akrilik.vercel.app');
   const targetUrl = `${origin}/q/${code}`;
 
   useEffect(() => {

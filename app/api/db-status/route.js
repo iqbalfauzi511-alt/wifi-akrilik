@@ -31,6 +31,9 @@ export async function GET() {
     const database = getDb();
     dbType = startsWithPostgres ? 'postgresql-supabase' : 'pglite-temporary';
 
+    // Ensure database tables exist
+    await ensureDatabaseInitialized();
+
     // Test a basic query
     const testResult = await database.execute(sql`SELECT 1 as test`);
     connectionSuccess = Boolean(testResult);
