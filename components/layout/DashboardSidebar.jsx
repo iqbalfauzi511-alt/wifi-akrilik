@@ -31,7 +31,7 @@ export default function DashboardSidebar({ role = 'customer', businessName }) {
   const navItems = role === 'admin' ? adminNav : customerNav;
 
   return (
-    <aside className="w-64 bg-white border-r border-slate-200/80 flex flex-col shrink-0 min-h-screen">
+    <aside className="hidden lg:flex w-64 bg-white border-r border-slate-200/80 flex-col shrink-0 min-h-screen sticky top-0 h-screen">
       {/* Brand */}
       <div className="p-6 border-b border-slate-100 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">

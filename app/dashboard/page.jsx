@@ -135,9 +135,14 @@ export default async function CustomerDashboardPage() {
                 </div>
 
                 <div className="bg-white p-3.5 rounded-xl border border-slate-200/80">
-                  <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
-                    <KeyRound className="w-3.5 h-3.5 text-amber-500" />
-                    <span>Password Wi-Fi</span>
+                  <div className="flex items-center justify-between text-xs text-slate-400 font-medium">
+                    <div className="flex items-center gap-1.5">
+                      <KeyRound className="w-3.5 h-3.5 text-amber-500" />
+                      <span>Password Wi-Fi</span>
+                    </div>
+                    <Link href="/dashboard/settings" className="text-[11px] font-bold text-brand-600 hover:text-brand-700 hover:underline">
+                      Ubah
+                    </Link>
                   </div>
                   <p className="text-sm font-mono font-bold text-slate-900 mt-1 truncate">
                     {business.wifiPassword}

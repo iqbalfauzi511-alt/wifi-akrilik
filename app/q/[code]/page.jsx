@@ -106,7 +106,7 @@ export default async function VisitorQrPage({ params }) {
   await recordScanLog(qr.id, userAgent);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-slate-100/70 sm:py-12">
+    <div className="min-h-screen flex flex-col items-center justify-center px-3 py-6 sm:py-12 bg-slate-100/70">
       <VisitorScanExperience
         code={qr.code}
         businessName={qr.businessName || 'Bisnis Anda'}

@@ -10,13 +10,13 @@ import Card from '@/components/ui/Card';
 import QRCodeViewer from '@/components/qr/QRCodeViewer';
 import { activateQrAction } from '@/lib/actions/qr-actions';
 
-export default function ActivationForm({ code, existingBusiness }) {
+export default function ActivationForm({ code }) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
   const [isSuccess, setIsSuccess] = useState(false);
-  const [savedBusinessName, setSavedBusinessName] = useState(existingBusiness?.businessName || '');
+  const [savedBusinessName, setSavedBusinessName] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -100,7 +100,8 @@ export default function ActivationForm({ code, existingBusiness }) {
             label="Nama Bisnis / Kafe"
             name="businessName"
             placeholder="Contoh: Kopi Senja"
-            defaultValue={existingBusiness?.businessName || ''}
+            defaultValue=""
+            autoComplete="off"
             error={fieldErrors.businessName}
             required
             prefix={<Building className="w-4 h-4 text-slate-400" />}
@@ -114,7 +115,8 @@ export default function ActivationForm({ code, existingBusiness }) {
             name="instagramUrl"
             type="url"
             placeholder="https://www.instagram.com/kopisenja/"
-            defaultValue={existingBusiness?.instagramUrl || ''}
+            defaultValue=""
+            autoComplete="off"
             error={fieldErrors.instagramUrl}
             required
             prefix={<Instagram className="w-4 h-4 text-slate-400" />}
@@ -127,7 +129,8 @@ export default function ActivationForm({ code, existingBusiness }) {
             label="Nama Wi-Fi (SSID)"
             name="wifiName"
             placeholder="Contoh: KOPI SENJA"
-            defaultValue={existingBusiness?.wifiName || ''}
+            defaultValue=""
+            autoComplete="off"
             error={fieldErrors.wifiName}
             required
             prefix={<Wifi className="w-4 h-4 text-slate-400" />}
@@ -141,7 +144,8 @@ export default function ActivationForm({ code, existingBusiness }) {
             name="wifiPassword"
             type="text"
             placeholder="Contoh: kopisenja123"
-            defaultValue={existingBusiness?.wifiPassword || ''}
+            defaultValue=""
+            autoComplete="off"
             error={fieldErrors.wifiPassword}
             required
             prefix={<KeyRound className="w-4 h-4 text-slate-400" />}

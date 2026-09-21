@@ -93,6 +93,10 @@ export default function SettingsForm({ business }) {
               helperText="Setiap kali Anda mengganti password di sini, semua akrilik QR di meja otomatis menyajikan password baru."
             />
           </div>
+
+          <div className="p-3.5 rounded-xl bg-amber-50/90 border border-amber-200 text-xs text-amber-900 leading-relaxed">
+            💡 <strong>Rekomendasi untuk Pemilik (Owner):</strong> Ganti password Wi-Fi secara berkala (misal seminggu atau sebulan sekali). Anda <strong>tidak perlu mencetak ulang akrilik di meja</strong> karena seluruh akrilik QR akan langsung menyajikan password baru secara instan begitu disimpan di sini.
+          </div>
         </div>
 
         <div className="pt-4 border-t border-slate-100 flex items-center justify-between">

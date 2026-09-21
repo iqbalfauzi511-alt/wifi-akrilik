@@ -174,8 +174,8 @@ export default async function ActivateQrPage({ params }) {
           </p>
         </div>
 
-        {/* Activation Form */}
-        <ActivationForm code={code} existingBusiness={session.business} />
+        {/* Activation Form - Always clean and empty */}
+        <ActivationForm code={code} />
       </div>
     </div>
   );

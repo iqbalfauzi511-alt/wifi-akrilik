@@ -43,9 +43,31 @@ export default function VisitorScanExperience({
   };
 
   const handleCopyPassword = () => {
-    navigator.clipboard.writeText(wifiPassword);
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(wifiPassword).catch(() => {
+        fallbackCopy(wifiPassword);
+      });
+    } else {
+      fallbackCopy(wifiPassword);
+    }
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
+  };
+
+  const fallbackCopy = (text) => {
+    try {
+      const el = document.createElement('textarea');
+      el.value = text;
+      el.setAttribute('readonly', '');
+      el.style.position = 'absolute';
+      el.style.left = '-9999px';
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+    } catch (e) {
+      console.warn('Fallback copy failed:', e);
+    }
   };
 
   return (
@@ -53,23 +75,23 @@ export default function VisitorScanExperience({
       {/* Main Acrylic-Style Visitor Card */}
       <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
         {/* Header Ribbon / Business Info */}
-        <div className="bg-gradient-to-b from-slate-900 to-slate-800 text-white p-7 text-center relative">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-inner mb-3">
-            <Wifi className="w-7 h-7 text-brand-400" />
+        <div className="bg-gradient-to-b from-slate-900 to-slate-800 text-white p-5 sm:p-7 text-center relative">
+          <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-inner mb-2.5">
+            <Wifi className="w-6 h-6 sm:w-7 sm:h-7 text-brand-400" />
           </div>
 
-          <h2 className="text-2xl font-black tracking-tight text-white uppercase">
+          <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white uppercase break-words px-2">
             ☕ {businessName}
           </h2>
 
-          <div className="inline-flex items-center gap-1.5 mt-2 px-3 py-1 rounded-full bg-white/10 text-slate-300 text-xs font-medium">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="inline-flex items-center gap-1.5 mt-2 px-3 py-1 rounded-full bg-white/10 text-slate-300 text-[11px] sm:text-xs font-medium">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
             <span>Wi-Fi Khusus Pelanggan</span>
           </div>
         </div>
 
         {/* Action Content */}
-        <div className="p-6 sm:p-8 space-y-6">
+        <div className="p-4 sm:p-7 space-y-5 sm:space-y-6">
           {!hasFollowed ? (
             /* Step 1: Follow Instagram prompt */
             <div className="space-y-5 text-center">
