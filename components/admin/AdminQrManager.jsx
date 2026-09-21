@@ -44,6 +44,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
   const [batchToReset, setBatchToReset] = useState(null);
   const [isGenerateOpen, setIsGenerateOpen] = useState(false);
   const [generateQuantity, setGenerateQuantity] = useState('5');
+  const [generateMode, setGenerateMode] = useState('batch'); // 'batch' | 'individual'
   const [isGenerating, setIsGenerating] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const [isDownloadingZip, setIsDownloadingZip] = useState(false);
@@ -84,13 +85,14 @@ export default function AdminQrManager({ initialQrs = [] }) {
     });
   }, [qrList, statusFilter, batchFilter, searchTerm]);
 
-  // Mass Generate handler (Creates 1 batch + X QRs)
+  // Mass Generate handler (Creates 1 batch or individual QRs)
   const handleMassGenerate = async (e) => {
     e.preventDefault();
     setIsGenerating(true);
     setNotification(null);
     const formData = new FormData();
     formData.set('quantity', generateQuantity);
+    formData.set('mode', generateMode);
 
     const result = await massGenerateQrAction(formData);
     setIsGenerating(false);
@@ -100,9 +102,13 @@ export default function AdminQrManager({ initialQrs = [] }) {
         setQrList((prev) => [...result.newQrs, ...prev]);
       }
       setIsGenerateOpen(false);
+      const successMsg =
+        generateMode === 'individual'
+          ? `Berhasil membuat ${result.count || generateQuantity} QR Code Satuan (Aktivasi Mandiri)!`
+          : `Berhasil membuat Batch ${result.batch?.batchCode || ''} berisi ${result.count || generateQuantity} QR Code baru!`;
       setNotification({
         type: 'success',
-        message: `Berhasil membuat Batch ${result.batch?.batchCode || ''} berisi ${result.count || generateQuantity} QR Code baru!`,
+        message: successMsg,
       });
       router.refresh();
     } else {
@@ -440,11 +446,13 @@ export default function AdminQrManager({ initialQrs = [] }) {
                     {/* Batch */}
                     <td className="py-3.5 px-4">
                       {qr.batchCode ? (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono text-[11px] font-semibold">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-100 font-mono text-[11px] font-semibold">
                           {qr.batchCode}
                         </span>
                       ) : (
-                        <span className="text-slate-300 font-mono text-xs">-</span>
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+                          Satuan
+                        </span>
                       )}
                     </td>
 
@@ -575,32 +583,82 @@ export default function AdminQrManager({ initialQrs = [] }) {
         </div>
       </div>
 
-      {/* Mass QR Batch Generator Modal */}
+      {/* Mass QR Generator Modal */}
       <Modal
         isOpen={isGenerateOpen}
         onClose={() => setIsGenerateOpen(false)}
-        title="Generate QR Batch Baru"
-        description="Buat satu paket batch QR Code unik baru dengan status BLANK (siap jual/cetak)."
+        title="Generate QR Code Baru"
+        description="Pilih tipe pembuatan QR Code dengan status BLANK (siap cetak/jual)."
       >
         <form onSubmit={handleMassGenerate} className="space-y-4">
+          {/* Mode Selector */}
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1">
-              Jumlah QR Code dalam Batch:
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+              Tipe Pembuatan QR:
+            </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <button
+                type="button"
+                onClick={() => setGenerateMode('batch')}
+                className={`text-left p-3 rounded-xl border-2 transition-all ${
+                  generateMode === 'batch'
+                    ? 'border-brand-600 bg-brand-50/50 shadow-sm'
+                    : 'border-slate-200 hover:border-slate-300 bg-white'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs font-bold text-slate-900">📦 Paket (Batch)</span>
+                  {generateMode === 'batch' && (
+                    <span className="w-2 h-2 rounded-full bg-brand-600"></span>
+                  )}
+                </div>
+                <p className="text-[11px] text-slate-500 leading-snug">
+                  1 Paket untuk 1 Kafe. Aktivasi 1 QR otomatis mengaktifkan semua QR dalam paket.
+                </p>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setGenerateMode('individual')}
+                className={`text-left p-3 rounded-xl border-2 transition-all ${
+                  generateMode === 'individual'
+                    ? 'border-brand-600 bg-brand-50/50 shadow-sm'
+                    : 'border-slate-200 hover:border-slate-300 bg-white'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs font-bold text-slate-900">🏷️ Satuan (Mandiri)</span>
+                  {generateMode === 'individual' && (
+                    <span className="w-2 h-2 rounded-full bg-brand-600"></span>
+                  )}
+                </div>
+                <p className="text-[11px] text-slate-500 leading-snug">
+                  Aktivasi 1 per 1. Setiap QR berdiri sendiri dan diaktivasi masing-masing (eceran).
+                </p>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+              Jumlah QR Code:
             </label>
             <select
               value={generateQuantity}
               onChange={(e) => setGenerateQuantity(e.target.value)}
               className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm font-medium focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
             >
-              <option value="5">5 QR Code (Paket Standar Kafe)</option>
+              <option value="5">5 QR Code</option>
               <option value="10">10 QR Code</option>
               <option value="25">25 QR Code</option>
               <option value="50">50 QR Code</option>
-              <option value="100">100 QR Code (Batch Akrilik Besar)</option>
+              <option value="100">100 QR Code</option>
               <option value="250">250 QR Code</option>
             </select>
             <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
-              Sistem akan otomatis membuat Batch baru (contoh: <span className="font-mono">BATCH-001</span>) dan seluruh QR di dalamnya berstatus <span className="font-semibold text-slate-700">BLANK</span>. Ketika customer mengaktifkan 1 QR dalam batch ini, seluruh QR lainnya otomatis terhubung ke bisnis yang sama.
+              {generateMode === 'batch'
+                ? 'Sistem akan memberi kode batch (misal BATCH-001). 1 customer yang scan akan langsung mengaktifkan semua QR dalam batch ini.'
+                : 'QR yang dibuat berdiri sendiri tanpa grup batch. Setiap QR harus diaktivasi secara terpisah.'}
             </p>
           </div>
 

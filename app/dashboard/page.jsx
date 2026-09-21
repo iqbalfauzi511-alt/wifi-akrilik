@@ -19,6 +19,7 @@ import Card, { CardHeader } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 import EmptyState from '@/components/ui/EmptyState';
+import CustomerQrTable from '@/components/customer/CustomerQrTable';
 
 export const dynamic = 'force-dynamic';
 
@@ -184,7 +185,7 @@ export default async function CustomerDashboardPage() {
             />
           </div>
 
-          {/* Recent QRs preview */}
+          {/* Recent QRs preview with Barcode Viewer & Download */}
           <Card>
             <CardHeader
               title="QR Code Terpasang"
@@ -198,61 +199,10 @@ export default async function CustomerDashboardPage() {
               }
             />
 
-            {myQrs.length === 0 ? (
-              <EmptyState
-                title="Belum Ada QR Terhubung"
-                description="Scan kode QR fisik pertama Anda dengan kamera smartphone untuk menghubungkannya ke bisnis ini."
-              />
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm text-slate-600">
-                  <thead className="bg-slate-50 text-[11px] uppercase tracking-wider text-slate-400 border-y border-slate-200/80">
-                    <tr>
-                      <th className="py-3 px-4 font-semibold">Kode QR</th>
-                      <th className="py-3 px-4 font-semibold">Status</th>
-                      <th className="py-3 px-4 font-semibold text-center">Total Scan</th>
-                      <th className="py-3 px-4 font-semibold">Tanggal Aktivasi</th>
-                      <th className="py-3 px-4 font-semibold text-right">Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {myQrs.slice(0, 5).map((qr) => (
-                      <tr key={qr.id} className="hover:bg-slate-50/60 transition-colors">
-                        <td className="py-3.5 px-4 font-mono font-bold text-slate-900">
-                          {qr.code}
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <Badge status={qr.status} />
-                        </td>
-                        <td className="py-3.5 px-4 text-center font-semibold text-slate-800">
-                          {qr.scanCount}
-                        </td>
-                        <td className="py-3.5 px-4 text-xs text-slate-500">
-                          {qr.activatedAt
-                            ? new Date(qr.activatedAt).toLocaleDateString('id-ID', {
-                                day: 'numeric',
-                                month: 'short',
-                                year: 'numeric',
-                              })
-                            : '-'}
-                        </td>
-                        <td className="py-3.5 px-4 text-right">
-                          <a
-                            href={`/q/${qr.code}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-700"
-                          >
-                            <span>Tes Scan</span>
-                            <ExternalLink className="w-3.5 h-3.5" />
-                          </a>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+            <CustomerQrTable
+              qrList={myQrs.slice(0, 5)}
+              businessName={business.businessName}
+            />
           </Card>
         </>
       )}

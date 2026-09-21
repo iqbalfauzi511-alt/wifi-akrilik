@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Wifi, Instagram, Building, KeyRound, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Wifi, Instagram, Building, KeyRound, CheckCircle2, ArrowRight, ExternalLink } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Card from '@/components/ui/Card';
+import QRCodeViewer from '@/components/qr/QRCodeViewer';
 import { activateQrAction } from '@/lib/actions/qr-actions';
 
 export default function ActivationForm({ code, existingBusiness }) {
@@ -14,6 +16,7 @@ export default function ActivationForm({ code, existingBusiness }) {
   const [errorMessage, setErrorMessage] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
   const [isSuccess, setIsSuccess] = useState(false);
+  const [savedBusinessName, setSavedBusinessName] = useState(existingBusiness?.businessName || '');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,14 +26,13 @@ export default function ActivationForm({ code, existingBusiness }) {
 
     const formData = new FormData(e.currentTarget);
     formData.set('code', code);
+    const bName = formData.get('businessName') || '';
 
     const result = await activateQrAction(null, formData);
 
     if (result?.success) {
+      setSavedBusinessName(bName);
       setIsSuccess(true);
-      setTimeout(() => {
-        router.push('/dashboard');
-      }, 1500);
     } else {
       setIsSubmitting(false);
       setErrorMessage(result?.error || 'Gagal mengaktifkan QR Code');
@@ -42,15 +44,44 @@ export default function ActivationForm({ code, existingBusiness }) {
 
   if (isSuccess) {
     return (
-      <Card className="text-center p-8 border-emerald-200 bg-emerald-50/50">
-        <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4">
+      <Card className="text-center p-6 sm:p-8 border-emerald-200 bg-white shadow-xl">
+        <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3">
           <CheckCircle2 className="w-8 h-8" />
         </div>
-        <h3 className="text-xl font-bold text-slate-900 mb-1">Aktivasi Berhasil!</h3>
-        <p className="text-sm text-slate-600 mb-5">
-          QR Code <span className="font-mono font-bold">{code}</span> kini telah aktif dan terhubung ke bisnis Anda.
+        <h3 className="text-2xl font-extrabold text-slate-900 mb-1">Aktivasi Berhasil!</h3>
+        <p className="text-sm text-slate-600 mb-4">
+          QR Code <span className="font-mono font-bold text-slate-900">{code}</span> kini telah aktif dan terhubung ke{' '}
+          <strong className="text-slate-900">{savedBusinessName || 'Bisnis Anda'}</strong>.
         </p>
-        <p className="text-xs text-slate-500">Mengarahkan Anda ke Dashboard...</p>
+
+        {/* Barcode Viewer with Download & Copy actions */}
+        <div className="flex justify-center my-3">
+          <QRCodeViewer
+            code={code}
+            subtitle={savedBusinessName}
+            size={220}
+            showActions={true}
+          />
+        </div>
+
+        <div className="mt-6 pt-5 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-2.5">
+          <Link href="/dashboard" className="w-full sm:flex-1">
+            <Button variant="outline" className="w-full text-xs">
+              Ke Dashboard Bisnis
+            </Button>
+          </Link>
+          <a
+            href={`/q/${code}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full sm:flex-1"
+          >
+            <Button variant="primary" className="w-full text-xs">
+              <span>Tes Scan Pengunjung</span>
+              <ExternalLink className="w-3.5 h-3.5 ml-1" />
+            </Button>
+          </a>
+        </div>
       </Card>
     );
   }

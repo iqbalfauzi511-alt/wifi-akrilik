@@ -1,10 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { Wifi, AlertCircle, ArrowLeft, ShieldAlert } from 'lucide-react';
+import { Wifi, AlertCircle, ArrowLeft, ShieldAlert, CheckCircle2, ExternalLink } from 'lucide-react';
 import { getCurrentSession } from '@/lib/auth/session';
 import { getQrByCode } from '@/lib/db/queries/qr';
 import ActivationForm from '@/components/customer/ActivationForm';
+import QRCodeViewer from '@/components/qr/QRCodeViewer';
 import Button from '@/components/ui/Button';
 
 export const dynamic = 'force-dynamic';
@@ -47,29 +48,67 @@ export default async function ActivateQrPage({ params }) {
     );
   }
 
-  // Check 2: QR already active (Enforce ownership security - no sensitive owner data)
+  // Check 2: QR already active - Show the Barcode and business info so the user can view & download it again!
   if (qr.status === 'active') {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
-        <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200 shadow-xl p-8 text-center">
-          <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center mx-auto mb-4">
-            <ShieldAlert className="w-7 h-7" />
+      <div className="min-h-screen bg-slate-50/70 py-10 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md mx-auto">
+          {/* Back Link */}
+          <div className="mb-4">
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Kembali ke Dashboard</span>
+            </Link>
           </div>
-          <h2 className="text-xl font-bold text-slate-900 mb-2">QR sudah diaktifkan.</h2>
-          <p className="text-sm text-slate-500 mb-6 leading-relaxed">
-            QR ini sudah terhubung dengan bisnis lain.
-          </p>
-          <div className="space-y-2">
-            <Link href={`/q/${code}`}>
-              <Button variant="primary" className="w-full">
-                Lihat Halaman Scan QR Ini
-              </Button>
-            </Link>
-            <Link href="/dashboard">
-              <Button variant="ghost" className="w-full text-xs">
-                Ke Dashboard Saya
-              </Button>
-            </Link>
+
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 sm:p-8 text-center">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200 mb-3">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              <span>QR SUDAH AKTIF</span>
+            </div>
+
+            <h2 className="text-2xl font-extrabold text-slate-900 mb-1">
+              {qr.businessName || 'Bisnis Anda'}
+            </h2>
+            <p className="text-xs text-slate-500 mb-5">
+              Wi-Fi: <strong className="text-slate-800 font-semibold">{qr.wifiName}</strong>
+              {qr.batchCode && (
+                <span> • Paket: <strong className="font-mono text-slate-800 font-semibold">{qr.batchCode}</strong></span>
+              )}
+            </p>
+
+            {/* Acrylic Frame QR Viewer with Download & Copy buttons */}
+            <div className="flex justify-center">
+              <QRCodeViewer
+                code={code}
+                subtitle={qr.businessName}
+                size={230}
+                showActions={true}
+              />
+            </div>
+
+            <div className="mt-6 pt-5 border-t border-slate-100 space-y-2.5">
+              <a
+                href={`/q/${code}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full block"
+              >
+                <Button variant="primary" className="w-full shadow-md shadow-brand-600/20">
+                  <span>Tes Halaman Scan Pengunjung</span>
+                  <ExternalLink className="w-4 h-4 ml-1.5" />
+                </Button>
+              </a>
+
+              <Link href="/dashboard" className="w-full block">
+                <Button variant="outline" className="w-full text-xs">
+                  Buka Dashboard Bisnis
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
