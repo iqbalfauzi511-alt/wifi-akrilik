@@ -20,6 +20,7 @@ import {
   Check,
   Wifi,
   MapPin,
+  Trash2,
 } from 'lucide-react';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
@@ -31,6 +32,8 @@ import {
   updateQrStatusAction,
   resetQrAction,
   resetBatchAction,
+  deleteQrAction,
+  deleteBatchAction,
 } from '@/lib/actions/qr-actions';
 
 export default function AdminQrManager({ initialQrs = [] }) {
@@ -45,6 +48,9 @@ export default function AdminQrManager({ initialQrs = [] }) {
   const [selectedQr, setSelectedQr] = useState(null);
   const [qrToReset, setQrToReset] = useState(null);
   const [batchToReset, setBatchToReset] = useState(null);
+  const [qrToDelete, setQrToDelete] = useState(null);
+  const [batchToDelete, setBatchToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [isGenerateOpen, setIsGenerateOpen] = useState(false);
   const [generateQuantity, setGenerateQuantity] = useState('5');
   const [generateMode, setGenerateMode] = useState('batch'); // 'batch' | 'individual'
@@ -230,6 +236,65 @@ export default function AdminQrManager({ initialQrs = [] }) {
     }
   };
 
+  // Handle Delete Single QR
+  const handleDeleteQr = async () => {
+    if (!qrToDelete) return;
+
+    try {
+      setIsDeleting(true);
+      const targetId = qrToDelete.id;
+      const targetCode = qrToDelete.code;
+
+      const result = await deleteQrAction(targetId);
+      setIsDeleting(false);
+      setQrToDelete(null);
+
+      if (result?.success) {
+        setQrList((prev) => prev.filter((item) => item.id !== targetId));
+        setNotification({
+          type: 'success',
+          message: `QR Code ${targetCode} berhasil dihapus permanen.`,
+        });
+        router.refresh();
+      } else {
+        alert(result?.error || 'Gagal menghapus QR');
+      }
+    } catch (err) {
+      setIsDeleting(false);
+      alert('Terjadi kendala saat menghapus QR');
+    }
+  };
+
+  // Handle Delete Entire Batch
+  const handleDeleteBatch = async () => {
+    if (!batchToDelete) return;
+
+    try {
+      setIsDeleting(true);
+      const targetBatchId = batchToDelete.batchId;
+      const targetBatchCode = batchToDelete.batchCode;
+
+      const result = await deleteBatchAction(targetBatchId);
+      setIsDeleting(false);
+      setBatchToDelete(null);
+
+      if (result?.success) {
+        setQrList((prev) => prev.filter((item) => item.batchId !== targetBatchId && item.batchCode !== targetBatchCode));
+        setBatchFilter('all');
+        setNotification({
+          type: 'success',
+          message: `Batch ${targetBatchCode} beserta ${result.count || 0} QR di dalamnya berhasil dihapus permanen.`,
+        });
+        router.refresh();
+      } else {
+        alert(result?.error || 'Gagal menghapus batch');
+      }
+    } catch (err) {
+      setIsDeleting(false);
+      alert('Terjadi kendala saat menghapus batch');
+    }
+  };
+
   // Bulk ZIP Download handler
   const handleBulkDownload = async () => {
     if (filteredQrs.length === 0) {
@@ -379,24 +444,44 @@ export default function AdminQrManager({ initialQrs = [] }) {
               </select>
 
               {batchFilter !== 'all' && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    const firstMatch = qrList.find((q) => q.batchCode === batchFilter);
-                    if (firstMatch) {
-                      setBatchToReset({
-                        batchId: firstMatch.batchId,
-                        batchCode: batchFilter,
-                      });
-                    }
-                  }}
-                  className="text-[11px] py-1 px-2 text-rose-600 border-rose-200 hover:bg-rose-50"
-                  title="Reset semua QR di batch ini"
-                >
-                  <RotateCcw className="w-3 h-3 mr-1" />
-                  Reset Batch
-                </Button>
+                <div className="flex items-center gap-1.5">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const firstMatch = qrList.find((q) => q.batchCode === batchFilter);
+                      if (firstMatch) {
+                        setBatchToReset({
+                          batchId: firstMatch.batchId,
+                          batchCode: batchFilter,
+                        });
+                      }
+                    }}
+                    className="text-[11px] py-1 px-2 text-rose-600 border-rose-200 hover:bg-rose-50"
+                    title="Reset semua QR di batch ini"
+                  >
+                    <RotateCcw className="w-3 h-3 mr-1" />
+                    Reset Batch
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const firstMatch = qrList.find((q) => q.batchCode === batchFilter);
+                      if (firstMatch) {
+                        setBatchToDelete({
+                          batchId: firstMatch.batchId,
+                          batchCode: batchFilter,
+                        });
+                      }
+                    }}
+                    className="text-[11px] py-1 px-2 text-rose-700 bg-rose-50 border-rose-200 hover:bg-rose-100"
+                    title="Hapus seluruh paket batch ini dan QR di dalamnya"
+                  >
+                    <Trash2 className="w-3 h-3 mr-1" />
+                    Hapus Batch
+                  </Button>
+                </div>
               )}
             </div>
           )}
@@ -609,6 +694,17 @@ export default function AdminQrManager({ initialQrs = [] }) {
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
                         </a>
+
+                        {/* Delete QR Button */}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setQrToDelete(qr)}
+                          className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50"
+                          title="Hapus QR Code permanen"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </Button>
                       </div>
                     </td>
                   </tr>
@@ -811,6 +907,97 @@ export default function AdminQrManager({ initialQrs = [] }) {
                 </span>
               </div>
             )}
+          </div>
+        )}
+      </Modal>
+
+      {/* Delete Single QR Confirmation Modal */}
+      <Modal
+        isOpen={!!qrToDelete}
+        onClose={() => setQrToDelete(null)}
+        title="Hapus QR Code Permanen"
+        description="Tindakan ini tidak dapat dibatalkan."
+      >
+        {qrToDelete && (
+          <div className="space-y-4 pt-2">
+            <div className="p-4 bg-rose-50 rounded-2xl border border-rose-200 text-rose-800 text-xs flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-sm text-rose-900">
+                  Hapus QR Code {qrToDelete.code}?
+                </p>
+                <p className="mt-1 leading-relaxed text-rose-700">
+                  Data kode QR ini akan dihapus secara permanen dari database, termasuk riwayat scan.
+                  {qrToDelete.businessName && (
+                    <span className="block mt-1 font-semibold">
+                      Terkait dengan bisnis: {qrToDelete.businessName}
+                    </span>
+                  )}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setQrToDelete(null)}
+                disabled={isDeleting}
+              >
+                Batal
+              </Button>
+              <Button
+                variant="danger"
+                size="sm"
+                isLoading={isDeleting}
+                onClick={handleDeleteQr}
+              >
+                Hapus QR Permanen
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* Delete Entire Batch Confirmation Modal */}
+      <Modal
+        isOpen={!!batchToDelete}
+        onClose={() => setBatchToDelete(null)}
+        title="Hapus Seluruh Batch"
+        description="Tindakan ini tidak dapat dibatalkan."
+      >
+        {batchToDelete && (
+          <div className="space-y-4 pt-2">
+            <div className="p-4 bg-rose-50 rounded-2xl border border-rose-200 text-rose-800 text-xs flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-sm text-rose-900">
+                  Hapus Batch {batchToDelete.batchCode} beserta seluruh QR di dalamnya?
+                </p>
+                <p className="mt-1 leading-relaxed text-rose-700">
+                  Semua QR code yang terdaftar di dalam paket batch ini akan dihapus secara permanen dari sistem.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setBatchToDelete(null)}
+                disabled={isDeleting}
+              >
+                Batal
+              </Button>
+              <Button
+                variant="danger"
+                size="sm"
+                isLoading={isDeleting}
+                onClick={handleDeleteBatch}
+              >
+                Hapus Seluruh Batch
+              </Button>
+            </div>
           </div>
         )}
       </Modal>
