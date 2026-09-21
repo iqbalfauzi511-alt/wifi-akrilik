@@ -2,14 +2,18 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { QrCode } from 'lucide-react';
+import { QrCode, ShieldCheck, Store, ArrowRight, Sparkles } from 'lucide-react';
 import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
 import { createClient } from '@/lib/supabase/client';
+import { devLoginAction } from '@/lib/actions/auth-actions';
 
 export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
   const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
   const [errorMessage, setErrorMessage] = useState(
-    errorParam === 'oauth_failed' ? 'Gagal login dengan Google. Silakan coba lagi.' : ''
+    errorParam === 'oauth_failed'
+      ? 'Gagal login dengan Google. Pastikan Google OAuth telah diaktifkan di Supabase Dashboard, atau gunakan Akses Masuk Cepat di bawah.'
+      : ''
   );
 
   const handleGoogleLogin = async () => {
@@ -20,7 +24,7 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
       const supabase = createClient();
       if (!supabase) {
         setErrorMessage(
-          'Konfigurasi Supabase belum lengkap di .env.local. Gunakan tombol "Akses Cepat Pengujian" di bawah untuk menguji aplikasi sekarang!'
+          'Konfigurasi Supabase URL/Key belum diisi di environment. Gunakan opsi "Akses Masuk Cepat" di bawah untuk langsung menguji aplikasi!'
         );
         setIsLoadingGoogle(false);
         return;
@@ -35,11 +39,11 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
       });
 
       if (error) {
-        setErrorMessage(error.message);
+        setErrorMessage(`Kendala Google OAuth: ${error.message}. Anda dapat menggunakan Akses Masuk Cepat di bawah.`);
         setIsLoadingGoogle(false);
       }
     } catch (err) {
-      setErrorMessage('Terjadi kendala saat menghubungkan ke Google.');
+      setErrorMessage('Terjadi kendala saat menghubungkan ke Google. Silakan gunakan Akses Masuk Cepat di bawah.');
       setIsLoadingGoogle(false);
     }
   };
@@ -65,8 +69,8 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
         {/* Card */}
         <Card className="shadow-lg border-slate-200/90">
           {errorMessage && (
-            <div className="mb-5 p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium leading-relaxed">
-              {errorMessage}
+            <div className="mb-5 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-800 font-medium leading-relaxed">
+              ⚠️ {errorMessage}
             </div>
           )}
 
@@ -99,9 +103,79 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
             <span>{isLoadingGoogle ? 'Menghubungkan ke Google...' : 'Lanjutkan dengan Google'}</span>
           </button>
 
-          <p className="mt-4 text-center text-[12px] text-slate-400 leading-relaxed">
-            Masuk dengan akun Google Anda untuk mengaktifkan perangkat Cobascan dan mengelola ulasan Google Review serta akses Wi-Fi bisnis.
-          </p>
+          {/* Quick Dev Switcher for instant testing */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-200" />
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="bg-white px-3 text-slate-400 font-bold uppercase tracking-wider text-[10px]">
+                ATAU MASUK CEPAT (MODE PENGUJIAN)
+              </span>
+            </div>
+          </div>
+
+          <div className="space-y-2.5">
+            <p className="text-[11px] text-slate-500 text-center mb-2">
+              Pilih akun untuk langsung masuk tanpa perlu OAuth Google:
+            </p>
+
+            {/* Login as Business Owner / Customer */}
+            <form
+              action={async () => {
+                await devLoginAction({
+                  email: 'owner@cobascan.com',
+                  name: 'Pemilik Bisnis (Demo)',
+                  role: 'customer',
+                  nextUrl,
+                });
+              }}
+            >
+              <button
+                type="submit"
+                className="w-full flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-brand-500 hover:bg-brand-50/50 transition-all text-left text-xs bg-slate-50/50"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-brand-600 text-white flex items-center justify-center shrink-0">
+                    <Store className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-slate-900">Masuk sebagai Pemilik Bisnis (Customer)</div>
+                    <div className="text-[10px] text-slate-500">owner@cobascan.com &bull; Akses Dashboard &amp; Aktivasi</div>
+                  </div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-slate-400 shrink-0" />
+              </button>
+            </form>
+
+            {/* Login as Admin */}
+            <form
+              action={async () => {
+                await devLoginAction({
+                  email: 'admin@smartwifi.com',
+                  name: 'Administrator Cobascan',
+                  role: 'admin',
+                  nextUrl: nextUrl.startsWith('/admin') ? nextUrl : '/admin',
+                });
+              }}
+            >
+              <button
+                type="submit"
+                className="w-full flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-brand-500 hover:bg-brand-50/50 transition-all text-left text-xs bg-slate-50/50"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center shrink-0">
+                    <ShieldCheck className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-slate-900">Masuk sebagai Administrator</div>
+                    <div className="text-[10px] text-slate-500">admin@smartwifi.com &bull; Akses Admin Portal</div>
+                  </div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-slate-400 shrink-0" />
+              </button>
+            </form>
+          </div>
         </Card>
 
         {/* Back Link */}
