@@ -13,6 +13,10 @@ export const metadata = {
 export default async function BusinessSetupPage() {
   const session = await getCurrentSession();
 
+  if (session?.role === 'admin') {
+    redirect('/admin');
+  }
+
   if (session?.business) {
     redirect('/dashboard');
   }

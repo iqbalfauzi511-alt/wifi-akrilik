@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { getCurrentSession } from '@/lib/auth/session';
 import SettingsForm from '@/components/customer/SettingsForm';
 import Card from '@/components/ui/Card';
@@ -13,6 +14,11 @@ export const metadata = {
 
 export default async function CustomerSettingsPage() {
   const session = await getCurrentSession();
+
+  if (session?.role === 'admin') {
+    redirect('/admin');
+  }
+
   const business = session?.business;
 
   return (

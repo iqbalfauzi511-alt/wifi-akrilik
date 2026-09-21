@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import {
   Wifi,
   Instagram,
@@ -29,6 +30,12 @@ export const metadata = {
 
 export default async function CustomerDashboardPage() {
   const session = await getCurrentSession();
+
+  // Admin manages the platform at /admin, not a customer cafe profile
+  if (session?.role === 'admin') {
+    redirect('/admin');
+  }
+
   const business = session?.business;
 
   const stats = await getCustomerStats(business?.id);

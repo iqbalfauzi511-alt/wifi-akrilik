@@ -89,25 +89,15 @@ export default function DashboardSidebar({ role = 'customer', businessName }) {
         })}
       </nav>
 
-      {/* Footer Switcher / Quick Link */}
+      {/* Footer Quick Link */}
       <div className="p-4 border-t border-slate-100">
-        {role === 'admin' ? (
-          <Link
-            href="/dashboard"
-            className="flex items-center justify-between px-3 py-2 text-xs font-medium text-slate-600 hover:text-brand-600 rounded-lg hover:bg-slate-50 transition-colors"
-          >
-            <span>Buka Customer View</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </Link>
-        ) : (
-          <Link
-            href="/"
-            className="flex items-center justify-between px-3 py-2 text-xs font-medium text-slate-500 hover:text-slate-800 rounded-lg hover:bg-slate-50 transition-colors"
-          >
-            <span>Kembali ke Beranda</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </Link>
-        )}
+        <Link
+          href="/"
+          className="flex items-center justify-between px-3 py-2 text-xs font-medium text-slate-500 hover:text-slate-800 rounded-lg hover:bg-slate-50 transition-colors"
+        >
+          <span>Kembali ke Beranda</span>
+          <ExternalLink className="w-3.5 h-3.5" />
+        </Link>
       </div>
     </aside>
   );

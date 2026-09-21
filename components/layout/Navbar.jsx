@@ -23,22 +23,22 @@ export default function Navbar({ session }) {
         {/* Navigation Actions */}
         <div className="flex items-center gap-3">
           {session?.user ? (
-            <>
-              {session.role === 'admin' ? (
-                <Link href="/admin">
-                  <Button variant="secondary" size="sm" className="gap-1.5">
-                    <ShieldCheck className="w-4 h-4 text-brand-400" />
-                    Admin Panel
-                  </Button>
-                </Link>
-              ) : null}
+            session.role === 'admin' ? (
+              <Link href="/admin">
+                <Button variant="primary" size="sm" className="gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-white" />
+                  Admin Panel
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
+            ) : (
               <Link href="/dashboard">
                 <Button variant="primary" size="sm" className="gap-1.5">
                   Dashboard
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
-            </>
+            )
           ) : (
             <>
               <Link href="/login">

@@ -9,9 +9,19 @@ export async function GET(request) {
   if (code) {
     const supabase = createClient();
     if (supabase) {
-      const { error } = await supabase.auth.exchangeCodeForSession(code);
+      const { data, error } = await supabase.auth.exchangeCodeForSession(code);
       if (!error) {
-        return NextResponse.redirect(`${origin}${next}`);
+        const userEmail = (data?.user?.email || '').toLowerCase().trim();
+        const isAdmin =
+          userEmail === 'distrapness@gmail.com' ||
+          userEmail === 'admin@smartwifi.com' ||
+          userEmail.startsWith('admin@');
+
+        let targetUrl = next;
+        if (targetUrl === '/dashboard' && isAdmin) {
+          targetUrl = '/admin';
+        }
+        return NextResponse.redirect(`${origin}${targetUrl}`);
       }
     }
   }
