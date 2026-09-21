@@ -34,7 +34,11 @@ export default async function CustomerQrPage() {
           title={`Total ${myQrs.length} QR Code`}
           subtitle="Setiap QR Code memiliki URL unik dan menghitung scan secara otomatis"
         />
-        <CustomerQrTable qrList={myQrs} businessName={business?.businessName} />
+        <CustomerQrTable
+          qrList={myQrs}
+          businessName={business?.businessName}
+          wifiEnabled={business?.wifiEnabled}
+        />
       </Card>
     </div>
   );

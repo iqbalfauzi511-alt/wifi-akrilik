@@ -1,15 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ExternalLink, Eye, QrCode, Download } from 'lucide-react';
+import { ExternalLink, Eye, QrCode, Download, Star, Wifi } from 'lucide-react';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 import QRCodeViewer from '@/components/qr/QRCodeViewer';
 import EmptyState from '@/components/ui/EmptyState';
 
-export default function CustomerQrTable({ qrList = [], businessName }) {
+export default function CustomerQrTable({ qrList = [], businessName, wifiEnabled = true }) {
   const [selectedQr, setSelectedQr] = useState(null);
+  const [activeTab, setActiveTab] = useState('review'); // 'review' | 'wifi'
 
   if (qrList.length === 0) {
     return (
@@ -88,18 +89,72 @@ export default function CustomerQrTable({ qrList = [], businessName }) {
       {/* QR Preview & Download Modal */}
       <Modal
         isOpen={!!selectedQr}
-        onClose={() => setSelectedQr(null)}
+        onClose={() => {
+          setSelectedQr(null);
+          setActiveTab('review');
+        }}
         title={`QR Code ${selectedQr?.code || ''}`}
         description={`Terhubung ke ${businessName || 'Bisnis Anda'}`}
       >
         {selectedQr && (
-          <div className="pt-2">
-            <QRCodeViewer
-              code={selectedQr.code}
-              subtitle={businessName}
-              size={220}
-              showActions={true}
-            />
+          <div className="pt-2 space-y-4">
+            {/* Tab Selection if Wi-Fi Enabled */}
+            {wifiEnabled && (
+              <div className="flex p-1 bg-slate-100 rounded-xl">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('review')}
+                  className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-bold transition-all ${
+                    activeTab === 'review'
+                      ? 'bg-white text-slate-900 shadow-sm'
+                      : 'text-slate-500 hover:text-slate-700'
+                  }`}
+                >
+                  <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
+                  <span>QR Review Maps</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('wifi')}
+                  className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-bold transition-all ${
+                    activeTab === 'wifi'
+                      ? 'bg-white text-brand-700 shadow-sm'
+                      : 'text-slate-500 hover:text-slate-700'
+                  }`}
+                >
+                  <Wifi className="w-3.5 h-3.5 text-brand-600" />
+                  <span>QR Akses Wi-Fi</span>
+                </button>
+              </div>
+            )}
+
+            {activeTab === 'review' ? (
+              <div>
+                <p className="text-xs text-center text-slate-500 mb-3">
+                  📍 <strong>Tujuan:</strong> Langsung membuka link Google Maps Review saat di-scan atau di-tap NFC.
+                </p>
+                <QRCodeViewer
+                  code={selectedQr.code}
+                  subtitle={businessName}
+                  size={220}
+                  showActions={true}
+                  path=""
+                />
+              </div>
+            ) : (
+              <div>
+                <p className="text-xs text-center text-slate-500 mb-3">
+                  📶 <strong>Tujuan:</strong> Akses Wi-Fi tamu. Pengunjung wajib klik review Google Maps terlebih dahulu sebelum password Wi-Fi ditampilkan.
+                </p>
+                <QRCodeViewer
+                  code={selectedQr.code}
+                  subtitle={`${businessName} — Wi-Fi`}
+                  size={220}
+                  showActions={true}
+                  path="/wifi"
+                />
+              </div>
+            )}
           </div>
         )}
       </Modal>

@@ -197,6 +197,34 @@ export default async function CustomerDashboardPage() {
                     {business.wifiEnabled && business.wifiPassword ? '••••••••••' : '—'}
                   </p>
                 </div>
+
+                {/* Link Wi-Fi Tamu (Wajib Review) */}
+                {business.wifiEnabled && myQrs.length > 0 && (
+                  <div className="bg-brand-50/60 p-3.5 rounded-xl border border-brand-200/80 sm:col-span-2">
+                    <div className="flex items-center justify-between text-xs text-brand-800 font-medium">
+                      <div className="flex items-center gap-1.5 font-bold">
+                        <Wifi className="w-3.5 h-3.5 text-brand-600" />
+                        <span>Link Khusus Wi-Fi Tamu (Wajib Review)</span>
+                      </div>
+                      <a
+                        href={`/q/${myQrs[0].code}/wifi`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[11px] font-bold text-brand-600 hover:text-brand-800 flex items-center gap-1 hover:underline"
+                      >
+                        <span>Buka Halaman</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                    <p className="text-xs text-slate-600 mt-1">
+                      Tamu membuka link ini untuk memberikan ulasan Google Maps sebelum password Wi-Fi ditampilkan:
+                    </p>
+                    <div className="mt-2 flex items-center justify-between bg-white p-2.5 rounded-lg border border-brand-200 text-xs font-mono text-slate-800">
+                      <span className="truncate">{`/q/${myQrs[0].code}/wifi`}</span>
+                      <span className="text-[11px] text-slate-400 font-sans ml-2">Wajib Review ⭐</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </Card>
 
@@ -256,6 +284,7 @@ export default async function CustomerDashboardPage() {
             <CustomerQrTable
               qrList={myQrs.slice(0, 5)}
               businessName={business.businessName}
+              wifiEnabled={business.wifiEnabled}
             />
           </Card>
         </>

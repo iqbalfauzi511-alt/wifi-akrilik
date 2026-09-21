@@ -28,6 +28,7 @@ export default function VisitorScanExperience({
   const [isRevealed, setIsRevealed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [hasOpenedReview, setHasOpenedReview] = useState(false);
   const [revealedWifiName, setRevealedWifiName] = useState(wifiName || 'Wi-Fi Tamu');
   const [revealedWifiPassword, setRevealedWifiPassword] = useState('');
   const [copied, setCopied] = useState(false);
@@ -35,9 +36,25 @@ export default function VisitorScanExperience({
   // Fallback Google Maps Review URL if empty
   const targetMapsUrl = googleMapsReviewUrl || googleMapsUrl || 'https://maps.google.com/';
 
+  // Handle opening Google Maps review
+  const handleOpenReview = () => {
+    setHasOpenedReview(true);
+    setErrorMessage('');
+  };
+
   // Handle "Saya Sudah Memberikan Rating" button click
   const handleSayaSudahMemberikanRating = async () => {
     if (isLoading) return;
+
+    // Must open and leave review first
+    if (!hasOpenedReview) {
+      setErrorMessage('Silakan buka dan berikan ulasan di Google Maps terlebih dahulu!');
+      if (typeof window !== 'undefined') {
+        window.open(targetMapsUrl, '_blank', 'noopener,noreferrer');
+      }
+      setHasOpenedReview(true);
+      return;
+    }
 
     try {
       setIsLoading(true);
@@ -143,12 +160,20 @@ export default function VisitorScanExperience({
               href={targetMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={handleOpenReview}
               className="w-full inline-flex items-center justify-center gap-2.5 font-bold rounded-xl transition-all duration-150 select-none active:scale-[0.98] bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:opacity-95 text-white text-base py-3.5 px-6 shadow-md shadow-blue-500/20"
             >
               <Star className="w-5 h-5 fill-amber-300 text-amber-300" />
               <span>Beri Rating di Google Maps</span>
               <ExternalLink className="w-4 h-4 ml-1 opacity-80" />
             </a>
+
+            {hasOpenedReview && (
+              <p className="text-xs font-semibold text-emerald-600 flex items-center justify-center gap-1">
+                <Check className="w-3.5 h-3.5" />
+                <span>Halaman Google Maps ulasan telah dibuka</span>
+              </p>
+            )}
           </div>
 
           {/* FITUR 2: WI-FI ACCESS (OPTIONAL - Hanya tampil jika wifiEnabled === true) */}

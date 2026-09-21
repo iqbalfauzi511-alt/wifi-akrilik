@@ -5,7 +5,14 @@ import QRCode from 'qrcode';
 import { Download, Copy, Check, ExternalLink } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
-export default function QRCodeViewer({ code, size = 260, showActions = true, subtitle }) {
+export default function QRCodeViewer({
+  code,
+  size = 260,
+  showActions = true,
+  subtitle,
+  path = '',
+  customUrl,
+}) {
   const [dataUrl, setDataUrl] = useState('');
   const [copied, setCopied] = useState(false);
   const [isGenerating, setIsGenerating] = useState(true);
@@ -17,7 +24,7 @@ export default function QRCodeViewer({ code, size = 260, showActions = true, sub
       : (process.env.NEXT_PUBLIC_APP_URL && !process.env.NEXT_PUBLIC_APP_URL.includes('supabase.co')
           ? process.env.NEXT_PUBLIC_APP_URL
           : 'https://wifi-akrilik.vercel.app');
-  const targetUrl = `${origin}/q/${code}`;
+  const targetUrl = customUrl || `${origin}/q/${code}${path}`;
 
   useEffect(() => {
     let isMounted = true;
@@ -54,10 +61,12 @@ export default function QRCodeViewer({ code, size = 260, showActions = true, sub
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const cleanSuffix = path ? `-${path.replace(/[^a-zA-Z0-9_-]/g, '')}` : '';
+
   const handleDownloadPng = () => {
     if (!dataUrl) return;
     const link = document.createElement('a');
-    link.download = `SmartWiFi-${code}.png`;
+    link.download = `SmartQR-${code}${cleanSuffix}.png`;
     link.href = dataUrl;
     link.click();
   };
@@ -76,7 +85,7 @@ export default function QRCodeViewer({ code, size = 260, showActions = true, sub
       const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.download = `SmartWiFi-${code}.svg`;
+      link.download = `SmartQR-${code}${cleanSuffix}.svg`;
       link.href = url;
       link.click();
       URL.revokeObjectURL(url);
