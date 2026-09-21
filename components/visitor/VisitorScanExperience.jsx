@@ -20,6 +20,7 @@ import Button from '@/components/ui/Button';
 export default function VisitorScanExperience({
   code,
   businessName,
+  googleMapsReviewUrl,
   googleMapsUrl,
   wifiEnabled,
   wifiName,
@@ -31,8 +32,8 @@ export default function VisitorScanExperience({
   const [revealedWifiPassword, setRevealedWifiPassword] = useState('');
   const [copied, setCopied] = useState(false);
 
-  // Fallback Google Maps URL if empty
-  const targetMapsUrl = googleMapsUrl || 'https://maps.google.com/';
+  // Fallback Google Maps Review URL if empty
+  const targetMapsUrl = googleMapsReviewUrl || googleMapsUrl || 'https://maps.google.com/';
 
   // Handle "Saya Sudah Memberikan Rating" button click
   const handleSayaSudahMemberikanRating = async () => {

@@ -149,7 +149,7 @@ export default async function AdminDashboardPage() {
                       {qr.businessName || <span className="text-slate-400 italic">Belum terhubung</span>}
                     </td>
                     <td className="py-3.5 px-3 text-center">
-                      {qr.googleMapsUrl ? (
+                      {(qr.googleMapsReviewUrl || qr.googleMapsUrl) ? (
                         <span className="text-emerald-700 font-bold text-xs">✓</span>
                       ) : (
                         <span className="text-slate-300 font-bold text-xs">—</span>

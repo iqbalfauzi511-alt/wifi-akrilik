@@ -131,21 +131,21 @@ export default async function CustomerDashboardPage() {
                   </p>
                 </div>
 
-                {/* Google Maps */}
+                {/* Google Maps Review */}
                 <div className="bg-white p-3.5 rounded-xl border border-slate-200/80">
                   <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
                     <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
-                    <span>Google Maps</span>
+                    <span>Link Review Google Maps</span>
                   </div>
-                  {business.googleMapsUrl ? (
+                  {(business.googleMapsReviewUrl || business.googleMapsUrl) ? (
                     <a
-                      href={business.googleMapsUrl}
+                      href={business.googleMapsReviewUrl || business.googleMapsUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-xs font-bold text-slate-900 hover:text-brand-600 mt-1.5 flex items-center gap-1 truncate"
-                      title={business.googleMapsUrl}
+                      title={business.googleMapsReviewUrl || business.googleMapsUrl}
                     >
-                      <span className="truncate">{business.googleMapsUrl}</span>
+                      <span className="truncate">{business.googleMapsReviewUrl || business.googleMapsUrl}</span>
                       <ExternalLink className="w-3 h-3 text-slate-400 shrink-0" />
                     </a>
                   ) : (

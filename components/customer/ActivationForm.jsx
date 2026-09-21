@@ -122,19 +122,19 @@ export default function ActivationForm({ code }) {
           />
         </div>
 
-        {/* Google Maps URL */}
+        {/* Google Maps Review URL */}
         <div>
           <Input
-            label="Link Google Maps (Review & Rating)"
-            name="googleMapsUrl"
+            label="Link Review Google Maps"
+            name="googleMapsReviewUrl"
             type="url"
             placeholder="https://maps.app.goo.gl/... atau https://maps.google.com/..."
             defaultValue=""
             autoComplete="off"
-            error={fieldErrors.googleMapsUrl}
+            error={fieldErrors.googleMapsReviewUrl || fieldErrors.googleMapsUrl}
             required
             prefix={<MapPin className="w-4 h-4 text-emerald-600" />}
-            helperText="Link langsung ke halaman ulasan Google Maps bisnis Anda untuk meningkatkan rating."
+            helperText="Masukkan link Google Maps yang mengarahkan pelanggan ke halaman untuk memberikan rating/review."
           />
         </div>
 

@@ -71,14 +71,14 @@ export default function SettingsForm({ business }) {
           />
 
           <Input
-            label="Link Google Maps (Review & Rating)"
-            name="googleMapsUrl"
+            label="Link Review Google Maps"
+            name="googleMapsReviewUrl"
             type="url"
-            defaultValue={business?.googleMapsUrl || ''}
-            error={fieldErrors.googleMapsUrl}
+            defaultValue={business?.googleMapsReviewUrl || business?.googleMapsUrl || ''}
+            error={fieldErrors.googleMapsReviewUrl || fieldErrors.googleMapsUrl}
             required
             prefix={<MapPin className="w-4 h-4 text-emerald-600" />}
-            helperText="Masukkan link profil Google Maps bisnis Anda, contoh: https://maps.app.goo.gl/... atau https://maps.google.com/..."
+            helperText="Masukkan link Google Maps yang mengarahkan pelanggan ke halaman untuk memberikan rating/review."
           />
 
           {/* Wi-Fi Access Toggle */}

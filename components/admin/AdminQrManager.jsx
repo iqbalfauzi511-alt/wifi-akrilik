@@ -482,13 +482,13 @@ export default function AdminQrManager({ initialQrs = [] }) {
 
                     {/* Google Maps Feature Status */}
                     <td className="py-3.5 px-3 text-center">
-                      {qr.googleMapsUrl ? (
+                      {(qr.googleMapsReviewUrl || qr.googleMapsUrl) ? (
                         <a
-                          href={qr.googleMapsUrl}
+                          href={qr.googleMapsReviewUrl || qr.googleMapsUrl}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors mx-auto"
-                          title={`Google Maps: ${qr.googleMapsUrl}`}
+                          title={`Review Google Maps: ${qr.googleMapsReviewUrl || qr.googleMapsUrl}`}
                         >
                           <span className="text-xs font-bold">✓</span>
                         </a>
@@ -803,9 +803,9 @@ export default function AdminQrManager({ initialQrs = [] }) {
               size={220}
               showActions={true}
             />
-            {selectedQr.googleMapsUrl && (
+            {(selectedQr.googleMapsReviewUrl || selectedQr.googleMapsUrl) && (
               <div className="mt-3 p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-center justify-between">
-                <span className="truncate max-w-[200px]">📍 <strong>Google Maps:</strong> Aktif</span>
+                <span className="truncate max-w-[200px]">📍 <strong>Review Google Maps:</strong> Aktif</span>
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${selectedQr.wifiEnabled ? 'bg-brand-100 text-brand-800' : 'bg-slate-200 text-slate-600'}`}>
                   {selectedQr.wifiEnabled ? 'Wi-Fi ON' : 'Wi-Fi OFF'}
                 </span>

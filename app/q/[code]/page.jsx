@@ -4,6 +4,7 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { AlertTriangle, ShieldOff, Sparkles, ArrowRight, MapPin } from 'lucide-react';
 import { getPublicQrByCode, recordScanLog } from '@/lib/db/queries/qr';
+import { validateGoogleMapsUrl } from '@/lib/utils/validation';
 import Button from '@/components/ui/Button';
 
 export const dynamic = 'force-dynamic';
@@ -109,11 +110,11 @@ export default async function VisitorQrPage({ params }) {
     console.warn('Scan logging error (ignored):', err);
   }
 
-  // 2. Validate Google Maps URL
-  const targetMapsUrl = qr.googleMapsUrl?.trim();
-  const isValidUrl = targetMapsUrl && /^https?:\/\//i.test(targetMapsUrl);
+  // 2. Validate Google Maps Review URL (strict database URL only, no query params)
+  const rawMapsUrl = (qr.googleMapsReviewUrl || qr.googleMapsUrl)?.trim();
+  const mapsValidation = validateGoogleMapsUrl(rawMapsUrl);
 
-  if (!isValidUrl) {
+  if (!mapsValidation.isValid) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
         <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200 shadow-xl p-8 text-center">
@@ -134,6 +135,6 @@ export default async function VisitorQrPage({ params }) {
     );
   }
 
-  // 3. Directly redirect customer straight to Google Maps Review!
-  redirect(targetMapsUrl);
+  // 3. Directly redirect customer straight to Google Maps Review URL!
+  redirect(mapsValidation.normalized);
 }
