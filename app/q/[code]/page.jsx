@@ -1,9 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
 import { headers } from 'next/headers';
-import { Wifi, AlertTriangle, ShieldOff, Sparkles, ArrowRight } from 'lucide-react';
+import { redirect } from 'next/navigation';
+import { AlertTriangle, ShieldOff, Sparkles, ArrowRight, MapPin } from 'lucide-react';
 import { getPublicQrByCode, recordScanLog } from '@/lib/db/queries/qr';
-import VisitorScanExperience from '@/components/visitor/VisitorScanExperience';
 import Button from '@/components/ui/Button';
 
 export const dynamic = 'force-dynamic';
@@ -12,7 +12,7 @@ export async function generateMetadata({ params }) {
   const { code } = params;
   return {
     title: `Smart QR & NFC — ${code}`,
-    description: 'Beri rating Google Maps dan akses Wi-Fi bisnis.',
+    description: 'Rating review Google Maps bisnis.',
   };
 }
 
@@ -100,7 +100,7 @@ export default async function VisitorQrPage({ params }) {
   }
 
   // Case 4: QR Active!
-  // Record visitor scan asynchronously in scan_logs (safely ignored if fails)
+  // 1. Record visitor scan asynchronously in scan_logs (safely ignored if fails)
   try {
     const headersList = headers();
     const userAgent = headersList.get('user-agent') || 'Unknown';
@@ -109,15 +109,31 @@ export default async function VisitorQrPage({ params }) {
     console.warn('Scan logging error (ignored):', err);
   }
 
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-3 py-6 sm:py-12 bg-slate-100/70">
-      <VisitorScanExperience
-        code={qr.code}
-        businessName={qr.businessName || 'Bisnis Anda'}
-        googleMapsUrl={qr.googleMapsUrl || ''}
-        wifiEnabled={Boolean(qr.wifiEnabled)}
-        wifiName={qr.wifiName || 'Wi-Fi Tamu'}
-      />
-    </div>
-  );
+  // 2. Validate Google Maps URL
+  const targetMapsUrl = qr.googleMapsUrl?.trim();
+  const isValidUrl = targetMapsUrl && /^https?:\/\//i.test(targetMapsUrl);
+
+  if (!isValidUrl) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
+        <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200 shadow-xl p-8 text-center">
+          <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center mx-auto mb-4">
+            <MapPin className="w-7 h-7" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-900 mb-2">Google Maps Belum Dikonfigurasi</h2>
+          <p className="text-sm text-slate-600 mb-6 leading-relaxed">
+            Google Maps belum dikonfigurasi untuk bisnis ini.
+          </p>
+          <Link href="/">
+            <Button variant="outline" className="w-full">
+              Kembali ke Beranda
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // 3. Directly redirect customer straight to Google Maps Review!
+  redirect(targetMapsUrl);
 }
