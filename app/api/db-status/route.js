@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { db, getDb } from '@/lib/db';
+import { db, getDb, ensureDatabaseInitialized } from '@/lib/db';
 import { qrCodes, qrBatches, users, businesses } from '@/lib/db/schema';
 import { sql } from 'drizzle-orm';
 
