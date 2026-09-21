@@ -11,8 +11,8 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }) {
   const { code } = params;
   return {
-    title: `Smart Wi-Fi — Scan ${code}`,
-    description: 'Hubungkan perangkat ke Wi-Fi dan follow Instagram.',
+    title: `Smart QR & NFC — ${code}`,
+    description: 'Beri rating Google Maps dan akses Wi-Fi bisnis.',
   };
 }
 
@@ -30,7 +30,7 @@ export default async function VisitorQrPage({ params }) {
           </div>
           <h2 className="text-xl font-bold text-slate-900 mb-2">QR Tidak Ditemukan</h2>
           <p className="text-sm text-slate-500 mb-6 leading-relaxed">
-            QR Code yang Anda scan (<span className="font-mono font-semibold">{code}</span>) tidak terdaftar pada sistem Smart Wi-Fi.
+            QR / NFC Code yang Anda akses (<span className="font-mono font-semibold">{code}</span>) tidak terdaftar pada sistem Smart QR.
           </p>
           <Link href="/">
             <Button variant="outline" className="w-full">
@@ -52,7 +52,7 @@ export default async function VisitorQrPage({ params }) {
           </div>
           <h2 className="text-xl font-bold text-slate-900 mb-2">QR Tidak Aktif</h2>
           <p className="text-sm text-slate-500 mb-6 leading-relaxed">
-            QR ini sedang dinonaktifkan. Silakan hubungi pemilik bisnis.
+            QR / NFC ini sedang dinonaktifkan. Silakan hubungi pemilik bisnis.
           </p>
           <Link href="/">
             <Button variant="outline" className="w-full">
@@ -79,18 +79,18 @@ export default async function VisitorQrPage({ params }) {
           )}
           <h2 className="text-2xl font-extrabold text-slate-900 mb-2">QR Belum Diaktifkan</h2>
           <p className="text-sm text-slate-500 mb-6 leading-relaxed">
-            QR ini belum diaktifkan. Jika Anda pemilik produk, silakan lakukan aktivasi.
+            QR / NFC ini belum diaktifkan. Jika Anda pemilik produk, silakan lakukan aktivasi bisnis.
           </p>
           <div className="space-y-3">
             <Link href={`/activate/${code}`}>
               <Button size="lg" className="w-full shadow-md shadow-brand-600/20">
-                Aktivasi
+                Aktivasi Sekarang
                 <ArrowRight className="w-4 h-4 ml-1.5" />
               </Button>
             </Link>
             <Link href="/">
               <Button variant="ghost" size="sm" className="w-full text-xs">
-                Tentang Smart Wi-Fi
+                Tentang Smart QR + NFC
               </Button>
             </Link>
           </div>
@@ -114,7 +114,8 @@ export default async function VisitorQrPage({ params }) {
       <VisitorScanExperience
         code={qr.code}
         businessName={qr.businessName || 'Bisnis Anda'}
-        instagramUrl={qr.instagramUrl || ''}
+        googleMapsUrl={qr.googleMapsUrl || ''}
+        wifiEnabled={Boolean(qr.wifiEnabled)}
         wifiName={qr.wifiName || 'Wi-Fi Tamu'}
       />
     </div>

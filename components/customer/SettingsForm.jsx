@@ -1,7 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Wifi, Instagram, Building, KeyRound, Check, Sparkles } from 'lucide-react';
+import {
+  Wifi,
+  MapPin,
+  Star,
+  Building,
+  KeyRound,
+  Check,
+  Sparkles,
+  Info,
+} from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Card from '@/components/ui/Card';
@@ -11,6 +20,7 @@ export default function SettingsForm({ business }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
+  const [isWifiEnabled, setIsWifiEnabled] = useState(Boolean(business?.wifiEnabled));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,6 +29,8 @@ export default function SettingsForm({ business }) {
     setFieldErrors({});
 
     const formData = new FormData(e.currentTarget);
+    formData.set('wifiEnabled', isWifiEnabled ? 'true' : 'false');
+
     const result = await updateBusinessWifiAction(null, formData);
 
     setIsSubmitting(false);
@@ -50,7 +62,7 @@ export default function SettingsForm({ business }) {
 
         <div className="space-y-4">
           <Input
-            label="Nama Bisnis / Kafe"
+            label="Nama Bisnis / Toko / Kafe"
             name="businessName"
             defaultValue={business?.businessName || ''}
             error={fieldErrors.businessName}
@@ -59,49 +71,91 @@ export default function SettingsForm({ business }) {
           />
 
           <Input
-            label="Link Instagram"
-            name="instagramUrl"
+            label="Link Google Maps (Review & Rating)"
+            name="googleMapsUrl"
             type="url"
-            defaultValue={business?.instagramUrl || ''}
-            error={fieldErrors.instagramUrl}
+            defaultValue={business?.googleMapsUrl || ''}
+            error={fieldErrors.googleMapsUrl}
             required
-            prefix={<Instagram className="w-4 h-4 text-slate-400" />}
-            helperText="Masukkan link Instagram bisnis Anda, contoh: https://instagram.com/kopisenja"
+            prefix={<MapPin className="w-4 h-4 text-emerald-600" />}
+            helperText="Masukkan link profil Google Maps bisnis Anda, contoh: https://maps.app.goo.gl/... atau https://maps.google.com/..."
           />
 
+          {/* Wi-Fi Access Toggle */}
           <div className="pt-3 border-t border-slate-100">
-            <Input
-              label="Nama Wi-Fi (SSID)"
-              name="wifiName"
-              defaultValue={business?.wifiName || ''}
-              error={fieldErrors.wifiName}
-              required
-              prefix={<Wifi className="w-4 h-4 text-slate-400" />}
-              helperText="Nama jaringan Wi-Fi yang harus dipilih pengunjung."
-            />
+            <div
+              onClick={() => setIsWifiEnabled((prev) => !prev)}
+              className={`flex items-start gap-3 p-3.5 rounded-xl border transition-all cursor-pointer select-none ${
+                isWifiEnabled
+                  ? 'bg-brand-50/70 border-brand-300 ring-1 ring-brand-300'
+                  : 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50/50'
+              }`}
+            >
+              <input
+                type="checkbox"
+                id="settingsWifiToggle"
+                checked={isWifiEnabled}
+                onChange={(e) => setIsWifiEnabled(e.target.checked)}
+                className="w-4 h-4 mt-1 rounded border-slate-300 text-brand-600 focus:ring-brand-500 cursor-pointer shrink-0"
+                onClick={(e) => e.stopPropagation()}
+              />
+              <div className="flex-1 text-xs">
+                <div className="flex items-center gap-2">
+                  <label htmlFor="settingsWifiToggle" className="font-bold text-slate-900 cursor-pointer">
+                    Sediakan Akses Wi-Fi Pelanggan
+                  </label>
+                  <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                    isWifiEnabled ? 'bg-brand-200/80 text-brand-800' : 'bg-slate-100 text-slate-500'
+                  }`}>
+                    {isWifiEnabled ? 'Aktif' : 'Nonaktif'}
+                  </span>
+                </div>
+                <p className="text-slate-500 mt-0.5 leading-relaxed">
+                  Jika diaktifkan, halaman publik akan menampilkan opsi Wi-Fi setelah pengunjung menekan tombol konfirmasi rating Google Maps. Jika dinonaktifkan, halaman hanya akan menampilkan tombol rating Google Maps.
+                </p>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <Input
-              label="Password Wi-Fi Baru / Aktif"
-              name="wifiPassword"
-              type="text"
-              defaultValue={business?.wifiPassword || ''}
-              error={fieldErrors.wifiPassword}
-              required
-              prefix={<KeyRound className="w-4 h-4 text-slate-400" />}
-              helperText="Setiap kali Anda mengganti password di sini, semua akrilik QR di meja otomatis menyajikan password baru."
-            />
-          </div>
+          {/* Conditional Wi-Fi Fields */}
+          {isWifiEnabled && (
+            <div className="space-y-3.5 p-4 rounded-xl bg-slate-50/90 border border-slate-200/80 animate-in fade-in slide-in-from-top-1 duration-200">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 mb-1">
+                <Wifi className="w-4 h-4 text-brand-600" />
+                <span>Kredensial Jaringan Wi-Fi</span>
+              </div>
+
+              <Input
+                label="Nama Wi-Fi (SSID)"
+                name="wifiName"
+                defaultValue={business?.wifiName || ''}
+                error={fieldErrors.wifiName}
+                required={isWifiEnabled}
+                prefix={<Wifi className="w-4 h-4 text-slate-400" />}
+                helperText="Nama jaringan Wi-Fi yang harus dipilih pelanggan di HP mereka."
+              />
+
+              <Input
+                label="Password Wi-Fi"
+                name="wifiPassword"
+                type="text"
+                defaultValue={business?.wifiPassword || ''}
+                error={fieldErrors.wifiPassword}
+                required={isWifiEnabled}
+                prefix={<KeyRound className="w-4 h-4 text-slate-400" />}
+                helperText="Password ini disembunyikan sampai pelanggan menekan tombol Saya Sudah Memberikan Rating."
+              />
+            </div>
+          )}
 
           <div className="p-3.5 rounded-xl bg-amber-50/90 border border-amber-200 text-xs text-amber-900 leading-relaxed">
-            💡 <strong>Rekomendasi untuk Pemilik (Owner):</strong> Ganti password Wi-Fi secara berkala (misal seminggu atau sebulan sekali). Anda <strong>tidak perlu mencetak ulang akrilik di meja</strong> karena seluruh akrilik QR akan langsung menyajikan password baru secara instan begitu disimpan di sini.
+            💡 <strong>Rekomendasi untuk Pemilik (Owner):</strong> Produk fisik QR dan chip NFC Anda selalu mengarahkan customer ke URL yang sama. Jika Anda mengganti password Wi-Fi atau mengubah link Google Maps di sini, seluruh QR akrilik dan tag NFC di meja <strong>otomatis langsung ter-update seketika tanpa perlu dicetak ulang!</strong>
           </div>
         </div>
 
         <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
           <p className="text-[11px] text-slate-400">
-            Perubahan berlaku instan ke seluruh QR aktif.
+            Perubahan berlaku instan ke seluruh QR dan NFC aktif.
           </p>
           <Button type="submit" isLoading={isSubmitting} size="md">
             Simpan Perubahan

@@ -4,6 +4,8 @@ import { redirect } from 'next/navigation';
 import {
   Wifi,
   Instagram,
+  MapPin,
+  Star,
   QrCode,
   BarChart3,
   Settings,
@@ -53,8 +55,8 @@ export default async function CustomerDashboardPage() {
           </h2>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
             {business
-              ? `Kelola koneksi Wi-Fi dan pantau interaksi pengunjung di ${business.businessName}.`
-              : 'Selamat datang! Silakan daftarkan profil bisnis Anda atau aktivasi QR fisik.'}
+              ? `Kelola rating Google Maps dan opsi akses Wi-Fi untuk ${business.businessName}.`
+              : 'Selamat datang! Silakan daftarkan profil bisnis Anda atau aktivasi Smart QR & NFC fisik.'}
           </p>
         </div>
 
@@ -62,13 +64,13 @@ export default async function CustomerDashboardPage() {
           <Link href="/dashboard/settings">
             <Button variant="outline" size="sm" className="gap-1.5 text-xs">
               <Settings className="w-3.5 h-3.5" />
-              Pengaturan Wi-Fi
+              Pengaturan Smart QR
             </Button>
           </Link>
           <Link href="/dashboard/qr">
             <Button variant="primary" size="sm" className="gap-1.5 text-xs">
               <QrCode className="w-3.5 h-3.5" />
-              Kelola QR
+              Kelola QR &amp; NFC
             </Button>
           </Link>
         </div>
@@ -78,13 +80,13 @@ export default async function CustomerDashboardPage() {
       {!business ? (
         <Card className="border-brand-200 bg-brand-50/40 p-8 text-center">
           <div className="w-12 h-12 rounded-2xl bg-brand-100 text-brand-600 flex items-center justify-center mx-auto mb-3">
-            <Wifi className="w-6 h-6" />
+            <Star className="w-6 h-6 fill-brand-600 text-brand-600" />
           </div>
           <h3 className="text-lg font-bold text-slate-900 mb-1">
             Belum Ada Bisnis Terdaftar
           </h3>
           <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto mb-5">
-            Anda dapat mendaftarkan informasi kafe Anda sekarang atau cukup scan QR Code fisik yang Anda terima untuk mengaktifkannya.
+            Anda dapat mendaftarkan informasi bisnis Anda sekarang atau cukup scan QR Code fisik / tap NFC yang Anda terima untuk mengaktifkannya.
           </p>
           <Link href="/dashboard/setup">
             <Button size="md">
@@ -116,31 +118,46 @@ export default async function CustomerDashboardPage() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-slate-200/70">
+                {/* Google Maps Tile */}
                 <div className="bg-white p-3.5 rounded-xl border border-slate-200/80">
                   <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
-                    <Instagram className="w-3.5 h-3.5 text-pink-500" />
-                    <span>Instagram</span>
+                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
+                    <span>Google Maps Review</span>
                   </div>
-                  <a
-                    href={business.instagramUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm font-bold text-slate-900 hover:text-brand-600 mt-1 block truncate"
-                  >
-                    {business.instagramUrl.replace(/^https?:\/\/(www\.)?instagram\.com\/?/i, '@') || business.instagramUrl}
-                  </a>
+                  {business.googleMapsUrl ? (
+                    <a
+                      href={business.googleMapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-bold text-slate-900 hover:text-brand-600 mt-1.5 flex items-center gap-1 truncate"
+                    >
+                      <span>Buka Profil Maps</span>
+                      <ExternalLink className="w-3 h-3 text-slate-400 shrink-0" />
+                    </a>
+                  ) : (
+                    <span className="text-xs text-slate-400 mt-1.5 block">Belum diatur</span>
+                  )}
                 </div>
 
+                {/* Wi-Fi SSID Tile */}
                 <div className="bg-white p-3.5 rounded-xl border border-slate-200/80">
-                  <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
-                    <Wifi className="w-3.5 h-3.5 text-brand-500" />
-                    <span>Nama Wi-Fi (SSID)</span>
+                  <div className="flex items-center justify-between text-xs text-slate-400 font-medium">
+                    <div className="flex items-center gap-1.5">
+                      <Wifi className="w-3.5 h-3.5 text-brand-500" />
+                      <span>Nama Wi-Fi (SSID)</span>
+                    </div>
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                      business.wifiEnabled ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500'
+                    }`}>
+                      {business.wifiEnabled ? 'Aktif' : 'Nonaktif'}
+                    </span>
                   </div>
                   <p className="text-sm font-bold text-slate-900 mt-1 truncate">
-                    {business.wifiName}
+                    {business.wifiEnabled && business.wifiName ? business.wifiName : '—'}
                   </p>
                 </div>
 
+                {/* Wi-Fi Password Tile */}
                 <div className="bg-white p-3.5 rounded-xl border border-slate-200/80">
                   <div className="flex items-center justify-between text-xs text-slate-400 font-medium">
                     <div className="flex items-center gap-1.5">
@@ -148,11 +165,11 @@ export default async function CustomerDashboardPage() {
                       <span>Password Wi-Fi</span>
                     </div>
                     <Link href="/dashboard/settings" className="text-[11px] font-bold text-brand-600 hover:text-brand-700 hover:underline">
-                      Ubah
+                      {business.wifiEnabled ? 'Ubah' : 'Aktifkan'}
                     </Link>
                   </div>
                   <p className="text-sm font-mono font-bold text-slate-900 mt-1 truncate">
-                    {business.wifiPassword}
+                    {business.wifiEnabled && business.wifiPassword ? business.wifiPassword : '—'}
                   </p>
                 </div>
               </div>

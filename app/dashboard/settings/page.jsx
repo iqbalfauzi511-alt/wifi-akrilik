@@ -9,7 +9,7 @@ import Button from '@/components/ui/Button';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Pengaturan Wi-Fi — Smart Wi-Fi',
+  title: 'Pengaturan — Smart QR + NFC',
 };
 
 export default async function CustomerSettingsPage() {
@@ -24,9 +24,9 @@ export default async function CustomerSettingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Pengaturan Wi-Fi & Bisnis</h2>
+        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Pengaturan Smart QR + NFC</h2>
         <p className="text-xs sm:text-sm text-slate-500 mt-1">
-          Ubah nama Wi-Fi, password, atau akun Instagram bisnis Anda.
+          Kelola link Google Maps rating dan opsi akses Wi-Fi bisnis Anda.
         </p>
       </div>
 

@@ -4,10 +4,10 @@ import { getQrWifiCredentials } from '@/lib/db/queries/qr';
 export const dynamic = 'force-dynamic';
 
 /**
- * POST /api/q/[code]/reveal
- * Secure Follow Gate reveal endpoint for visitors.
- * Strictly returns wifi_name and wifi_password ONLY upon request.
- * No user login or registration required.
+ * POST /api/q/[code]/reveal-wifi
+ * Secure Smart QR + NFC Wi-Fi reveal endpoint for visitors.
+ * Strictly returns wifi_name and wifi_password ONLY upon request when wifi_enabled is true.
+ * No user login, registration, or Google API check required.
  */
 export async function POST(request, { params }) {
   try {
@@ -62,7 +62,7 @@ export async function POST(request, { params }) {
       wifi_password: result.wifi_password,
     });
   } catch (err) {
-    console.error('API reveal error:', err);
+    console.error('API reveal-wifi error:', err);
     return NextResponse.json(
       { success: false, error: 'Maaf, password Wi-Fi belum bisa ditampilkan. Silakan coba lagi.' },
       { status: 500 }

@@ -17,6 +17,9 @@ import {
   RotateCcw,
   Archive,
   Layers,
+  Check,
+  Wifi,
+  MapPin,
 } from 'lucide-react';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
@@ -422,6 +425,8 @@ export default function AdminQrManager({ initialQrs = [] }) {
                 <th className="py-3.5 px-4 font-semibold">Batch</th>
                 <th className="py-3.5 px-4 font-semibold">Status</th>
                 <th className="py-3.5 px-4 font-semibold">Bisnis / Kafe</th>
+                <th className="py-3.5 px-3 font-semibold text-center">Maps</th>
+                <th className="py-3.5 px-3 font-semibold text-center">Wi-Fi</th>
                 <th className="py-3.5 px-4 font-semibold text-center">Total Scan</th>
                 <th className="py-3.5 px-4 font-semibold">Dibuat</th>
                 <th className="py-3.5 px-4 font-semibold">Diaktifkan</th>
@@ -431,7 +436,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
             <tbody className="divide-y divide-slate-100">
               {filteredQrs.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-12 text-center text-xs text-slate-400">
+                  <td colSpan={10} className="py-12 text-center text-xs text-slate-400">
                     Tidak ditemukan QR Code yang cocok dengan filter atau pencarian.
                   </td>
                 </tr>
@@ -472,6 +477,37 @@ export default function AdminQrManager({ initialQrs = [] }) {
                         </div>
                       ) : (
                         <span className="text-slate-400 italic text-xs">Belum dihubungkan</span>
+                      )}
+                    </td>
+
+                    {/* Google Maps Feature Status */}
+                    <td className="py-3.5 px-3 text-center">
+                      {qr.googleMapsUrl ? (
+                        <a
+                          href={qr.googleMapsUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors mx-auto"
+                          title={`Google Maps: ${qr.googleMapsUrl}`}
+                        >
+                          <span className="text-xs font-bold">✓</span>
+                        </a>
+                      ) : (
+                        <span className="text-slate-300 font-bold">—</span>
+                      )}
+                    </td>
+
+                    {/* Wi-Fi Feature Status */}
+                    <td className="py-3.5 px-3 text-center">
+                      {qr.wifiEnabled ? (
+                        <span
+                          className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-brand-50 text-brand-700 font-bold text-xs mx-auto"
+                          title="Akses Wi-Fi Aktif"
+                        >
+                          ✓
+                        </span>
+                      ) : (
+                        <span className="text-slate-300 font-bold">—</span>
                       )}
                     </td>
 
@@ -767,6 +803,14 @@ export default function AdminQrManager({ initialQrs = [] }) {
               size={220}
               showActions={true}
             />
+            {selectedQr.googleMapsUrl && (
+              <div className="mt-3 p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-center justify-between">
+                <span className="truncate max-w-[200px]">📍 <strong>Google Maps:</strong> Aktif</span>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${selectedQr.wifiEnabled ? 'bg-brand-100 text-brand-800' : 'bg-slate-200 text-slate-600'}`}>
+                  {selectedQr.wifiEnabled ? 'Wi-Fi ON' : 'Wi-Fi OFF'}
+                </span>
+              </div>
+            )}
           </div>
         )}
       </Modal>

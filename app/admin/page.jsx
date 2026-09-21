@@ -129,6 +129,8 @@ export default async function AdminDashboardPage() {
                   <th className="py-3.5 px-4 font-semibold">Kode QR</th>
                   <th className="py-3.5 px-4 font-semibold">Status</th>
                   <th className="py-3.5 px-4 font-semibold">Bisnis</th>
+                  <th className="py-3.5 px-3 font-semibold text-center">Maps</th>
+                  <th className="py-3.5 px-3 font-semibold text-center">Wi-Fi</th>
                   <th className="py-3.5 px-4 font-semibold text-center">Total Scan</th>
                   <th className="py-3.5 px-4 font-semibold">Dibuat</th>
                   <th className="py-3.5 px-4 font-semibold">Diaktifkan</th>
@@ -145,6 +147,20 @@ export default async function AdminDashboardPage() {
                     </td>
                     <td className="py-3.5 px-4 font-medium text-slate-800">
                       {qr.businessName || <span className="text-slate-400 italic">Belum terhubung</span>}
+                    </td>
+                    <td className="py-3.5 px-3 text-center">
+                      {qr.googleMapsUrl ? (
+                        <span className="text-emerald-700 font-bold text-xs">✓</span>
+                      ) : (
+                        <span className="text-slate-300 font-bold text-xs">—</span>
+                      )}
+                    </td>
+                    <td className="py-3.5 px-3 text-center">
+                      {qr.wifiEnabled ? (
+                        <span className="text-brand-600 font-bold text-xs">✓</span>
+                      ) : (
+                        <span className="text-slate-300 font-bold text-xs">—</span>
+                      )}
                     </td>
                     <td className="py-3.5 px-4 text-center font-bold text-slate-800">
                       {qr.scanCount}

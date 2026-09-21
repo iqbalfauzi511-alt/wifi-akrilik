@@ -11,8 +11,8 @@ import Button from '@/components/ui/Button';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Aktivasi Smart Wi-Fi QR',
-  description: 'Aktifkan QR Code fisik untuk bisnis Anda.',
+  title: 'Aktivasi Smart QR + NFC',
+  description: 'Aktifkan produk Smart QR & NFC fisik untuk bisnis Anda.',
 };
 
 export default async function ActivateQrPage({ params }) {
@@ -74,9 +74,15 @@ export default async function ActivateQrPage({ params }) {
               {qr.businessName || 'Bisnis Anda'}
             </h2>
             <p className="text-xs text-slate-500 mb-5">
-              Wi-Fi: <strong className="text-slate-800 font-semibold">{qr.wifiName}</strong>
-              {qr.batchCode && (
-                <span> • Paket: <strong className="font-mono text-slate-800 font-semibold">{qr.batchCode}</strong></span>
+              {qr.wifiEnabled ? (
+                <>Wi-Fi: <strong className="text-slate-800 font-semibold">{qr.wifiName}</strong> • </>
+              ) : (
+                <>Fitur: <strong className="text-emerald-700 font-semibold">Google Maps Rating</strong> • </>
+              )}
+              {qr.batchCode ? (
+                <span>Paket: <strong className="font-mono text-slate-800 font-semibold">{qr.batchCode}</strong></span>
+              ) : (
+                <span>Satuan</span>
               )}
             </p>
 
@@ -98,7 +104,7 @@ export default async function ActivateQrPage({ params }) {
                 className="w-full block"
               >
                 <Button variant="primary" className="w-full shadow-md shadow-brand-600/20">
-                  <span>Tes Halaman Scan Pengunjung</span>
+                  <span>Tes Halaman Scan / Tap NFC</span>
                   <ExternalLink className="w-4 h-4 ml-1.5" />
                 </Button>
               </a>
@@ -157,7 +163,7 @@ export default async function ActivateQrPage({ params }) {
             <Wifi className="w-6 h-6" />
           </div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-50 border border-brand-200/80 text-brand-700 text-xs font-semibold mb-2">
-            <span>Kode QR: <strong className="font-mono font-bold">{code}</strong></span>
+            <span>Kode Produk: <strong className="font-mono font-bold">{code}</strong></span>
           </div>
 
           {qr.batchCode && (
@@ -167,10 +173,10 @@ export default async function ActivateQrPage({ params }) {
           )}
 
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Aktivasi Smart Wi-Fi
+            Aktivasi Smart QR + NFC
           </h1>
           <p className="mt-1.5 text-xs sm:text-sm text-slate-500 max-w-sm mx-auto">
-            Lengkapi data bisnis dan Wi-Fi Anda. Setelah disimpan, seluruh akrilik QR dalam paket langsung aktif seketika!
+            Lengkapi data bisnis Anda. Setelah disimpan, seluruh akrilik QR dan NFC dalam paket langsung aktif seketika!
           </p>
         </div>
 
