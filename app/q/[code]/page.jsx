@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import { Wifi, AlertTriangle, ShieldOff, Sparkles, ArrowRight } from 'lucide-react';
-import { getQrByCode, recordScanLog } from '@/lib/db/queries/qr';
+import { getPublicQrByCode, recordScanLog } from '@/lib/db/queries/qr';
 import VisitorScanExperience from '@/components/visitor/VisitorScanExperience';
 import Button from '@/components/ui/Button';
 
@@ -18,7 +18,7 @@ export async function generateMetadata({ params }) {
 
 export default async function VisitorQrPage({ params }) {
   const { code } = params;
-  const qr = await getQrByCode(code);
+  const qr = await getPublicQrByCode(code);
 
   // Case 1: QR not found
   if (!qr) {
@@ -116,7 +116,6 @@ export default async function VisitorQrPage({ params }) {
         businessName={qr.businessName || 'Bisnis Anda'}
         instagramUrl={qr.instagramUrl || ''}
         wifiName={qr.wifiName || 'Wi-Fi Tamu'}
-        wifiPassword={qr.wifiPassword || ''}
       />
     </div>
   );

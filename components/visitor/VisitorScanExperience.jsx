@@ -10,6 +10,8 @@ import {
   ExternalLink,
   ShieldCheck,
   HelpCircle,
+  Loader2,
+  AlertCircle,
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
@@ -18,12 +20,15 @@ export default function VisitorScanExperience({
   businessName,
   instagramUrl,
   wifiName,
-  wifiPassword,
 }) {
-  const [hasFollowed, setHasFollowed] = useState(false);
+  const [isRevealed, setIsRevealed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [revealedWifiName, setRevealedWifiName] = useState(wifiName || 'Wi-Fi Tamu');
+  const [revealedWifiPassword, setRevealedWifiPassword] = useState('');
   const [copied, setCopied] = useState(false);
 
-  // Fallback if empty
+  // Fallback Instagram URL if empty
   const targetInstagramUrl = instagramUrl || 'https://www.instagram.com/';
 
   // Extract display username if possible for label
@@ -38,17 +43,52 @@ export default function VisitorScanExperience({
     displayHandle = '';
   }
 
-  const handleRevealPassword = () => {
-    setHasFollowed(true);
+  // Handle "Saya Sudah Follow" button click
+  const handleSayaSudahFollow = async () => {
+    if (isLoading) return;
+
+    try {
+      setIsLoading(true);
+      setErrorMessage('');
+
+      const res = await fetch(`/api/q/${encodeURIComponent(code)}/reveal`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok || !data || !data.success) {
+        const errorText =
+          data?.error ||
+          'Maaf, password Wi-Fi belum bisa ditampilkan. Silakan coba lagi.';
+        setErrorMessage(errorText);
+        setIsLoading(false);
+        return;
+      }
+
+      setRevealedWifiName(data.wifi_name || wifiName || 'Wi-Fi Tamu');
+      setRevealedWifiPassword(data.wifi_password || '');
+      setIsRevealed(true);
+    } catch (err) {
+      setErrorMessage('Maaf, password Wi-Fi belum bisa ditampilkan. Silakan coba lagi.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
+  // Handle Copy Password
   const handleCopyPassword = () => {
+    if (!revealedWifiPassword) return;
+
     if (navigator?.clipboard?.writeText) {
-      navigator.clipboard.writeText(wifiPassword).catch(() => {
-        fallbackCopy(wifiPassword);
+      navigator.clipboard.writeText(revealedWifiPassword).catch(() => {
+        fallbackCopy(revealedWifiPassword);
       });
     } else {
-      fallbackCopy(wifiPassword);
+      fallbackCopy(revealedWifiPassword);
     }
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
@@ -92,86 +132,101 @@ export default function VisitorScanExperience({
 
         {/* Action Content */}
         <div className="p-4 sm:p-7 space-y-5 sm:space-y-6">
-          {!hasFollowed ? (
-            /* Step 1: Follow Instagram prompt */
+          {!isRevealed ? (
+            /* STEP 1 & 2: Follow Instagram & Self-Confirmation */
             <div className="space-y-5 text-center">
+              {/* Instructions */}
               <div>
-                <p className="text-sm sm:text-base text-slate-700 font-medium leading-relaxed">
-                  Follow Instagram kami untuk mendapatkan password Wi-Fi.
+                <p className="text-sm sm:text-base text-slate-700 font-semibold leading-relaxed">
+                  📸 Follow Instagram kami
                 </p>
-                <p className="text-xs text-slate-400 mt-1">
-                  Mendukung pertumbuhan bisnis lokal favorit Anda 💖
+                <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                  untuk mendapatkan password Wi-Fi.
                 </p>
               </div>
 
-              {/* Display Instagram handle if available */}
+              {/* Display Instagram handle badge if available */}
               {displayHandle && (
-                <div className="p-3.5 rounded-2xl bg-gradient-to-r from-pink-50 via-purple-50 to-orange-50 border border-purple-100 flex items-center justify-center gap-2">
-                  <Instagram className="w-5 h-5 text-pink-600" />
-                  <span className="font-bold text-slate-900 text-base">@{displayHandle}</span>
+                <div className="p-3 rounded-2xl bg-gradient-to-r from-pink-50 via-purple-50 to-orange-50 border border-purple-100 flex items-center justify-center gap-2">
+                  <Instagram className="w-4 h-4 text-pink-600" />
+                  <span className="font-bold text-slate-900 text-sm">@{displayHandle}</span>
                 </div>
               )}
 
-              {/* Direct Anchor Button pointing exactly to business.instagram_url */}
+              {/* Button: Follow Instagram */}
               <a
                 href={targetInstagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full inline-flex items-center justify-center gap-2.5 font-semibold rounded-xl transition-all duration-150 select-none active:scale-[0.98] bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#F77737] hover:opacity-95 text-white text-base py-3.5 px-6 shadow-md shadow-pink-500/20"
+                className="w-full inline-flex items-center justify-center gap-2.5 font-bold rounded-xl transition-all duration-150 select-none active:scale-[0.98] bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#F77737] hover:opacity-95 text-white text-base py-3.5 px-6 shadow-md shadow-pink-500/20"
               >
                 <Instagram className="w-5 h-5" />
-                <span>FOLLOW INSTAGRAM</span>
+                <span>Follow Instagram</span>
                 <ExternalLink className="w-4 h-4 ml-1 opacity-80" />
               </a>
 
-              {/* Confirmation Step */}
+              {/* Error Message if reveal fails */}
+              {errorMessage && (
+                <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium flex items-center gap-2 text-left animate-in fade-in duration-150">
+                  <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                  <span>{errorMessage}</span>
+                </div>
+              )}
+
+              {/* Confirmation Step: Saya Sudah Follow */}
               <div className="pt-3 border-t border-slate-100">
                 <p className="text-xs text-slate-400 mb-3">Setelah follow Instagram:</p>
                 <Button
                   variant="primary"
                   size="lg"
-                  onClick={handleRevealPassword}
-                  className="w-full text-sm font-bold bg-slate-900 hover:bg-slate-800 focus:ring-slate-700 shadow-sm"
+                  onClick={handleSayaSudahFollow}
+                  disabled={isLoading}
+                  className="w-full text-sm font-bold bg-slate-900 hover:bg-slate-800 focus:ring-slate-700 shadow-sm disabled:opacity-60"
                 >
-                  <Check className="w-4 h-4" />
-                  SAYA SUDAH FOLLOW
+                  {isLoading ? (
+                    <div className="inline-flex items-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                      <span>Memuat password...</span>
+                    </div>
+                  ) : (
+                    <div className="inline-flex items-center gap-2">
+                      <Check className="w-4 h-4" />
+                      <span>Saya Sudah Follow</span>
+                    </div>
+                  )}
                 </Button>
               </div>
             </div>
           ) : (
-            /* Step 2: Password Revealed */
+            /* STEP 3: Password Revealed After Follow */
             <div className="space-y-6 text-center animate-in fade-in zoom-in-95 duration-200">
+              {/* Success Badge */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 text-xs font-semibold">
                 <Sparkles className="w-4 h-4 text-emerald-600" />
-                <span>Terima Kasih Telah Follow!</span>
+                <span>Terima kasih sudah follow! 🎉</span>
               </div>
 
-              <div>
-                <h3 className="text-lg font-bold text-slate-900">Akses Wi-Fi Terbuka</h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Gunakan informasi di bawah untuk menghubungkan perangkat Anda:
-                </p>
-              </div>
-
-              {/* Wi-Fi Credential Card */}
+              {/* Wi-Fi Credentials Box */}
               <div className="bg-slate-50 rounded-2xl border border-slate-200 p-5 text-left space-y-4">
+                {/* Wi-Fi Name */}
                 <div>
                   <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                    Nama Jaringan (SSID)
+                    Wi-Fi
                   </label>
-                  <div className="text-base font-bold text-slate-900 mt-0.5 flex items-center gap-2">
+                  <div className="text-base font-bold text-slate-900 mt-1 flex items-center gap-2">
                     <Wifi className="w-4 h-4 text-brand-600 shrink-0" />
-                    <span>{wifiName}</span>
+                    <span>{revealedWifiName}</span>
                   </div>
                 </div>
 
+                {/* Wi-Fi Password */}
                 <div className="pt-3 border-t border-slate-200/70">
                   <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                    Password Wi-Fi
+                    Password
                   </label>
                   <div className="mt-1 flex items-center justify-between bg-white p-3 rounded-xl border border-slate-200">
                     <span className="font-mono text-lg font-extrabold text-slate-900 tracking-wider">
-                      {wifiPassword}
+                      {revealedWifiPassword}
                     </span>
                     <button
                       type="button"
@@ -189,41 +244,34 @@ export default function VisitorScanExperience({
                 </div>
               </div>
 
-              {/* Large Copy Button */}
+              {/* Action Button: Copy Password */}
               <Button
                 variant={copied ? 'secondary' : 'primary'}
                 size="lg"
                 onClick={handleCopyPassword}
-                className="w-full text-base py-3.5 shadow-md shadow-brand-600/20"
+                className="w-full text-base py-3.5 shadow-md shadow-brand-600/20 font-bold"
               >
                 {copied ? (
-                  <>
-                    <Check className="w-5 h-5 text-emerald-400" />
-                    Password Berhasil Disalin!
-                  </>
+                  <div className="inline-flex items-center gap-2">
+                    <Check className="w-5 h-5 text-emerald-500" />
+                    <span>Password Tersalin ✓</span>
+                  </div>
                 ) : (
-                  <>
+                  <div className="inline-flex items-center gap-2">
                     <Copy className="w-5 h-5" />
-                    Salin Password Wi-Fi
-                  </>
+                    <span>Copy Password</span>
+                  </div>
                 )}
               </Button>
 
+              {/* Mobile connection helper */}
               <div className="bg-blue-50/70 rounded-xl p-3 border border-blue-100 text-left flex items-start gap-2.5">
                 <HelpCircle className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
                 <p className="text-xs text-blue-800 leading-relaxed">
                   Buka pengaturan Wi-Fi di smartphone Anda, pilih jaringan{' '}
-                  <strong>{wifiName}</strong>, lalu tempel (paste) password yang sudah disalin.
+                  <strong>{revealedWifiName}</strong>, lalu tempel (paste) password yang sudah disalin.
                 </p>
               </div>
-
-              <button
-                type="button"
-                onClick={() => setHasFollowed(false)}
-                className="text-xs text-slate-400 hover:text-slate-600 underline"
-              >
-                Kembali ke halaman follow
-              </button>
             </div>
           )}
         </div>
