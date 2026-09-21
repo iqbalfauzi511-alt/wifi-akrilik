@@ -38,9 +38,14 @@ export default function AdminQrManager({ initialQrs = [] }) {
   const [isDownloadingZip, setIsDownloadingZip] = useState(false);
   const [statusUpdatingId, setStatusUpdatingId] = useState(null);
 
-  // Synchronize when server updates initialQrs
+  // Synchronize when server updates initialQrs without wiping freshly created items
   useEffect(() => {
-    setQrList(initialQrs);
+    if (Array.isArray(initialQrs)) {
+      setQrList((prev) => {
+        if (initialQrs.length > 0) return initialQrs;
+        return prev.length > 0 ? prev : [];
+      });
+    }
   }, [initialQrs]);
 
   // Filtered and Searched QRs
