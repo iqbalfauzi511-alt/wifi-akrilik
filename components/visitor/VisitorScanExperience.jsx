@@ -141,17 +141,19 @@ export default function VisitorScanExperience({
 
         {/* Card Content */}
         <div className="p-5 sm:p-7 space-y-6">
-          {/* FITUR 1: GOOGLE MAPS RATING (Utama untuk semua bisnis) */}
+          {/* FITUR 1: GOOGLE MAPS RATING & REVIEW */}
           <div className="space-y-4 text-center">
             <div>
               <div className="inline-flex items-center gap-1.5 text-amber-500 mb-1.5">
                 <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
                 <span className="text-base sm:text-lg font-bold text-slate-900">
-                  Bagaimana pengalaman Anda?
+                  {wifiEnabled ? 'Langkah 1: Berikan Rating' : 'Bagaimana pengalaman Anda?'}
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-                Bantu kami dengan memberikan rating di Google Maps.
+                {wifiEnabled
+                  ? 'Klik tombol di bawah untuk membuka halaman ulasan Google Maps bisnis kami:'
+                  : 'Bantu kami dengan memberikan rating di Google Maps.'}
               </p>
             </div>
 
@@ -169,14 +171,14 @@ export default function VisitorScanExperience({
             </a>
 
             {hasOpenedReview && (
-              <p className="text-xs font-semibold text-emerald-600 flex items-center justify-center gap-1">
+              <p className="text-xs font-semibold text-emerald-600 flex items-center justify-center gap-1 bg-emerald-50 py-1.5 px-3 rounded-lg border border-emerald-200">
                 <Check className="w-3.5 h-3.5" />
-                <span>Halaman Google Maps ulasan telah dibuka</span>
+                <span>Halaman Google Maps telah dibuka. Silakan kembali untuk melihat password!</span>
               </p>
             )}
           </div>
 
-          {/* FITUR 2: WI-FI ACCESS (OPTIONAL - Hanya tampil jika wifiEnabled === true) */}
+          {/* FITUR 2: WI-FI ACCESS (Hanya tampil jika wifiEnabled === true) */}
           {wifiEnabled && (
             <div className="pt-5 border-t border-slate-200/80">
               {!isRevealed ? (
@@ -184,11 +186,11 @@ export default function VisitorScanExperience({
                 <div className="space-y-4 text-center animate-in fade-in duration-200">
                   <div className="flex items-center justify-center gap-2 text-slate-800">
                     <Wifi className="w-5 h-5 text-brand-600" />
-                    <h3 className="text-base font-bold">Wi-Fi Gratis</h3>
+                    <h3 className="text-base font-bold">Langkah 2: Ambil Password Wi-Fi</h3>
                   </div>
 
                   <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                    Berikan rating untuk mendapatkan akses Wi-Fi.
+                    Setelah membuka/memberikan ulasan, tekan tombol di bawah untuk melihat password Wi-Fi:
                   </p>
 
                   {/* Error Message if reveal fails */}
@@ -210,12 +212,12 @@ export default function VisitorScanExperience({
                     {isLoading ? (
                       <div className="inline-flex items-center gap-2">
                         <Loader2 className="w-4 h-4 animate-spin text-white" />
-                        <span>Memuat password...</span>
+                        <span>Membuka password...</span>
                       </div>
                     ) : (
                       <div className="inline-flex items-center gap-2">
-                        <Check className="w-4 h-4" />
-                        <span>Saya Sudah Memberikan Rating</span>
+                        <Check className="w-4 h-4 text-emerald-400" />
+                        <span>Saya Sudah Review (Buka Password)</span>
                       </div>
                     )}
                   </Button>
