@@ -100,10 +100,14 @@ export default async function VisitorQrPage({ params }) {
   }
 
   // Case 4: QR Active!
-  // Record visitor scan asynchronously in scan_logs
-  const headersList = headers();
-  const userAgent = headersList.get('user-agent') || 'Unknown';
-  await recordScanLog(qr.id, userAgent);
+  // Record visitor scan asynchronously in scan_logs (safely ignored if fails)
+  try {
+    const headersList = headers();
+    const userAgent = headersList.get('user-agent') || 'Unknown';
+    await recordScanLog(qr.id, userAgent);
+  } catch (err) {
+    console.warn('Scan logging error (ignored):', err);
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-3 py-6 sm:py-12 bg-slate-100/70">
