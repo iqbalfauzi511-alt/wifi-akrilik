@@ -402,7 +402,7 @@ export default async function HomePage() {
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
               <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer">
-                <Button size="lg" className="bg-white text-brand-700 hover:bg-slate-50 border-white px-8">
+                <Button size="lg" className="!bg-white !text-brand-700 hover:!bg-slate-50 px-8">
                   Pesan via WhatsApp
                 </Button>
               </a>
