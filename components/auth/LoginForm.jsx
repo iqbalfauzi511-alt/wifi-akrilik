@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { QrCode, ShieldCheck, Store, ArrowRight, Sparkles } from 'lucide-react';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
@@ -89,8 +90,8 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
         {/* Brand */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2.5 group">
-            <div className="w-12 h-12 flex items-center justify-center group-hover:scale-105 transition-transform">
-              <img src="/logo.png" alt="Cobascan" className="w-full h-full object-contain drop-shadow-sm" />
+            <div className="w-12 h-12 flex items-center justify-center group-hover:scale-105 transition-transform relative">
+              <Image src="/logo.png" alt="Cobascan" width={200} height={200} priority className="w-full h-full object-contain drop-shadow-sm" />
             </div>
           </Link>
           <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">

@@ -112,11 +112,14 @@ export default function QRCodeViewer({
           {isGenerating ? (
             <div className="w-10 h-10 border-4 border-brand-200 border-t-brand-600 rounded-full animate-spin" />
           ) : dataUrl ? (
-            <img
-              src={dataUrl}
-              alt={`QR Code ${code}`}
-              className="w-full h-full object-contain select-none"
-            />
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={dataUrl}
+                alt={`QR Code ${code}`}
+                className="w-full h-full object-contain select-none"
+              />
+            </>
           ) : (
             <p className="text-xs text-slate-400">Gagal memuat QR</p>
           )}

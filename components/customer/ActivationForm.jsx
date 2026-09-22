@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
   Wifi,
@@ -221,9 +222,11 @@ export default function ActivationForm({
                     <div className="flex items-center gap-2.5 overflow-hidden">
                       <div className="w-8 h-8 rounded-xl bg-slate-100 border border-slate-200/80 p-0.5 flex items-center justify-center shrink-0 overflow-hidden">
                         {st.logoUrl ? (
-                          <img
+                          <Image
                             src={st.logoUrl}
                             alt={st.businessName}
+                            width={32}
+                            height={32}
                             className="w-full h-full object-contain rounded-lg"
                           />
                         ) : (
