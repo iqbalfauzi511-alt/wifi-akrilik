@@ -174,9 +174,9 @@ export default function VisitorScanExperience({
           </h2>
           <p className="text-xs text-slate-500 mt-1 leading-relaxed">
             {wifiEnabled ? (
-              <>Beri rating bintang 5 di Google Maps untuk <strong>membuka akses password Wi-Fi gratis</strong> kami.</>
+              <>Ulasan Anda di Google Maps sangat membantu kami. Ketuk tombol untuk memberikan ulasan sekaligus membuka akses password Wi-Fi gratis kami.</>
             ) : (
-              <>Ulasan dan rating bintang 5 Anda di Google Maps sangat berharga bagi perkembangan kami.</>
+              <>Ulasan dan masukan Anda di Google Maps sangat berarti bagi pelayanan kami.</>
             )}
           </p>
         </div>
@@ -185,7 +185,7 @@ export default function VisitorScanExperience({
         <div className="space-y-1.5">
           <div className="text-center">
             <span className="text-[11px] font-bold text-amber-700 uppercase tracking-wider">
-              {hasReviewed ? '✓ Rating Anda Telah Dipilih' : 'Ketuk Bintang untuk Menilai:'}
+              {hasReviewed ? '✓ Ulasan Anda Sangat Berarti' : 'Bagikan Ulasan Anda:'}
             </span>
           </div>
           <div className="flex items-center justify-center gap-2 py-2 bg-amber-50/40 rounded-2xl border border-amber-100">
@@ -246,7 +246,7 @@ export default function VisitorScanExperience({
         {hasReviewed && (
           <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800 text-center flex items-center justify-center gap-2 animate-in fade-in duration-200">
             <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>✓ Ulasan dibuka! Akses Wi-Fi kini telah terbuka. Silakan buka password di bawah.</span>
+            <span>✓ Terima kasih atas ulasan Anda! Akses Wi-Fi kini telah terbuka di bawah ini.</span>
           </div>
         )}
       </div>
