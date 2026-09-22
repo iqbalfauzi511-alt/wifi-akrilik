@@ -221,7 +221,7 @@ export default async function HomePage() {
                   {[1,2,3,4,5].map(i => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
                 </div>
                 <p className="text-sm text-slate-600 leading-relaxed italic mb-6">
-                  "Sejak pakai ini, ulasan bintang 5 kafe saya naik drastis! Pelanggan suka karena sangat simpel. HP tinggal tap, link menu dan review langsung muncul di layar. Jumlah review bulanan naik lebih dari 3 kali lipat!"
+                  &quot;Sejak pakai ini, ulasan bintang 5 kafe saya naik drastis! Pelanggan suka karena sangat simpel. HP tinggal tap, link menu dan review langsung muncul di layar. Jumlah review bulanan naik lebih dari 3 kali lipat!&quot;
                 </p>
               </div>
               <div className="flex items-center gap-3">
@@ -241,7 +241,7 @@ export default async function HomePage() {
                   {[1,2,3,4,5].map(i => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
                 </div>
                 <p className="text-sm text-slate-600 leading-relaxed italic mb-6">
-                  "Bentuknya ringkas dan tidak memakan meja kasir. Desain elegan. Pasien di klinik kami merasa sangat dimudahkan saat harus memberikan feedback pelayanan."
+                  &quot;Bentuknya ringkas dan tidak memakan meja kasir. Desain elegan. Pasien di klinik kami merasa sangat dimudahkan saat harus memberikan feedback pelayanan.&quot;
                 </p>
               </div>
               <div className="flex items-center gap-3">
@@ -261,7 +261,7 @@ export default async function HomePage() {
                   {[1,2,3,4,5].map(i => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
                 </div>
                 <p className="text-sm text-slate-600 leading-relaxed italic mb-6">
-                  "Sebelumnya kami pakai *tent card* biasa dan jarang ada yang scan karena ribet. Dengan adanya *smart tag* ini, tamu kami lebih senang melakukan *tap* NFC. Sangat worth it buat naikin rating!"
+                  &quot;Sebelumnya kami pakai *tent card* biasa dan jarang ada yang scan karena ribet. Dengan adanya *smart tag* ini, tamu kami lebih senang melakukan *tap* NFC. Sangat worth it buat naikin rating!&quot;
                 </p>
               </div>
               <div className="flex items-center gap-3">
