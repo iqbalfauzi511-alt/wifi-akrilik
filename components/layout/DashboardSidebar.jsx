@@ -75,10 +75,10 @@ export default function DashboardSidebar({ role = 'customer', businessName }) {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all border ${
                   isActive
-                    ? 'bg-blue-50 text-blue-700 font-bold shadow-2xs'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                    ? 'bg-white border-slate-200 text-brand-600 shadow-sm'
+                    : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
                 <item.icon

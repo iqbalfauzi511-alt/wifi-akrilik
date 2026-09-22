@@ -3,7 +3,7 @@ import React from 'react';
 export default function Card({ children, className = '', ...props }) {
   return (
     <div
-      className={`bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 ${className}`}
+      className={`bento-card p-6 ${className}`}
       {...props}
     >
       {children}

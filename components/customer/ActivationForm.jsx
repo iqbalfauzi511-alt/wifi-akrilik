@@ -107,7 +107,7 @@ export default function ActivationForm({
 
   if (isSuccess) {
     return (
-      <Card className="text-center p-6 sm:p-8 border-emerald-200 bg-white shadow-xl">
+      <div className="bento-card text-center p-6 sm:p-8 border-emerald-200">
         <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3">
           <CheckCircle2 className="w-8 h-8" />
         </div>
@@ -151,12 +151,12 @@ export default function ActivationForm({
             </Button>
           </a>
         </div>
-      </Card>
+      </div>
     );
   }
 
   return (
-    <Card className="shadow-lg border-slate-200/90">
+    <div className="bento-card p-6 sm:p-8">
       {/* Account linking header */}
       {userEmail && (
         <div className="mb-5 p-3 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between text-xs">
@@ -426,13 +426,13 @@ export default function ActivationForm({
             type="submit"
             size="lg"
             isLoading={isSubmitting}
-            className="w-full shadow-md shadow-brand-600/20"
+            className="w-full"
           >
             <span>Aktifkan Cobascan</span>
             <ArrowRight className="w-4 h-4 ml-1.5" />
           </Button>
         </div>
       </form>
-    </Card>
+    </div>
   );
 }

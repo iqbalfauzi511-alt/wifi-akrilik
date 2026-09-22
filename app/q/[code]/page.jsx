@@ -26,7 +26,7 @@ export default async function VisitorQrPage({ params }) {
   if (!qr) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
-        <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200 shadow-xl p-8 text-center">
+        <div className="max-w-md w-full bento-card p-8 text-center">
           <div className="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center mx-auto mb-4">
             <AlertTriangle className="w-7 h-7" />
           </div>
@@ -48,7 +48,7 @@ export default async function VisitorQrPage({ params }) {
   if (qr.status === 'disabled') {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
-        <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200 shadow-xl p-8 text-center">
+        <div className="max-w-md w-full bento-card p-8 text-center">
           <div className="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center mx-auto mb-4">
             <ShieldOff className="w-7 h-7" />
           </div>
@@ -70,7 +70,7 @@ export default async function VisitorQrPage({ params }) {
   if (qr.status === 'blank' || qr.status === 'sold') {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
-        <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200 shadow-xl p-8 text-center">
+        <div className="max-w-md w-full bento-card p-8 text-center">
           <div className="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 border border-brand-100 flex items-center justify-center mx-auto mb-4">
             <Sparkles className="w-7 h-7" />
           </div>
@@ -85,7 +85,7 @@ export default async function VisitorQrPage({ params }) {
           </p>
           <div className="space-y-3">
             <Link href={`/activate/${code}`}>
-              <Button size="lg" className="w-full shadow-md shadow-brand-600/20">
+              <Button size="lg" className="w-full">
                 Aktivasi Sekarang
                 <ArrowRight className="w-4 h-4 ml-1.5" />
               </Button>
@@ -118,7 +118,7 @@ export default async function VisitorQrPage({ params }) {
   if (!mapsValidation.isValid) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
-        <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200 shadow-xl p-8 text-center">
+        <div className="max-w-md w-full bento-card p-8 text-center">
           <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center mx-auto mb-4">
             <MapPin className="w-7 h-7" />
           </div>

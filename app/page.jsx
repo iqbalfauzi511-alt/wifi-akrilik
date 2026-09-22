@@ -27,6 +27,10 @@ export default async function HomePage() {
 
       {/* Hero Section */}
       <section className="relative pt-20 pb-16 sm:pt-28 sm:pb-24 overflow-hidden bg-white border-b border-slate-100">
+        <div className="aurora-bg-container">
+          <div className="aurora-blob-1"></div>
+          <div className="aurora-blob-2"></div>
+        </div>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           {/* Badge */}
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-50 border border-brand-100 text-brand-700 text-[10px] sm:text-xs font-bold mb-6 sm:mb-8 tracking-wide shadow-xs">
@@ -35,8 +39,8 @@ export default async function HomePage() {
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 leading-[1.1] mb-6">
-            Ubah Pengunjung Puas Jadi Ulasan Bintang 5 di Google Secara Instan
+          <h1 className="heading-premium text-4xl sm:text-5xl lg:text-6xl mb-6">
+            Ubah Pengunjung Puas Jadi <span className="text-gradient-google">Ulasan Bintang 5</span> di Google Secara Instan
           </h1>
 
           {/* Subheadline */}
@@ -52,7 +56,7 @@ export default async function HomePage() {
               rel="noopener noreferrer"
               className="w-full sm:w-auto"
             >
-              <Button size="lg" className="w-full bg-brand-600 hover:bg-brand-700 text-white shadow-lg shadow-brand-500/25 border-brand-600 px-8">
+              <Button size="lg" className="w-full btn-glow-blue px-8">
                 Pesan Sekarang
               </Button>
             </a>
@@ -97,7 +101,7 @@ export default async function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {/* Step 1 */}
-            <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow relative">
+            <div className="bento-card p-8 relative">
               <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 text-slate-900 font-mono font-bold flex items-center justify-center mb-6">
                 01
               </div>
@@ -105,12 +109,12 @@ export default async function HomePage() {
               <p className="text-sm text-slate-500 leading-relaxed mb-6">
                 HP iPhone maupun Android cukup didekatkan ke permukaan perangkat, atau cahaya aktifkan kamera ke QR code.
               </p>
-              <div className="flex items-center gap-2 text-xs font-bold text-emerald-600 bg-emerald-50 w-fit px-3 py-1.5 rounded-full border border-emerald-100">
+              <div className="flex items-center gap-2 text-xs font-bold text-[#15803D] bg-[#F0FDF4] w-fit px-3 py-1.5 rounded-full border border-[#BBF7D0]">
                 <CheckCircle2 className="w-3.5 h-3.5" /> Tanpa instal aplikasi apapun
               </div>
             </div>
             {/* Step 2 */}
-            <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow relative">
+            <div className="bento-card p-8 relative">
               <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 text-slate-900 font-mono font-bold flex items-center justify-center mb-6">
                 02
               </div>
@@ -123,7 +127,7 @@ export default async function HomePage() {
               </div>
             </div>
             {/* Step 3 */}
-            <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow relative">
+            <div className="bento-card p-8 relative">
               <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 text-slate-900 font-mono font-bold flex items-center justify-center mb-6">
                 03
               </div>
@@ -155,8 +159,8 @@ export default async function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="p-8 rounded-3xl border border-slate-100 bg-[#FAFAFA] hover:bg-white hover:shadow-xl hover:shadow-brand-500/5 transition-all">
-              <div className="w-12 h-12 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center mb-5">
+            <div className="bento-card p-8">
+              <div className="w-12 h-12 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center mb-5">
                 <Smartphone className="w-5 h-5" />
               </div>
               <h4 className="text-base font-bold text-slate-900 mb-2">Aktivitas Scan Tidak Dibatasi</h4>
@@ -165,8 +169,8 @@ export default async function HomePage() {
               </p>
             </div>
             
-            <div className="p-8 rounded-3xl border border-slate-100 bg-[#FAFAFA] hover:bg-white hover:shadow-xl hover:shadow-emerald-500/5 transition-all">
-              <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-5">
+            <div className="bento-card p-8">
+              <div className="w-12 h-12 rounded-xl bg-[#F0FDF4] text-[#15803D] flex items-center justify-center mb-5">
                 <Battery className="w-5 h-5" />
               </div>
               <h4 className="text-base font-bold text-slate-900 mb-2">100% Tanpa Baterai</h4>
@@ -175,8 +179,8 @@ export default async function HomePage() {
               </p>
             </div>
 
-            <div className="p-8 rounded-3xl border border-slate-100 bg-[#FAFAFA] hover:bg-white hover:shadow-xl hover:shadow-blue-500/5 transition-all">
-              <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-5">
+            <div className="bento-card p-8">
+              <div className="w-12 h-12 rounded-xl bg-[#EFF6FF] text-[#1D4ED8] flex items-center justify-center mb-5">
                 <Monitor className="w-5 h-5" />
               </div>
               <h4 className="text-base font-bold text-slate-900 mb-2">Tampilkan Sandi Wi-Fi</h4>
@@ -185,8 +189,8 @@ export default async function HomePage() {
               </p>
             </div>
 
-            <div className="p-8 rounded-3xl border border-slate-100 bg-[#FAFAFA] hover:bg-white hover:shadow-xl hover:shadow-amber-500/5 transition-all">
-              <div className="w-12 h-12 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mb-5">
+            <div className="bento-card p-8">
+              <div className="w-12 h-12 rounded-xl bg-[#FFFBEB] text-[#B45309] flex items-center justify-center mb-5">
                 <Droplets className="w-5 h-5" />
               </div>
               <h4 className="text-base font-bold text-slate-900 mb-2">Cetak Anti Pudar & Tahan Air</h4>
@@ -195,8 +199,8 @@ export default async function HomePage() {
               </p>
             </div>
 
-            <div className="p-8 rounded-3xl border border-slate-100 bg-[#FAFAFA] hover:bg-white hover:shadow-xl hover:shadow-indigo-500/5 transition-all">
-              <div className="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mb-5">
+            <div className="bento-card p-8">
+              <div className="w-12 h-12 rounded-xl bg-[#EEF2FF] text-[#4338CA] flex items-center justify-center mb-5">
                 <LinkIcon className="w-5 h-5" />
               </div>
               <h4 className="text-base font-bold text-slate-900 mb-2">Ganti Link Kapan Saja</h4>
@@ -205,8 +209,8 @@ export default async function HomePage() {
               </p>
             </div>
 
-            <div className="p-8 rounded-3xl border border-slate-100 bg-[#FAFAFA] hover:bg-white hover:shadow-xl hover:shadow-rose-500/5 transition-all">
-              <div className="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mb-5">
+            <div className="bento-card p-8">
+              <div className="w-12 h-12 rounded-xl bg-[#FFF1F2] text-[#BE123C] flex items-center justify-center mb-5">
                 <CheckCircle2 className="w-5 h-5" />
               </div>
               <h4 className="text-base font-bold text-slate-900 mb-2">Dashboard Analitik Terpusat</h4>
@@ -234,7 +238,7 @@ export default async function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition-shadow">
+            <div className="bento-card overflow-hidden flex flex-col group p-0">
               <div className="h-40 bg-brand-100 flex items-center justify-center relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-tr from-brand-600 to-indigo-600 opacity-90"></div>
                 <h4 className="text-2xl font-black text-white relative z-10 drop-shadow-sm">F&B / Kuliner</h4>
@@ -247,9 +251,9 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition-shadow">
+            <div className="bento-card overflow-hidden flex flex-col group p-0">
               <div className="h-40 bg-emerald-100 flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500 to-teal-500 opacity-90"></div>
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#34A853] to-teal-500 opacity-90"></div>
                 <h4 className="text-2xl font-black text-white relative z-10 drop-shadow-sm">Kesehatan</h4>
               </div>
               <div className="p-8 flex-1 flex flex-col">
@@ -260,9 +264,9 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition-shadow">
+            <div className="bento-card overflow-hidden flex flex-col group p-0">
               <div className="h-40 bg-amber-100 flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-tr from-amber-500 to-orange-500 opacity-90"></div>
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#FBBC04] to-orange-500 opacity-90"></div>
                 <h4 className="text-2xl font-black text-white relative z-10 drop-shadow-sm">Retail & Jasa</h4>
               </div>
               <div className="p-8 flex-1 flex flex-col">
@@ -392,23 +396,23 @@ export default async function HomePage() {
       {/* CTA Footer Banner */}
       <section className="bg-white py-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-brand-600 rounded-3xl p-10 sm:p-14 text-center relative overflow-hidden">
+          <div className="bento-card p-10 sm:p-14 text-center relative overflow-hidden bg-gradient-to-br from-[#4285F4] to-[#1E3A8A]">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
             
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-4 relative z-10">
+            <h2 className="heading-premium text-2xl sm:text-3xl text-white mb-4 relative z-10">
               Siap Meningkatkan Reputasi Bisnis Anda di Google?
             </h2>
-            <p className="text-brand-100 mb-8 max-w-xl mx-auto text-sm sm:text-base relative z-10">
+            <p className="text-blue-100 mb-8 max-w-xl mx-auto text-sm sm:text-base relative z-10">
               Mulai kumpulkan ulasan positif pelanggan lama Anda dengan mudah hari ini dengan alat cerdas ini.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
               <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer">
-                <Button size="lg" className="!bg-white !text-brand-700 hover:!bg-slate-50 px-8">
+                <Button size="lg" className="w-full !bg-white !text-brand-700 hover:!bg-slate-50 px-8">
                   Pesan via WhatsApp
                 </Button>
               </a>
               <Link href="/login">
-                <Button size="lg" className="!bg-transparent border border-brand-400 text-white hover:!bg-brand-500 px-8 shadow-none">
+                <Button size="lg" className="w-full !bg-transparent border border-white/40 text-white hover:!bg-white/10 px-8 shadow-none">
                   Masuk Dashboard
                 </Button>
               </Link>

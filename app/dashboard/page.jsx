@@ -279,7 +279,7 @@ export default async function CustomerDashboardPage() {
             {/* Quick Action / Hardware Overview Tile */}
             {/* Quick Tips / Actions */}
             <div className="space-y-4">
-              <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm relative overflow-hidden">
+              <div className="bento-card p-5 relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
                   <QrCode className="w-24 h-24" />
                 </div>
