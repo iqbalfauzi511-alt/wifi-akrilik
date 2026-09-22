@@ -25,6 +25,8 @@ import {
   Check,
   Search,
   Filter,
+  Wifi,
+  Star,
 } from 'lucide-react';
 import { getAdminStats } from '@/lib/db/queries/stats';
 import { getAllQrsAdmin, getAllBatchesAdmin } from '@/lib/db/queries/qr';
@@ -325,7 +327,7 @@ export default async function AdminDashboardPage() {
 
             {/* Batch Cards Carousel / Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mt-5">
-              {batches.slice(0, 3).map((b, idx) => {
+              {(Array.isArray(batches) ? batches : []).slice(0, 3).map((b, idx) => {
                 const total = b.totalQrs || 0;
                 const active = b.activeQrs || 0;
                 const available = Math.max(0, total - active);
@@ -334,13 +336,13 @@ export default async function AdminDashboardPage() {
 
                 return (
                   <div
-                    key={b.id}
+                    key={b.id || idx}
                     className="p-4 rounded-2xl border border-slate-200/90 bg-slate-50/50 hover:bg-slate-50 transition-colors flex flex-col justify-between"
                   >
                     <div>
                       <div className="flex items-center justify-between mb-2">
                         <span className="font-mono font-bold text-slate-900 text-xs bg-white px-2.5 py-0.5 rounded-md border border-slate-200">
-                          {b.batchCode}
+                          {b.batchCode || 'BATCH'}
                         </span>
                         <span
                           className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
@@ -369,11 +371,13 @@ export default async function AdminDashboardPage() {
                         <div className="flex justify-between text-[10px] text-slate-400 font-mono pt-1">
                           <span>Date:</span>
                           <span>
-                            {new Date(b.createdAt).toLocaleDateString('en-US', {
-                              month: 'short',
-                              day: 'numeric',
-                              year: 'numeric',
-                            })}
+                            {b?.createdAt
+                              ? new Date(b.createdAt).toLocaleDateString('en-US', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric',
+                                })
+                              : 'Baru'}
                           </span>
                         </div>
                       </div>
@@ -633,7 +637,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Embedded Interactive Fleet Table */}
-        <AdminQrManager initialQrs={allQrs} />
+        <AdminQrManager initialQrs={Array.isArray(allQrs) ? allQrs : []} />
       </div>
     </div>
   );

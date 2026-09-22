@@ -328,7 +328,7 @@ export default function AdminUsersManager({
               <AlertTriangle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
               <div>
                 <p className="font-bold text-sm text-rose-900">
-                  Hapus Bisnis "{businessToDelete.businessName}"?
+                  Hapus Bisnis &ldquo;{businessToDelete.businessName}&rdquo;?
                 </p>
                 <p className="mt-1 leading-relaxed text-rose-700">
                   Profil bisnis ini akan dihapus dari sistem.
