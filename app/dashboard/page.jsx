@@ -71,8 +71,8 @@ export default async function CustomerDashboardPage() {
             {userBusinesses.length > 1
               ? `Kelola ${userBusinesses.length} cabang bisnis (${userBusinesses.map((b) => b.businessName).join(', ')}), Google Review, dan akses Wi-Fi masing-masing.`
               : business
-              ? `Kelola Cobascan, Google Review, dan akses Wi-Fi untuk ${business.businessName}.`
-              : 'Selamat datang! Silakan daftarkan profil bisnis Anda atau aktivasi perangkat Cobascan (QR + NFC).'}
+              ? `Kelola Perangkat, Google Review, dan akses Wi-Fi untuk ${business.businessName}.`
+              : 'Selamat datang! Silakan daftarkan profil bisnis Anda atau aktivasi perangkat baru.'}
           </p>
         </div>
 
@@ -86,7 +86,7 @@ export default async function CustomerDashboardPage() {
           <Link href="/dashboard/qr">
             <Button variant="primary" size="sm" className="gap-1.5 text-xs">
               <QrCode className="w-3.5 h-3.5" />
-              Perangkat Cobascan
+              Perangkat Aktif
             </Button>
           </Link>
         </div>
@@ -94,15 +94,15 @@ export default async function CustomerDashboardPage() {
 
       {/* If customer hasn't set up business yet */}
       {!business ? (
-        <Card className="border-brand-200 bg-brand-50/40 p-8 text-center">
-          <div className="w-12 h-12 rounded-2xl bg-brand-100 text-brand-600 flex items-center justify-center mx-auto mb-3">
-            <QrCode className="w-6 h-6 text-brand-600" />
+        <Card className="border-blue-200 bg-blue-50/40 p-8 text-center">
+          <div className="w-12 h-12 rounded-2xl bg-blue-100 text-google-blue flex items-center justify-center mx-auto mb-3">
+            <QrCode className="w-6 h-6 text-google-blue" />
           </div>
           <h3 className="text-lg font-bold text-slate-900 mb-1">
             Belum Ada Bisnis Terdaftar
           </h3>
           <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto mb-5">
-            Anda dapat melengkapi profil bisnis Anda sekarang atau cukup scan QR Code / tap NFC pada produk Cobascan fisik untuk mengaktifkannya.
+            Anda dapat melengkapi profil bisnis Anda sekarang atau cukup scan QR Code pada perangkat fisik untuk mengaktifkannya.
           </p>
           <Link href="/dashboard/setup">
             <Button size="md">
@@ -121,15 +121,15 @@ export default async function CustomerDashboardPage() {
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                      Cobascan Anda
+                      Perangkat Anda
                     </h3>
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                      <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                      Active
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-google-green border border-emerald-200">
+                      <CheckCircle2 className="w-3 h-3 text-google-green" />
+                      Aktif
                     </span>
                   </div>
                   <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                    QR &amp; NFC aktif dan siap digunakan pelanggan.
+                    Sistem aktif dan siap digunakan pelanggan.
                   </p>
                 </div>
 
@@ -283,52 +283,76 @@ export default async function CustomerDashboardPage() {
             </Card>
 
             {/* Quick Action / Hardware Overview Tile */}
-            <Card className="flex flex-col justify-between bg-slate-900 text-white border-slate-800">
-              <div>
-                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-amber-400 mb-4">
-                  <Radio className="w-5 h-5" />
+            {/* Quick Tips / Actions */}
+            <div className="space-y-4">
+              <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+                  <QrCode className="w-24 h-24" />
                 </div>
-                <h4 className="text-base font-bold text-white">Tambah Perangkat Cobascan</h4>
-                <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                  Punya produk fisik Cobascan baru? Cukup scan kode QR atau tap HP ke chip NFC produk tersebut untuk menautkannya ke {business.businessName}.
+                <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2 relative z-10">
+                  <span className="w-2 h-2 rounded-full bg-google-blue" />
+                  Punya Cabang Lain?
+                </h4>
+                <p className="text-xs text-slate-500 mt-2 relative z-10 leading-relaxed">
+                  Punya perangkat baru? Cukup scan kode QR produk tersebut untuk mendaftarkannya sebagai cabang baru atau menautkannya ke {business.businessName}.
                 </p>
-                <div className="mt-4 p-3 rounded-xl bg-white/5 border border-white/10 text-xs text-slate-300">
-                  💡 <strong>Satu URL untuk QR &amp; NFC:</strong> Pengunjung scan QR atau tap NFC diarahkan ke halaman yang sama secara otomatis.
+                <div className="mt-3 relative z-10 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                  <p className="text-[11px] text-slate-600 leading-relaxed">
+                    💡 <strong>Otomatis:</strong> Pengunjung scan QR diarahkan ke halaman khusus secara otomatis.
+                  </p>
                 </div>
               </div>
-              <div className="mt-6 pt-4 border-t border-slate-800">
-                <Link href="/dashboard/qr" className="block">
-                  <Button variant="outline" size="sm" className="w-full text-xs bg-white/10 hover:bg-white/20 text-white border-white/20">
-                    Lihat Seluruh Cobascan ({myQrs.length})
-                  </Button>
-                </Link>
+            </div>
+          </div>
+
+          {/* Device List & Activity (Simplified) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+            <Card className="border-slate-200 bg-white">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 rounded-lg bg-blue-50 text-google-blue">
+                  <QrCode className="w-4 h-4" />
+                </div>
+                <h3 className="font-bold text-slate-900">Total Perangkat</h3>
               </div>
+              <p className="text-3xl font-black text-slate-900">{stats.totalQrs}</p>
+              <p className="text-xs text-slate-500 mt-1">Perangkat aktif di lokasi bisnis Anda</p>
+            </Card>
+
+            <Card className="border-slate-200 bg-white">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 rounded-lg bg-emerald-50 text-google-green">
+                  <BarChart3 className="w-4 h-4" />
+                </div>
+                <h3 className="font-bold text-slate-900">Total Scan</h3>
+              </div>
+              <p className="text-3xl font-black text-slate-900">{stats.totalScans}</p>
+              <p className="text-xs text-slate-500 mt-1">Akumulasi interaksi pelanggan melalui QR scan</p>
             </Card>
           </div>
 
-          {/* Statistics Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <StatCard
-              title="Perangkat Cobascan Aktif"
-              value={stats.activeQrCount}
-              subtitle="Total perangkat QR & NFC aktif di lokasi bisnis Anda"
-              icon={QrCode}
-              color="blue"
-            />
-            <StatCard
-              title="Total Scan & Tap"
-              value={stats.totalScans}
-              subtitle="Akumulasi interaksi pelanggan melalui QR scan & NFC tap"
-              icon={BarChart3}
-              color="emerald"
-            />
+          {/* Quick Access to QR Table */}
+          <div className="mt-8">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-bold text-slate-900">Perangkat Anda</h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Daftar perangkat aktif yang terhubung ke bisnis Anda
+                </p>
+              </div>
+              <Link href="/dashboard/qr">
+                <Button variant="outline" size="sm" className="text-xs gap-1">
+                  Lihat Semua
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Button>
+              </Link>
+            </div>
           </div>
 
-          {/* Recent Cobascan Devices preview with Barcode Viewer & Download */}
+          {/* Recent Devices preview with Barcode Viewer & Download */}
           <Card>
             <CardHeader
-              title="Perangkat Cobascan Terpasang"
-              subtitle="Daftar perangkat QR & NFC aktif yang terhubung ke bisnis Anda"
+              title="Perangkat Terpasang"
+              subtitle="Daftar perangkat aktif yang terhubung ke bisnis Anda"
               action={
                 <Link href="/dashboard/qr">
                   <Button variant="ghost" size="sm" className="text-xs">

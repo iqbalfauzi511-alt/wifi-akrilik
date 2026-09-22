@@ -415,10 +415,10 @@ export default function VisitorScanExperience({
         <div className="flex items-center justify-center gap-1.5 text-xs text-slate-400 font-medium">
           <span>Powered by</span>
           <strong className="text-slate-700 font-bold">Cobascan</strong>
-          <span className="w-1.5 h-1.5 rounded-full bg-brand-600 inline-block" />
+          <span className="w-1.5 h-1.5 rounded-full bg-google-blue inline-block" />
         </div>
         <p className="text-[10px] text-slate-400">
-          Smart Acrylic Stand &bull; QR Code + NFC Table Portal
+          Layanan Portal QR Code
         </p>
       </div>
     </div>

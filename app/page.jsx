@@ -41,7 +41,7 @@ export default async function HomePage() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-600"></span>
             </span>
-            <span>QR + NFC Platform untuk Bisnis Anda</span>
+            <span>Platform QR Code untuk Bisnis Anda</span>
           </div>
 
           {/* Title & Tagline */}
@@ -53,7 +53,7 @@ export default async function HomePage() {
           </h1>
 
           <p className="mt-5 text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium">
-            Satu scan, satu tap, berbagai akses untuk bisnis Anda. Perangkat QR &amp; NFC terintegrasi untuk mengarahkan pelanggan langsung ke Google Review dan fasilitas Wi-Fi.
+            Satu scan, berbagai akses untuk bisnis Anda. Perangkat QR terintegrasi untuk mengarahkan pelanggan langsung ke Google Review dan fasilitas Wi-Fi.
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -102,10 +102,10 @@ export default async function HomePage() {
                   </div>
                   <div>
                     <h4 className="text-sm font-extrabold text-white tracking-wide">COBASCAN</h4>
-                    <p className="text-[11px] text-slate-400 flex items-center gap-1">
-                      <Radio className="w-3 h-3 text-amber-400" />
-                      <span>Dual Access: Scan QR &bull; Tap NFC</span>
-                    </p>
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/50 backdrop-blur-md border border-white/10 text-xs font-semibold text-white">
+                      <QrCode className="w-3.5 h-3.5 text-brand-400" />
+                      <span>QR Code Dinamis</span>
+                    </div>
                   </div>
                 </div>
                 <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
@@ -159,7 +159,7 @@ export default async function HomePage() {
               <div className="flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-slate-800/60">
                 <span className="flex items-center gap-1.5">
                   <Smartphone className="w-3.5 h-3.5 text-brand-400" />
-                  Kamera Scan &amp; NFC Tap Smartphone
+                  Kamera Scan Smartphone
                 </span>
                 <span className="text-brand-400 font-mono font-bold">domain.com/q/CS-X7K29A</span>
               </div>
@@ -173,7 +173,7 @@ export default async function HomePage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-xs font-bold uppercase tracking-widest text-brand-600 mb-2">
-              Satu Perangkat, Dua Cara Akses
+              Satu Perangkat, Akses Mudah
             </h2>
             <h3 className="text-3xl font-extrabold text-slate-900 tracking-tight">
               Cara Kerja Cobascan
@@ -187,14 +187,14 @@ export default async function HomePage() {
             {[
               {
                 step: '01',
-                title: 'Pasang Cobascan',
-                desc: 'Letakkan perangkat akrilik Cobascan (QR + NFC) di setiap meja atau kasir bisnis Anda.',
+                title: 'Pasang Perangkat',
+                desc: 'Letakkan perangkat QR Cobascan di setiap meja atau kasir bisnis Anda.',
                 icon: Store,
               },
               {
                 step: '02',
-                title: 'Scan QR / Tap NFC',
-                desc: 'Pelanggan cukup scan QR dengan kamera atau tap HP ke chip NFC Cobascan.',
+                title: 'Scan QR Code',
+                desc: 'Pelanggan cukup scan QR dengan kamera HP.',
                 icon: Smartphone,
               },
               {
@@ -246,9 +246,9 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {[
               {
-                title: 'Satu Perangkat: QR Scan & NFC Tap',
-                desc: 'Pelanggan bebas memilih: scan QR menggunakan kamera atau cukup tempelkan smartphone (tap NFC) untuk membuka halaman yang sama tanpa repot instal aplikasi.',
-                icon: Radio,
+                title: 'Akses Sekali Scan',
+                desc: 'Pelanggan bebas scan QR menggunakan kamera untuk membuka halaman tanpa repot instal aplikasi.',
+                icon: QrCode,
               },
               {
                 title: 'Tingkatkan Google Review Bintang 5',
@@ -257,7 +257,7 @@ export default async function HomePage() {
               },
               {
                 title: 'Pengaturan Dinamis di Cloud',
-                desc: 'Ganti link review atau perbarui password Wi-Fi kapan saja dari dashboard. Seluruh perangkat fisik QR dan NFC di meja otomatis menyajikan data terbaru tanpa perlu cetak ulang.',
+                desc: 'Ganti link review atau perbarui password Wi-Fi kapan saja dari dashboard. Seluruh perangkat fisik QR di meja otomatis menyajikan data terbaru tanpa perlu cetak ulang.',
                 icon: RefreshCw,
               },
               {
@@ -288,7 +288,7 @@ export default async function HomePage() {
               Siap Menghubungkan Bisnis Anda dengan Cobascan?
             </h3>
             <p className="mt-3 text-slate-300 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
-              Dapatkan perangkat fisik Cobascan (QR + NFC) dan mulai kumpulkan ulasan Google Maps serta kelola akses Wi-Fi bisnis Anda sekarang.
+              Dapatkan perangkat fisik Cobascan dan mulai kumpulkan ulasan Google Maps serta kelola akses Wi-Fi bisnis Anda sekarang.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/login">

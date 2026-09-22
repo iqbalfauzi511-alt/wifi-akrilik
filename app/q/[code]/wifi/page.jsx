@@ -52,7 +52,7 @@ export default async function VisitorWifiPage({ params }) {
           </div>
           <h2 className="text-xl font-bold text-slate-900 mb-2">QR Tidak Aktif</h2>
           <p className="text-sm text-slate-500 mb-6 leading-relaxed">
-            QR / NFC ini sedang dinonaktifkan. Silakan hubungi pemilik bisnis.
+            QR Code ini sedang dinonaktifkan. Silakan hubungi pemilik bisnis.
           </p>
           <Link href="/">
             <Button variant="outline" className="w-full">
@@ -79,7 +79,7 @@ export default async function VisitorWifiPage({ params }) {
           )}
           <h2 className="text-2xl font-extrabold text-slate-900 mb-2">Cobascan Belum Diaktifkan</h2>
           <p className="text-sm text-slate-500 mb-6 leading-relaxed">
-            Perangkat Cobascan (QR &amp; NFC) ini belum diaktifkan. Jika Anda pemilik produk, silakan lakukan aktivasi bisnis.
+            QR Code ini belum diaktifkan. Jika Anda pemilik bisnis, silakan lakukan aktivasi.
           </p>
           <div className="space-y-3">
             <Link href={`/activate/${code}`}>

@@ -10,17 +10,23 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
-          950: '#172554',
+          50: '#e8f0fe',
+          100: '#d2e3fc',
+          200: '#aecbfa',
+          300: '#8ab4f8',
+          400: '#669df6',
+          500: '#4285f4', // Google Blue
+          600: '#1a73e8',
+          700: '#1967d2',
+          800: '#185abc',
+          900: '#174ea6',
+          950: '#103975',
+        },
+        google: {
+          blue: '#4285f4',
+          red: '#ea4335',
+          yellow: '#fbbc05',
+          green: '#34a853',
         },
         instagram: {
           pink: '#E1306C',

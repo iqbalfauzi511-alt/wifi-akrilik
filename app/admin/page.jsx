@@ -235,197 +235,140 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* SECTION 1: Hardware Provisioning & Batch QR Generator (Exact Match from Image 1) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-        {/* Left: Acrylic Hardware Unit Preview */}
-        <div className="lg:col-span-4 bg-white rounded-3xl border border-slate-200/90 shadow-sm p-5 flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold text-slate-900">Acrylic Hardware Unit</h3>
-              <div className="flex items-center gap-1.5">
-                <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-slate-100 text-slate-700 border border-slate-200">
-                  rev-04-BlackGlass
-                </span>
-                <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                  NFC NTAG424 DNA
-                </span>
-              </div>
+      {/* SECTION 1: Batch Provisioning & QR Generator */}
+      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 flex flex-col justify-between">
+        <div>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-100">
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-google-blue font-mono">
+                PENCETAKAN QR
+              </span>
+              <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+                Batch Provisioning &amp; Generator QR
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
+                Cetak batch kode QR unik secara massal untuk digunakan oleh bisnis mitra.
+              </p>
             </div>
 
-            {/* Hardware Mockup Image */}
-            <div className="relative rounded-2xl overflow-hidden aspect-square bg-slate-950 group shadow-inner">
-              <Image
-                src="/images/hardware-unit-acrylic.jpg"
-                alt="Acrylic Hardware Unit"
-                fill
-                className="object-cover opacity-95 group-hover:scale-105 transition-transform duration-500"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent" />
-              <div className="absolute bottom-3 left-3 right-3 text-white flex items-center justify-between text-xs font-mono">
-                <div>
-                  <div className="font-bold text-slate-100 text-[11px]">Laser Beveled 12mm Plexiglas</div>
-                  <div className="text-[9px] text-slate-400">Dual NFC NXP + Dynamic Vector QR</div>
+            {/* Quick Batch Presets */}
+            <div className="flex items-center gap-1.5 shrink-0">
+              <span className="text-[10px] text-slate-400 font-mono">Cetak Cepat:</span>
+              <Link href="/admin/qr">
+                <div className="flex items-center gap-1">
+                  {[6, 10, 50, 100, 500].map((qty) => (
+                    <span
+                      key={qty}
+                      className="px-2 py-1 rounded-lg text-xs font-mono font-bold bg-slate-50 hover:bg-blue-50 hover:text-google-blue text-slate-700 border border-slate-200 transition-colors cursor-pointer"
+                    >
+                      {qty}
+                    </span>
+                  ))}
                 </div>
-                <span className="px-2 py-1 rounded-md bg-white/10 backdrop-blur-md border border-white/20 text-[10px] font-bold text-blue-300">
-                  13.56 MHz
-                </span>
-              </div>
+              </Link>
             </div>
           </div>
 
-          {/* Specs Footer */}
-          <div className="mt-4 pt-3 border-t border-slate-100 grid grid-cols-3 text-center text-[10px] text-slate-500">
-            <div>
-              <span className="text-slate-400 block uppercase font-mono text-[9px]">Enclosure</span>
-              <strong className="text-slate-800">Milled Acrylic</strong>
-            </div>
-            <div>
-              <span className="text-slate-400 block uppercase font-mono text-[9px]">Tamper Guard</span>
-              <strong className="text-slate-800">AES-128 SUN</strong>
-            </div>
-            <div>
-              <span className="text-slate-400 block uppercase font-mono text-[9px]">Tap Range</span>
-              <strong className="text-slate-800">15mm - 35mm</strong>
-            </div>
+          {/* Batch Cards Carousel / Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mt-5">
+            {(Array.isArray(batches) ? batches : []).slice(0, 3).map((b, idx) => {
+              const total = b.totalQrs || 0;
+              const active = b.activeQrs || 0;
+              const available = Math.max(0, total - active);
+              const percent = total > 0 ? Math.round((active / total) * 100) : 0;
+              const isFirst = idx === 0;
+
+              return (
+                <div
+                  key={b.id || idx}
+                  className="p-4 rounded-2xl border border-slate-200/90 bg-slate-50/50 hover:bg-slate-50 transition-colors flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-mono font-bold text-slate-900 text-xs bg-white px-2.5 py-0.5 rounded-md border border-slate-200">
+                        {b.batchCode || 'BATCH'}
+                      </span>
+                      <span
+                        className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                          isFirst
+                            ? 'bg-emerald-50 text-google-green border border-emerald-200'
+                            : 'bg-blue-50 text-google-blue border border-blue-200'
+                        }`}
+                      >
+                        {isFirst ? 'Deployed' : 'Active Mint'}
+                      </span>
+                    </div>
+
+                    <div className="text-xl font-black text-slate-900 tracking-tight mt-2">
+                      {total} Units
+                    </div>
+
+                    <div className="text-xs text-slate-500 mt-2 space-y-1">
+                      <div className="flex justify-between">
+                        <span>Tersedia:</span>
+                        <strong className="text-slate-800">{available} units</strong>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Terpasang:</span>
+                        <strong className="text-google-green">{active} units</strong>
+                      </div>
+                      <div className="flex justify-between text-[10px] text-slate-400 font-mono pt-1">
+                        <span>Tanggal:</span>
+                        <span>
+                          {b?.createdAt
+                            ? new Date(b.createdAt).toLocaleDateString('id-ID', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                              })
+                            : 'Baru'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Progress Bar */}
+                    <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-3">
+                      <div
+                        className="bg-google-blue h-full rounded-full transition-all"
+                        style={{ width: `${percent}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* Placeholder Card if fewer than 3 batches */}
+            {batches.length < 3 && (
+              <div className="p-4 rounded-2xl border border-dashed border-slate-300 bg-white flex flex-col justify-center items-center text-center">
+                <div className="w-8 h-8 rounded-xl bg-blue-50 text-google-blue flex items-center justify-center mb-2">
+                  <Plus className="w-4 h-4" />
+                </div>
+                <h4 className="text-xs font-bold text-slate-900">Buat Batch Baru</h4>
+                <p className="text-[11px] text-slate-500 mt-1">Cetak kode QR fisik baru</p>
+                <Link href="/admin/qr" className="mt-3">
+                  <Button size="sm" variant="outline" className="text-xs">
+                    + Tambah Batch
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Right: Batch Provisioning & QR Generator */}
-        <div className="lg:col-span-8 bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 flex flex-col justify-between">
-          <div>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-100">
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 font-mono">
-                  SECTION 1
-                </span>
-                <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
-                  Batch Provisioning &amp; QR Generator
-                </h2>
-                <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
-                  Instantly mint cryptographically verified unique identifier batches. Automatically builds pairing URLs, SVG high-resolution vector prints, and firmware write files for physical NFC flashing.
-                </p>
-              </div>
-
-              {/* Quick Batch Presets */}
-              <div className="flex items-center gap-1.5 shrink-0">
-                <span className="text-[10px] text-slate-400 font-mono">Quick Batch:</span>
-                <Link href="/admin/qr">
-                  <div className="flex items-center gap-1">
-                    {[6, 10, 50, 100, 500].map((qty) => (
-                      <span
-                        key={qty}
-                        className="px-2 py-1 rounded-lg text-xs font-mono font-bold bg-slate-50 hover:bg-blue-50 hover:text-blue-600 text-slate-700 border border-slate-200 transition-colors cursor-pointer"
-                      >
-                        {qty}
-                      </span>
-                    ))}
-                  </div>
-                </Link>
-              </div>
-            </div>
-
-            {/* Batch Cards Carousel / Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mt-5">
-              {(Array.isArray(batches) ? batches : []).slice(0, 3).map((b, idx) => {
-                const total = b.totalQrs || 0;
-                const active = b.activeQrs || 0;
-                const available = Math.max(0, total - active);
-                const percent = total > 0 ? Math.round((active / total) * 100) : 0;
-                const isFirst = idx === 0;
-
-                return (
-                  <div
-                    key={b.id || idx}
-                    className="p-4 rounded-2xl border border-slate-200/90 bg-slate-50/50 hover:bg-slate-50 transition-colors flex flex-col justify-between"
-                  >
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-mono font-bold text-slate-900 text-xs bg-white px-2.5 py-0.5 rounded-md border border-slate-200">
-                          {b.batchCode || 'BATCH'}
-                        </span>
-                        <span
-                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                            isFirst
-                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                              : 'bg-blue-50 text-blue-700 border border-blue-200'
-                          }`}
-                        >
-                          {isFirst ? 'Deployed' : 'Active Mint'}
-                        </span>
-                      </div>
-
-                      <div className="text-xl font-black text-slate-900 tracking-tight mt-2">
-                        {total} Units
-                      </div>
-
-                      <div className="text-xs text-slate-500 mt-2 space-y-1">
-                        <div className="flex justify-between">
-                          <span>Available:</span>
-                          <strong className="text-slate-800">{available} units</strong>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Active:</span>
-                          <strong className="text-emerald-700">{active} units</strong>
-                        </div>
-                        <div className="flex justify-between text-[10px] text-slate-400 font-mono pt-1">
-                          <span>Date:</span>
-                          <span>
-                            {b?.createdAt
-                              ? new Date(b.createdAt).toLocaleDateString('en-US', {
-                                  month: 'short',
-                                  day: 'numeric',
-                                  year: 'numeric',
-                                })
-                              : 'Baru'}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Progress Bar */}
-                      <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-3">
-                        <div
-                          className="bg-blue-600 h-full rounded-full transition-all"
-                          style={{ width: `${percent}%` }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-
-              {/* Placeholder Card if fewer than 3 batches */}
-              {batches.length < 3 && (
-                <div className="p-4 rounded-2xl border border-dashed border-slate-300 bg-white flex flex-col justify-center items-center text-center">
-                  <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-2">
-                    <Plus className="w-4 h-4" />
-                  </div>
-                  <h4 className="text-xs font-bold text-slate-900">Mint New Batch</h4>
-                  <p className="text-[11px] text-slate-500 mt-1">Generate 50 to 500 units for physical production</p>
-                  <Link href="/admin/qr" className="mt-3">
-                    <Button size="sm" variant="outline" className="text-xs">
-                      + Add Batch
-                    </Button>
-                  </Link>
-                </div>
-              )}
-            </div>
+        {/* Bottom Route Preview */}
+        <div className="mt-5 pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-slate-500">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-google-green animate-pulse" />
+            <span className="font-mono text-[11px]">Rute publik: <strong>/q/:code</strong></span>
           </div>
-
-          {/* Bottom Route Preview */}
-          <div className="mt-5 pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-slate-500">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="font-mono text-[11px]">Rute target portal perangkat: <strong>/q/:code (QR Scan &amp; NFC Tap)</strong></span>
-            </div>
-            <Link
-              href="/admin/qr"
-              className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 font-semibold text-xs"
-            >
-              <span>Buka Generator Batch Perangkat</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
+          <Link
+            href="/admin/qr"
+            className="inline-flex items-center gap-1 text-google-blue hover:text-blue-800 font-semibold text-xs"
+          >
+            <span>Buka Generator Batch</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
       </div>
 

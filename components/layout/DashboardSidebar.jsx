@@ -44,8 +44,8 @@ export default function DashboardSidebar({ role = 'customer', businessName }) {
               <div className="font-bold text-slate-900 text-sm tracking-tight leading-none">
                 Cobascan
               </div>
-              <div className="text-[10px] uppercase font-mono font-bold tracking-wider text-blue-600 mt-1">
-                {role === 'admin' ? 'HARDWARE CONSOLE' : 'QR + NFC Platform'}
+              <div className="text-[10px] uppercase font-mono font-bold tracking-wider text-google-blue mt-1">
+                {role === 'admin' ? 'ADMIN CONSOLE' : 'PLATFORM QR'}
               </div>
             </div>
           </Link>
@@ -92,21 +92,7 @@ export default function DashboardSidebar({ role = 'customer', businessName }) {
         </nav>
       </div>
 
-      {/* Bottom NFC Bridge Status Card (Exact Match from Image 1) */}
       <div className="p-4 space-y-3">
-        <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-800">
-            <span className="text-[11px] font-mono tracking-wider">NFC BRIDGE</span>
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          </div>
-          <div className="text-[10px] text-slate-500 font-mono">
-            Firmware v4.12.0
-          </div>
-          <div className="text-[10px] text-emerald-700 font-semibold pt-0.5">
-            24 acrylic nodes active
-          </div>
-        </div>
-
         {/* Footer Quick Link */}
         <Link
           href="/"

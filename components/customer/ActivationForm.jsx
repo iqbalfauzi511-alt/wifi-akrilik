@@ -112,7 +112,7 @@ export default function ActivationForm({
         </div>
         <h3 className="text-2xl font-extrabold text-slate-900 mb-1">Cobascan Anda Aktif!</h3>
         <p className="text-sm text-slate-600 mb-4">
-          Produk Cobascan (QR + NFC) <span className="font-mono font-bold text-slate-900">{code}</span> kini telah aktif dan siap digunakan pelanggan untuk{' '}
+          Perangkat Cobascan <span className="font-mono font-bold text-slate-900">{code}</span> kini telah aktif dan siap digunakan pelanggan untuk{' '}
           <strong className="text-slate-900">{savedBusinessName || 'Bisnis Anda'}</strong>.
         </p>
 
@@ -145,7 +145,7 @@ export default function ActivationForm({
             className="w-full sm:flex-1"
           >
             <Button variant="primary" className="w-full text-xs">
-              <span>Tes Scan / Tap NFC</span>
+              <span>Tes Scan Halaman</span>
               <ExternalLink className="w-3.5 h-3.5 ml-1" />
             </Button>
           </a>
@@ -178,7 +178,7 @@ export default function ActivationForm({
 
       {storeList.length === 0 ? (
         <div className="mb-5 p-3 rounded-xl bg-brand-50/70 border border-brand-200 text-xs text-brand-900 leading-relaxed">
-          🚀 <strong>Aktivasi Perangkat Pertama:</strong> Masukkan profil bisnis Anda di bawah untuk mengaktifkan stand Cobascan ini. Data ini langsung terhubung dengan QR &amp; NFC.
+          🚀 <strong>Aktivasi Perangkat Pertama:</strong> Masukkan profil bisnis Anda di bawah untuk mengaktifkan perangkat Cobascan ini. Data ini langsung terhubung dengan QR Code.
         </div>
       ) : (
         <div className="mb-5 p-3 rounded-xl bg-brand-50/70 border border-brand-200 text-xs text-brand-900 leading-relaxed">
