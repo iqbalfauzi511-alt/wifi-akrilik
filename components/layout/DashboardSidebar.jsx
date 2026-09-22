@@ -28,7 +28,8 @@ export default function DashboardSidebar({ role = 'customer', businessName }) {
     { name: 'Pengguna & Bisnis', href: '/admin/users', icon: Users },
   ];
 
-  const navItems = role === 'admin' ? adminNav : customerNav;
+  const isAdminView = role === 'admin' && pathname.startsWith('/admin');
+  const navItems = isAdminView ? adminNav : customerNav;
 
   return (
     <aside className="hidden lg:flex w-64 bg-white border-r border-slate-200/80 flex-col shrink-0 min-h-screen sticky top-0 h-screen justify-between">
@@ -44,14 +45,14 @@ export default function DashboardSidebar({ role = 'customer', businessName }) {
                 Cobascan
               </div>
               <div className="text-[10px] uppercase font-mono font-bold tracking-wider text-google-blue mt-1">
-                {role === 'admin' ? 'ADMIN CONSOLE' : 'PLATFORM QR'}
+                {isAdminView ? 'ADMIN CONSOLE' : 'PLATFORM QR'}
               </div>
             </div>
           </Link>
         </div>
 
-        {/* Business Info snippet (Customer only) */}
-        {role === 'customer' && businessName && (
+        {/* Business Info snippet (Customer only or Admin in customer view) */}
+        {!isAdminView && businessName && (
           <div className="px-4 py-3 mx-3 my-3 bg-slate-50 border border-slate-100 rounded-xl">
             <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
               Bisnis Aktif
