@@ -1,20 +1,15 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  QrCode,
-  Radio,
-  Star,
-  Wifi,
   Smartphone,
-  Store,
-  Zap,
-  BarChart3,
-  RefreshCw,
-  Sparkles,
+  Star,
+  Monitor,
   CheckCircle2,
-  ArrowRight,
-  ShieldCheck,
-  ExternalLink,
+  Battery,
+  Droplets,
+  Link as LinkIcon,
+  HelpCircle,
+  QrCode
 } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Button from '@/components/ui/Button';
@@ -26,199 +21,397 @@ export default async function HomePage() {
   const session = await getCurrentSession();
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-[#FAFAFA] text-slate-900 selection:bg-brand-500 selection:text-white">
       <Navbar session={session} />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-12 pb-20 sm:pt-20 sm:pb-28">
-        {/* Subtle background glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[380px] bg-gradient-to-tr from-brand-200/50 via-indigo-200/40 to-amber-100/40 blur-[110px] rounded-full pointer-events-none -z-10" />
-
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="relative pt-20 pb-16 sm:pt-28 sm:pb-24 overflow-hidden bg-white border-b border-slate-100">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-50 border border-brand-200/80 text-brand-700 text-xs font-semibold mb-6 shadow-xs">
-            <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-600"></span>
-            </span>
-            <span>Platform QR Code untuk Bisnis Anda</span>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-50 border border-brand-100 text-brand-700 text-[10px] sm:text-xs font-bold mb-6 sm:mb-8 tracking-wide shadow-xs">
+            <div className="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse" />
+            PERANGKAT PINTAR UNTUK GOOGLE REVIEW
           </div>
 
-          {/* Title & Tagline */}
-          <h1 className="text-4xl sm:text-6xl font-black text-slate-900 tracking-tight leading-[1.15]">
-            Cobascan
-            <span className="block mt-2 text-2xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-brand-600 via-indigo-600 to-amber-600">
-              Scan. Tap. Connect. Review.
-            </span>
+          {/* Headline */}
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 leading-[1.1] mb-6">
+            Ubah Pengunjung Puas Jadi Ulasan Bintang 5 di Google Secara Instan
           </h1>
 
-          <p className="mt-5 text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium">
-            Satu scan, berbagai akses untuk bisnis Anda. Perangkat QR terintegrasi untuk mengarahkan pelanggan langsung ke Google Review dan fasilitas Wi-Fi.
+          {/* Subheadline */}
+          <p className="text-base sm:text-xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed">
+            Sistem cerdas dengan chip NFC dan QR code berdaya tahan tinggi. Cukup tempelkan HP atau scan tanpa perlu download aplikasi apapun.
           </p>
 
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
               href="https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20dengan%20produk%20Cobascan"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto"
             >
-              <Button size="lg" className="w-full shadow-lg shadow-brand-600/25">
-                Dapatkan Sekarang
-                <ArrowRight className="w-4 h-4 ml-1" />
+              <Button size="lg" className="w-full bg-brand-600 hover:bg-brand-700 text-white shadow-lg shadow-brand-500/25 border-brand-600 px-8">
+                Pesan Sekarang
               </Button>
             </a>
           </div>
 
-          {/* Feature Highlights Pills */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-xs font-semibold text-slate-700">
-            <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-100 border border-slate-200/80">
-              <QrCode className="w-4 h-4 text-brand-600" />
-              <span>QR Scan</span>
+          {/* Stats Bar */}
+          <div className="mt-16 sm:mt-24 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 max-w-3xl mx-auto border-t border-slate-100 pt-10">
+            <div className="text-center sm:text-left">
+              <div className="text-2xl font-black text-slate-900 flex items-center justify-center sm:justify-start gap-1">
+                4.9 <Star className="w-4 h-4 fill-amber-400 text-amber-500" />
+              </div>
+              <div className="text-xs text-slate-500 mt-1 font-medium">Kepuasan Mitra</div>
             </div>
-            <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-100 border border-slate-200/80">
-              <Radio className="w-4 h-4 text-amber-500" />
-              <span>NFC Tap</span>
+            <div className="text-center sm:text-left">
+              <div className="text-2xl font-black text-slate-900">1 Detik</div>
+              <div className="text-xs text-slate-500 mt-1 font-medium">Kecepatan Scan</div>
             </div>
-            <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-amber-50 border border-amber-200/70 text-amber-900">
-              <Star className="w-4 h-4 text-amber-500 fill-amber-400" />
-              <span>⭐ Google Review</span>
+            <div className="text-center sm:text-left">
+              <div className="text-2xl font-black text-slate-900">3.000+</div>
+              <div className="text-xs text-slate-500 mt-1 font-medium">Scan Berhasil</div>
             </div>
-            <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-brand-50 border border-brand-200/70 text-brand-900">
-              <Wifi className="w-4 h-4 text-brand-600" />
-              <span>📶 Wi-Fi Access</span>
+            <div className="text-center sm:text-left">
+              <div className="text-2xl font-black text-slate-900">100%</div>
+              <div className="text-xs text-slate-500 mt-1 font-medium">Tanpa Baterai</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Cara Kerja Section */}
-      <section id="cara-kerja" className="py-16 sm:py-24 bg-slate-50 border-y border-slate-200/80">
+      <section id="cara-kerja" className="py-20 bg-[#FAFAFA]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-brand-600 mb-2">
-              Satu Perangkat, Akses Mudah
+          <div className="text-center mb-16">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-brand-600 mb-3">
+              Langkah Mudah
             </h2>
-            <h3 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-              Cara Kerja Cobascan
+            <h3 className="text-3xl font-extrabold text-slate-900">
+              Cara Kerja 3 Langkah Mudah
             </h3>
-            <p className="text-slate-600 mt-2 text-sm sm:text-base">
-              Hanya butuh beberapa detik bagi pelanggan untuk terhubung ke Google Review dan Wi-Fi bisnis Anda.
+            <p className="mt-3 text-slate-500 text-sm max-w-xl mx-auto">
+              Didesain praktis agar tamu Anda dapat memberikan rating bintang lima tanpa kesulitan teknis.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {[
-              {
-                step: '01',
-                title: 'Pasang Perangkat',
-                desc: 'Letakkan perangkat QR Cobascan di setiap meja atau kasir bisnis Anda.',
-                icon: Store,
-              },
-              {
-                step: '02',
-                title: 'Scan QR Code',
-                desc: 'Pelanggan cukup scan QR dengan kamera HP.',
-                icon: Smartphone,
-              },
-              {
-                step: '03',
-                title: 'Buka Google Review',
-                desc: 'Sistem langsung membuka halaman Google Review resmi untuk memberikan rating & ulasan.',
-                icon: Star,
-              },
-              {
-                step: '04',
-                title: 'Akses Wi-Fi (Opsional)',
-                desc: 'Jika Wi-Fi diaktifkan, pelanggan langsung mendapatkan password koneksi internet.',
-                icon: Wifi,
-              },
-            ].map((item, idx) => (
-              <div
-                key={idx}
-                className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs relative flex flex-col hover:border-brand-300 transition-colors"
-              >
-                <div className="text-2xl font-black text-brand-200 mb-3 font-mono">
-                  {item.step}
-                </div>
-                <div className="w-10 h-10 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-600 mb-4">
-                  <item.icon className="w-5 h-5" />
-                </div>
-                <h4 className="text-base font-bold text-slate-900 mb-1.5">{item.title}</h4>
-                <p className="text-xs text-slate-500 leading-relaxed">{item.desc}</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            {/* Step 1 */}
+            <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow relative">
+              <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 text-slate-900 font-mono font-bold flex items-center justify-center mb-6">
+                01
               </div>
-            ))}
+              <h4 className="text-lg font-bold text-slate-900 mb-3">Tamu Tap atau Scan</h4>
+              <p className="text-sm text-slate-500 leading-relaxed mb-6">
+                HP iPhone maupun Android cukup didekatkan ke permukaan perangkat, atau cahaya aktifkan kamera ke QR code.
+              </p>
+              <div className="flex items-center gap-2 text-xs font-bold text-emerald-600 bg-emerald-50 w-fit px-3 py-1.5 rounded-full border border-emerald-100">
+                <CheckCircle2 className="w-3.5 h-3.5" /> Tanpa instal aplikasi apapun
+              </div>
+            </div>
+            {/* Step 2 */}
+            <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow relative">
+              <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 text-slate-900 font-mono font-bold flex items-center justify-center mb-6">
+                02
+              </div>
+              <h4 className="text-lg font-bold text-slate-900 mb-3">Terbuka Halaman Ulasan</h4>
+              <p className="text-sm text-slate-500 leading-relaxed mb-6">
+                Perangkat otomatis membuka formulir review resmi Google Profil Bisnis Anda dalam hitungan detik. Tanpa filter, langsung ke sasaran.
+              </p>
+              <div className="flex items-center gap-2 text-xs font-bold text-amber-600 bg-amber-50 w-fit px-3 py-1.5 rounded-full border border-amber-100">
+                <Star className="w-3.5 h-3.5 fill-amber-500" /> Kumpulkan bintang 5
+              </div>
+            </div>
+            {/* Step 3 */}
+            <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow relative">
+              <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 text-slate-900 font-mono font-bold flex items-center justify-center mb-6">
+                03
+              </div>
+              <h4 className="text-lg font-bold text-slate-900 mb-3">Pantau di Dashboard</h4>
+              <p className="text-sm text-slate-500 leading-relaxed mb-6">
+                Ketahui performa dan jumlah interaksi per meja, kasir, atau cabang secara *realtime* melalui dasbor analitik pemilik usaha.
+              </p>
+              <div className="flex items-center gap-2 text-xs font-bold text-brand-600 bg-brand-50 w-fit px-3 py-1.5 rounded-full border border-brand-100">
+                <Monitor className="w-3.5 h-3.5" /> Analitik Real-Time
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Kelebihan Cobascan Section */}
-      <section className="py-16 sm:py-24 bg-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-brand-600 mb-2">
-              Keunggulan
+      {/* Spesifikasi & Keunggulan Section */}
+      <section id="spesifikasi" className="py-20 bg-white border-y border-slate-100">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-brand-600 mb-3">
+              Keunggulan Fisik
             </h2>
-            <h3 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-              Kenapa Bisnis Memilih Cobascan?
+            <h3 className="text-3xl font-extrabold text-slate-900">
+              Spesifikasi & Keunggulan Perangkat
             </h3>
-            <p className="text-slate-600 mt-2 text-sm sm:text-base">
-              Solusi all-in-one cerdas yang menyatukan perangkat fisik, cloud dashboard, dan pengalaman digital pengunjung.
+            <p className="mt-3 text-slate-500 text-sm max-w-xl mx-auto">
+              Didesain khusus untuk tahan lama di area publik. Dirancang kuat dan estetis untuk meja bisnis Anda.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {[
-              {
-                title: 'Akses Sekali Scan',
-                desc: 'Pelanggan bebas scan QR menggunakan kamera untuk membuka halaman tanpa repot instal aplikasi.',
-                icon: QrCode,
-              },
-              {
-                title: 'Tingkatkan Google Review Bintang 5',
-                desc: 'Fungsi utama Cobascan dirancang untuk mempermudah pelanggan memberikan penilaian positif sehingga reputasi toko atau kafe Anda melejit di Google Maps.',
-                icon: Star,
-              },
-              {
-                title: 'Pengaturan Dinamis di Cloud',
-                desc: 'Ganti link review atau perbarui password Wi-Fi kapan saja dari dashboard. Seluruh perangkat fisik QR di meja otomatis menyajikan data terbaru tanpa perlu cetak ulang.',
-                icon: RefreshCw,
-              },
-              {
-                title: 'Fasilitas Akses Wi-Fi Fleksibel',
-                desc: 'Aktifkan opsi Wi-Fi untuk memberikan pengalaman lengkap bagi tamu, atau matikan untuk fokus 100% langsung mengarahkan pengunjung ke halaman ulasan Google.',
-                icon: Wifi,
-              },
-            ].map((feature, idx) => (
-              <div
-                key={idx}
-                className="flex items-start gap-4 p-6 rounded-2xl border border-slate-200/80 bg-slate-50/50 hover:bg-slate-50 transition-colors"
-              >
-                <div className="w-10 h-10 rounded-xl bg-brand-50 border border-brand-200/60 flex items-center justify-center text-brand-600 shrink-0">
-                  <feature.icon className="w-5 h-5" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="p-8 rounded-3xl border border-slate-100 bg-[#FAFAFA] hover:bg-white hover:shadow-xl hover:shadow-brand-500/5 transition-all">
+              <div className="w-12 h-12 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center mb-5">
+                <Smartphone className="w-5 h-5" />
+              </div>
+              <h4 className="text-base font-bold text-slate-900 mb-2">Aktivitas Scan Tidak Dibatasi</h4>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                QR bisa discan dengan cepat. Tidak dibatasi algoritma karena murni hardware. Tanpa biaya langganan bulanan scan/tap tambahan.
+              </p>
+            </div>
+            
+            <div className="p-8 rounded-3xl border border-slate-100 bg-[#FAFAFA] hover:bg-white hover:shadow-xl hover:shadow-emerald-500/5 transition-all">
+              <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-5">
+                <Battery className="w-5 h-5" />
+              </div>
+              <h4 className="text-base font-bold text-slate-900 mb-2">100% Tanpa Baterai</h4>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                Bekerja menggunakan induksi magnetik *smartphone*, perangkat ini tidak perlu di-charge, dicolok kabel, atau ganti baterai.
+              </p>
+            </div>
+
+            <div className="p-8 rounded-3xl border border-slate-100 bg-[#FAFAFA] hover:bg-white hover:shadow-xl hover:shadow-amber-500/5 transition-all">
+              <div className="w-12 h-12 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mb-5">
+                <Droplets className="w-5 h-5" />
+              </div>
+              <h4 className="text-base font-bold text-slate-900 mb-2">Cetak Anti Pudar</h4>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                Dicetak dengan bahan premium berdaya tahan tinggi agar aman dari paparan sinar UV matahari langsung atau cipratan air.
+              </p>
+            </div>
+
+            <div className="p-8 rounded-3xl border border-slate-100 bg-[#FAFAFA] hover:bg-white hover:shadow-xl hover:shadow-indigo-500/5 transition-all">
+              <div className="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mb-5">
+                <LinkIcon className="w-5 h-5" />
+              </div>
+              <h4 className="text-base font-bold text-slate-900 mb-2">Ganti Link Kapan Saja</h4>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                Bisa bawa *device* ke lokasi/cabang baru. *Smart link* dapat Anda perbarui langsung dari *dashboard* kapanpun dan di mana saja.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimoni Section */}
+      <section id="testimoni" className="py-20 bg-[#FAFAFA]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-emerald-600 mb-3">
+              Pengalaman Bisnis
+            </h2>
+            <h3 className="text-3xl font-extrabold text-slate-900">
+              Ulasan dari Pemilik Usaha di Indonesia
+            </h3>
+            <p className="mt-3 text-slate-500 text-sm max-w-xl mx-auto">
+              Lihat bagaimana alat cerdas ini membantu bisnis lokal meningkatkan visibilitas mereka di Google Maps secara drastis.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between">
+              <div>
+                <div className="flex gap-1 mb-4">
+                  {[1,2,3,4,5].map(i => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
+                </div>
+                <p className="text-sm text-slate-600 leading-relaxed italic mb-6">
+                  "Sejak pakai ini, ulasan bintang 5 kafe saya naik drastis! Pelanggan suka karena sangat simpel. HP tinggal tap, link menu dan review langsung muncul di layar. Jumlah review bulanan naik lebih dari 3 kali lipat!"
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500 text-sm">
+                  BP
                 </div>
                 <div>
-                  <h4 className="text-base font-bold text-slate-900">{feature.title}</h4>
-                  <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">{feature.desc}</p>
+                  <div className="text-sm font-bold text-slate-900">Budi Pratama</div>
+                  <div className="text-[10px] text-slate-500">Pemilik Coffee Shop, Jakarta Selatan</div>
                 </div>
               </div>
-            ))}
+            </div>
+
+            <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between">
+              <div>
+                <div className="flex gap-1 mb-4">
+                  {[1,2,3,4,5].map(i => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
+                </div>
+                <p className="text-sm text-slate-600 leading-relaxed italic mb-6">
+                  "Bentuknya ringkas dan tidak memakan meja kasir. Desain elegan. Pasien di klinik kami merasa sangat dimudahkan saat harus memberikan feedback pelayanan."
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500 text-sm">
+                  SK
+                </div>
+                <div>
+                  <div className="text-sm font-bold text-slate-900">Dr. Sarah Kusuma</div>
+                  <div className="text-[10px] text-slate-500">Pemilik Klinik Estetika, Surabaya</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between">
+              <div>
+                <div className="flex gap-1 mb-4">
+                  {[1,2,3,4,5].map(i => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
+                </div>
+                <p className="text-sm text-slate-600 leading-relaxed italic mb-6">
+                  "Sebelumnya kami pakai *tent card* biasa dan jarang ada yang scan karena ribet. Dengan adanya *smart tag* ini, tamu kami lebih senang melakukan *tap* NFC. Sangat worth it buat naikin rating!"
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500 text-sm">
+                  FA
+                </div>
+                <div>
+                  <div className="text-sm font-bold text-slate-900">Faisal Akbar</div>
+                  <div className="text-[10px] text-slate-500">Pemilik Restoran Keluarga, Bandung</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section id="harga" className="py-20 bg-white border-y border-slate-100">
+        <div className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-brand-600 mb-3">
+              Paket Harga Transparan
+            </h2>
+            <h3 className="text-3xl font-extrabold text-slate-900">
+              Satu Harga, Akses Selamanya
+            </h3>
+            <p className="mt-3 text-slate-500 text-sm max-w-md mx-auto">
+              Sistem perangkat fisik canggih yang dilengkapi dashboard pintar.
+            </p>
           </div>
 
-          {/* CTA Banner */}
-          <div className="mt-16 bg-gradient-to-br from-slate-900 via-slate-800 to-brand-900 rounded-3xl p-8 sm:p-12 text-center text-white shadow-xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
-            <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              Siap Menghubungkan Bisnis Anda dengan Cobascan?
+          <div className="bg-white rounded-3xl border-2 border-brand-500 p-8 shadow-xl relative overflow-hidden text-center">
+            <div className="absolute top-0 inset-x-0 h-1.5 bg-brand-500"></div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-bold mb-6">
+              TERLARIS & TERJANGKAU
+            </div>
+            
+            <h4 className="text-2xl font-bold text-slate-900 mb-2">Smart Perangkat QR & NFC</h4>
+            <div className="text-sm text-slate-500 mb-6">Cocok untuk UMKM, Kafe, dan Bisnis Ritel</div>
+            
+            <div className="flex items-baseline justify-center gap-1 mb-8">
+              <span className="text-2xl font-bold text-slate-900">Rp</span>
+              <span className="text-5xl font-black text-slate-900 tracking-tight">89.000</span>
+            </div>
+            <div className="text-xs text-slate-400 font-medium mb-8">
+              Satu kali bayar. Tidak ada biaya langganan bulanan.
+            </div>
+
+            <div className="space-y-4 mb-8 text-sm text-slate-600 text-left w-max mx-auto">
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="w-5 h-5 text-emerald-500" /> Bebas ubah link Google Maps kapan saja
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="w-5 h-5 text-emerald-500" /> Akses penuh ke Analytics Dashboard
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="w-5 h-5 text-emerald-500" /> Fitur Pembuka Password Wi-Fi Otomatis
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="w-5 h-5 text-emerald-500" /> Tahan air & tahan lama di meja publik
+              </div>
+            </div>
+
+            <a
+              href="https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20dengan%20produk%20Cobascan%20seharga%2089rb"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full"
+            >
+              <Button size="lg" className="w-full bg-brand-600 hover:bg-brand-700 text-white shadow-md">
+                Pesan Sekarang
+              </Button>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section id="faq" className="py-20 bg-[#FAFAFA]">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">
+              Tanya Jawab
+            </h2>
+            <h3 className="text-2xl font-extrabold text-slate-900">
+              Pertanyaan yang Sering Diajukan
             </h3>
-            <p className="mt-3 text-slate-300 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
-              Dapatkan perangkat fisik Cobascan dan mulai kumpulkan ulasan Google Maps serta kelola akses Wi-Fi bisnis Anda sekarang.
+          </div>
+
+          <div className="space-y-4">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200">
+              <h4 className="font-bold text-slate-900 flex items-center justify-between">
+                Apakah alat ini butuh langganan bulanan?
+              </h4>
+              <p className="text-sm text-slate-500 mt-2 leading-relaxed">
+                Tidak sama sekali. Hanya sekali bayar di awal untuk pembelian perangkat fisik. Platform dan dashboard pintar bisa Anda gunakan seterusnya secara gratis.
+              </p>
+            </div>
+            
+            <div className="bg-white p-6 rounded-2xl border border-slate-200">
+              <h4 className="font-bold text-slate-900 flex items-center justify-between">
+                Bagaimana jika alamat atau link Google Maps bisnis saya pindah?
+              </h4>
+              <p className="text-sm text-slate-500 mt-2 leading-relaxed">
+                Anda tidak perlu membeli perangkat baru. Cukup log in ke dashboard, perbarui tautan profil Google Maps Anda, dan sistem akan langsung memperbaruinya secara instan ke fisik perangkat Anda.
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-2xl border border-slate-200">
+              <h4 className="font-bold text-slate-900 flex items-center justify-between">
+                Apakah baterainya perlu diganti?
+              </h4>
+              <p className="text-sm text-slate-500 mt-2 leading-relaxed">
+                Teknologi pintar dalam perangkat ini tidak memerlukan baterai, dan bebas perawatan listrik. Chip NFC menggunakan daya induksi dari smartphone pelanggan.
+              </p>
+            </div>
+            
+            <div className="bg-white p-6 rounded-2xl border border-slate-200">
+              <h4 className="font-bold text-slate-900 flex items-center justify-between">
+                Apakah ini khusus HP canggih saja?
+              </h4>
+              <p className="text-sm text-slate-500 mt-2 leading-relaxed">
+                Sama sekali tidak. Jika HP pelanggan belum memiliki sensor NFC, mereka masih dapat menggunakan kamera standar untuk memindai kode QR dinamis yang tercetak di perangkat dengan kecepatan kilat.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Footer Banner */}
+      <section className="bg-white py-16">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-brand-600 rounded-3xl p-10 sm:p-14 text-center relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+            
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-4 relative z-10">
+              Siap Meningkatkan Reputasi Bisnis Anda di Google?
+            </h2>
+            <p className="text-brand-100 mb-8 max-w-xl mx-auto text-sm sm:text-base relative z-10">
+              Mulai kumpulkan ulasan positif pelanggan lama Anda dengan mudah hari ini dengan alat cerdas ini.
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
+              <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer">
+                <Button size="lg" className="bg-white text-brand-700 hover:bg-slate-50 border-white px-8">
+                  Pesan via WhatsApp
+                </Button>
+              </a>
               <Link href="/login">
-                <Button size="lg" className="bg-brand-600 hover:bg-brand-500 text-white shadow-md shadow-brand-600/30">
-                  Mulai dengan Cobascan
-                  <ArrowRight className="w-4 h-4 ml-1" />
+                <Button size="lg" variant="outline" className="border-brand-400 text-white hover:bg-brand-500 px-8">
+                  Masuk Dashboard
                 </Button>
               </Link>
             </div>
@@ -227,24 +420,30 @@ export default async function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="mt-auto border-t border-slate-200/80 bg-white py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-lg bg-brand-600 flex items-center justify-center text-white text-[10px] font-bold">
-              <QrCode className="w-3.5 h-3.5" />
+      <footer className="border-t border-slate-200 bg-white py-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col items-center md:items-start">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-8 h-8 rounded-xl bg-brand-600 flex items-center justify-center text-white font-bold">
+                <QrCode className="w-4 h-4" />
+              </div>
+              <span className="font-bold text-slate-800 text-lg">Cobascan</span>
             </div>
-            <span className="font-bold text-slate-800">Cobascan</span>
-            <span>&bull; Scan. Tap. Connect. Review.</span>
-            <span>&copy; {new Date().getFullYear()} All rights reserved.</span>
+            <p className="text-xs text-slate-400 max-w-xs text-center md:text-left">
+              Platform perangkat keras & lunak cerdas untuk meningkatkan ulasan bintang 5 Google Maps bisnis Anda.
+            </p>
           </div>
-          <div className="flex items-center gap-4 font-medium">
-            <Link href="/login" className="hover:text-slate-900">
-              Customer Login
-            </Link>
-            <Link href="/admin" className="hover:text-slate-900">
-              Admin Portal
-            </Link>
+          
+          <div className="flex flex-wrap justify-center md:justify-end items-center gap-4 sm:gap-6 text-sm font-medium text-slate-500">
+            <a href="#cara-kerja" className="hover:text-brand-600 transition-colors">Cara Kerja</a>
+            <a href="#spesifikasi" className="hover:text-brand-600 transition-colors">Keunggulan</a>
+            <a href="#harga" className="hover:text-brand-600 transition-colors">Harga</a>
+            <Link href="/login" className="hover:text-brand-600 transition-colors">Masuk Dashboard</Link>
           </div>
+        </div>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400">
+          <p>&copy; {new Date().getFullYear()} Cobascan Technologies. Hak Cipta Dilindungi.</p>
+          <p className="mt-2 sm:mt-0">Didesain eksklusif untuk kemajuan UMKM & Bisnis Retail.</p>
         </div>
       </footer>
     </div>
