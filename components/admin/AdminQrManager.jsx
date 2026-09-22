@@ -711,7 +711,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
               size="sm"
               disabled={isBulkProcessing}
               onClick={() => setBulkStatusModal(true)}
-              className="text-xs bg-indigo-600 hover:bg-indigo-700 text-white border-transparent py-1 px-3"
+              className="text-xs !bg-indigo-600 hover:!bg-indigo-700 !text-white !border-transparent py-1 px-3 shadow-none"
             >
               <ToggleRight className="w-3.5 h-3.5 mr-1" />
               Ubah Status
@@ -722,7 +722,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
               size="sm"
               disabled={isBulkProcessing}
               onClick={handleBulkZipSelected}
-              className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700 py-1 px-3"
+              className="text-xs !bg-slate-800 hover:!bg-slate-700 !text-slate-200 !border-slate-700 py-1 px-3 shadow-none"
             >
               <Download className="w-3.5 h-3.5 mr-1" />
               Download ZIP
@@ -733,7 +733,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
               size="sm"
               disabled={isBulkProcessing}
               onClick={() => setBulkResetModal(true)}
-              className="text-xs bg-amber-600 hover:bg-amber-700 text-white border-transparent py-1 px-3"
+              className="text-xs !bg-amber-600 hover:!bg-amber-700 !text-white !border-transparent py-1 px-3 shadow-none"
             >
               <RotateCcw className="w-3.5 h-3.5 mr-1" />
               Reset ke Blank
@@ -744,7 +744,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
               size="sm"
               disabled={isBulkProcessing}
               onClick={() => setBulkDeleteModal(true)}
-              className="text-xs bg-rose-600 hover:bg-rose-700 text-white border-transparent py-1 px-3"
+              className="text-xs !bg-rose-600 hover:!bg-rose-700 !text-white !border-transparent py-1 px-3 shadow-none"
             >
               <Trash2 className="w-3.5 h-3.5 mr-1" />
               Hapus Permanen
