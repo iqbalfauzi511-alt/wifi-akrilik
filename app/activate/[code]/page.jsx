@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { QrCode, Radio, AlertCircle, ArrowLeft, ShieldAlert, CheckCircle2, ExternalLink } from 'lucide-react';
 import { getCurrentSession } from '@/lib/auth/session';
 import { getQrByCode } from '@/lib/db/queries/qr';
+import { getBusinessesByOwnerId } from '@/lib/db/queries/business';
 import ActivationForm from '@/components/customer/ActivationForm';
 import QRCodeViewer from '@/components/qr/QRCodeViewer';
 import Button from '@/components/ui/Button';
@@ -25,6 +26,9 @@ export default async function ActivateQrPage({ params }) {
   }
 
   const qr = await getQrByCode(code);
+  const userBusinesses = session?.user?.id
+    ? await getBusinessesByOwnerId(session.user.id)
+    : [];
 
   // Check 1: QR not found
   if (!qr) {
@@ -182,8 +186,8 @@ export default async function ActivateQrPage({ params }) {
         {/* Activation Form with prefilled account business info */}
         <ActivationForm
           code={code}
-          initialBusiness={session?.business}
-          businesses={session?.businesses || (session?.business ? [session.business] : [])}
+          initialBusiness={userBusinesses[0] || null}
+          businesses={userBusinesses}
           userEmail={session?.user?.email}
           batchCode={qr?.batchCode}
         />

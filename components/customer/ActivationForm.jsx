@@ -164,17 +164,25 @@ export default function ActivationForm({
             <span className="text-slate-500">Akun terhubung:</span>
             <strong className="font-mono text-slate-800">{userEmail}</strong>
           </div>
-          {initialBusiness && (
+          {storeList.length > 0 ? (
             <span className="text-[11px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold border border-emerald-200">
-              Profil Terdaftar
+              {storeList.length} Bisnis Terdaftar
+            </span>
+          ) : (
+            <span className="text-[11px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-bold border border-blue-200">
+              Aktivasi Pertama
             </span>
           )}
         </div>
       )}
 
-      {initialBusiness && (
+      {storeList.length === 0 ? (
         <div className="mb-5 p-3 rounded-xl bg-brand-50/70 border border-brand-200 text-xs text-brand-900 leading-relaxed">
-          💡 Data bisnis Anda (<strong>{initialBusiness.businessName}</strong>) telah otomatis terisi di bawah. Anda bisa langsung klik <strong>Aktifkan Cobascan</strong> untuk menautkan perangkat baru ini, atau sesuaikan data jika diperlukan.
+          🚀 <strong>Aktivasi Perangkat Pertama:</strong> Masukkan profil bisnis Anda di bawah untuk mengaktifkan stand Cobascan ini. Data ini langsung terhubung dengan QR &amp; NFC.
+        </div>
+      ) : (
+        <div className="mb-5 p-3 rounded-xl bg-brand-50/70 border border-brand-200 text-xs text-brand-900 leading-relaxed">
+          💡 Pilih salah satu cafe/cabang Anda yang sudah terdaftar untuk langsung menggunakan data yang sama, atau pilih <strong>+ Cabang Baru</strong> jika perangkat ini diletakkan di lokasi/outlet lain.
         </div>
       )}
 

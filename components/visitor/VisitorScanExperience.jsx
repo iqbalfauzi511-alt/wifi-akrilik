@@ -6,7 +6,6 @@ import {
   Star,
   Copy,
   Check,
-  Radio,
   ExternalLink,
   Loader2,
   AlertCircle,
@@ -14,6 +13,8 @@ import {
   Building,
   ShieldCheck,
   CheckCircle2,
+  Lock,
+  Unlock,
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
@@ -37,9 +38,17 @@ export default function VisitorScanExperience({
 
   const targetMapsUrl = googleMapsReviewUrl || googleMapsUrl || 'https://maps.google.com/';
 
-  // Reveal Wi-Fi password via secured API
+  // Reveal Wi-Fi password via secured API (STRICTLY GATED behind hasReviewed)
   const handleRevealPassword = async () => {
     if (isRevealing || isRevealed) return;
+
+    if (!hasReviewed) {
+      setErrorMessage(
+        'Silakan berikan rating bintang atau klik "Tulis Ulasan di Google Maps" di atas terlebih dahulu untuk membuka akses Wi-Fi.'
+      );
+      return;
+    }
+
     try {
       setIsRevealing(true);
       setErrorMessage('');
@@ -99,11 +108,18 @@ export default function VisitorScanExperience({
     }
   };
 
+  // Open Google Maps and UNLOCK the Wi-Fi password access
   const handleReviewClick = () => {
     setHasReviewed(true);
+    setErrorMessage('');
     if (typeof window !== 'undefined') {
       window.open(targetMapsUrl, '_blank', 'noopener,noreferrer');
     }
+  };
+
+  const handleRatingSelect = (star) => {
+    setSelectedRating(star);
+    handleReviewClick();
   };
 
   return (
@@ -140,7 +156,7 @@ export default function VisitorScanExperience({
         </div>
       </div>
 
-      {/* CARD 1: Google Review (Fokus Utama) */}
+      {/* CARD 1: Google Review (Fokus Utama & Pembuka Kunci Wi-Fi) */}
       <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-5 sm:p-6 space-y-4">
         <div className="flex items-center justify-between">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-900 border border-amber-200 text-[11px] font-bold">
@@ -157,37 +173,45 @@ export default function VisitorScanExperience({
             Bagikan Pengalaman Anda
           </h2>
           <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-            Ulasan dan rating bintang 5 Anda di Google Maps sangat berharga bagi perkembangan kami.
+            {wifiEnabled ? (
+              <>Beri rating bintang 5 di Google Maps untuk <strong>membuka akses password Wi-Fi gratis</strong> kami.</>
+            ) : (
+              <>Ulasan dan rating bintang 5 Anda di Google Maps sangat berharga bagi perkembangan kami.</>
+            )}
           </p>
         </div>
 
         {/* Interactive Star Rating Selector */}
-        <div className="flex items-center justify-center gap-2 py-2 bg-amber-50/40 rounded-2xl border border-amber-100">
-          {[1, 2, 3, 4, 5].map((star) => {
-            const isFilled = star <= (hoverRating || selectedRating);
-            return (
-              <button
-                key={star}
-                type="button"
-                onMouseEnter={() => setHoverRating(star)}
-                onMouseLeave={() => setHoverRating(0)}
-                onClick={() => {
-                  setSelectedRating(star);
-                  handleReviewClick();
-                }}
-                className="p-1.5 transition-transform hover:scale-125 active:scale-95 focus:outline-none"
-                title={`Beri bintang ${star}`}
-              >
-                <Star
-                  className={`w-7 h-7 sm:w-8 sm:h-8 transition-colors ${
-                    isFilled
-                      ? 'fill-amber-400 text-amber-400'
-                      : 'text-slate-300 stroke-[1.5]'
-                  }`}
-                />
-              </button>
-            );
-          })}
+        <div className="space-y-1.5">
+          <div className="text-center">
+            <span className="text-[11px] font-bold text-amber-700 uppercase tracking-wider">
+              {hasReviewed ? '✓ Rating Anda Telah Dipilih' : 'Ketuk Bintang untuk Menilai:'}
+            </span>
+          </div>
+          <div className="flex items-center justify-center gap-2 py-2 bg-amber-50/40 rounded-2xl border border-amber-100">
+            {[1, 2, 3, 4, 5].map((star) => {
+              const isFilled = star <= (hoverRating || selectedRating);
+              return (
+                <button
+                  key={star}
+                  type="button"
+                  onMouseEnter={() => setHoverRating(star)}
+                  onMouseLeave={() => setHoverRating(0)}
+                  onClick={() => handleRatingSelect(star)}
+                  className="p-1.5 transition-transform hover:scale-125 active:scale-95 focus:outline-none"
+                  title={`Beri bintang ${star} di Google Maps`}
+                >
+                  <Star
+                    className={`w-7 h-7 sm:w-8 sm:h-8 transition-colors ${
+                      isFilled
+                        ? 'fill-amber-400 text-amber-400'
+                        : 'text-slate-300 stroke-[1.5]'
+                    }`}
+                  />
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Primary Google Review CTA Button */}
@@ -222,31 +246,53 @@ export default function VisitorScanExperience({
         {hasReviewed && (
           <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800 text-center flex items-center justify-center gap-2 animate-in fade-in duration-200">
             <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>Terima kasih! Ulasan Google Anda sangat berarti bagi kami. 🙏</span>
+            <span>✓ Ulasan dibuka! Akses Wi-Fi kini telah terbuka. Silakan buka password di bawah.</span>
           </div>
         )}
       </div>
 
-      {/* CARD 2: Free Guest Wi-Fi (Ketika Wi-Fi Aktif) */}
+      {/* CARD 2: Free Guest Wi-Fi (Terkunci sampai pengunjung memberi rating/ulasan) */}
       {wifiEnabled && (
-        <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-5 sm:p-6 space-y-4">
+        <div
+          id="wifi-card-section"
+          className={`bg-white rounded-3xl border shadow-xs p-5 sm:p-6 space-y-4 transition-all ${
+            hasReviewed ? 'border-emerald-300 ring-1 ring-emerald-400/30' : 'border-slate-200/80'
+          }`}
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-xl bg-emerald-50 border border-emerald-200/80 text-emerald-600 flex items-center justify-center">
+              <div
+                className={`w-7 h-7 rounded-xl flex items-center justify-center border ${
+                  hasReviewed
+                    ? 'bg-emerald-50 border-emerald-200/80 text-emerald-600'
+                    : 'bg-amber-50 border-amber-200 text-amber-700'
+                }`}
+              >
                 <Wifi className="w-4 h-4" />
               </div>
               <span className="text-sm sm:text-base font-bold text-slate-900">
                 Akses Wi-Fi Tamu
               </span>
             </div>
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              Gratis
-            </span>
+
+            {/* Lock / Unlock Gate Indicator Badge */}
+            {!hasReviewed ? (
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-bold">
+                <Lock className="w-3 h-3 text-amber-600" />
+                Terkunci (Beri Rating Dulu)
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold animate-in fade-in duration-200">
+                <Unlock className="w-3 h-3 text-emerald-600" />
+                Akses Terbuka
+              </span>
+            )}
           </div>
 
           <p className="text-xs text-slate-500 leading-relaxed">
-            Gunakan jaringan internet khusus pengunjung secara gratis selama Anda berada di sini.
+            {!hasReviewed
+              ? 'Password Wi-Fi dilindungi. Anda dapat membukanya setelah memberikan ulasan Google Maps di atas.'
+              : 'Terima kasih atas ulasan Anda! Password Wi-Fi kini sudah dapat dibuka di bawah ini.'}
           </p>
 
           {/* Wi-Fi Credentials Box */}
@@ -269,20 +315,35 @@ export default function VisitorScanExperience({
                   {isRevealed ? revealedWifiPassword : '••••••••••••'}
                 </span>
 
+                {/* Password Action Button */}
                 {!isRevealed ? (
-                  <button
-                    type="button"
-                    onClick={handleRevealPassword}
-                    disabled={isRevealing}
-                    className="px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-600 hover:bg-brand-700 text-white transition-colors shadow-2xs disabled:opacity-50 inline-flex items-center gap-1.5"
-                  >
-                    {isRevealing ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    ) : (
-                      <Eye className="w-3.5 h-3.5" />
-                    )}
-                    <span>{isRevealing ? 'Membuka...' : 'Buka Password'}</span>
-                  </button>
+                  !hasReviewed ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleReviewClick();
+                      }}
+                      className="px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 transition-colors shadow-2xs inline-flex items-center gap-1.5"
+                      title="Beri rating di Google Maps untuk membuka password"
+                    >
+                      <Lock className="w-3 h-3 text-amber-700" />
+                      <span>Beri Rating Dulu</span>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleRevealPassword}
+                      disabled={isRevealing}
+                      className="px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white transition-colors shadow-2xs disabled:opacity-50 inline-flex items-center gap-1.5 animate-in fade-in duration-200"
+                    >
+                      {isRevealing ? (
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                      ) : (
+                        <Eye className="w-3 h-3" />
+                      )}
+                      <span>{isRevealing ? 'Membuka...' : 'Buka Password'}</span>
+                    </button>
+                  )
                 ) : (
                   <button
                     type="button"
@@ -308,33 +369,44 @@ export default function VisitorScanExperience({
           </div>
 
           {errorMessage && (
-            <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium flex items-center gap-1.5">
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+            <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium flex items-center gap-1.5 animate-in fade-in duration-200">
+              <AlertCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
               <span>{errorMessage}</span>
             </div>
           )}
 
-          {/* Quick Connect / Copy Action Button */}
-          <button
-            type="button"
-            onClick={() => {
-              if (!isRevealed) {
-                handleRevealPassword();
-              } else {
-                handleCopyPassword();
-              }
-            }}
-            className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl font-bold text-sm text-white bg-slate-900 hover:bg-slate-800 active:scale-[0.99] transition-all shadow-sm"
-          >
-            <Wifi className="w-4 h-4 text-emerald-400" />
-            <span>
-              {isRevealed
-                ? copied
-                  ? 'Password Berhasil Disalin ✓'
-                  : 'Salin Password Wi-Fi'
-                : 'Buka & Hubungkan ke Wi-Fi'}
-            </span>
-          </button>
+          {/* Bottom Action Button */}
+          {!hasReviewed ? (
+            <button
+              type="button"
+              onClick={() => {
+                handleReviewClick();
+              }}
+              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl font-bold text-sm text-white bg-amber-600 hover:bg-amber-700 active:scale-[0.99] transition-all shadow-sm"
+            >
+              <Star className="w-4 h-4 fill-amber-300 text-amber-300" />
+              <span>Beri Rating untuk Buka Wi-Fi</span>
+            </button>
+          ) : !isRevealed ? (
+            <button
+              type="button"
+              onClick={handleRevealPassword}
+              disabled={isRevealing}
+              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl font-bold text-sm text-white bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] transition-all shadow-sm"
+            >
+              <Wifi className="w-4 h-4" />
+              <span>{isRevealing ? 'Membuka Password...' : 'Buka Password Wi-Fi'}</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handleCopyPassword}
+              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl font-bold text-sm text-white bg-slate-900 hover:bg-slate-800 active:scale-[0.99] transition-all shadow-sm"
+            >
+              <Wifi className="w-4 h-4 text-emerald-400" />
+              <span>{copied ? 'Password Berhasil Disalin ✓' : 'Salin Password Wi-Fi'}</span>
+            </button>
+          )}
         </div>
       )}
 
