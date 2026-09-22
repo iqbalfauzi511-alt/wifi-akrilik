@@ -24,7 +24,7 @@ export default async function VisitorWifiPage({ params }) {
   if (!qr) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
-        <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200 shadow-xl p-8 text-center">
+        <div className="max-w-md w-full bento-card p-8 text-center">
           <div className="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center mx-auto mb-4">
             <AlertTriangle className="w-7 h-7" />
           </div>
@@ -46,7 +46,7 @@ export default async function VisitorWifiPage({ params }) {
   if (qr.status === 'disabled') {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
-        <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200 shadow-xl p-8 text-center">
+        <div className="max-w-md w-full bento-card p-8 text-center">
           <div className="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center mx-auto mb-4">
             <ShieldOff className="w-7 h-7" />
           </div>
@@ -68,7 +68,7 @@ export default async function VisitorWifiPage({ params }) {
   if (qr.status === 'blank' || qr.status === 'sold') {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
-        <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200 shadow-xl p-8 text-center">
+        <div className="max-w-md w-full bento-card p-8 text-center">
           <div className="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 border border-brand-100 flex items-center justify-center mx-auto mb-4">
             <Sparkles className="w-7 h-7" />
           </div>
@@ -109,7 +109,7 @@ export default async function VisitorWifiPage({ params }) {
   if (!qr.wifiEnabled) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
-        <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200 shadow-xl p-8 text-center">
+        <div className="max-w-md w-full bento-card p-8 text-center">
           <div className="w-14 h-14 rounded-2xl bg-slate-100 text-slate-600 border border-slate-200 flex items-center justify-center mx-auto mb-4">
             <WifiOff className="w-7 h-7" />
           </div>
