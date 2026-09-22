@@ -10,8 +10,8 @@ export default function Navbar({ session }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 flex items-center justify-center group-hover:scale-105 transition-transform relative">
-            <Image src="/logo.png" alt="Cobascan" width={100} height={100} priority className="w-full h-full object-contain drop-shadow-sm" />
+          <div className="w-9 h-9 flex items-center justify-center group-hover:scale-105 transition-transform relative mix-blend-multiply">
+            <Image src="/logo.png" alt="Cobascan" width={100} height={100} priority className="w-full h-full object-contain" />
           </div>
           <div>
             <span className="heading-premium text-lg">Cobascan</span>

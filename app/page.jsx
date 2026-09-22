@@ -426,7 +426,7 @@ export default async function HomePage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex flex-col items-center md:items-start">
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 flex items-center justify-center relative">
+              <div className="w-8 h-8 flex items-center justify-center relative mix-blend-multiply">
                 <Image src="/logo.png" alt="Cobascan" width={100} height={100} className="w-full h-full object-contain" />
               </div>
               <span className="font-bold text-slate-800 text-lg">Cobascan</span>

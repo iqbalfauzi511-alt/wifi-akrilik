@@ -38,8 +38,8 @@ export default function DashboardSidebar({ role = 'customer', businessName }) {
         {/* Brand Header */}
         <div className="p-6 border-b border-slate-100 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 flex items-center justify-center relative">
-              <Image src="/logo.png" alt="Cobascan" width={100} height={100} priority className="w-full h-full object-contain drop-shadow-sm" />
+            <div className="w-8 h-8 flex items-center justify-center relative mix-blend-multiply">
+              <Image src="/logo.png" alt="Cobascan" width={100} height={100} priority className="w-full h-full object-contain" />
             </div>
             <div>
               <div className="font-bold text-slate-900 text-sm tracking-tight leading-none">

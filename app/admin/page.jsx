@@ -133,7 +133,7 @@ export default async function AdminDashboardPage() {
       {/* 7 KPI METRICS CARDS ROW (Exact Match from Image 1) */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
         {/* TOTAL DEVICES */}
-        <div className="p-3.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+        <div className="p-3.5 bento-card">
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-[10px] font-bold uppercase tracking-wider font-mono">TOTAL DEVICES</span>
             <Cpu className="w-3.5 h-3.5 text-blue-500" />
@@ -149,7 +149,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* ACTIVE & DEPLOYED */}
-        <div className="p-3.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+        <div className="p-3.5 bento-card">
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-[10px] font-bold uppercase tracking-wider font-mono">ACTIVE &amp; DEPLOYED</span>
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
@@ -163,7 +163,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* AVAILABLE STOCK */}
-        <div className="p-3.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+        <div className="p-3.5 bento-card">
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-[10px] font-bold uppercase tracking-wider font-mono">AVAILABLE STOCK</span>
             <Package className="w-3.5 h-3.5 text-amber-500" />
@@ -177,7 +177,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* DISABLED / RETIRED */}
-        <div className="p-3.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+        <div className="p-3.5 bento-card">
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-[10px] font-bold uppercase tracking-wider font-mono">DISABLED/RETIRED</span>
             <ShieldOff className="w-3.5 h-3.5 text-rose-500" />
@@ -191,7 +191,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* PARTNER VENUES */}
-        <div className="p-3.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+        <div className="p-3.5 bento-card">
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-[10px] font-bold uppercase tracking-wider font-mono">PARTNER VENUES</span>
             <Building className="w-3.5 h-3.5 text-indigo-500" />
@@ -205,7 +205,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* GLOBAL INTERACTIONS */}
-        <div className="p-3.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+        <div className="p-3.5 bento-card">
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-[10px] font-bold uppercase tracking-wider font-mono">GLOBAL INTERACTIONS</span>
             <BarChart3 className="w-3.5 h-3.5 text-blue-600" />
@@ -221,7 +221,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* ACTIVATION RATE */}
-        <div className="p-3.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+        <div className="p-3.5 bento-card">
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-[10px] font-bold uppercase tracking-wider font-mono">ACTIVATION RATE</span>
             <Zap className="w-3.5 h-3.5 text-emerald-500" />
@@ -236,7 +236,7 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* SECTION 1: Batch Provisioning & QR Generator */}
-      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 flex flex-col justify-between">
+      <div className="bento-card p-6 flex flex-col justify-between">
         <div>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-100">
             <div>
@@ -375,7 +375,7 @@ export default async function AdminDashboardPage() {
       {/* ANALYTICS ROW: Fleet Distribution + Activation Velocity + Tap vs Scan Ratio */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {/* Card 1: Fleet Distribution */}
-        <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-5 space-y-4">
+        <div className="bento-card p-5 space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-sm font-bold text-slate-900">Fleet Distribution</h3>
@@ -447,7 +447,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Card 2: Laju Aktivasi Armada (Live Real-Time Data) */}
-        <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-5 space-y-4 flex flex-col justify-between">
+        <div className="bento-card p-5 space-y-4 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between">
               <div>
@@ -506,7 +506,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Card 3: Adopsi Fitur Mitra (Live Real-Time Data) */}
-        <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-5 space-y-4 flex flex-col justify-between">
+        <div className="bento-card p-5 space-y-4 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between">
               <div>
