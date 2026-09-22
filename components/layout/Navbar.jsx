@@ -42,13 +42,8 @@ export default function Navbar({ session }) {
           ) : (
             <>
               <Link href="/login">
-                <Button variant="ghost" size="sm">
-                  Masuk
-                </Button>
-              </Link>
-              <Link href="/login">
                 <Button variant="primary" size="sm">
-                  Mulai Sekarang
+                  Masuk Dashboard
                 </Button>
               </Link>
             </>

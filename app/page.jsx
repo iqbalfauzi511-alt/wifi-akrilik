@@ -57,17 +57,16 @@ export default async function HomePage() {
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/login" className="w-full sm:w-auto">
+            <a
+              href="https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20dengan%20produk%20Cobascan"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto"
+            >
               <Button size="lg" className="w-full shadow-lg shadow-brand-600/25">
-                Mulai Sekarang
+                Dapatkan Sekarang
                 <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
-            </Link>
-            <a
-              href="#cara-kerja"
-              className="w-full sm:w-auto inline-flex items-center justify-center text-sm font-semibold text-slate-700 hover:text-slate-900 px-6 py-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors shadow-sm"
-            >
-              Lihat Cara Kerja
             </a>
           </div>
 
@@ -88,81 +87,6 @@ export default async function HomePage() {
             <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-brand-50 border border-brand-200/70 text-brand-900">
               <Wifi className="w-4 h-4 text-brand-600" />
               <span>📶 Wi-Fi Access</span>
-            </div>
-          </div>
-
-          {/* Interactive Mock Preview Card of Cobascan Device */}
-          <div className="mt-12 max-w-xl mx-auto">
-            <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-800 text-left relative overflow-hidden">
-              {/* Product Badge Header */}
-              <div className="flex items-center justify-between border-b border-slate-800 pb-4 mb-5">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white shadow-md">
-                    <QrCode className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-extrabold text-white tracking-wide">COBASCAN</h4>
-                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/50 backdrop-blur-md border border-white/10 text-xs font-semibold text-white">
-                      <QrCode className="w-3.5 h-3.5 text-brand-400" />
-                      <span>QR Code Dinamis</span>
-                    </div>
-                  </div>
-                </div>
-                <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3" />
-                  SIAP DIGUNAKAN
-                </span>
-              </div>
-
-              {/* Functional Preview Cards */}
-              <div className="space-y-3 mb-4">
-                {/* 1. Google Review Function */}
-                <div className="bg-gradient-to-r from-amber-500/15 via-slate-800 to-slate-800/90 rounded-2xl p-4 border border-amber-500/30 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
-                      <Star className="w-5 h-5 fill-amber-400" />
-                    </div>
-                    <div>
-                      <div className="text-xs font-bold text-white flex items-center gap-1.5">
-                        <span>⭐ Google Review</span>
-                        <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-amber-400/20 text-amber-300">UTAMA</span>
-                      </div>
-                      <p className="text-[11px] text-slate-300 mt-0.5">
-                        Arahkan pelanggan langsung ke ulasan bintang 5
-                      </p>
-                    </div>
-                  </div>
-                  <ExternalLink className="w-4 h-4 text-slate-400" />
-                </div>
-
-                {/* 2. Wi-Fi Access Function */}
-                <div className="bg-slate-800/80 rounded-2xl p-4 border border-slate-700/60 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-brand-500/20 border border-brand-500/30 flex items-center justify-center text-brand-400">
-                      <Wifi className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <div className="text-xs font-bold text-white flex items-center gap-1.5">
-                        <span>📶 Wi-Fi Access</span>
-                        <span className="text-[10px] font-medium text-slate-400">Tambahan</span>
-                      </div>
-                      <p className="text-[11px] text-slate-400 mt-0.5">
-                        Fasilitas koneksi Wi-Fi aman untuk pengunjung kafe/toko
-                      </p>
-                    </div>
-                  </div>
-                  <span className="text-[10px] font-mono font-bold text-slate-400">SSID: KAFE-TAMU</span>
-                </div>
-              </div>
-
-              {/* Device Micro Footer */}
-              <div className="flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-slate-800/60">
-                <span className="flex items-center gap-1.5">
-                  <Smartphone className="w-3.5 h-3.5 text-brand-400" />
-                  Kamera Scan Smartphone
-                </span>
-                <span className="text-brand-400 font-mono font-bold">domain.com/q/CS-X7K29A</span>
-              </div>
             </div>
           </div>
         </div>

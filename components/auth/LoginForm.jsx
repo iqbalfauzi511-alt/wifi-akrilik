@@ -112,7 +112,7 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
                 )}
               </div>
               <div>
-                Silakan masuk atau daftarkan email Anda terlebih dahulu. Perangkat ini akan otomatis ditambahkan ke dashboard bisnis akun Anda.
+                Silakan masuk menggunakan email Anda terlebih dahulu. Perangkat ini akan otomatis ditambahkan ke dashboard bisnis akun Anda.
               </div>
             </div>
           )}
