@@ -25,7 +25,6 @@ export default function DashboardSidebar({ role = 'customer', businessName }) {
   const adminNav = [
     { name: 'Admin Center', href: '/admin', icon: LayoutDashboard, exact: true },
     { name: 'My Cobascan', href: '/admin/qr', icon: QrCode },
-    { name: 'Google Review', href: '/dashboard/settings', icon: Wifi },
     { name: 'Pengguna & Bisnis', href: '/admin/users', icon: Users },
   ];
 
