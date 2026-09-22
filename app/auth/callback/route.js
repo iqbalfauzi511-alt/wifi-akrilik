@@ -14,8 +14,7 @@ export async function GET(request) {
         const userEmail = (data?.user?.email || '').toLowerCase().trim();
         const isAdmin =
           userEmail === 'distrapness@gmail.com' ||
-          userEmail === 'admin@smartwifi.com' ||
-          userEmail.startsWith('admin@');
+          userEmail === 'admin@smartwifi.com';
 
         let targetUrl = next;
         if (targetUrl === '/dashboard' && isAdmin) {
