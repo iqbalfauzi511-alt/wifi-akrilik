@@ -80,20 +80,12 @@ export default function CustomerQrTable({
   const allSelected = filteredQrList.length > 0 && filteredQrList.every((q) => selectedIds.has(q.id));
   const isIndeterminate = filteredQrList.some((q) => selectedIds.has(q.id)) && !allSelected;
 
-  // Toggle selection for all
+  // Toggle selection for all: If any items are selected, unselect all. If none, select all filtered.
   const handleToggleSelectAll = () => {
-    if (allSelected) {
-      setSelectedIds((prev) => {
-        const next = new Set(prev);
-        filteredQrList.forEach((q) => next.delete(q.id));
-        return next;
-      });
+    if (selectedIds.size > 0) {
+      setSelectedIds(new Set());
     } else {
-      setSelectedIds((prev) => {
-        const next = new Set(prev);
-        filteredQrList.forEach((q) => next.add(q.id));
-        return next;
-      });
+      setSelectedIds(new Set(filteredQrList.map((q) => q.id)));
     }
   };
 
@@ -261,67 +253,70 @@ export default function CustomerQrTable({
 
       {/* Floating Batch Action Bar when items selected */}
       {selectedIds.size > 0 && (
-        <div className="mb-4 p-3.5 rounded-2xl bg-slate-900 text-white shadow-xl border border-slate-800 flex flex-wrap items-center justify-between gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
-          <div className="flex items-center gap-2.5">
-            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-brand-500 text-white text-xs font-black">
+        <div className="mb-4 p-4 rounded-2xl bg-slate-900 text-white shadow-xl border border-slate-800 flex flex-wrap items-center justify-between gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="flex items-center gap-3">
+            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-brand-600 text-white text-xs font-black shadow-sm">
               {selectedIds.size}
             </span>
-            <span className="text-xs font-bold text-slate-200">
-              Perangkat Cobascan Dipilih
-            </span>
+            <div>
+              <div className="text-xs font-bold text-white">
+                {selectedIds.size} Perangkat Dipilih
+              </div>
+              <div className="text-[11px] text-slate-300">
+                Pilih aksi massal untuk perangkat yang ditandai:
+              </div>
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
+            <button
+              type="button"
               disabled={isProcessingBulk}
               onClick={() => handleBulkStatus('active')}
-              className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white border-transparent py-1 px-3"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white shadow-sm transition-colors disabled:opacity-50 cursor-pointer"
             >
-              <ToggleRight className="w-3.5 h-3.5 mr-1" />
-              Aktifkan
-            </Button>
+              <ToggleRight className="w-4 h-4" />
+              <span>Aktifkan</span>
+            </button>
 
-            <Button
-              variant="outline"
-              size="sm"
+            <button
+              type="button"
               disabled={isProcessingBulk}
               onClick={() => handleBulkStatus('disabled')}
-              className="text-xs bg-amber-600 hover:bg-amber-700 text-white border-transparent py-1 px-3"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-500 active:bg-amber-700 text-white shadow-sm transition-colors disabled:opacity-50 cursor-pointer"
             >
-              <ToggleLeft className="w-3.5 h-3.5 mr-1" />
-              Nonaktifkan
-            </Button>
+              <ToggleLeft className="w-4 h-4" />
+              <span>Nonaktifkan</span>
+            </button>
 
-            <Button
-              variant="outline"
-              size="sm"
+            <button
+              type="button"
               disabled={isProcessingBulk}
               onClick={handleBulkDownloadZip}
-              className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700 py-1 px-3"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors disabled:opacity-50 cursor-pointer"
             >
-              <Download className="w-3.5 h-3.5 mr-1" />
-              Download ZIP
-            </Button>
+              <Download className="w-4 h-4" />
+              <span>Download ZIP</span>
+            </button>
 
-            <Button
-              variant="outline"
-              size="sm"
+            <button
+              type="button"
               disabled={isProcessingBulk}
               onClick={() => setShowUnlinkModal(true)}
-              className="text-xs bg-rose-600 hover:bg-rose-700 text-white border-transparent py-1 px-3"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-500 active:bg-rose-700 text-white shadow-sm transition-colors disabled:opacity-50 cursor-pointer"
             >
-              <Trash2 className="w-3.5 h-3.5 mr-1" />
-              Lepas dari Akun
-            </Button>
+              <Trash2 className="w-4 h-4" />
+              <span>Lepas dari Akun</span>
+            </button>
 
             <button
               type="button"
               onClick={() => setSelectedIds(new Set())}
-              className="text-xs text-slate-400 hover:text-white px-2 py-1 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors cursor-pointer"
+              title="Batalkan semua pilihan"
             >
-              Batal
+              <X className="w-3.5 h-3.5 text-slate-300" />
+              <span>Batal Pilih</span>
             </button>
           </div>
         </div>
@@ -375,7 +370,7 @@ export default function CustomerQrTable({
       {/* Main Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm text-slate-600">
-          <thead className="bg-slate-50 text-[11px] uppercase tracking-wider text-slate-400 border-y border-slate-200/80">
+          <thead className="bg-slate-100 text-[11px] uppercase tracking-wider text-slate-700 font-bold border-y border-slate-200">
             <tr>
               {/* Checkbox Column */}
               <th className="py-3.5 px-3 w-10 text-center">
