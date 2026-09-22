@@ -12,7 +12,9 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
   const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
   const [errorMessage, setErrorMessage] = useState(
     errorParam === 'oauth_failed'
-      ? 'Gagal login dengan Google. Pastikan Google OAuth telah diaktifkan di Supabase Dashboard, atau gunakan Akses Masuk Cepat di bawah.'
+      ? 'Gagal login dengan Google. Pastikan akun Anda sudah terdaftar.'
+      : errorParam === 'unregistered_email'
+      ? 'Akun dengan email ini belum terdaftar. Anda harus memiliki perangkat Cobascan terlebih dahulu.'
       : ''
   );
 
@@ -69,6 +71,7 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
         email: emailTrim,
         name: emailTrim.split('@')[0],
         nextUrl: nextUrl || (isAdmin ? '/admin' : '/dashboard'),
+        allowSignup: isActivationFlow, // Only allow signup if they are activating a device
       });
     } catch (err) {
       setIsSubmittingEmail(false);

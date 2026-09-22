@@ -21,6 +21,36 @@ export async function GET(request) {
         if (targetUrl === '/dashboard' && isAdmin) {
           targetUrl = '/admin';
         }
+
+        // We only allow creating a new DB user if they are an admin or activating a device.
+        const isActivationFlow = targetUrl.startsWith('/activate/');
+        
+        // Let's check if they exist in DB
+        const { db } = await import('@/lib/db');
+        const { users } = await import('@/lib/db/schema');
+        const { eq } = await import('drizzle-orm');
+        
+        let dbUser = await db.query.users.findFirst({
+          where: eq(users.id, data.user.id)
+        });
+        
+        if (!dbUser) {
+          if (!isActivationFlow && !isAdmin) {
+            // Sign them out of Supabase because they aren't registered
+            await supabase.auth.signOut();
+            return NextResponse.redirect(`${origin}/login?error=unregistered_email`);
+          }
+          
+          // Permitted to register: Insert them into our DB
+          await db.insert(users).values({
+            id: data.user.id,
+            email: userEmail,
+            name: data.user.user_metadata?.full_name || userEmail.split('@')[0],
+            avatarUrl: data.user.user_metadata?.avatar_url || null,
+            role: isAdmin ? 'admin' : 'customer',
+          });
+        }
+
         return NextResponse.redirect(`${origin}${targetUrl}`);
       }
     }
