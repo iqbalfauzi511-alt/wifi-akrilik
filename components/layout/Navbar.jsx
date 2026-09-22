@@ -21,6 +21,19 @@ export default function Navbar({ session }) {
           </div>
         </Link>
 
+        {/* Desktop Links */}
+        <nav className="hidden md:flex items-center gap-8">
+          <Link href="/#cara-kerja" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">
+            Cara Kerja
+          </Link>
+          <Link href="/#spesifikasi" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">
+            Keunggulan
+          </Link>
+          <Link href="/#harga" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">
+            Harga
+          </Link>
+        </nav>
+
         {/* Navigation Actions */}
         <div className="flex items-center gap-3">
           {session?.user ? (
