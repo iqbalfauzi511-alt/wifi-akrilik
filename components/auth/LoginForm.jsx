@@ -89,8 +89,8 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
         {/* Brand */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2.5 group">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-700 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-brand-500/25 group-hover:scale-105 transition-transform">
-              <QrCode className="w-6 h-6" />
+            <div className="w-12 h-12 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <img src="/logo.png" alt="Cobascan" className="w-full h-full object-contain drop-shadow-sm" />
             </div>
           </Link>
           <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">

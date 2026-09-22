@@ -36,8 +36,8 @@ export default function DashboardSidebar({ role = 'customer', businessName }) {
         {/* Brand Header */}
         <div className="p-6 border-b border-slate-100 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-600 flex items-center justify-center text-white shadow-sm shadow-blue-500/20">
-              <QrCode className="w-4 h-4" />
+            <div className="w-8 h-8 flex items-center justify-center">
+              <img src="/logo.png" alt="Cobascan" className="w-full h-full object-contain drop-shadow-sm" />
             </div>
             <div>
               <div className="font-bold text-slate-900 text-sm tracking-tight leading-none">
