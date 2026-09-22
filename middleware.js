@@ -9,15 +9,24 @@ const ADMIN_EMAILS = [
 function isUserAdmin(email) {
   if (!email) return false;
   const clean = email.trim().toLowerCase();
-  return ADMIN_EMAILS.includes(clean) || clean.startsWith('admin@');
+  return ADMIN_EMAILS.includes(clean);
 }
 
 export async function middleware(request) {
-  // First run Supabase session updater
-  const sessionResult = await updateSession(request);
-  const res = sessionResult?.response || sessionResult;
-  const supabaseUser = sessionResult?.user || null;
+  // Check session cookie existence
+  const devCookie = request.cookies.get('smartwifi_session')?.value;
+  const hasSupabaseCookie = request.cookies.getAll().some((c) => c.name.startsWith('sb-'));
 
+  let sessionResult = null;
+  let supabaseUser = null;
+
+  // Only run Supabase session updater if there is a potential Supabase session
+  if (hasSupabaseCookie) {
+    sessionResult = await updateSession(request);
+    supabaseUser = sessionResult?.user || null;
+  }
+  
+  const res = sessionResult?.response || NextResponse.next();
   const { pathname } = request.nextUrl;
 
   // Protected paths
@@ -28,11 +37,6 @@ export async function middleware(request) {
   if (!isDashboardRoute && !isActivateRoute && !isAdminRoute) {
     return res;
   }
-
-  // Check session cookie
-  // Either dev session or Supabase auth token
-  const devCookie = request.cookies.get('smartwifi_session')?.value;
-  const hasSupabaseCookie = request.cookies.getAll().some((c) => c.name.startsWith('sb-'));
 
   let isAuthenticated = !!supabaseUser || !!devCookie || hasSupabaseCookie;
   let userRole = 'customer';
