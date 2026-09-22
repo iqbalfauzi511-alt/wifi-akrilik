@@ -36,13 +36,10 @@ export default async function CustomerSettingsPage() {
       </div>
 
       {!business ? (
-        <Card className="p-8 text-center max-w-lg">
-          <p className="text-sm text-slate-600 mb-4">
-            Anda belum memiliki data bisnis. Silakan lengkapi profil bisnis terlebih dahulu.
+        <Card className="border-slate-200 bg-white p-8 text-center max-w-lg mx-auto mt-10">
+          <p className="text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
+            Akses Pengaturan terkunci. Anda harus memindai kode QR perangkat fisik Anda terlebih dahulu.
           </p>
-          <Link href="/dashboard/setup">
-            <Button size="sm">Atur Profil Bisnis</Button>
-          </Link>
         </Card>
       ) : (
         <SettingsForm

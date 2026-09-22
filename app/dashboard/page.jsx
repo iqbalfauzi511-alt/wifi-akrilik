@@ -94,22 +94,16 @@ export default async function CustomerDashboardPage() {
 
       {/* If customer hasn't set up business yet */}
       {!business ? (
-        <Card className="border-blue-200 bg-blue-50/40 p-8 text-center">
-          <div className="w-12 h-12 rounded-2xl bg-blue-100 text-google-blue flex items-center justify-center mx-auto mb-3">
-            <QrCode className="w-6 h-6 text-google-blue" />
+        <Card className="border-slate-200 bg-white p-8 text-center max-w-lg mx-auto mt-10">
+          <div className="w-14 h-14 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-4">
+            <QrCode className="w-6 h-6" />
           </div>
-          <h3 className="text-lg font-bold text-slate-900 mb-1">
-            Belum Ada Bisnis Terdaftar
+          <h3 className="text-xl font-bold text-slate-900 mb-2">
+            Akses Terbatas
           </h3>
-          <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto mb-5">
-            Anda dapat melengkapi profil bisnis Anda sekarang atau cukup scan QR Code pada perangkat fisik untuk mengaktifkannya.
+          <p className="text-sm text-slate-500 max-w-md mx-auto mb-6 leading-relaxed">
+            Anda harus memindai (scan) kode QR pada fisik perangkat Cobascan yang Anda beli untuk mengaktifkan akses ke Dashboard ini.
           </p>
-          <Link href="/dashboard/setup">
-            <Button size="md">
-              Atur Profil Bisnis Sekarang
-              <ArrowRight className="w-4 h-4 ml-1.5" />
-            </Button>
-          </Link>
         </Card>
       ) : (
         <>

@@ -41,17 +41,25 @@ export default async function CustomerQrPage() {
         </div>
       </div>
 
-      <Card>
-        <CardHeader
-          title={`Total ${myQrs.length} Perangkat Cobascan`}
-          subtitle="Setiap perangkat memiliki kode unik untuk scan kamera atau tap smartphone via NFC"
-        />
-        <CustomerQrTable
-          qrList={myQrs}
-          businessName={business?.businessName}
-          wifiEnabled={business?.wifiEnabled}
-        />
-      </Card>
+      {!business ? (
+        <Card className="border-slate-200 bg-white p-8 text-center max-w-lg mx-auto mt-10">
+          <p className="text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
+            Akses Daftar Perangkat terkunci. Anda belum memindai perangkat Cobascan mana pun.
+          </p>
+        </Card>
+      ) : (
+        <Card>
+          <CardHeader
+            title={`Total ${myQrs.length} Perangkat Cobascan`}
+            subtitle="Setiap perangkat memiliki kode unik untuk scan kamera."
+          />
+          <CustomerQrTable
+            qrList={myQrs}
+            businessName={business?.businessName}
+            wifiEnabled={business?.wifiEnabled}
+          />
+        </Card>
+      )}
     </div>
   );
 }

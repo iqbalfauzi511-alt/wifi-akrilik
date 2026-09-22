@@ -11,28 +11,5 @@ export const metadata = {
 };
 
 export default async function BusinessSetupPage() {
-  const session = await getCurrentSession();
-
-  if (session?.role === 'admin') {
-    redirect('/admin');
-  }
-
-  if (session?.business) {
-    redirect('/dashboard');
-  }
-
-  return (
-    <div className="max-w-2xl mx-auto py-8">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
-          Lengkapi Profil Bisnis Anda
-        </h2>
-        <p className="text-xs sm:text-sm text-slate-500 mt-1">
-          Daftarkan informasi bisnis, link Google Review, dan opsi akses Wi-Fi Anda.
-        </p>
-      </div>
-
-      <SettingsForm business={null} />
-    </div>
-  );
+  redirect('/dashboard');
 }
