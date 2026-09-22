@@ -100,7 +100,14 @@ export default async function HomePage() {
             <div className="relative mx-auto w-full max-w-[500px] lg:max-w-none">
               <div className="bento-card p-2 sm:p-4 rotate-1 hover:rotate-0 transition-transform duration-500">
                 <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-slate-100">
-                  <Image src="/stand.jpg" alt="Cobascan Acrylic Stand" fill className="object-cover" priority />
+                  <Image 
+                    src="/stand.jpg" 
+                    alt="Cobascan Acrylic Stand" 
+                    fill 
+                    className="object-cover" 
+                    priority 
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
                 </div>
                 
                 {/* Floating Badge overlay */}
