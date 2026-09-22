@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getCurrentSession } from '@/lib/auth/session';
+import { getBusinessesByOwnerId } from '@/lib/db/queries/business';
 import SettingsForm from '@/components/customer/SettingsForm';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
@@ -19,14 +20,18 @@ export default async function CustomerSettingsPage() {
     redirect('/admin');
   }
 
-  const business = session?.business;
+  const userBusinesses = session?.user?.id
+    ? await getBusinessesByOwnerId(session.user.id)
+    : (session?.businesses || []);
+
+  const business = userBusinesses[0] || session?.business;
 
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Pengaturan Cobascan</h2>
         <p className="text-xs sm:text-sm text-slate-500 mt-1">
-          Kelola link Google Review dan opsi akses Wi-Fi bisnis Anda.
+          Kelola link Google Review dan opsi akses Wi-Fi bisnis Anda secara terpisah per cabang/toko.
         </p>
       </div>
 
@@ -40,7 +45,10 @@ export default async function CustomerSettingsPage() {
           </Link>
         </Card>
       ) : (
-        <SettingsForm business={business} />
+        <SettingsForm
+          business={business}
+          businesses={userBusinesses}
+        />
       )}
     </div>
   );

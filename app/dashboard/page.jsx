@@ -19,6 +19,7 @@ import {
 import { getCurrentSession } from '@/lib/auth/session';
 import { getCustomerStats, getCustomerStatsByUserId } from '@/lib/db/queries/stats';
 import { getQrsByBusinessId, getQrsByOwnerUserId } from '@/lib/db/queries/qr';
+import { getBusinessesByOwnerId } from '@/lib/db/queries/business';
 import StatCard from '@/components/ui/StatCard';
 import Card, { CardHeader } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
@@ -41,9 +42,10 @@ export default async function CustomerDashboardPage() {
   }
 
   const userId = session?.user?.id;
+  const userBusinesses = userId ? await getBusinessesByOwnerId(userId) : (session?.businesses || []);
   const myQrs = userId ? await getQrsByOwnerUserId(userId) : [];
   const stats = userId ? await getCustomerStatsByUserId(userId) : { activeQrCount: 0, totalScans: 0 };
-  const business = session?.business || (myQrs.length > 0 ? {
+  const business = userBusinesses[0] || session?.business || (myQrs.length > 0 ? {
     id: myQrs[0].businessId,
     businessName: myQrs[0].businessName,
     googleMapsReviewUrl: myQrs[0].googleMapsReviewUrl || myQrs[0].googleMapsUrl,
@@ -62,7 +64,9 @@ export default async function CustomerDashboardPage() {
             Halo, {userName} 👋
           </h2>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            {business
+            {userBusinesses.length > 1
+              ? `Kelola ${userBusinesses.length} cabang bisnis (${userBusinesses.map((b) => b.businessName).join(', ')}), Google Review, dan akses Wi-Fi masing-masing.`
+              : business
               ? `Kelola Cobascan, Google Review, dan akses Wi-Fi untuk ${business.businessName}.`
               : 'Selamat datang! Silakan daftarkan profil bisnis Anda atau aktivasi perangkat Cobascan (QR + NFC).'}
           </p>

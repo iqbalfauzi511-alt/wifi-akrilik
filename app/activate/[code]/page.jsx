@@ -183,6 +183,7 @@ export default async function ActivateQrPage({ params }) {
         <ActivationForm
           code={code}
           initialBusiness={session?.business}
+          businesses={session?.businesses || (session?.business ? [session.business] : [])}
           userEmail={session?.user?.email}
           batchCode={qr?.batchCode}
         />

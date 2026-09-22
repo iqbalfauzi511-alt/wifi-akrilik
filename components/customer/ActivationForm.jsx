@@ -24,6 +24,7 @@ import { activateQrAction } from '@/lib/actions/qr-actions';
 export default function ActivationForm({
   code,
   initialBusiness = null,
+  businesses = [],
   userEmail = '',
   batchCode = '',
 }) {
@@ -34,14 +35,47 @@ export default function ActivationForm({
   const [isSuccess, setIsSuccess] = useState(false);
   const [savedBusinessName, setSavedBusinessName] = useState('');
 
-  // Pre-populate with existing business if user already registered one
-  const [businessNameVal, setBusinessNameVal] = useState(initialBusiness?.businessName || '');
-  const [mapsUrlVal, setMapsUrlVal] = useState(
-    initialBusiness?.googleMapsReviewUrl || initialBusiness?.googleMapsUrl || ''
+  const storeList = useMemo(() => {
+    if (businesses && businesses.length > 0) return businesses;
+    if (initialBusiness) return [initialBusiness];
+    return [];
+  }, [businesses, initialBusiness]);
+
+  const [selectedStoreId, setSelectedStoreId] = useState(
+    storeList.length > 0 ? storeList[0].id : 'new'
   );
-  const [isWifiEnabled, setIsWifiEnabled] = useState(Boolean(initialBusiness?.wifiEnabled));
-  const [wifiNameVal, setWifiNameVal] = useState(initialBusiness?.wifiName || '');
-  const [wifiPasswordVal, setWifiPasswordVal] = useState(initialBusiness?.wifiPassword || '');
+
+  // Pre-populate with existing business if user already registered one
+  const [businessNameVal, setBusinessNameVal] = useState(storeList[0]?.businessName || '');
+  const [logoVal, setLogoVal] = useState(storeList[0]?.logoUrl || '');
+  const [mapsUrlVal, setMapsUrlVal] = useState(
+    storeList[0]?.googleMapsReviewUrl || storeList[0]?.googleMapsUrl || ''
+  );
+  const [isWifiEnabled, setIsWifiEnabled] = useState(Boolean(storeList[0]?.wifiEnabled));
+  const [wifiNameVal, setWifiNameVal] = useState(storeList[0]?.wifiName || '');
+  const [wifiPasswordVal, setWifiPasswordVal] = useState(storeList[0]?.wifiPassword || '');
+
+  const handleSelectStore = (storeId) => {
+    setSelectedStoreId(storeId);
+    if (storeId === 'new') {
+      setBusinessNameVal('');
+      setLogoVal('');
+      setMapsUrlVal('');
+      setIsWifiEnabled(false);
+      setWifiNameVal('');
+      setWifiPasswordVal('');
+    } else {
+      const found = storeList.find((s) => s.id === storeId);
+      if (found) {
+        setBusinessNameVal(found.businessName || '');
+        setLogoVal(found.logoUrl || '');
+        setMapsUrlVal(found.googleMapsReviewUrl || found.googleMapsUrl || '');
+        setIsWifiEnabled(Boolean(found.wifiEnabled));
+        setWifiNameVal(found.wifiName || '');
+        setWifiPasswordVal(found.wifiPassword || '');
+      }
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,6 +86,8 @@ export default function ActivationForm({
     const formData = new FormData(e.currentTarget);
     formData.set('code', code);
     formData.set('wifiEnabled', isWifiEnabled ? 'true' : 'false');
+    formData.set('targetBusinessId', selectedStoreId);
+    formData.set('isNewBusiness', selectedStoreId === 'new' ? 'true' : 'false');
     const bName = formData.get('businessName') || '';
 
     const result = await activateQrAction(null, formData);
@@ -149,26 +185,108 @@ export default function ActivationForm({
           </div>
         )}
 
+        {/* Store / Outlet Selection Cards */}
+        {storeList.length > 0 && (
+          <div className="space-y-2 pb-2">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                Pilih Toko / Cabang Tujuan:
+              </label>
+              <span className="text-[11px] text-slate-400 font-mono">
+                {selectedStoreId === 'new' ? 'Pendaftaran Cabang Baru' : 'Menautkan ke Cabang Terdaftar'}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              {storeList.map((st) => {
+                const isSelected = selectedStoreId === st.id;
+                return (
+                  <div
+                    key={st.id}
+                    onClick={() => handleSelectStore(st.id)}
+                    className={`p-3 rounded-2xl border text-xs cursor-pointer transition-all flex items-center justify-between select-none ${
+                      isSelected
+                        ? 'border-brand-600 bg-brand-50/70 ring-2 ring-brand-500/20 shadow-xs'
+                        : 'border-slate-200 hover:border-slate-300 bg-white'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5 overflow-hidden">
+                      <div className="w-8 h-8 rounded-xl bg-slate-100 border border-slate-200/80 p-0.5 flex items-center justify-center shrink-0 overflow-hidden">
+                        {st.logoUrl ? (
+                          <img
+                            src={st.logoUrl}
+                            alt={st.businessName}
+                            className="w-full h-full object-contain rounded-lg"
+                          />
+                        ) : (
+                          <Building className="w-4 h-4 text-slate-400" />
+                        )}
+                      </div>
+                      <div className="truncate">
+                        <div className="font-bold text-slate-900 truncate">{st.businessName}</div>
+                        <div className="text-[10px] text-slate-500 truncate">
+                          {st.wifiEnabled ? `Wi-Fi: ${st.wifiName || 'Aktif'}` : 'Google Maps Only'}
+                        </div>
+                      </div>
+                    </div>
+                    {isSelected && (
+                      <div className="w-4 h-4 rounded-full bg-brand-600 text-white flex items-center justify-center shrink-0">
+                        <CheckCircle2 className="w-4 h-4" />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+
+              {/* Option: + Daftarkan Toko / Cabang Baru */}
+              <div
+                onClick={() => handleSelectStore('new')}
+                className={`p-3 rounded-2xl border text-xs cursor-pointer transition-all flex items-center justify-between select-none ${
+                  selectedStoreId === 'new'
+                    ? 'border-brand-600 bg-brand-50/70 ring-2 ring-brand-500/20 shadow-xs'
+                    : 'border-dashed border-slate-300 hover:border-slate-400 bg-slate-50/60'
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-brand-600 shrink-0 font-bold">
+                    +
+                  </div>
+                  <div>
+                    <div className="font-bold text-slate-900">+ Cabang Baru</div>
+                    <div className="text-[10px] text-slate-500">Wi-Fi &amp; Maps berbeda</div>
+                  </div>
+                </div>
+                {selectedStoreId === 'new' && (
+                  <div className="w-4 h-4 rounded-full bg-brand-600 text-white flex items-center justify-center shrink-0">
+                    <CheckCircle2 className="w-4 h-4" />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Business Name */}
         <div>
           <Input
-            label="Nama Bisnis"
+            label="Nama Bisnis / Toko"
             name="businessName"
-            placeholder="Contoh: Kopi Senja / Toko Berkah"
+            placeholder="Contoh: Kopi Senja - Cabang Melati"
             value={businessNameVal}
             onChange={(e) => setBusinessNameVal(e.target.value)}
             autoComplete="off"
             error={fieldErrors.businessName}
             required
             prefix={<Building className="w-4 h-4 text-slate-400" />}
-            helperText="Nama ini akan tampil di bagian atas halaman saat customer scan QR atau tap NFC."
+            helperText="Nama toko/cabang ini akan tampil di bagian atas halaman saat pelanggan scan QR atau tap NFC."
           />
         </div>
 
         {/* Business Logo Uploader */}
         <div className="pt-1">
           <LogoUploader
-            initialLogo={initialBusiness?.logoUrl || ''}
+            key={selectedStoreId}
+            initialLogo={logoVal}
             name="logoUrl"
             label="Logo Bisnis"
             helperText="Logo ini akan tampil pada avatar halaman sambutan ketika pengunjung melakukan scan QR atau tap NFC Cobascan."

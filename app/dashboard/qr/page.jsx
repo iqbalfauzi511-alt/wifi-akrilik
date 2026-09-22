@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { QrCode, PlusCircle } from 'lucide-react';
 import { getCurrentSession } from '@/lib/auth/session';
 import { getQrsByBusinessId, getQrsByOwnerUserId } from '@/lib/db/queries/qr';
+import { getBusinessesByOwnerId } from '@/lib/db/queries/business';
 import CustomerQrTable from '@/components/customer/CustomerQrTable';
 import Card, { CardHeader } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
@@ -16,8 +17,9 @@ export const metadata = {
 export default async function CustomerQrPage() {
   const session = await getCurrentSession();
   const userId = session?.user?.id;
+  const userBusinesses = userId ? await getBusinessesByOwnerId(userId) : (session?.businesses || []);
   const myQrs = userId ? await getQrsByOwnerUserId(userId) : [];
-  const business = session?.business || (myQrs.length > 0 ? {
+  const business = userBusinesses[0] || session?.business || (myQrs.length > 0 ? {
     businessName: myQrs[0].businessName,
     wifiEnabled: myQrs[0].wifiEnabled,
   } : null);
@@ -28,7 +30,9 @@ export default async function CustomerQrPage() {
         <div>
           <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Perangkat Cobascan (QR &amp; NFC)</h2>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Daftar seluruh perangkat Cobascan yang aktif dan terhubung dengan {business?.businessName || 'bisnis Anda'}.
+            {userBusinesses.length > 1
+              ? `Daftar seluruh perangkat Cobascan yang aktif di ${userBusinesses.length} cabang bisnis Anda.`
+              : `Daftar seluruh perangkat Cobascan yang aktif dan terhubung dengan ${business?.businessName || 'bisnis Anda'}.`}
           </p>
         </div>
       </div>

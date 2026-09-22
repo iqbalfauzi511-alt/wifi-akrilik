@@ -21,6 +21,8 @@ import {
   X,
   CheckCircle2,
   Sparkles,
+  Building,
+  Store,
 } from 'lucide-react';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
@@ -41,6 +43,24 @@ export default function CustomerQrTable({
 
   const [selectedQr, setSelectedQr] = useState(null);
   const [activeTab, setActiveTab] = useState('review'); // 'review' | 'wifi'
+  const [selectedStoreFilter, setSelectedStoreFilter] = useState('all');
+
+  // Extract store options for filtering
+  const storeOptions = React.useMemo(() => {
+    const map = new Map();
+    qrList.forEach((q) => {
+      const name = q.businessName || businessName || 'Outlet Utama';
+      map.set(name, (map.get(name) || 0) + 1);
+    });
+    return Array.from(map.entries()).map(([name, count]) => ({ name, count }));
+  }, [qrList, businessName]);
+
+  const filteredQrList = React.useMemo(() => {
+    if (selectedStoreFilter === 'all') return qrList;
+    return qrList.filter(
+      (q) => (q.businessName || businessName || 'Outlet Utama') === selectedStoreFilter
+    );
+  }, [qrList, businessName, selectedStoreFilter]);
 
   // Multi-select state
   const [selectedIds, setSelectedIds] = useState(new Set());
@@ -57,15 +77,23 @@ export default function CustomerQrTable({
     );
   }
 
-  const allSelected = qrList.length > 0 && selectedIds.size === qrList.length;
-  const isIndeterminate = selectedIds.size > 0 && selectedIds.size < qrList.length;
+  const allSelected = filteredQrList.length > 0 && filteredQrList.every((q) => selectedIds.has(q.id));
+  const isIndeterminate = filteredQrList.some((q) => selectedIds.has(q.id)) && !allSelected;
 
   // Toggle selection for all
   const handleToggleSelectAll = () => {
     if (allSelected) {
-      setSelectedIds(new Set());
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        filteredQrList.forEach((q) => next.delete(q.id));
+        return next;
+      });
     } else {
-      setSelectedIds(new Set(qrList.map((q) => q.id)));
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        filteredQrList.forEach((q) => next.add(q.id));
+        return next;
+      });
     }
   };
 
@@ -299,6 +327,51 @@ export default function CustomerQrTable({
         </div>
       )}
 
+      {/* Store / Branch Filter Pills (if user has devices across multiple branches) */}
+      {storeOptions.length > 1 && (
+        <div className="mb-4 p-2.5 bg-slate-50/90 rounded-2xl border border-slate-200/80 flex flex-wrap items-center gap-2">
+          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider px-2">
+            Filter Cabang:
+          </span>
+          <button
+            type="button"
+            onClick={() => setSelectedStoreFilter('all')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              selectedStoreFilter === 'all'
+                ? 'bg-brand-600 text-white shadow-xs'
+                : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 hover:text-slate-900'
+            }`}
+          >
+            Semua Cabang ({qrList.length})
+          </button>
+          {storeOptions.map(({ name, count }) => {
+            const isSelected = selectedStoreFilter === name;
+            return (
+              <button
+                key={name}
+                type="button"
+                onClick={() => setSelectedStoreFilter(name)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                  isSelected
+                    ? 'bg-brand-600 text-white shadow-xs'
+                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 hover:text-slate-900'
+                }`}
+              >
+                <Store className="w-3.5 h-3.5" />
+                <span>{name}</span>
+                <span
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                    isSelected ? 'bg-brand-700 text-white' : 'bg-slate-100 text-slate-500'
+                  }`}
+                >
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+
       {/* Main Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm text-slate-600">
@@ -329,7 +402,7 @@ export default function CustomerQrTable({
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {qrList.map((qr) => {
+            {filteredQrList.map((qr) => {
               const isSelected = selectedIds.has(qr.id);
               return (
                 <tr
@@ -362,8 +435,22 @@ export default function CustomerQrTable({
                         </span>
                       )}
                     </div>
-                    <div className="text-[11px] text-slate-400">
-                      {qr.businessName || businessName}
+                    <div className="flex items-center gap-1.5 mt-1">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+                        <Store className="w-3 h-3 text-brand-600 shrink-0" />
+                        <span className="truncate max-w-[150px] sm:max-w-[220px]">
+                          {qr.businessName || businessName || 'Outlet Utama'}
+                        </span>
+                      </span>
+                      {qr.wifiEnabled ? (
+                        <span className="inline-flex items-center gap-0.5 text-[10px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded">
+                          <Wifi className="w-2.5 h-2.5" /> Wi-Fi
+                        </span>
+                      ) : (
+                        <span className="text-[10px] text-slate-400">
+                          Review Direct
+                        </span>
+                      )}
                     </div>
                   </td>
 
@@ -462,8 +549,8 @@ export default function CustomerQrTable({
       >
         {selectedQr && (
           <div className="pt-2 space-y-4">
-            {/* Tab Selection if Wi-Fi Enabled */}
-            {wifiEnabled && (
+            {/* Tab Selection if Wi-Fi Enabled for this specific QR */}
+            {Boolean(selectedQr.wifiEnabled ?? wifiEnabled) && (
               <div className="flex p-1 bg-slate-100 rounded-xl">
                 <button
                   type="button"
