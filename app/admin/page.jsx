@@ -45,18 +45,25 @@ export default async function AdminDashboardPage() {
   const allQrs = await getAllQrsAdmin();
   const batches = await getAllBatchesAdmin();
 
-  // Dynamic calculated ratios
+  // Dynamic calculated ratios from real database queries
   const totalNodes = stats.totalQr || 0;
   const activeNodes = stats.activeQr || 0;
   const stockNodes = (stats.availableQr || 0) + (stats.soldQr || 0);
   const disabledNodes = stats.disabledQr || 0;
-  const activePercent = totalNodes > 0 ? ((activeNodes / totalNodes) * 100).toFixed(1) : '76.0';
-  const stockPercent = totalNodes > 0 ? ((stockNodes / totalNodes) * 100).toFixed(1) : '22.3';
-  const disabledPercent = totalNodes > 0 ? ((disabledNodes / totalNodes) * 100).toFixed(1) : '1.7';
+  const activePercent = totalNodes > 0 ? ((activeNodes / totalNodes) * 100).toFixed(1) : '0.0';
+  const stockPercent = totalNodes > 0 ? ((stockNodes / totalNodes) * 100).toFixed(1) : '0.0';
+  const disabledPercent = totalNodes > 0 ? ((disabledNodes / totalNodes) * 100).toFixed(1) : '0.0';
   const totalVenues = stats.totalBusinesses || 0;
-  const avgNodesPerVenue = totalVenues > 0 ? (totalNodes / totalVenues).toFixed(1) : '4.9';
+  const avgNodesPerVenue = totalVenues > 0 ? (totalNodes / totalVenues).toFixed(1) : '0.0';
   const globalInteractions = stats.totalScans || 0;
-  const activationRate = totalNodes > 0 ? (((activeNodes + (stats.soldQr || 0)) / totalNodes) * 100).toFixed(1) : '91.2';
+  const recentScans7d = stats.recentScans7d || 0;
+  const recentActivations30d = stats.recentActivations30d || 0;
+  const nodesThisMonth = stats.nodesThisMonth || 0;
+  const wifiBizCount = stats.wifiBizCount || 0;
+  const reviewOnlyBizCount = stats.reviewOnlyBizCount || 0;
+  const wifiBizPercent = totalVenues > 0 ? ((wifiBizCount / totalVenues) * 100).toFixed(1) : '0.0';
+  const reviewOnlyPercent = totalVenues > 0 ? ((reviewOnlyBizCount / totalVenues) * 100).toFixed(1) : '0.0';
+  const activationRate = totalNodes > 0 ? (((activeNodes + (stats.soldQr || 0)) / totalNodes) * 100).toFixed(1) : '0.0';
 
   return (
     <div className="space-y-8 pb-12">
@@ -66,10 +73,10 @@ export default async function AdminDashboardPage() {
           <div className="flex items-center gap-2 mb-2 flex-wrap">
             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold font-mono uppercase bg-emerald-50 text-emerald-700 border border-emerald-200">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              FACTORY LINK CONNECTED
+              DATABASE CONNECTED
             </span>
-            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono text-slate-500 bg-slate-100 border border-slate-200">
-              Cluster: US-EAST-FAB01
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono text-slate-600 bg-slate-100 border border-slate-200">
+              Engine: PostgreSQL Supabase (Production)
             </span>
           </div>
 
@@ -123,7 +130,9 @@ export default async function AdminDashboardPage() {
               {totalNodes.toLocaleString()}
             </span>
           </div>
-          <p className="text-[10px] text-blue-600 font-semibold mt-0.5">+320 this mo</p>
+          <p className="text-[10px] text-blue-600 font-semibold mt-0.5">
+            {nodesThisMonth > 0 ? `+${nodesThisMonth} unit bulan ini` : `${activeNodes} aktif terhubung`}
+          </p>
         </div>
 
         {/* ACTIVE & DEPLOYED */}
@@ -193,7 +202,9 @@ export default async function AdminDashboardPage() {
               {globalInteractions.toLocaleString()}
             </span>
           </div>
-          <p className="text-[10px] text-blue-600 font-semibold mt-0.5">+14.2k past 7 days</p>
+          <p className="text-[10px] text-blue-600 font-semibold mt-0.5">
+            {recentScans7d > 0 ? `+${recentScans7d.toLocaleString()} 7 hari terakhir` : 'Akumulasi Real-Time'}
+          </p>
         </div>
 
         {/* ACTIVATION RATE */}
@@ -389,14 +400,14 @@ export default async function AdminDashboardPage() {
           {/* Bottom Route Preview */}
           <div className="mt-5 pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-slate-500">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-blue-500" />
-              <span className="font-mono text-[11px]">Default target route: <strong>https://wifi-akrilik.vercel.app/q/:code</strong></span>
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="font-mono text-[11px]">Rute target portal perangkat: <strong>/q/:code (QR Scan &amp; NFC Tap)</strong></span>
             </div>
             <Link
               href="/admin/qr"
               className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 font-semibold text-xs"
             >
-              <span>Configure Vector Stamp Preset</span>
+              <span>Buka Generator Batch Perangkat</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -477,60 +488,74 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* Card 2: Activation Velocity */}
+        {/* Card 2: Laju Aktivasi Armada (Live Real-Time Data) */}
         <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-5 space-y-4 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm font-bold text-slate-900">Activation Velocity</h3>
-                  <span className="text-[10px] font-bold text-emerald-600 font-mono">+18.4% MoM</span>
+                  <h3 className="text-sm font-bold text-slate-900">Laju Aktivasi Armada</h3>
+                  <span className="text-[10px] font-bold text-emerald-600 font-mono">
+                    +{recentActivations30d} Unit (30 Hari)
+                  </span>
                 </div>
-                <p className="text-[11px] text-slate-400">New counter stands online past 30 days</p>
+                <p className="text-[11px] text-slate-400">Stand fisik diaktivasi dalam 30 hari terakhir</p>
               </div>
-              <Zap className="w-4 h-4 text-blue-500" />
+              <Zap className="w-4 h-4 text-emerald-500" />
             </div>
 
-            {/* Smooth SVG Area Chart Mockup */}
-            <div className="h-28 w-full mt-4 relative flex items-end">
-              <svg className="w-full h-full overflow-visible" viewBox="0 0 100 40" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="gradientVelocity" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.3" />
-                    <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
-                  </linearGradient>
-                </defs>
-                <path
-                  d="M 0 35 Q 25 32 50 18 T 100 8 L 100 40 L 0 40 Z"
-                  fill="url(#gradientVelocity)"
+            {/* Live Progress Bar & Breakdown */}
+            <div className="mt-5 space-y-3">
+              <div className="flex items-baseline justify-between">
+                <span className="text-2xl font-black text-slate-900 tracking-tight">
+                  {activationRate}%
+                </span>
+                <span className="text-xs text-slate-500 font-medium">
+                  {activeNodes} dari {totalNodes} stand aktif
+                </span>
+              </div>
+
+              <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden flex">
+                <div
+                  className="bg-emerald-500 h-full transition-all"
+                  style={{ width: `${activePercent}%` }}
+                  title={`Aktif: ${activePercent}%`}
                 />
-                <path
-                  d="M 0 35 Q 25 32 50 18 T 100 8"
-                  fill="none"
-                  stroke="#2563eb"
-                  strokeWidth="2"
-                  strokeLinecap="round"
+                <div
+                  className="bg-amber-400 h-full transition-all"
+                  style={{ width: `${stockPercent}%` }}
+                  title={`Tersedia: ${stockPercent}%`}
                 />
-              </svg>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 pt-2 text-[11px] text-slate-600">
+                <div className="p-2 rounded-xl bg-emerald-50/70 border border-emerald-100">
+                  <div className="text-[10px] text-emerald-800 font-bold uppercase tracking-wider">Aktif Terpasang</div>
+                  <div className="text-sm font-extrabold text-emerald-900 font-mono mt-0.5">{activeNodes} Unit</div>
+                </div>
+                <div className="p-2 rounded-xl bg-amber-50/70 border border-amber-100">
+                  <div className="text-[10px] text-amber-800 font-bold uppercase tracking-wider">Stok / Blank</div>
+                  <div className="text-sm font-extrabold text-amber-900 font-mono mt-0.5">{stockNodes} Unit</div>
+                </div>
+              </div>
             </div>
           </div>
 
           <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono pt-2 border-t border-slate-100">
-            <span>Day 1: 14 nodes/wk</span>
-            <span className="font-bold text-blue-600">Peak: 60 nodes/wk</span>
-            <span>Day 30</span>
+            <span>Total Armada Terdaftar:</span>
+            <span className="font-bold text-slate-700">{totalNodes.toLocaleString()} Unit</span>
           </div>
         </div>
 
-        {/* Card 3: Tap vs. Scan Ratio */}
+        {/* Card 3: Adopsi Fitur Mitra (Live Real-Time Data) */}
         <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-5 space-y-4 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-slate-900">Tap vs. Scan Ratio</h3>
-                <p className="text-[11px] text-slate-400">NFC contactless vs. Camera QR optics</p>
+                <h3 className="text-sm font-bold text-slate-900">Adopsi Fitur Mitra Bisnis</h3>
+                <p className="text-[11px] text-slate-400">Distribusi konfigurasi Wi-Fi vs Google Maps Direct</p>
               </div>
-              <Radio className="w-4 h-4 text-blue-600" />
+              <Building className="w-4 h-4 text-indigo-600" />
             </div>
 
             {/* Split Progress Bar */}
@@ -538,38 +563,44 @@ export default async function AdminDashboardPage() {
               <div>
                 <div className="flex items-center justify-between text-xs font-semibold mb-1.5">
                   <div className="flex items-center gap-1.5 text-blue-700">
-                    <Radio className="w-3.5 h-3.5" />
-                    <span>NFC Contactless Tap</span>
+                    <Wifi className="w-3.5 h-3.5 text-brand-600" />
+                    <span>Wi-Fi Tamu + Google Maps</span>
                   </div>
                   <div className="font-mono text-slate-700">
-                    <strong>64.8%</strong> <span className="text-[10px] text-slate-400">(273,384)</span>
+                    <strong>{wifiBizPercent}%</strong> <span className="text-[10px] text-slate-400">({wifiBizCount} Mitra)</span>
                   </div>
                 </div>
                 <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                  <div className="bg-blue-600 h-full rounded-full w-[64.8%]" />
+                  <div
+                    className="bg-brand-600 h-full rounded-full transition-all"
+                    style={{ width: `${wifiBizPercent}%` }}
+                  />
                 </div>
               </div>
 
               <div>
                 <div className="flex items-center justify-between text-xs font-semibold mb-1.5">
                   <div className="flex items-center gap-1.5 text-amber-700">
-                    <QrCode className="w-3.5 h-3.5" />
-                    <span>Visual QR Camera Scan</span>
+                    <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
+                    <span>Direct Google Maps Saja</span>
                   </div>
                   <div className="font-mono text-slate-700">
-                    <strong>35.2%</strong> <span className="text-[10px] text-slate-400">(148,506)</span>
+                    <strong>{reviewOnlyPercent}%</strong> <span className="text-[10px] text-slate-400">({reviewOnlyBizCount} Mitra)</span>
                   </div>
                 </div>
                 <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                  <div className="bg-amber-400 h-full rounded-full w-[35.2%]" />
+                  <div
+                    className="bg-amber-400 h-full rounded-full transition-all"
+                    style={{ width: `${reviewOnlyPercent}%` }}
+                  />
                 </div>
               </div>
             </div>
           </div>
 
           <div className="flex items-center justify-between text-[10px] text-slate-500 font-mono pt-3 border-t border-slate-100">
-            <span>NFC tap conversion latency:</span>
-            <span className="font-bold text-emerald-600">0.42s direct app launch</span>
+            <span>Total Mitra Terdaftar:</span>
+            <span className="font-bold text-indigo-600">{totalVenues} Bisnis Terverifikasi</span>
           </div>
         </div>
       </div>
