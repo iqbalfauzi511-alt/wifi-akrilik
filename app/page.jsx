@@ -178,9 +178,9 @@ export default async function HomePage() {
               <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-5">
                 <Monitor className="w-5 h-5" />
               </div>
-              <h4 className="text-base font-bold text-slate-900 mb-2">Bagikan Kata Sandi Wi-Fi</h4>
+              <h4 className="text-base font-bold text-slate-900 mb-2">Tampilkan Sandi Wi-Fi</h4>
               <p className="text-sm text-slate-500 leading-relaxed">
-                Tamu tidak perlu lagi repot mengetik password WiFi. Cukup scan, sistem otomatis menyambungkan koneksi mereka ke WiFi kafe Anda.
+                Tamu tidak perlu lagi repot bertanya ke kasir. Cukup scan, sistem akan langsung menampilkan dan menyambungkan WiFi ke HP pelanggan.
               </p>
             </div>
 
@@ -407,7 +407,7 @@ export default async function HomePage() {
                 </Button>
               </a>
               <Link href="/login">
-                <Button size="lg" variant="outline" className="border-brand-400 text-white hover:bg-brand-500 px-8">
+                <Button size="lg" className="!bg-transparent border border-brand-400 text-white hover:!bg-brand-500 px-8 shadow-none">
                   Masuk Dashboard
                 </Button>
               </Link>
