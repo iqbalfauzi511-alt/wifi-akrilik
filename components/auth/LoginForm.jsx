@@ -195,73 +195,7 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
             <span>{isLoadingGoogle ? 'Menghubungkan ke Google...' : 'Lanjutkan dengan Google'}</span>
           </button>
 
-          {/* Quick Dev Switcher for instant testing */}
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-200" />
-            </div>
-            <div className="relative flex justify-center text-xs">
-              <span className="bg-white px-3 text-slate-400 font-bold uppercase tracking-wider text-[10px]">
-                AKSES CEPAT PENGUJIAN
-              </span>
-            </div>
-          </div>
 
-          <div className="space-y-2.5">
-            {/* Login as Business Owner / Customer */}
-            <form
-              action={async () => {
-                await devLoginAction({
-                  email: 'owner@cobascan.com',
-                  name: 'Pemilik Bisnis (Demo)',
-                  nextUrl,
-                });
-              }}
-            >
-              <button
-                type="submit"
-                className="w-full flex items-center justify-between p-2.5 rounded-xl border border-slate-200 hover:border-brand-500 hover:bg-brand-50/50 transition-all text-left text-xs bg-slate-50/50"
-              >
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-brand-600 text-white flex items-center justify-center shrink-0">
-                    <Store className="w-3.5 h-3.5" />
-                  </div>
-                  <div>
-                    <div className="font-bold text-slate-900">Demo Pemilik Bisnis</div>
-                    <div className="text-[10px] text-slate-500">owner@cobascan.com</div>
-                  </div>
-                </div>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-              </button>
-            </form>
-
-            {/* Login as Admin */}
-            <form
-              action={async () => {
-                await devLoginAction({
-                  email: 'admin@smartwifi.com',
-                  name: 'Administrator Cobascan',
-                  nextUrl: nextUrl.startsWith('/admin') ? nextUrl : '/admin',
-                });
-              }}
-            >
-              <button
-                type="submit"
-                className="w-full flex items-center justify-between p-2.5 rounded-xl border border-slate-200 hover:border-brand-500 hover:bg-brand-50/50 transition-all text-left text-xs bg-slate-50/50"
-              >
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-slate-900 text-white flex items-center justify-center shrink-0">
-                    <ShieldCheck className="w-3.5 h-3.5" />
-                  </div>
-                  <div>
-                    <div className="font-bold text-slate-900">Demo Administrator</div>
-                    <div className="text-[10px] text-slate-500">admin@smartwifi.com &bull; Ringkasan Platform</div>
-                  </div>
-                </div>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-              </button>
-            </form>
-          </div>
         </Card>
 
         {/* Back Link */}
