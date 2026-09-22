@@ -42,9 +42,13 @@ export default async function CustomerDashboardPage() {
   }
 
   const userId = session?.user?.id;
-  const userBusinesses = userId ? await getBusinessesByOwnerId(userId) : (session?.businesses || []);
-  const myQrs = userId ? await getQrsByOwnerUserId(userId) : [];
-  const stats = userId ? await getCustomerStatsByUserId(userId) : { activeQrCount: 0, totalScans: 0 };
+  const [userBusinesses, myQrs, stats] = userId
+    ? await Promise.all([
+        getBusinessesByOwnerId(userId).catch(() => []),
+        getQrsByOwnerUserId(userId).catch(() => []),
+        getCustomerStatsByUserId(userId).catch(() => ({ activeQrCount: 0, totalScans: 0 })),
+      ])
+    : [(session?.businesses || []), [], { activeQrCount: 0, totalScans: 0 }];
   const business = userBusinesses[0] || session?.business || (myQrs.length > 0 ? {
     id: myQrs[0].businessId,
     businessName: myQrs[0].businessName,

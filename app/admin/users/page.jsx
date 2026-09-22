@@ -15,42 +15,52 @@ export default async function AdminUsersPage() {
   await ensureDatabaseInitialized();
   const session = await getCurrentSession();
 
-  // Fetch all businesses with owner user information and active QR count
-  const businessList = await db
-    .select({
-      id: businesses.id,
-      ownerId: businesses.ownerId,
-      businessName: businesses.businessName,
-      googleMapsReviewUrl: businesses.googleMapsReviewUrl,
-      googleMapsUrl: businesses.googleMapsUrl,
-      wifiEnabled: businesses.wifiEnabled,
-      wifiName: businesses.wifiName,
-      createdAt: businesses.createdAt,
-      ownerEmail: users.email,
-      ownerName: users.name,
-      ownerRole: users.role,
-      qrCount: sql`cast(count(${qrCodes.id}) as integer)`,
-    })
-    .from(businesses)
-    .innerJoin(users, eq(businesses.ownerId, users.id))
-    .leftJoin(qrCodes, eq(businesses.id, qrCodes.businessId))
-    .groupBy(
-      businesses.id,
-      businesses.ownerId,
-      businesses.businessName,
-      businesses.googleMapsReviewUrl,
-      businesses.googleMapsUrl,
-      businesses.wifiEnabled,
-      businesses.wifiName,
-      businesses.createdAt,
-      users.id,
-      users.email,
-      users.name,
-      users.role
-    );
-
-  // Fetch all users
-  const allUsers = await db.select().from(users);
+  // Fetch all businesses and users in parallel
+  const [businessList, allUsers] = await Promise.all([
+    db
+      .select({
+        id: businesses.id,
+        ownerId: businesses.ownerId,
+        businessName: businesses.businessName,
+        googleMapsReviewUrl: businesses.googleMapsReviewUrl,
+        googleMapsUrl: businesses.googleMapsUrl,
+        wifiEnabled: businesses.wifiEnabled,
+        wifiName: businesses.wifiName,
+        createdAt: businesses.createdAt,
+        ownerEmail: users.email,
+        ownerName: users.name,
+        ownerRole: users.role,
+        qrCount: sql`cast(count(${qrCodes.id}) as integer)`,
+      })
+      .from(businesses)
+      .innerJoin(users, eq(businesses.ownerId, users.id))
+      .leftJoin(qrCodes, eq(businesses.id, qrCodes.businessId))
+      .groupBy(
+        businesses.id,
+        businesses.ownerId,
+        businesses.businessName,
+        businesses.googleMapsReviewUrl,
+        businesses.googleMapsUrl,
+        businesses.wifiEnabled,
+        businesses.wifiName,
+        businesses.createdAt,
+        users.id,
+        users.email,
+        users.name,
+        users.role
+      )
+      .catch((err) => {
+        console.warn('businessList query error:', err?.message || err);
+        return [];
+      }),
+    db
+      .select()
+      .from(users)
+      .catch((err) => {
+        console.warn('allUsers query error:', err?.message || err);
+        return [];
+      }),
+  ]);
 
   return (
     <div className="space-y-8">

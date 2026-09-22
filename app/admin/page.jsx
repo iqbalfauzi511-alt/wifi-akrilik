@@ -41,9 +41,20 @@ export const metadata = {
 };
 
 export default async function AdminDashboardPage() {
-  const stats = await getAdminStats();
-  const allQrs = await getAllQrsAdmin();
-  const batches = await getAllBatchesAdmin();
+  const [stats, allQrs, batches] = await Promise.all([
+    getAdminStats().catch((err) => {
+      console.warn('getAdminStats error:', err?.message || err);
+      return {};
+    }),
+    getAllQrsAdmin().catch((err) => {
+      console.warn('getAllQrsAdmin error:', err?.message || err);
+      return [];
+    }),
+    getAllBatchesAdmin().catch((err) => {
+      console.warn('getAllBatchesAdmin error:', err?.message || err);
+      return [];
+    }),
+  ]);
 
   // Dynamic calculated ratios from real database queries
   const totalNodes = stats.totalQr || 0;

@@ -17,8 +17,12 @@ export const metadata = {
 export default async function CustomerQrPage() {
   const session = await getCurrentSession();
   const userId = session?.user?.id;
-  const userBusinesses = userId ? await getBusinessesByOwnerId(userId) : (session?.businesses || []);
-  const myQrs = userId ? await getQrsByOwnerUserId(userId) : [];
+  const [userBusinesses, myQrs] = userId
+    ? await Promise.all([
+        getBusinessesByOwnerId(userId).catch(() => []),
+        getQrsByOwnerUserId(userId).catch(() => []),
+      ])
+    : [(session?.businesses || []), []];
   const business = userBusinesses[0] || session?.business || (myQrs.length > 0 ? {
     businessName: myQrs[0].businessName,
     wifiEnabled: myQrs[0].wifiEnabled,
