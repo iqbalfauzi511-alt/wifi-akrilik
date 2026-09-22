@@ -57,21 +57,19 @@ export default async function HomePage() {
             </a>
           </div>
 
-          {/* Stats Bar */}
-          <div className="mt-16 sm:mt-24 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 max-w-3xl mx-auto border-t border-slate-100 pt-10">
+          {/* Features Bar */}
+          <div className="mt-16 sm:mt-24 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 max-w-4xl mx-auto border-t border-slate-100 pt-10">
             <div className="text-center sm:text-left">
-              <div className="text-2xl font-black text-slate-900 flex items-center justify-center sm:justify-start gap-1">
-                4.9 <Star className="w-4 h-4 fill-amber-400 text-amber-500" />
-              </div>
-              <div className="text-xs text-slate-500 mt-1 font-medium">Kepuasan Mitra</div>
+              <div className="text-2xl font-black text-slate-900">Tanpa Batas</div>
+              <div className="text-xs text-slate-500 mt-1 font-medium">Kuota Scan & Tap</div>
             </div>
             <div className="text-center sm:text-left">
               <div className="text-2xl font-black text-slate-900">1 Detik</div>
-              <div className="text-xs text-slate-500 mt-1 font-medium">Kecepatan Scan</div>
+              <div className="text-xs text-slate-500 mt-1 font-medium">Kecepatan Akses</div>
             </div>
             <div className="text-center sm:text-left">
-              <div className="text-2xl font-black text-slate-900">3.000+</div>
-              <div className="text-xs text-slate-500 mt-1 font-medium">Scan Berhasil</div>
+              <div className="text-2xl font-black text-slate-900">Gratis</div>
+              <div className="text-xs text-slate-500 mt-1 font-medium">Biaya Langganan</div>
             </div>
             <div className="text-center sm:text-left">
               <div className="text-2xl font-black text-slate-900">100%</div>
@@ -155,7 +153,7 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="p-8 rounded-3xl border border-slate-100 bg-[#FAFAFA] hover:bg-white hover:shadow-xl hover:shadow-brand-500/5 transition-all">
               <div className="w-12 h-12 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center mb-5">
                 <Smartphone className="w-5 h-5" />
@@ -176,11 +174,21 @@ export default async function HomePage() {
               </p>
             </div>
 
+            <div className="p-8 rounded-3xl border border-slate-100 bg-[#FAFAFA] hover:bg-white hover:shadow-xl hover:shadow-blue-500/5 transition-all">
+              <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-5">
+                <Monitor className="w-5 h-5" />
+              </div>
+              <h4 className="text-base font-bold text-slate-900 mb-2">Bagikan Kata Sandi Wi-Fi</h4>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                Tamu tidak perlu lagi repot mengetik password WiFi. Cukup scan, sistem otomatis menyambungkan koneksi mereka ke WiFi kafe Anda.
+              </p>
+            </div>
+
             <div className="p-8 rounded-3xl border border-slate-100 bg-[#FAFAFA] hover:bg-white hover:shadow-xl hover:shadow-amber-500/5 transition-all">
               <div className="w-12 h-12 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mb-5">
                 <Droplets className="w-5 h-5" />
               </div>
-              <h4 className="text-base font-bold text-slate-900 mb-2">Cetak Anti Pudar</h4>
+              <h4 className="text-base font-bold text-slate-900 mb-2">Cetak Anti Pudar & Tahan Air</h4>
               <p className="text-sm text-slate-500 leading-relaxed">
                 Dicetak dengan bahan premium berdaya tahan tinggi agar aman dari paparan sinar UV matahari langsung atau cipratan air.
               </p>
@@ -195,83 +203,72 @@ export default async function HomePage() {
                 Bisa bawa *device* ke lokasi/cabang baru. *Smart link* dapat Anda perbarui langsung dari *dashboard* kapanpun dan di mana saja.
               </p>
             </div>
+
+            <div className="p-8 rounded-3xl border border-slate-100 bg-[#FAFAFA] hover:bg-white hover:shadow-xl hover:shadow-rose-500/5 transition-all">
+              <div className="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mb-5">
+                <CheckCircle2 className="w-5 h-5" />
+              </div>
+              <h4 className="text-base font-bold text-slate-900 mb-2">Dashboard Analitik Terpusat</h4>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                Setiap pemindaian yang berhasil tercatat di sistem kami. Anda bisa memantau performa perangkat secara realtime dari laptop/HP Anda.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Testimoni Section */}
-      <section id="testimoni" className="py-20 bg-[#FAFAFA]">
+      {/* Penerapan Section */}
+      <section id="penerapan" className="py-20 bg-[#FAFAFA]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-xs font-bold uppercase tracking-widest text-emerald-600 mb-3">
-              Pengalaman Bisnis
+              Fleksibilitas
             </h2>
             <h3 className="text-3xl font-extrabold text-slate-900">
-              Ulasan dari Pemilik Usaha di Indonesia
+              Sangat Cocok Diterapkan di Berbagai Bisnis
             </h3>
             <p className="mt-3 text-slate-500 text-sm max-w-xl mx-auto">
-              Lihat bagaimana alat cerdas ini membantu bisnis lokal meningkatkan visibilitas mereka di Google Maps secara drastis.
+              Perangkat dirancang khusus untuk membaur dan meningkatkan estetika di meja kasir, ruang tunggu, maupun meja pelanggan.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between">
-              <div>
-                <div className="flex gap-1 mb-4">
-                  {[1,2,3,4,5].map(i => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
-                </div>
-                <p className="text-sm text-slate-600 leading-relaxed italic mb-6">
-                  &quot;Sejak pakai ini, ulasan bintang 5 kafe saya naik drastis! Pelanggan suka karena sangat simpel. HP tinggal tap, link menu dan review langsung muncul di layar. Jumlah review bulanan naik lebih dari 3 kali lipat!&quot;
-                </p>
+            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition-shadow">
+              <div className="h-40 bg-brand-100 flex items-center justify-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-tr from-brand-600 to-indigo-600 opacity-90"></div>
+                <h4 className="text-2xl font-black text-white relative z-10 drop-shadow-sm">F&B / Kuliner</h4>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500 text-sm">
-                  BP
-                </div>
-                <div>
-                  <div className="text-sm font-bold text-slate-900">Budi Pratama</div>
-                  <div className="text-[10px] text-slate-500">Pemilik Coffee Shop, Jakarta Selatan</div>
-                </div>
+              <div className="p-8 flex-1 flex flex-col">
+                <h4 className="text-lg font-bold text-slate-900 mb-3">Kafe & Restoran</h4>
+                <p className="text-sm text-slate-500 leading-relaxed">
+                  Letakkan di setiap meja agar pelanggan bisa dengan mudah menghubungkan ponsel ke WiFi kafe Anda sekaligus memberikan review sambil menunggu pesanan datang.
+                </p>
               </div>
             </div>
 
-            <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between">
-              <div>
-                <div className="flex gap-1 mb-4">
-                  {[1,2,3,4,5].map(i => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
-                </div>
-                <p className="text-sm text-slate-600 leading-relaxed italic mb-6">
-                  &quot;Bentuknya ringkas dan tidak memakan meja kasir. Desain elegan. Pasien di klinik kami merasa sangat dimudahkan saat harus memberikan feedback pelayanan.&quot;
-                </p>
+            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition-shadow">
+              <div className="h-40 bg-emerald-100 flex items-center justify-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500 to-teal-500 opacity-90"></div>
+                <h4 className="text-2xl font-black text-white relative z-10 drop-shadow-sm">Kesehatan</h4>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500 text-sm">
-                  SK
-                </div>
-                <div>
-                  <div className="text-sm font-bold text-slate-900">Dr. Sarah Kusuma</div>
-                  <div className="text-[10px] text-slate-500">Pemilik Klinik Estetika, Surabaya</div>
-                </div>
+              <div className="p-8 flex-1 flex flex-col">
+                <h4 className="text-lg font-bold text-slate-900 mb-3">Klinik & Apotek</h4>
+                <p className="text-sm text-slate-500 leading-relaxed">
+                  Sangat tepat diletakkan di ruang tunggu pasien. Pasien yang merasa puas dengan layanan dokter/staf dapat langsung memberikan ulasan positif dalam hitungan detik.
+                </p>
               </div>
             </div>
 
-            <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between">
-              <div>
-                <div className="flex gap-1 mb-4">
-                  {[1,2,3,4,5].map(i => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
-                </div>
-                <p className="text-sm text-slate-600 leading-relaxed italic mb-6">
-                  &quot;Sebelumnya kami pakai *tent card* biasa dan jarang ada yang scan karena ribet. Dengan adanya *smart tag* ini, tamu kami lebih senang melakukan *tap* NFC. Sangat worth it buat naikin rating!&quot;
-                </p>
+            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition-shadow">
+              <div className="h-40 bg-amber-100 flex items-center justify-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-tr from-amber-500 to-orange-500 opacity-90"></div>
+                <h4 className="text-2xl font-black text-white relative z-10 drop-shadow-sm">Retail & Jasa</h4>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500 text-sm">
-                  FA
-                </div>
-                <div>
-                  <div className="text-sm font-bold text-slate-900">Faisal Akbar</div>
-                  <div className="text-[10px] text-slate-500">Pemilik Restoran Keluarga, Bandung</div>
-                </div>
+              <div className="p-8 flex-1 flex flex-col">
+                <h4 className="text-lg font-bold text-slate-900 mb-3">Toko & Salon</h4>
+                <p className="text-sm text-slate-500 leading-relaxed">
+                  Tempatkan di meja kasir. Saat pelanggan membayar atau menunggu giliran salon, ajak mereka memindai alat ini untuk mendongkrak visibilitas bisnis lokal Anda di pencarian peta.
+                </p>
               </div>
             </div>
           </div>
