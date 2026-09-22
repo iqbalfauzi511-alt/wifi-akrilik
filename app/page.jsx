@@ -10,7 +10,10 @@ import {
   Droplets,
   Link as LinkIcon,
   HelpCircle,
-  QrCode
+  QrCode,
+  MapPin,
+  PlayCircle,
+  Wifi
 } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Button from '@/components/ui/Button';
@@ -22,63 +25,95 @@ export default async function HomePage() {
   const session = await getCurrentSession();
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAFAFA] text-slate-900 selection:bg-brand-500 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#FAFAFA] text-slate-900 selection:bg-brand-500 selection:text-white overflow-x-hidden">
       <Navbar session={session} />
 
       {/* Hero Section */}
-      <section className="relative pt-20 pb-16 sm:pt-28 sm:pb-24 overflow-hidden bg-white border-b border-slate-100">
+      <section className="relative pt-16 pb-16 sm:pt-24 sm:pb-24 overflow-hidden bg-white border-b border-slate-100">
         <div className="aurora-bg-container">
           <div className="aurora-blob-1"></div>
           <div className="aurora-blob-2"></div>
         </div>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-50 border border-brand-100 text-brand-700 text-[10px] sm:text-xs font-bold mb-6 sm:mb-8 tracking-wide shadow-xs">
-            <div className="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse" />
-            PERANGKAT PINTAR UNTUK GOOGLE REVIEW
-          </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+            {/* Left Content */}
+            <div className="text-center lg:text-left">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-50 border border-brand-100 text-brand-700 text-[10px] sm:text-xs font-bold mb-6 tracking-wide shadow-xs">
+                <div className="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse" />
+                Perangkat Cerdas Untuk Google Review
+              </div>
 
-          {/* Headline */}
-          <h1 className="heading-premium text-4xl sm:text-5xl lg:text-6xl mb-6">
-            Ubah Pengunjung Puas Jadi <span className="text-gradient-google">Ulasan Bintang 5</span> di Google Secara Instan
-          </h1>
+              {/* Headline */}
+              <h1 className="heading-premium text-4xl sm:text-5xl lg:text-[54px] leading-[1.15] mb-6">
+                Ubah Pengunjung Puas Jadi <span className="text-gradient-google">Ulasan Bintang 5</span> di Google Secara Instan
+              </h1>
 
-          {/* Subheadline */}
-          <p className="text-base sm:text-xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Sistem cerdas dengan chip NFC dan QR code berdaya tahan tinggi. Cukup tempelkan HP atau scan tanpa perlu download aplikasi apapun.
-          </p>
+              {/* Subheadline */}
+              <p className="text-base sm:text-lg text-slate-500 max-w-xl mx-auto lg:mx-0 mb-10 leading-relaxed">
+                Sistem cerdas dengan chip NFC dan QR code berdaya tahan tinggi. Cukup tempelkan HP atau scan tanpa perlu download aplikasi apapun.
+              </p>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href="https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20dengan%20produk%20Cobascan"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto"
-            >
-              <Button size="lg" className="w-full btn-glow-blue px-8">
-                Pesan Sekarang
-              </Button>
-            </a>
-          </div>
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-14">
+                <a
+                  href="https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20dengan%20produk%20Cobascan"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto"
+                >
+                  <Button size="lg" className="w-full btn-glow-blue px-8">
+                    Pesan Sekarang
+                  </Button>
+                </a>
+                <Button size="lg" variant="outline" className="w-full sm:w-auto px-6 gap-2">
+                  <PlayCircle className="w-5 h-5 text-slate-400" />
+                  Lihat Video (1 Menit)
+                </Button>
+              </div>
 
-          {/* Features Bar */}
-          <div className="mt-16 sm:mt-24 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 max-w-4xl mx-auto border-t border-slate-100 pt-10">
-            <div className="text-center sm:text-left">
-              <div className="text-2xl font-black text-slate-900">Tanpa Batas</div>
-              <div className="text-xs text-slate-500 mt-1 font-medium">Kuota Scan & Tap</div>
+              {/* Features Stats */}
+              <div className="grid grid-cols-4 gap-4 pt-8 border-t border-slate-100/60">
+                <div>
+                  <div className="flex items-center gap-1 mb-1 justify-center lg:justify-start">
+                    <span className="text-xl font-black text-slate-900">4.9</span>
+                    <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                  </div>
+                  <div className="text-[10px] sm:text-xs text-slate-500 font-medium leading-tight">Kepuasan Pelanggan</div>
+                </div>
+                <div>
+                  <div className="text-xl font-black text-slate-900 mb-1">1 Detik</div>
+                  <div className="text-[10px] sm:text-xs text-slate-500 font-medium leading-tight">Kecepatan Tap / Scan</div>
+                </div>
+                <div>
+                  <div className="text-xl font-black text-slate-900 mb-1">3,000+</div>
+                  <div className="text-[10px] sm:text-xs text-slate-500 font-medium leading-tight">Bisnis Lokal di Indonesia</div>
+                </div>
+                <div>
+                  <div className="text-xl font-black text-slate-900 mb-1">100%</div>
+                  <div className="text-[10px] sm:text-xs text-slate-500 font-medium leading-tight">Tanpa Baterai / Listrik</div>
+                </div>
+              </div>
             </div>
-            <div className="text-center sm:text-left">
-              <div className="text-2xl font-black text-slate-900">1 Detik</div>
-              <div className="text-xs text-slate-500 mt-1 font-medium">Kecepatan Akses</div>
-            </div>
-            <div className="text-center sm:text-left">
-              <div className="text-2xl font-black text-slate-900">Gratis</div>
-              <div className="text-xs text-slate-500 mt-1 font-medium">Biaya Langganan</div>
-            </div>
-            <div className="text-center sm:text-left">
-              <div className="text-2xl font-black text-slate-900">100%</div>
-              <div className="text-xs text-slate-500 mt-1 font-medium">Tanpa Baterai</div>
+
+            {/* Right Image */}
+            <div className="relative mx-auto w-full max-w-[500px] lg:max-w-none">
+              <div className="bento-card p-2 sm:p-4 rotate-1 hover:rotate-0 transition-transform duration-500">
+                <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-slate-100">
+                  <Image src="/stand.jpg" alt="Cobascan Acrylic Stand" fill className="object-cover" priority />
+                </div>
+                
+                {/* Floating Badge overlay */}
+                <div className="absolute -bottom-4 -left-4 sm:bottom-6 sm:-left-8 bento-card p-3 sm:p-4 flex items-center gap-3 sm:gap-4 shadow-2xl animate-bounce-slow">
+                  <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                    <Wifi className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="text-xs sm:text-sm font-bold text-slate-900">Visitor Wi-Fi Tersedia</div>
+                    <div className="text-[10px] sm:text-xs text-slate-500">Koneksi Instan, Tanpa Tanya Password</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -89,7 +124,7 @@ export default async function HomePage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-xs font-bold uppercase tracking-widest text-brand-600 mb-3">
-              Langkah Mudah
+              Alur Penggunaan
             </h2>
             <h3 className="text-3xl font-extrabold text-slate-900">
               Cara Kerja 3 Langkah Mudah
@@ -107,7 +142,7 @@ export default async function HomePage() {
               </div>
               <h4 className="text-lg font-bold text-slate-900 mb-3">Tamu Tap atau Scan</h4>
               <p className="text-sm text-slate-500 leading-relaxed mb-6">
-                HP iPhone maupun Android cukup didekatkan ke permukaan perangkat, atau cahaya aktifkan kamera ke QR code.
+                HP iPhone maupun Android cukup didekatkan ke permukaan akrilik, atau cahaya aktifkan kamera ke QR code produk di bagian tengah.
               </p>
               <div className="flex items-center gap-2 text-xs font-bold text-[#15803D] bg-[#F0FDF4] w-fit px-3 py-1.5 rounded-full border border-[#BBF7D0]">
                 <CheckCircle2 className="w-3.5 h-3.5" /> Tanpa instal aplikasi apapun
@@ -118,7 +153,7 @@ export default async function HomePage() {
               <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 text-slate-900 font-mono font-bold flex items-center justify-center mb-6">
                 02
               </div>
-              <h4 className="text-lg font-bold text-slate-900 mb-3">Terbuka Halaman Ulasan</h4>
+              <h4 className="text-lg font-bold text-slate-900 mb-3">Langsung Terbuka Halaman Ulasan</h4>
               <p className="text-sm text-slate-500 leading-relaxed mb-6">
                 Perangkat otomatis membuka formulir review resmi Google Profil Bisnis Anda dalam hitungan detik. Tanpa filter, langsung ke sasaran.
               </p>
@@ -133,7 +168,7 @@ export default async function HomePage() {
               </div>
               <h4 className="text-lg font-bold text-slate-900 mb-3">Pantau di Dashboard</h4>
               <p className="text-sm text-slate-500 leading-relaxed mb-6">
-                Ketahui performa dan jumlah interaksi per meja, kasir, atau cabang secara *realtime* melalui dasbor analitik pemilik usaha.
+                Ketahui performa dan jumlah interaksi per meja, kasir, atau cabang secara realtime melalui dasbor analitik pemilik usaha.
               </p>
               <div className="flex items-center gap-2 text-xs font-bold text-brand-600 bg-brand-50 w-fit px-3 py-1.5 rounded-full border border-brand-100">
                 <Monitor className="w-3.5 h-3.5" /> Analitik Real-Time
@@ -148,24 +183,24 @@ export default async function HomePage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-xs font-bold uppercase tracking-widest text-brand-600 mb-3">
-              Keunggulan Fisik
+              Kualitas Industri
             </h2>
             <h3 className="text-3xl font-extrabold text-slate-900">
-              Spesifikasi & Keunggulan Perangkat
+              Spesifikasi & Keunggulan Fisik Stand
             </h3>
             <p className="mt-3 text-slate-500 text-sm max-w-xl mx-auto">
               Didesain khusus untuk tahan lama di area publik. Dirancang kuat dan estetis untuk meja bisnis Anda.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="bento-card p-8">
               <div className="w-12 h-12 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center mb-5">
-                <Smartphone className="w-5 h-5" />
+                <MapPin className="w-5 h-5" />
               </div>
-              <h4 className="text-base font-bold text-slate-900 mb-2">Aktivitas Scan Tidak Dibatasi</h4>
+              <h4 className="text-base font-bold text-slate-900 mb-2">Aktif & Siap Pakai Kirim</h4>
               <p className="text-sm text-slate-500 leading-relaxed">
-                QR bisa discan dengan cepat. Tidak dibatasi algoritma karena murni hardware. Tanpa biaya langganan bulanan scan/tap tambahan.
+                Dikirim dalam keadaan sudah disetup. Stand akrilik bisa langsung dipakai saat diterima, tanpa ribet setting manual atau download tool tambahan.
               </p>
             </div>
             
@@ -175,17 +210,7 @@ export default async function HomePage() {
               </div>
               <h4 className="text-base font-bold text-slate-900 mb-2">100% Tanpa Baterai</h4>
               <p className="text-sm text-slate-500 leading-relaxed">
-                Bekerja menggunakan induksi magnetik *smartphone*, perangkat ini tidak perlu di-charge, dicolok kabel, atau ganti baterai.
-              </p>
-            </div>
-
-            <div className="bento-card p-8">
-              <div className="w-12 h-12 rounded-xl bg-[#EFF6FF] text-[#1D4ED8] flex items-center justify-center mb-5">
-                <Monitor className="w-5 h-5" />
-              </div>
-              <h4 className="text-base font-bold text-slate-900 mb-2">Tampilkan Sandi Wi-Fi</h4>
-              <p className="text-sm text-slate-500 leading-relaxed">
-                Tamu tidak perlu lagi repot bertanya ke kasir. Cukup scan, sistem akan langsung menampilkan dan menyambungkan WiFi ke HP pelanggan.
+                Bekerja menggunakan induksi magnetik dari *smartphone*, perangkat ini tidak perlu di-charge, dicolok kabel, atau ganti baterai.
               </p>
             </div>
 
@@ -193,9 +218,9 @@ export default async function HomePage() {
               <div className="w-12 h-12 rounded-xl bg-[#FFFBEB] text-[#B45309] flex items-center justify-center mb-5">
                 <Droplets className="w-5 h-5" />
               </div>
-              <h4 className="text-base font-bold text-slate-900 mb-2">Cetak Anti Pudar & Tahan Air</h4>
+              <h4 className="text-base font-bold text-slate-900 mb-2">Cetak Anti Pudar</h4>
               <p className="text-sm text-slate-500 leading-relaxed">
-                Dicetak dengan bahan premium berdaya tahan tinggi agar aman dari paparan sinar UV matahari langsung atau cipratan air.
+                Cetakan grafis berkualitas tinggi di dalam akrilik, tahan paparan sinar matahari langsung dan tidak luntur walaupun ketumpahan air.
               </p>
             </div>
 
@@ -205,75 +230,92 @@ export default async function HomePage() {
               </div>
               <h4 className="text-base font-bold text-slate-900 mb-2">Ganti Link Kapan Saja</h4>
               <p className="text-sm text-slate-500 leading-relaxed">
-                Bisa bawa *device* ke lokasi/cabang baru. *Smart link* dapat Anda perbarui langsung dari *dashboard* kapanpun dan di mana saja.
-              </p>
-            </div>
-
-            <div className="bento-card p-8">
-              <div className="w-12 h-12 rounded-xl bg-[#FFF1F2] text-[#BE123C] flex items-center justify-center mb-5">
-                <CheckCircle2 className="w-5 h-5" />
-              </div>
-              <h4 className="text-base font-bold text-slate-900 mb-2">Dashboard Analitik Terpusat</h4>
-              <p className="text-sm text-slate-500 leading-relaxed">
-                Setiap pemindaian yang berhasil tercatat di sistem kami. Anda bisa memantau performa perangkat secara realtime dari laptop/HP Anda.
+                Bisa bawa *device* ke lokasi/cabang baru. Pembaruan tautan tujuan langsung diterapkan dari sistem *dashboard* kapanpun dan tanpa ribet.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Penerapan Section */}
-      <section id="penerapan" className="py-20 bg-[#FAFAFA]">
+      {/* Ulasan Section (NEW) */}
+      <section className="py-20 bg-[#FAFAFA]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-emerald-600 mb-3">
-              Fleksibilitas
+            <h2 className="text-xs font-bold uppercase tracking-widest text-[#15803D] mb-3">
+              Pengalaman Klien Kami
             </h2>
             <h3 className="text-3xl font-extrabold text-slate-900">
-              Sangat Cocok Diterapkan di Berbagai Bisnis
+              Ulasan dari Pemilik Usaha di Indonesia
             </h3>
             <p className="mt-3 text-slate-500 text-sm max-w-xl mx-auto">
-              Perangkat dirancang khusus untuk membaur dan meningkatkan estetika di meja kasir, ruang tunggu, maupun meja pelanggan.
+              Lihat bagaimana Cobascan membantu bisnis lokal meningkatkan visibilitas di Google Maps.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bento-card overflow-hidden flex flex-col group p-0">
-              <div className="h-40 bg-brand-100 flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-tr from-brand-600 to-indigo-600 opacity-90"></div>
-                <h4 className="text-2xl font-black text-white relative z-10 drop-shadow-sm">F&B / Kuliner</h4>
-              </div>
-              <div className="p-8 flex-1 flex flex-col">
-                <h4 className="text-lg font-bold text-slate-900 mb-3">Kafe & Restoran</h4>
-                <p className="text-sm text-slate-500 leading-relaxed">
-                  Letakkan di setiap meja agar pelanggan bisa dengan mudah menghubungkan ponsel ke WiFi kafe Anda sekaligus memberikan review sambil menunggu pesanan datang.
+            <div className="bento-card p-8 flex flex-col justify-between bg-white">
+              <div>
+                <div className="flex gap-1 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
+                <p className="text-sm text-slate-600 leading-relaxed mb-8 italic">
+                  &quot;Sistem otomatis dari alat ini sangat membantu kafe saya. Pengunjung suka karena tinggal tempel HP langsung keluar rating di Google Maps. Jumlah review bulanan naik lebih dari 3x lipat!&quot;
                 </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-700">
+                  BP
+                </div>
+                <div>
+                  <div className="text-sm font-bold text-slate-900">Budi Pratama</div>
+                  <div className="text-xs text-slate-500">Pemilik Coffee Shop, Jakarta</div>
+                </div>
               </div>
             </div>
 
-            <div className="bento-card overflow-hidden flex flex-col group p-0">
-              <div className="h-40 bg-emerald-100 flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-tr from-[#34A853] to-teal-500 opacity-90"></div>
-                <h4 className="text-2xl font-black text-white relative z-10 drop-shadow-sm">Kesehatan</h4>
-              </div>
-              <div className="p-8 flex-1 flex flex-col">
-                <h4 className="text-lg font-bold text-slate-900 mb-3">Klinik & Apotek</h4>
-                <p className="text-sm text-slate-500 leading-relaxed">
-                  Sangat tepat diletakkan di ruang tunggu pasien. Pasien yang merasa puas dengan layanan dokter/staf dapat langsung memberikan ulasan positif dalam hitungan detik.
+            <div className="bento-card p-8 flex flex-col justify-between bg-white">
+              <div>
+                <div className="flex gap-1 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
+                <p className="text-sm text-slate-600 leading-relaxed mb-8 italic">
+                  &quot;Bentuk akriliknya sangat bersih dan elegan, cocok dengan interior klinik kecantikan kami. Pasien yang puas sehabis perawatan sangat terdorong merekomendasikan layanan kami ke pelanggan lain.&quot;
                 </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center font-bold text-emerald-700">
+                  SK
+                </div>
+                <div>
+                  <div className="text-sm font-bold text-slate-900">Dr. Sarah Kusuma</div>
+                  <div className="text-xs text-slate-500">Klinik Kecantikan, Surabaya</div>
+                </div>
               </div>
             </div>
 
-            <div className="bento-card overflow-hidden flex flex-col group p-0">
-              <div className="h-40 bg-amber-100 flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-tr from-[#FBBC04] to-orange-500 opacity-90"></div>
-                <h4 className="text-2xl font-black text-white relative z-10 drop-shadow-sm">Retail & Jasa</h4>
-              </div>
-              <div className="p-8 flex-1 flex flex-col">
-                <h4 className="text-lg font-bold text-slate-900 mb-3">Toko & Salon</h4>
-                <p className="text-sm text-slate-500 leading-relaxed">
-                  Tempatkan di meja kasir. Saat pelanggan membayar atau menunggu giliran salon, ajak mereka memindai alat ini untuk mendongkrak visibilitas bisnis lokal Anda di pencarian peta.
+            <div className="bento-card p-8 flex flex-col justify-between bg-white">
+              <div>
+                <div className="flex gap-1 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
+                <p className="text-sm text-slate-600 leading-relaxed mb-8 italic">
+                  &quot;Awalnya saya kira bakalan ribet aplikasinya, ternyata pelanggan gak butuh instalasi. Begitu datang, cukup tap NFC dan form review kebuka. Sangat efisien, ROI-nya luar biasa.&quot;
                 </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center font-bold text-purple-700">
+                  FR
+                </div>
+                <div>
+                  <div className="text-sm font-bold text-slate-900">Fikri Ridwan</div>
+                  <div className="text-xs text-slate-500">Pemilik Rumah Makan, Bandung</div>
+                </div>
               </div>
             </div>
           </div>
@@ -282,61 +324,147 @@ export default async function HomePage() {
 
       {/* Pricing Section */}
       <section id="harga" className="py-20 bg-white border-y border-slate-100">
-        <div className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
             <h2 className="text-xs font-bold uppercase tracking-widest text-brand-600 mb-3">
-              Paket Harga Transparan
+              Kapasitas Skala Usaha
             </h2>
             <h3 className="text-3xl font-extrabold text-slate-900">
-              Satu Harga, Akses Selamanya
+              Pilihan Paket Harga Transparan
             </h3>
-            <p className="mt-3 text-slate-500 text-sm max-w-md mx-auto">
-              Sistem perangkat fisik canggih yang dilengkapi dashboard pintar.
+            <p className="mt-3 text-slate-500 text-sm max-w-xl mx-auto">
+              Beli unit sekali, akses dasbor gratis selamanya. Dilengkapi garansi fisik hardware 1 tahun penuh.
             </p>
           </div>
 
-          <div className="bg-white rounded-3xl border-2 border-brand-500 p-8 shadow-xl relative overflow-hidden text-center">
-            <div className="absolute top-0 inset-x-0 h-1.5 bg-brand-500"></div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-bold mb-6">
-              TERLARIS & TERJANGKAU
-            </div>
-            
-            <h4 className="text-2xl font-bold text-slate-900 mb-2">Smart Perangkat QR & NFC</h4>
-            <div className="text-sm text-slate-500 mb-6">Cocok untuk UMKM, Kafe, dan Bisnis Ritel</div>
-            
-            <div className="flex items-baseline justify-center gap-1 mb-8">
-              <span className="text-2xl font-bold text-slate-900">Rp</span>
-              <span className="text-5xl font-black text-slate-900 tracking-tight">89.000</span>
-            </div>
-            <div className="text-xs text-slate-400 font-medium mb-8">
-              Satu kali bayar. Tidak ada biaya langganan bulanan.
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Paket 1 Stand */}
+            <div className="bento-card p-8 flex flex-col bg-white">
+              <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">STARTER</div>
+              <h4 className="text-2xl font-black text-slate-900 mb-2">1 Stand Akrilik</h4>
+              <p className="text-sm text-slate-500 mb-8">Pilihan pas untuk dicoba di kasir atau meja utama bisnis Anda.</p>
+              
+              <div className="flex items-baseline gap-1 mb-2">
+                <span className="text-3xl font-black text-slate-900">Rp 249.000</span>
+              </div>
+              <div className="text-xs text-slate-400 font-medium mb-8">
+                Satu kali bayar.
+              </div>
+
+              <div className="space-y-4 mb-8 text-sm text-slate-600 flex-1">
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> 
+                  <span>Dashboard Analitik Tap & Scan Perangkat</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> 
+                  <span>Ganti URL kapanpun dari Google Maps/Sosmed Anda</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> 
+                  <span>Gratis dashboard & link selamanya</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> 
+                  <span>Garansi fisik 1 tahun</span>
+                </div>
+              </div>
+
+              <a href="https://wa.me/6281234567890?text=Halo%20saya%20pesan%20Paket%201%20Stand" target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" className="w-full">
+                  Pesan Paket Starter
+                </Button>
+              </a>
             </div>
 
-            <div className="space-y-4 mb-8 text-sm text-slate-600 text-left w-max mx-auto">
-              <div className="flex items-center gap-3">
-                <CheckCircle2 className="w-5 h-5 text-emerald-500" /> Bebas ubah link Google Maps kapan saja
+            {/* Paket 3 Stand (Populer) */}
+            <div className="bento-card p-8 flex flex-col bg-white border-2 border-brand-500 relative shadow-xl transform md:-translate-y-4">
+              <div className="absolute top-0 inset-x-0 h-1.5 bg-brand-500"></div>
+              <div className="absolute -top-3.5 inset-x-0 flex justify-center">
+                <span className="bg-brand-500 text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
+                  Paling Populer / Hemat
+                </span>
               </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle2 className="w-5 h-5 text-emerald-500" /> Akses penuh ke Analytics Dashboard
+              
+              <div className="text-xs font-bold text-brand-500 uppercase tracking-widest mb-2 mt-4">BISNIS BERKEMBANG</div>
+              <h4 className="text-2xl font-black text-slate-900 mb-2">3 Stand Akrilik</h4>
+              <p className="text-sm text-slate-500 mb-8">Ideal untuk menjangkau beberapa area strategis, atau 3 meja tunggu.</p>
+              
+              <div className="flex items-baseline gap-1 mb-2">
+                <span className="text-3xl font-black text-slate-900">Rp 599.000</span>
               </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle2 className="w-5 h-5 text-emerald-500" /> Fitur Pembuka Password Wi-Fi Otomatis
+              <div className="text-xs text-slate-400 font-medium mb-8">
+                Satu kali bayar (Rp 199.000 / stand)
               </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle2 className="w-5 h-5 text-emerald-500" /> Tahan air & tahan lama di meja publik
+
+              <div className="space-y-4 mb-8 text-sm text-slate-600 flex-1">
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> 
+                  <span>3x Akrilik Premium & Chip NFC Cerdas</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> 
+                  <span>Analitik Individual dari Setiap Stand Akrilik</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> 
+                  <span>Arahkan ke Link Google Berbeda (opsional)</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> 
+                  <span>Bebas ongkos kirim seluruh Jawa</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> 
+                  <span>Garansi fisik 1 tahun</span>
+                </div>
               </div>
+
+              <a href="https://wa.me/6281234567890?text=Halo%20saya%20pesan%20Paket%203%20Stand" target="_blank" rel="noopener noreferrer">
+                <Button className="w-full btn-glow-blue">
+                  Pesan Paket 3 Stand
+                </Button>
+              </a>
             </div>
 
-            <a
-              href="https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20dengan%20produk%20Cobascan%20seharga%2089rb"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block w-full"
-            >
-              <Button size="lg" className="w-full bg-brand-600 hover:bg-brand-700 text-white shadow-md">
-                Pesan Sekarang
-              </Button>
-            </a>
+            {/* Paket 10 Stand */}
+            <div className="bento-card p-8 flex flex-col bg-white">
+              <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">MULTI-CABANG / WARALABA</div>
+              <h4 className="text-2xl font-black text-slate-900 mb-2">10 Stand Akrilik</h4>
+              <p className="text-sm text-slate-500 mb-8">Solusi lengkap untuk restoran berskala besar, atau cabang franchise.</p>
+              
+              <div className="flex items-baseline gap-1 mb-2">
+                <span className="text-3xl font-black text-slate-900">Rp 1.799.000</span>
+              </div>
+              <div className="text-xs text-slate-400 font-medium mb-8">
+                Satu kali bayar (± Rp 179.000/stand)
+              </div>
+
+              <div className="space-y-4 mb-8 text-sm text-slate-600 flex-1">
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> 
+                  <span>Skalabilitas terbaik dari Sistem Review</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> 
+                  <span>Dedicated fast support & prioritas</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> 
+                  <span>Manajemen multi-lokasi di 1 dashboard cabang</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> 
+                  <span>Gratis ongkos kirim seluruh Indonesia</span>
+                </div>
+              </div>
+
+              <a href="https://wa.me/6281234567890?text=Halo%20saya%20pesan%20Paket%2010%20Stand" target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" className="w-full">
+                  Pesan Paket 10 Stand
+                </Button>
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -354,7 +482,7 @@ export default async function HomePage() {
           </div>
 
           <div className="space-y-4">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200">
+            <div className="bento-card p-6">
               <h4 className="font-bold text-slate-900 flex items-center justify-between">
                 Apakah alat ini butuh langganan bulanan?
               </h4>
@@ -363,7 +491,7 @@ export default async function HomePage() {
               </p>
             </div>
             
-            <div className="bg-white p-6 rounded-2xl border border-slate-200">
+            <div className="bento-card p-6">
               <h4 className="font-bold text-slate-900 flex items-center justify-between">
                 Bagaimana jika alamat atau link Google Maps bisnis saya pindah?
               </h4>
@@ -372,7 +500,7 @@ export default async function HomePage() {
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-slate-200">
+            <div className="bento-card p-6">
               <h4 className="font-bold text-slate-900 flex items-center justify-between">
                 Apakah baterainya perlu diganti?
               </h4>
@@ -381,7 +509,7 @@ export default async function HomePage() {
               </p>
             </div>
             
-            <div className="bg-white p-6 rounded-2xl border border-slate-200">
+            <div className="bento-card p-6">
               <h4 className="font-bold text-slate-900 flex items-center justify-between">
                 Apakah ini khusus HP canggih saja?
               </h4>
@@ -396,7 +524,7 @@ export default async function HomePage() {
       {/* CTA Footer Banner */}
       <section className="bg-white py-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bento-card p-10 sm:p-14 text-center relative overflow-hidden bg-gradient-to-br from-[#4285F4] to-[#1E3A8A]">
+          <div className="bento-card p-10 sm:p-14 text-center relative overflow-hidden bg-gradient-to-br from-[#1E40AF] to-[#1E3A8A]">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
             
             <h2 className="heading-premium text-2xl sm:text-3xl text-white mb-4 relative z-10">
