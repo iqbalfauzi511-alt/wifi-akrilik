@@ -138,6 +138,7 @@ export default async function VisitorWifiPage({ params }) {
       <VisitorScanExperience
         code={qr.code}
         businessName={qr.businessName}
+        logoUrl={qr.logoUrl}
         googleMapsReviewUrl={qr.googleMapsReviewUrl || qr.googleMapsUrl}
         googleMapsUrl={qr.googleMapsUrl}
         wifiEnabled={true}

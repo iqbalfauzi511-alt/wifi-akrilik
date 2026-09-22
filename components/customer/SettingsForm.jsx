@@ -14,6 +14,7 @@ import {
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Card from '@/components/ui/Card';
+import LogoUploader from '@/components/ui/LogoUploader';
 import { updateBusinessWifiAction } from '@/lib/actions/business-actions';
 
 export default function SettingsForm({ business }) {
@@ -68,6 +69,13 @@ export default function SettingsForm({ business }) {
             error={fieldErrors.businessName}
             required
             prefix={<Building className="w-4 h-4 text-slate-400" />}
+          />
+
+          <LogoUploader
+            initialLogo={business?.logoUrl || ''}
+            name="logoUrl"
+            label="Logo Bisnis"
+            helperText="Perubahan logo akan langsung tampil di seluruh scan QR dan tap NFC meja Anda tanpa perlu cetak ulang."
           />
 
           <Input

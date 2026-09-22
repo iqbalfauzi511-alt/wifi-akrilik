@@ -22,6 +22,7 @@ import Button from '@/components/ui/Button';
 export default function VisitorScanExperience({
   code,
   businessName = 'Kopi ABC',
+  logoUrl,
   googleMapsReviewUrl,
   googleMapsUrl,
   wifiEnabled = true,
@@ -175,9 +176,17 @@ export default function VisitorScanExperience({
                   priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent" />
-                <div className="absolute bottom-3.5 left-4 right-4 text-white">
-                  <h4 className="text-sm font-bold tracking-tight">Counter Stand #04</h4>
-                  <p className="text-[11px] text-slate-300 font-medium">Artisan Wood Table &bull; Main Cashier Area</p>
+                <div className="absolute bottom-3.5 left-4 right-4 text-white flex items-center justify-between">
+                  <div>
+                    <h4 className="text-sm font-bold tracking-tight">{businessName || 'Counter Stand #04'}</h4>
+                    <p className="text-[11px] text-slate-300 font-medium">Artisan Wood Table &bull; Main Cashier Area</p>
+                  </div>
+                  {logoUrl && (
+                    <div className="w-9 h-9 rounded-xl bg-white/95 p-1 border border-white/40 shadow-sm shrink-0 overflow-hidden flex items-center justify-center">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={logoUrl} alt={businessName} className="w-full h-full object-contain rounded-lg" />
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -295,8 +304,17 @@ export default function VisitorScanExperience({
 
                 {/* Business Avatar & Greeting Header */}
                 <div className="text-center space-y-1.5 pt-1">
-                  <div className="w-16 h-16 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex items-center justify-center mx-auto text-amber-700">
-                    <span className="text-2xl select-none">☕</span>
+                  <div className="w-16 h-16 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex items-center justify-center mx-auto text-amber-700 overflow-hidden relative p-1">
+                    {logoUrl ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img
+                        src={logoUrl}
+                        alt={businessName}
+                        className="w-full h-full object-contain rounded-xl"
+                      />
+                    ) : (
+                      <span className="text-2xl select-none">☕</span>
+                    )}
                   </div>
                   <h2 className="text-2xl font-black text-slate-900 tracking-tight">
                     {businessName}

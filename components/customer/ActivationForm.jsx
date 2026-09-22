@@ -18,6 +18,7 @@ import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Card from '@/components/ui/Card';
 import QRCodeViewer from '@/components/qr/QRCodeViewer';
+import LogoUploader from '@/components/ui/LogoUploader';
 import { activateQrAction } from '@/lib/actions/qr-actions';
 
 export default function ActivationForm({
@@ -161,6 +162,16 @@ export default function ActivationForm({
             required
             prefix={<Building className="w-4 h-4 text-slate-400" />}
             helperText="Nama ini akan tampil di bagian atas halaman saat customer scan QR atau tap NFC."
+          />
+        </div>
+
+        {/* Business Logo Uploader */}
+        <div className="pt-1">
+          <LogoUploader
+            initialLogo={initialBusiness?.logoUrl || ''}
+            name="logoUrl"
+            label="Logo Bisnis"
+            helperText="Logo ini akan tampil pada avatar halaman sambutan ketika pengunjung melakukan scan QR atau tap NFC Cobascan."
           />
         </div>
 

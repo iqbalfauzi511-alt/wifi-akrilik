@@ -66,7 +66,7 @@ export default function QRCodeViewer({
   const handleDownloadPng = () => {
     if (!dataUrl) return;
     const link = document.createElement('a');
-    link.download = `Cobascan-${code}${cleanSuffix}.png`;
+    link.download = `${code}${cleanSuffix}.png`;
     link.href = dataUrl;
     link.click();
   };
@@ -85,7 +85,7 @@ export default function QRCodeViewer({
       const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.download = `Cobascan-${code}${cleanSuffix}.svg`;
+      link.download = `${code}${cleanSuffix}.svg`;
       link.href = url;
       link.click();
       URL.revokeObjectURL(url);

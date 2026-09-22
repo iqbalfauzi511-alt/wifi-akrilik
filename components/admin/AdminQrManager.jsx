@@ -113,10 +113,22 @@ export default function AdminQrManager({ initialQrs = [] }) {
   // Mass Generate handler (Creates 1 batch or individual QRs)
   const handleMassGenerate = async (e) => {
     e.preventDefault();
+    if (isGenerating) return; // Prevent double-click duplicate submission
+
+    const qtyNum = Number(generateQuantity);
+    if (!generateQuantity || isNaN(qtyNum) || !Number.isInteger(qtyNum) || qtyNum < 1) {
+      alert('Jumlah QR harus berupa angka bulat minimal 1.');
+      return;
+    }
+    if (qtyNum > 1000) {
+      alert('Maksimum QR yang dapat di-generate sekaligus adalah 1.000 unit.');
+      return;
+    }
+
     setIsGenerating(true);
     setNotification(null);
     const formData = new FormData();
-    formData.set('quantity', generateQuantity);
+    formData.set('quantity', String(qtyNum));
     formData.set('mode', generateMode);
 
     const result = await massGenerateQrAction(formData);
@@ -1016,25 +1028,50 @@ export default function AdminQrManager({ initialQrs = [] }) {
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
-              Jumlah QR Code:
-            </label>
-            <select
-              value={generateQuantity}
-              onChange={(e) => setGenerateQuantity(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm font-medium focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
-            >
-              <option value="5">5 QR Code</option>
-              <option value="10">10 QR Code</option>
-              <option value="25">25 QR Code</option>
-              <option value="50">50 QR Code</option>
-              <option value="100">100 QR Code</option>
-              <option value="250">250 QR Code</option>
-            </select>
-            <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                Jumlah QR Code:
+              </label>
+              <span className="text-[11px] text-slate-400 font-mono">Bebas (1 - 1.000)</span>
+            </div>
+
+            <div className="relative">
+              <input
+                type="number"
+                min="1"
+                max="1000"
+                step="1"
+                required
+                value={generateQuantity}
+                onChange={(e) => setGenerateQuantity(e.target.value)}
+                placeholder="Masukkan jumlah (misal: 1, 7, 13, 50)"
+                className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm font-semibold text-slate-900 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
+              />
+            </div>
+
+            {/* Quick Preset Buttons */}
+            <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+              <span className="text-[10px] text-slate-400 font-mono uppercase">Preset Cepat:</span>
+              {[1, 2, 3, 7, 10, 13, 25, 50, 100, 500].map((qty) => (
+                <button
+                  key={qty}
+                  type="button"
+                  onClick={() => setGenerateQuantity(String(qty))}
+                  className={`px-2 py-0.5 rounded-lg text-xs font-mono font-bold transition-all border ${
+                    generateQuantity === String(qty)
+                      ? 'bg-brand-600 text-white border-brand-600 shadow-xs'
+                      : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-200'
+                  }`}
+                >
+                  {qty}
+                </button>
+              ))}
+            </div>
+
+            <p className="text-xs text-slate-500 mt-2 leading-relaxed">
               {generateMode === 'batch'
-                ? 'Sistem akan memberi kode batch (misal BATCH-001). 1 customer yang scan akan langsung mengaktifkan semua QR dalam batch ini.'
-                : 'QR yang dibuat berdiri sendiri tanpa grup batch. Setiap QR harus diaktivasi secara terpisah.'}
+                ? 'Sistem akan membuat 1 batch khusus berisi tepat jumlah QR ini. Saat customer mengaktifkan 1 unit dari paket ini, seluruh unit lain dalam batch otomatis ikut terdaftar di akunnya.'
+                : 'QR yang dibuat berdiri sendiri tanpa grup batch. Setiap unit diaktivasi 1 per 1 secara terpisah.'}
             </p>
           </div>
 

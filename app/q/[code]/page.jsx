@@ -145,6 +145,7 @@ export default async function VisitorQrPage({ params }) {
         <VisitorScanExperience
           code={qr.code}
           businessName={qr.businessName}
+          logoUrl={qr.logoUrl}
           googleMapsReviewUrl={mapsValidation.normalized}
           googleMapsUrl={mapsValidation.normalized}
           wifiEnabled={true}
