@@ -15,7 +15,6 @@ import {
   ChevronRight,
   Info,
   ShieldCheck,
-  MessageCircle,
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
@@ -164,7 +163,6 @@ function EditBranchForm({ store, onSuccess }) {
           wifiEnabled: isWifiEnabled,
           wifiName: formData.get('wifiName'),
           wifiPassword: formData.get('wifiPassword'),
-          whatsappNumber: formData.get('whatsappNumber'),
         });
       }
     } else {
@@ -239,16 +237,6 @@ function EditBranchForm({ store, onSuccess }) {
             required
             prefix={<Star className="w-4 h-4 text-amber-500 fill-amber-400" />}
             helperText="Link review spesifik untuk outlet ini agar ulasan masuk ke lokasi cabang yang tepat di Google Maps."
-          />
-
-          <Input
-            label="Nomor WhatsApp Penanggung Jawab"
-            name="whatsappNumber"
-            type="tel"
-            defaultValue={store?.whatsappNumber || ''}
-            error={fieldErrors.whatsappNumber}
-            prefix={<MessageCircle className="w-4 h-4 text-emerald-500" />}
-            helperText="Nomor ini akan menerima feedback pelanggan dengan rating 1–2 melalui WhatsApp."
           />
 
           {/* Wi-Fi Access Toggle */}

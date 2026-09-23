@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { AlertTriangle, ShieldOff, Sparkles, ArrowRight, MapPin } from 'lucide-react';
 import { getPublicQrByCode, recordScanLog } from '@/lib/db/queries/qr';
 import { validateGoogleMapsUrl } from '@/lib/utils/validation';
-import CustomerRatingExperience from '@/components/visitor/CustomerRatingExperience';
+import VisitorScanExperience from '@/components/visitor/VisitorScanExperience';
 import Button from '@/components/ui/Button';
 
 export const dynamic = 'force-dynamic';
@@ -136,18 +136,26 @@ export default async function VisitorQrPage({ params }) {
     );
   }
 
-  // 3. Render the Customer Rating Experience (always)
-  return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
-      <CustomerRatingExperience
-        code={qr.code}
-        businessName={qr.businessName}
-        logoUrl={qr.logoUrl}
-        googleMapsReviewUrl={mapsValidation.normalized}
-        googleMapsUrl={mapsValidation.normalized}
-        wifiEnabled={Boolean(qr.wifiEnabled)}
-        wifiName={qr.wifiName}
-      />
-    </div>
-  );
+  // 3. Conditional behavior based on business configuration:
+  // JIKA MEMILIH WI-FI (wifi_enabled === true) ->
+  // Tampilkan halaman review-gate: pengunjung klik untuk beri review Google Maps, lalu kembali untuk melihat password Wi-Fi.
+  if (qr.wifiEnabled) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
+        <VisitorScanExperience
+          code={qr.code}
+          businessName={qr.businessName}
+          logoUrl={qr.logoUrl}
+          googleMapsReviewUrl={mapsValidation.normalized}
+          googleMapsUrl={mapsValidation.normalized}
+          wifiEnabled={true}
+          wifiName={qr.wifiName}
+        />
+      </div>
+    );
+  }
+
+  // JIKA HANYA MEMILIH MAPS (wifi_enabled === false) ->
+  // Langsung direct redirect 100% otomatis ke Google Maps Review URL!
+  redirect(mapsValidation.normalized);
 }
