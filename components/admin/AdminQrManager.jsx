@@ -1017,7 +1017,6 @@ export default function AdminQrManager({ initialQrs = [] }) {
             </div>
           </div>
         )}
-        </div>
       </div>
 
       {/* Mass QR Generator Modal */}
