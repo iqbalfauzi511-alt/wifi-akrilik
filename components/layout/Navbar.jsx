@@ -30,11 +30,14 @@ export default function Navbar({ session }) {
           <Link href="/#cara-kerja" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">
             Cara Kerja
           </Link>
-          <Link href="/#spesifikasi" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">
+          <Link href="/#keunggulan" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">
             Keunggulan
           </Link>
           <Link href="/#harga" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">
             Harga
+          </Link>
+          <Link href="/#solusi" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">
+            Solusi Bisnis
           </Link>
         </nav>
 
@@ -42,13 +45,13 @@ export default function Navbar({ session }) {
         <div className="flex items-center gap-3">
           {session?.user ? (
             <Link href="/dashboard" className="hidden sm:block">
-              <Button variant="primary" size="sm">
+              <Button variant="primary" size="sm" className="!rounded-full px-5 font-bold shadow-sm shadow-blue-500/20">
                 Dashboard
               </Button>
             </Link>
           ) : (
             <Link href="/login" className="hidden sm:block">
-              <Button variant="primary" size="sm">
+              <Button variant="primary" size="sm" className="!rounded-full px-5 font-bold shadow-sm shadow-blue-500/20">
                 Masuk Dashboard
               </Button>
             </Link>
