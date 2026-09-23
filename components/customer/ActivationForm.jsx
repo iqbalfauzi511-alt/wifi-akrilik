@@ -5,31 +5,25 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
-  Wifi,
-  MapPin,
-  Star,
-  Building,
-  KeyRound,
-  CheckCircle2,
+  HelpCircle,
+  Lock,
   ArrowRight,
+  CheckCircle2,
   ExternalLink,
-  Sparkles,
+  ChevronDown
 } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Input';
-import Card from '@/components/ui/Card';
 import QRCodeViewer from '@/components/qr/QRCodeViewer';
-import LogoUploader from '@/components/ui/LogoUploader';
 import { activateQrAction } from '@/lib/actions/qr-actions';
 
 export default function ActivationForm({
-  code,
+  code: initialCode = '',
   initialBusiness = null,
   businesses = [],
   userEmail = '',
   batchCode = '',
 }) {
   const router = useRouter();
+  const [activationCodeVal, setActivationCodeVal] = useState(initialCode || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
@@ -46,55 +40,41 @@ export default function ActivationForm({
     storeList.length > 0 ? storeList[0].id : 'new'
   );
 
-  // Pre-populate with existing business if user already registered one
   const [businessNameVal, setBusinessNameVal] = useState(storeList[0]?.businessName || '');
-  const [logoVal, setLogoVal] = useState(storeList[0]?.logoUrl || '');
   const [mapsUrlVal, setMapsUrlVal] = useState(
     storeList[0]?.googleMapsReviewUrl || storeList[0]?.googleMapsUrl || ''
   );
   const [isWifiEnabled, setIsWifiEnabled] = useState(Boolean(storeList[0]?.wifiEnabled));
   const [wifiNameVal, setWifiNameVal] = useState(storeList[0]?.wifiName || '');
   const [wifiPasswordVal, setWifiPasswordVal] = useState(storeList[0]?.wifiPassword || '');
-
-  const handleSelectStore = (storeId) => {
-    setSelectedStoreId(storeId);
-    if (storeId === 'new') {
-      setBusinessNameVal('');
-      setLogoVal('');
-      setMapsUrlVal('');
-      setIsWifiEnabled(false);
-      setWifiNameVal('');
-      setWifiPasswordVal('');
-    } else {
-      const found = storeList.find((s) => s.id === storeId);
-      if (found) {
-        setBusinessNameVal(found.businessName || '');
-        setLogoVal(found.logoUrl || '');
-        setMapsUrlVal(found.googleMapsReviewUrl || found.googleMapsUrl || '');
-        setIsWifiEnabled(Boolean(found.wifiEnabled));
-        setWifiNameVal(found.wifiName || '');
-        setWifiPasswordVal(found.wifiPassword || '');
-      }
-    }
-  };
+  const [whatsappVal, setWhatsappVal] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const finalCode = (activationCodeVal || initialCode || '').trim().toUpperCase();
+    if (!finalCode) {
+      setErrorMessage('Silakan masukkan Kode Aktivasi perangkat.');
+      return;
+    }
+
     setIsSubmitting(true);
     setErrorMessage('');
     setFieldErrors({});
 
     const formData = new FormData(e.currentTarget);
-    formData.set('code', code);
+    formData.set('code', finalCode);
+    formData.set('businessName', businessNameVal);
+    formData.set('googleMapsReviewUrl', mapsUrlVal);
     formData.set('wifiEnabled', isWifiEnabled ? 'true' : 'false');
+    formData.set('wifiName', wifiNameVal);
+    formData.set('wifiPassword', wifiPasswordVal);
     formData.set('targetBusinessId', selectedStoreId);
     formData.set('isNewBusiness', selectedStoreId === 'new' ? 'true' : 'false');
-    const bName = formData.get('businessName') || '';
 
     const result = await activateQrAction(null, formData);
 
     if (result?.success) {
-      setSavedBusinessName(bName);
+      setSavedBusinessName(businessNameVal);
       setIsSuccess(true);
     } else {
       setIsSubmitting(false);
@@ -106,49 +86,49 @@ export default function ActivationForm({
   };
 
   if (isSuccess) {
+    const finalCode = (activationCodeVal || initialCode).trim().toUpperCase();
     return (
-      <div className="bento-card text-center p-6 sm:p-8 border-emerald-200">
-        <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3">
+      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xl shadow-slate-200/50 p-8 sm:p-10 text-center max-w-xl mx-auto">
+        <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4">
           <CheckCircle2 className="w-8 h-8" />
         </div>
-        <h3 className="text-2xl font-extrabold text-slate-900 mb-1">Cobascan Anda Aktif!</h3>
-        <p className="text-sm text-slate-600 mb-4">
-          Perangkat Cobascan <span className="font-mono font-bold text-slate-900">{code}</span> kini telah aktif dan siap digunakan pelanggan untuk{' '}
-          <strong className="text-slate-900">{savedBusinessName || 'Bisnis Anda'}</strong>.
+        <h3 className="text-2xl font-black text-slate-900 mb-2">Aktivasi Berhasil!</h3>
+        <p className="text-sm text-slate-600 mb-5 leading-relaxed">
+          Stand Cobascan <span className="font-mono font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded">{finalCode}</span> kini telah aktif dan terhubung ke profil ulasan Google Maps{' '}
+          <strong className="text-slate-900">{savedBusinessName}</strong>.
         </p>
 
         {batchCode && (
-          <div className="mb-4 p-3 rounded-2xl bg-indigo-50 border border-indigo-200 text-xs text-indigo-900 max-w-sm mx-auto">
-            ✨ Seluruh perangkat dalam <strong>Paket {batchCode}</strong> telah otomatis aktif dan terdaftar di dashboard akun Anda.
+          <div className="mb-5 p-3 rounded-2xl bg-blue-50 border border-blue-200 text-xs text-blue-900 max-w-sm mx-auto">
+            ✨ Seluruh perangkat dalam <strong>Paket {batchCode}</strong> telah otomatis terdaftar dan aktif.
           </div>
         )}
 
-        {/* Barcode Viewer with Download & Copy actions */}
-        <div className="flex justify-center my-3">
+        <div className="flex justify-center my-4">
           <QRCodeViewer
-            code={code}
+            code={finalCode}
             subtitle={savedBusinessName}
             size={220}
             showActions={true}
           />
         </div>
 
-        <div className="mt-6 pt-5 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-2.5">
+        <div className="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-3">
           <Link href="/dashboard" className="w-full sm:flex-1">
-            <Button variant="outline" className="w-full text-xs">
-              Ke Dashboard Cobascan
-            </Button>
+            <button className="w-full py-3 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 font-bold text-xs text-slate-700 transition-colors">
+              Ke Dashboard Bisnis
+            </button>
           </Link>
           <a
-            href={`/q/${code}`}
+            href={`/q/${finalCode}`}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full sm:flex-1"
           >
-            <Button variant="primary" className="w-full text-xs">
-              <span>Tes Scan Halaman</span>
-              <ExternalLink className="w-3.5 h-3.5 ml-1" />
-            </Button>
+            <button className="w-full py-3 px-4 rounded-xl bg-[#1A73E8] hover:bg-[#1557B0] font-bold text-xs text-white shadow-md shadow-blue-500/20 inline-flex items-center justify-center gap-1.5 transition-all">
+              <span>Tes Scan / Tap Meja</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </button>
           </a>
         </div>
       </div>
@@ -156,283 +136,211 @@ export default function ActivationForm({
   }
 
   return (
-    <div className="bento-card p-6 sm:p-8">
-      {/* Account linking header */}
-      {userEmail && (
-        <div className="mb-5 p-3 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span className="text-slate-500">Akun terhubung:</span>
-            <strong className="font-mono text-slate-800">{userEmail}</strong>
+    <div className="w-full max-w-2xl mx-auto">
+      {/* Top Bar matching Image 1 */}
+      <header className="flex items-center justify-between py-6 px-2 mb-2">
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="w-8 h-8 relative mix-blend-multiply group-hover:scale-105 transition-transform">
+            <Image src="/logo.png" alt="Cobascan" width={100} height={100} priority className="w-full h-full object-contain" />
           </div>
-          {storeList.length > 0 ? (
-            <span className="text-[11px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold border border-emerald-200">
-              {storeList.length} Bisnis Terdaftar
-            </span>
-          ) : (
-            <span className="text-[11px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-bold border border-blue-200">
-              Aktivasi Pertama
-            </span>
-          )}
-        </div>
-      )}
+          <span className="font-extrabold text-xl text-slate-900">cobascan</span>
+        </Link>
 
-      {storeList.length === 0 ? (
-        <div className="mb-5 p-3 rounded-xl bg-brand-50/70 border border-brand-200 text-xs text-brand-900 leading-relaxed">
-          🚀 <strong>Aktivasi Perangkat Pertama:</strong> Masukkan profil bisnis Anda di bawah untuk mengaktifkan perangkat Cobascan ini. Data ini langsung terhubung dengan QR Code.
-        </div>
-      ) : (
-        <div className="mb-5 p-3 rounded-xl bg-brand-50/70 border border-brand-200 text-xs text-brand-900 leading-relaxed">
-          💡 Pilih salah satu cafe/cabang Anda yang sudah terdaftar untuk langsung menggunakan data yang sama, atau pilih <strong>+ Cabang Baru</strong> jika perangkat ini diletakkan di lokasi/outlet lain.
-        </div>
-      )}
+        <a
+          href="https://wa.me/6281234567890?text=Halo%20Admin%20Cobascan%2C%20saya%20butuh%20bantuan%20aktivasi%20stand"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors"
+        >
+          <HelpCircle className="w-4 h-4 text-slate-400" />
+          <span>Bantuan</span>
+        </a>
+      </header>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Main Activation Card matching Image 1 */}
+      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xl shadow-slate-200/50 p-6 sm:p-10">
+        <div className="mb-8">
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            Aktivasi Cobascan
+          </h1>
+          <p className="mt-2 text-xs sm:text-sm text-slate-500 leading-relaxed">
+            Masukkan informasi berikut untuk mulai menggunakan Cobascan Anda.
+          </p>
+        </div>
+
         {errorMessage && (
-          <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium leading-relaxed">
-            {errorMessage}
+          <div className="mb-6 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium leading-relaxed">
+            ⚠️ {errorMessage}
           </div>
         )}
 
-        {/* Store / Outlet Selection Cards */}
-        {storeList.length > 0 && (
-          <div className="space-y-2 pb-2">
-            <div className="flex items-center justify-between">
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
-                Pilih Toko / Cabang Tujuan:
-              </label>
-              <span className="text-[11px] text-slate-500 font-mono">
-                {selectedStoreId === 'new' ? 'Pendaftaran Cabang Baru' : 'Menautkan ke Cabang Terdaftar'}
-              </span>
-            </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Field 1: Kode Aktivasi */}
+          <div>
+            <label htmlFor="activationCodeInput" className="block text-xs font-bold text-slate-800 mb-1.5">
+              Kode Aktivasi <span className="text-rose-500">*</span>
+            </label>
+            <input
+              id="activationCodeInput"
+              name="code"
+              type="text"
+              required
+              value={activationCodeVal}
+              onChange={(e) => setActivationCodeVal(e.target.value.toUpperCase())}
+              placeholder="Contoh: CS-99214A"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1A73E8] focus:border-transparent font-mono transition-all bg-white"
+            />
+            <p className="mt-1.5 text-[11px] text-slate-500">
+              Kode aktivasi terdapat pada stiker atau kartu dalam kemasan.
+            </p>
+          </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {storeList.map((st) => {
-                const isSelected = selectedStoreId === st.id;
-                return (
-                  <div
-                    key={st.id}
-                    onClick={() => handleSelectStore(st.id)}
-                    className={`p-3 rounded-2xl border text-xs cursor-pointer transition-all flex items-center justify-between select-none ${
-                      isSelected
-                        ? 'border-brand-600 bg-brand-50/70 ring-2 ring-brand-500/20 shadow-xs'
-                        : 'border-slate-200 hover:border-slate-300 bg-white'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5 overflow-hidden">
-                      <div className="w-8 h-8 rounded-xl bg-slate-100 border border-slate-200/80 p-0.5 flex items-center justify-center shrink-0 overflow-hidden">
-                        {st.logoUrl ? (
-                          <Image
-                            src={st.logoUrl}
-                            alt={st.businessName}
-                            width={32}
-                            height={32}
-                            className="w-full h-full object-contain rounded-lg"
-                          />
-                        ) : (
-                          <Building className="w-4 h-4 text-slate-500" />
-                        )}
-                      </div>
-                      <div className="truncate">
-                        <div className="font-bold text-slate-900 truncate">{st.businessName}</div>
-                        <div className="text-[10px] text-slate-500 truncate">
-                          {st.wifiEnabled ? `Wi-Fi: ${st.wifiName || 'Aktif'}` : 'Google Maps Only'}
-                        </div>
-                      </div>
-                    </div>
-                    {isSelected && (
-                      <div className="w-4 h-4 rounded-full bg-brand-600 text-white flex items-center justify-center shrink-0">
-                        <CheckCircle2 className="w-4 h-4" />
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+          {/* Field 2: Nama Bisnis */}
+          <div>
+            <label htmlFor="businessNameInput" className="block text-xs font-bold text-slate-800 mb-1.5">
+              Nama Bisnis <span className="text-rose-500">*</span>
+            </label>
+            <input
+              id="businessNameInput"
+              name="businessName"
+              type="text"
+              required
+              value={businessNameVal}
+              onChange={(e) => setBusinessNameVal(e.target.value)}
+              placeholder="Contoh: Kopi Kenangan"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1A73E8] focus:border-transparent transition-all bg-white"
+            />
+          </div>
 
-              {/* Option: + Daftarkan Toko / Cabang Baru */}
-              <div
-                onClick={() => handleSelectStore('new')}
-                className={`p-3 rounded-2xl border text-xs cursor-pointer transition-all flex items-center justify-between select-none ${
-                  selectedStoreId === 'new'
-                    ? 'border-brand-600 bg-brand-50/70 ring-2 ring-brand-500/20 shadow-xs'
-                    : 'border-dashed border-slate-300 hover:border-slate-400 bg-slate-50/60'
+          {/* Field 3: Link Google Maps / Review */}
+          <div>
+            <label htmlFor="mapsUrlInput" className="block text-xs font-bold text-slate-800 mb-1.5">
+              Link Google Maps / Review <span className="text-rose-500">*</span>
+            </label>
+            <input
+              id="mapsUrlInput"
+              name="googleMapsReviewUrl"
+              type="url"
+              required
+              value={mapsUrlVal}
+              onChange={(e) => setMapsUrlVal(e.target.value)}
+              placeholder="Contoh: https://g.page/xxxxxxxxx/review"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1A73E8] focus:border-transparent transition-all bg-white"
+            />
+            <p className="mt-1.5 text-[11px] text-slate-500">
+              Link ini akan langsung terbuka saat pengunjung scan atau tap.
+            </p>
+          </div>
+
+          {/* Field 4: Pakai Wi-Fi untuk pengunjung? (Opsional) */}
+          <div>
+            <label className="block text-xs font-bold text-slate-800 mb-2">
+              Pakai Wi-Fi untuk pengunjung? <span className="text-slate-400 font-normal">(Opsional)</span>
+            </label>
+            
+            {/* Pill Switch Buttons [ Ya ] [ Tidak ] */}
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setIsWifiEnabled(true)}
+                className={`px-7 py-2.5 rounded-full font-bold text-xs transition-all ${
+                  isWifiEnabled
+                    ? 'bg-[#1A73E8] text-white shadow-md shadow-blue-500/20'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-brand-600 shrink-0 font-bold">
-                    +
-                  </div>
-                  <div>
-                    <div className="font-bold text-slate-900">+ Cabang Baru</div>
-                    <div className="text-[10px] text-slate-500">Wi-Fi &amp; Maps berbeda</div>
-                  </div>
+                Ya
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsWifiEnabled(false)}
+                className={`px-7 py-2.5 rounded-full font-bold text-xs transition-all ${
+                  !isWifiEnabled
+                    ? 'bg-[#1A73E8] text-white shadow-md shadow-blue-500/20'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                Tidak
+              </button>
+            </div>
+
+            {/* Revealed Wi-Fi input container when Ya is active */}
+            {isWifiEnabled && (
+              <div className="mt-4 p-5 rounded-2xl bg-blue-50/50 border border-blue-100 space-y-4 transition-all">
+                <div>
+                  <label htmlFor="wifiNameInput" className="block text-xs font-bold text-slate-800 mb-1.5">
+                    Nama Wi-Fi (SSID)
+                  </label>
+                  <input
+                    id="wifiNameInput"
+                    name="wifiName"
+                    type="text"
+                    value={wifiNameVal}
+                    onChange={(e) => setWifiNameVal(e.target.value)}
+                    placeholder="Contoh: KopiSenja_Guest"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1A73E8] bg-white transition-all"
+                  />
                 </div>
-                {selectedStoreId === 'new' && (
-                  <div className="w-4 h-4 rounded-full bg-brand-600 text-white flex items-center justify-center shrink-0">
-                    <CheckCircle2 className="w-4 h-4" />
-                  </div>
-                )}
+                <div>
+                  <label htmlFor="wifiPasswordInput" className="block text-xs font-bold text-slate-800 mb-1.5">
+                    Password Wi-Fi
+                  </label>
+                  <input
+                    id="wifiPasswordInput"
+                    name="wifiPassword"
+                    type="text"
+                    value={wifiPasswordVal}
+                    onChange={(e) => setWifiPasswordVal(e.target.value)}
+                    placeholder="Contoh: kopisenja2026"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1A73E8] bg-white transition-all"
+                  />
+                </div>
               </div>
-            </div>
-          </div>
-        )}
-
-        {/* Business Name */}
-        <div>
-          <Input
-            label="Nama Bisnis / Toko"
-            name="businessName"
-            placeholder="Contoh: Kopi Senja - Cabang Melati"
-            value={businessNameVal}
-            onChange={(e) => setBusinessNameVal(e.target.value)}
-            autoComplete="off"
-            error={fieldErrors.businessName}
-            required
-            prefix={<Building className="w-4 h-4 text-slate-500" />}
-            helperText="Nama toko/cabang ini akan tampil di bagian atas halaman saat pelanggan scan QR atau tap NFC."
-          />
-        </div>
-
-        {/* Business Logo Uploader */}
-        <div className="pt-1">
-          <LogoUploader
-            key={selectedStoreId}
-            initialLogo={logoVal}
-            name="logoUrl"
-            label="Logo Bisnis"
-            helperText="Logo ini akan tampil pada avatar halaman sambutan ketika pengunjung melakukan scan QR atau tap NFC Cobascan."
-          />
-        </div>
-
-        {/* Google Review Link */}
-        <div>
-          <Input
-            label="Google Review Link"
-            name="googleMapsReviewUrl"
-            type="url"
-            placeholder="https://maps.app.goo.gl/... atau https://maps.google.com/..."
-            value={mapsUrlVal}
-            onChange={(e) => setMapsUrlVal(e.target.value)}
-            autoComplete="off"
-            error={fieldErrors.googleMapsReviewUrl || fieldErrors.googleMapsUrl}
-            required
-            prefix={<Star className="w-4 h-4 text-amber-500 fill-amber-400" />}
-            helperText="Arahkan pelanggan langsung ke halaman review bisnis Anda di Google."
-          />
-        </div>
-
-        {/* Features Priority Section */}
-        <div className="pt-3 pb-1 border-t border-slate-100 space-y-3">
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">
-            Fitur Cobascan
-          </label>
-
-          {/* Feature 1: Google Review (Fungsi Utama) */}
-          <div className="flex items-start gap-3 p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/80">
-            <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 mt-0.5">
-              <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
-            </div>
-            <div className="flex-1 text-xs">
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-slate-900">Google Review</span>
-                <span className="px-2 py-0.5 rounded-md bg-amber-200/70 text-amber-900 text-[10px] font-bold">
-                  Fungsi Utama
-                </span>
-              </div>
-              <p className="text-slate-600 mt-0.5 leading-relaxed">
-                Arahkan pelanggan langsung ke halaman review bisnis.
-              </p>
-            </div>
+            )}
           </div>
 
-          {/* Feature 2: Wi-Fi Access (Fitur Tambahan) */}
-          <div
-            onClick={() => setIsWifiEnabled((prev) => !prev)}
-            className={`flex items-start gap-3 p-3.5 rounded-xl border transition-all cursor-pointer select-none ${
-              isWifiEnabled
-                ? 'bg-brand-50/70 border-brand-300 ring-1 ring-brand-300'
-                : 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50/50'
-            }`}
-          >
-            <input
-              type="checkbox"
-              id="wifiEnabledCheckbox"
-              checked={isWifiEnabled}
-              onChange={(e) => setIsWifiEnabled(e.target.checked)}
-              className="w-4 h-4 mt-1 rounded border-slate-300 text-brand-600 focus:ring-brand-500 cursor-pointer shrink-0"
-              onClick={(e) => e.stopPropagation()}
-            />
-            <div className="flex-1 text-xs">
-              <div className="flex items-center gap-2">
-                <label htmlFor="wifiEnabledCheckbox" className="font-bold text-slate-900 cursor-pointer">
-                  Wi-Fi Access
-                </label>
-                <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
-                  isWifiEnabled ? 'bg-brand-200/80 text-brand-800' : 'bg-slate-100 text-slate-500'
-                }`}>
-                  {isWifiEnabled ? 'Aktif' : 'Fitur Tambahan'}
-                </span>
+          {/* Field 5: Nomor WhatsApp Penanggung Jawab (Opsional) */}
+          <div>
+            <label htmlFor="whatsappInput" className="block text-xs font-bold text-slate-800 mb-1.5">
+              Nomor WhatsApp Penanggung Jawab <span className="text-slate-400 font-normal">(Opsional)</span>
+            </label>
+            <div className="flex items-center rounded-xl border border-slate-200 overflow-hidden focus-within:ring-2 focus-within:ring-[#1A73E8] focus-within:border-transparent transition-all bg-white">
+              <div className="px-3.5 py-3 bg-slate-50 border-r border-slate-200 text-xs font-bold text-slate-700 flex items-center gap-1 shrink-0">
+                <span>+62</span>
+                <ChevronDown className="w-3 h-3 text-slate-400" />
               </div>
-              <p className="text-slate-500 mt-0.5 leading-relaxed">
-                Berikan akses Wi-Fi kepada pelanggan melalui Cobascan.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Conditional Wi-Fi Inputs */}
-        {isWifiEnabled && (
-          <div className="space-y-3.5 p-4 rounded-xl bg-slate-50/90 border border-slate-200/80 animate-in fade-in slide-in-from-top-1 duration-200">
-            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 mb-1">
-              <Wifi className="w-4 h-4 text-brand-600" />
-              <span>Detail Jaringan Wi-Fi</span>
-            </div>
-
-            <div>
-              <Input
-                label="Nama Wi-Fi"
-                name="wifiName"
-                placeholder="Contoh: KAFE-TAMU"
-                value={wifiNameVal}
-                onChange={(e) => setWifiNameVal(e.target.value)}
-                autoComplete="off"
-                error={fieldErrors.wifiName}
-                required={isWifiEnabled}
-                prefix={<Wifi className="w-4 h-4 text-slate-500" />}
-                helperText="Nama SSID jaringan Wi-Fi bisnis Anda."
+              <input
+                id="whatsappInput"
+                name="whatsappNumber"
+                type="tel"
+                value={whatsappVal}
+                onChange={(e) => setWhatsappVal(e.target.value)}
+                placeholder="812 3456 7890"
+                className="w-full px-3.5 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none bg-white"
               />
             </div>
-
-            <div>
-              <Input
-                label="Password Wi-Fi"
-                name="wifiPassword"
-                type="text"
-                placeholder="Contoh: password123"
-                value={wifiPasswordVal}
-                onChange={(e) => setWifiPasswordVal(e.target.value)}
-                autoComplete="off"
-                error={fieldErrors.wifiPassword}
-                required={isWifiEnabled}
-                prefix={<KeyRound className="w-4 h-4 text-slate-500" />}
-                helperText="Password ini disembunyikan sampai customer selesai membuka Google Review."
-              />
-            </div>
+            <p className="mt-1.5 text-[11px] text-slate-500">
+              Untuk menerima kritik, saran, atau pertanyaan dari pelanggan.
+            </p>
           </div>
-        )}
 
-        <div className="pt-4">
-          <Button
+          {/* Submit Button */}
+          <button
             type="submit"
-            size="lg"
-            isLoading={isSubmitting}
-            className="w-full"
+            disabled={isSubmitting}
+            className="w-full py-4 px-6 bg-[#1A73E8] hover:bg-[#1557B0] text-white font-bold text-sm rounded-xl shadow-lg shadow-blue-500/20 inline-flex items-center justify-center gap-2 transition-all hover:scale-[1.01] disabled:opacity-60 pt-3.5 pb-3.5"
           >
-            <span>Aktifkan Cobascan</span>
-            <ArrowRight className="w-4 h-4 ml-1.5" />
-          </Button>
+            <span>{isSubmitting ? 'Mengaktifkan...' : 'Aktifkan Cobascan'}</span>
+            <ArrowRight className="w-4 h-4 ml-1" />
+          </button>
+        </form>
+
+        {/* Footnote */}
+        <div className="mt-6 flex items-center justify-center gap-1.5 text-xs text-slate-400 text-center">
+          <Lock className="w-3.5 h-3.5" />
+          <span>Data Anda aman dan hanya digunakan untuk keperluan layanan Cobascan.</span>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

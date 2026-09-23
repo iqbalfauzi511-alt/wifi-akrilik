@@ -27,7 +27,7 @@ export default async function CustomerSettingsPage() {
   const business = userBusinesses[0] || session?.business;
 
   return (
-    <div className="space-y-6">
+    <div className="px-4 sm:px-8 py-6 max-w-7xl mx-auto w-full space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Pengaturan Cobascan</h2>
         <p className="text-xs sm:text-sm text-slate-500 mt-1">

@@ -29,7 +29,7 @@ export default async function CustomerQrPage() {
   } : null);
 
   return (
-    <div className="space-y-6">
+    <div className="px-4 sm:px-8 py-6 max-w-7xl mx-auto w-full space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Perangkat Cobascan (QR &amp; NFC)</h2>

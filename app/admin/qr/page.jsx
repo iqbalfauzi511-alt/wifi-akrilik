@@ -11,5 +11,9 @@ export const metadata = {
 export default async function AdminQrPage() {
   const qrList = await getAllQrsAdmin();
 
-  return <AdminQrManager initialQrs={qrList} />;
+  return (
+    <div className="px-4 sm:px-8 py-6 max-w-7xl mx-auto w-full">
+      <AdminQrManager initialQrs={qrList} />
+    </div>
+  );
 }

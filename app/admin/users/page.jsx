@@ -63,7 +63,7 @@ export default async function AdminUsersPage() {
   ]);
 
   return (
-    <div className="space-y-8">
+    <div className="px-4 sm:px-8 py-6 max-w-7xl mx-auto w-full space-y-8">
       <div>
         <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Mitra &amp; Pengguna Terdaftar</h2>
         <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
