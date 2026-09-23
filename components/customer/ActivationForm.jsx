@@ -14,6 +14,7 @@ import {
   ArrowRight,
   ExternalLink,
   Sparkles,
+  MessageCircle,
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
@@ -55,6 +56,7 @@ export default function ActivationForm({
   const [isWifiEnabled, setIsWifiEnabled] = useState(Boolean(storeList[0]?.wifiEnabled));
   const [wifiNameVal, setWifiNameVal] = useState(storeList[0]?.wifiName || '');
   const [wifiPasswordVal, setWifiPasswordVal] = useState(storeList[0]?.wifiPassword || '');
+  const [whatsappNumberVal, setWhatsappNumberVal] = useState(storeList[0]?.whatsappNumber || '');
 
   const handleSelectStore = (storeId) => {
     setSelectedStoreId(storeId);
@@ -74,6 +76,7 @@ export default function ActivationForm({
         setIsWifiEnabled(Boolean(found.wifiEnabled));
         setWifiNameVal(found.wifiName || '');
         setWifiPasswordVal(found.wifiPassword || '');
+        setWhatsappNumberVal(found.whatsappNumber || '');
       }
     }
   };
@@ -318,6 +321,22 @@ export default function ActivationForm({
             required
             prefix={<Star className="w-4 h-4 text-amber-500 fill-amber-400" />}
             helperText="Arahkan pelanggan langsung ke halaman review bisnis Anda di Google."
+          />
+        </div>
+
+        {/* WhatsApp Feedback Link */}
+        <div>
+          <Input
+            label="Nomor WhatsApp Penanggung Jawab"
+            name="whatsappNumber"
+            type="tel"
+            placeholder="Contoh: 081234567890"
+            value={whatsappNumberVal}
+            onChange={(e) => setWhatsappNumberVal(e.target.value)}
+            autoComplete="off"
+            error={fieldErrors.whatsappNumber}
+            prefix={<MessageCircle className="w-4 h-4 text-emerald-500" />}
+            helperText="Nomor ini akan menerima feedback pelanggan dari Cobascan."
           />
         </div>
 

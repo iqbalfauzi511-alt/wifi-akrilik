@@ -20,6 +20,7 @@ import { getCurrentSession } from '@/lib/auth/session';
 import { getCustomerStats, getCustomerStatsByUserId } from '@/lib/db/queries/stats';
 import { getQrsByBusinessId, getQrsByOwnerUserId } from '@/lib/db/queries/qr';
 import { getBusinessesByOwnerId } from '@/lib/db/queries/business';
+import { getRatingMetricsByBusinessId } from '@/lib/db/queries/ratings';
 import StatCard from '@/components/ui/StatCard';
 import Card, { CardHeader } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
@@ -56,6 +57,8 @@ export default async function CustomerDashboardPage() {
     googleMapsUrl: myQrs[0].googleMapsUrl,
     wifiEnabled: myQrs[0].wifiEnabled,
   } : null);
+
+  const ratingMetrics = business ? await getRatingMetricsByBusinessId(business.id).catch(() => ({ avg: 0, total: 0 })) : { avg: 0, total: 0 };
 
   const userName = session?.user?.name || session?.user?.email?.split('@')[0] || 'Partner';
 
@@ -321,6 +324,22 @@ export default async function CustomerDashboardPage() {
               </div>
               <p className="text-3xl font-black text-slate-900">{stats.totalScans}</p>
               <p className="text-xs text-slate-500 mt-1">Akumulasi interaksi pelanggan melalui QR scan</p>
+            </Card>
+
+            <Card className="border-slate-200 bg-white">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 rounded-lg bg-amber-50 text-amber-500">
+                  <Star className="w-4 h-4 fill-amber-500" />
+                </div>
+                <h3 className="font-bold text-slate-900">Rata-rata Rating</h3>
+              </div>
+              <div className="flex items-end gap-2">
+                <p className="text-3xl font-black text-slate-900">
+                  {ratingMetrics.avg ? Number(ratingMetrics.avg).toFixed(1) : '0.0'}
+                </p>
+                <p className="text-sm font-semibold text-slate-500 mb-1">/ 5.0</p>
+              </div>
+              <p className="text-xs text-slate-500 mt-1">Dari {ratingMetrics.total} ulasan yang masuk</p>
             </Card>
           </div>
 
