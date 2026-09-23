@@ -23,7 +23,7 @@ export default function QRCodeViewer({
       ? window.location.origin
       : (process.env.NEXT_PUBLIC_APP_URL && !process.env.NEXT_PUBLIC_APP_URL.includes('supabase.co')
           ? process.env.NEXT_PUBLIC_APP_URL
-          : 'https://wifi-akrilik.vercel.app');
+          : 'https://cobascan.my.id');
   const targetUrl = customUrl || `${origin}/q/${code}${path}`;
 
   useEffect(() => {

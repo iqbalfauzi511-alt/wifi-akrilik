@@ -195,7 +195,7 @@ export default function CustomerQrTable({
       const appUrl =
         typeof window !== 'undefined' && window.location.origin
           ? window.location.origin
-          : 'https://wifi-akrilik.vercel.app';
+          : 'https://cobascan.my.id';
       const cleanOrigin = appUrl.replace(/\/$/, '');
 
       const itemsToDownload = qrList.filter((q) => selectedIds.has(q.id));

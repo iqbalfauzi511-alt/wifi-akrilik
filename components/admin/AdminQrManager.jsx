@@ -355,7 +355,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
           ? window.location.origin
           : (process.env.NEXT_PUBLIC_APP_URL && !process.env.NEXT_PUBLIC_APP_URL.includes('supabase.co')
               ? process.env.NEXT_PUBLIC_APP_URL
-              : 'https://wifi-akrilik.vercel.app');
+              : 'https://cobascan.my.id');
       const cleanOrigin = appUrl.replace(/\/$/, '');
 
       for (const qr of filteredQrs) {
@@ -514,7 +514,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
       const appUrl =
         typeof window !== 'undefined' && window.location.origin
           ? window.location.origin
-          : 'https://wifi-akrilik.vercel.app';
+          : 'https://cobascan.my.id';
       const cleanOrigin = appUrl.replace(/\/$/, '');
 
       const items = qrList.filter((q) => selectedIds.has(q.id));

@@ -217,7 +217,7 @@ async function runEditBusinessSettingsTests() {
     // TEST 4 — NFC Consistency (Prompt Section 17, Test 4)
     // -------------------------------------------------------------------------
     console.log('\n--- Test 4: NFC URL Consistency & Reusability ---');
-    const appBaseUrl = 'https://wifi-akrilik.vercel.app';
+    const appBaseUrl = 'https://cobascan.my.id';
     const nfcUrl = `${appBaseUrl}/q/${qr1.code}`;
     const qrTargetUrl = `${appBaseUrl}/q/${qr1.code}`;
     assert(nfcUrl === qrTargetUrl, 'NFC tag URL and acrylic QR URL are 100% identical');
