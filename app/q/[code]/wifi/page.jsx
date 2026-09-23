@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }) {
   const { code } = params;
   return {
-    title: `Cobascan Wi-Fi — ${code}`,
+    title: `Cobascan Wi-Fi: ${code}`,
     description: 'Cobascan: Berikan ulasan Google Maps untuk mendapatkan akses password Wi-Fi.',
   };
 }

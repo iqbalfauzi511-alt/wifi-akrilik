@@ -164,7 +164,7 @@ export default function LogoUploader({
             className={`px-2 py-0.5 rounded-md font-semibold transition-colors ${
               activeTab === 'upload'
                 ? 'bg-slate-200/80 text-slate-900'
-                : 'text-slate-400 hover:text-slate-600'
+                : 'text-slate-500 hover:text-slate-700'
             }`}
           >
             File
@@ -175,7 +175,7 @@ export default function LogoUploader({
             className={`px-2 py-0.5 rounded-md font-semibold transition-colors ${
               activeTab === 'url'
                 ? 'bg-slate-200/80 text-slate-900'
-                : 'text-slate-400 hover:text-slate-600'
+                : 'text-slate-500 hover:text-slate-700'
             }`}
           >
             Link URL
@@ -259,7 +259,7 @@ export default function LogoUploader({
           <p className="text-xs font-bold text-slate-800">
             {isCompressing ? 'Mengoptimasi gambar...' : 'Klik atau seret logo ke sini'}
           </p>
-          <p className="text-[11px] text-slate-400 mt-0.5">
+          <p className="text-[11px] text-slate-500 mt-0.5">
             Format PNG, JPG, WebP, SVG (Otomatis disesuaikan untuk smartphone)
           </p>
         </div>
@@ -290,7 +290,7 @@ export default function LogoUploader({
       )}
 
       {helperText && !uploadError && (
-        <p className="text-[11px] text-slate-400 leading-relaxed">{helperText}</p>
+        <p className="text-[11px] text-slate-500 leading-relaxed">{helperText}</p>
       )}
     </div>
   );

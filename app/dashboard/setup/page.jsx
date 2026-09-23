@@ -7,7 +7,7 @@ import Card, { CardHeader } from '@/components/ui/Card';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Setup Profil Bisnis — Cobascan',
+  title: 'Setup Profil Bisnis: Cobascan',
 };
 
 export default async function BusinessSetupPage() {

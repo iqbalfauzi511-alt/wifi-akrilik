@@ -55,7 +55,7 @@ export default function DashboardSidebar({ role = 'customer', businessName }) {
         {/* Business Info snippet (Customer only or Admin in customer view) */}
         {!isAdminView && businessName && (
           <div className="px-4 py-3 mx-3 my-3 bg-slate-50 border border-slate-100 rounded-xl">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
               Bisnis Aktif
             </p>
             <p className="text-sm font-bold text-slate-800 truncate mt-0.5">
@@ -83,7 +83,7 @@ export default function DashboardSidebar({ role = 'customer', businessName }) {
               >
                 <item.icon
                   className={`w-4 h-4 ${
-                    isActive ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600'
+                    isActive ? 'text-blue-600' : 'text-slate-500 group-hover:text-slate-700'
                   }`}
                 />
                 {item.name}

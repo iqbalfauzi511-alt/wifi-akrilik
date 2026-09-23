@@ -38,7 +38,7 @@ import AdminQrManager from '@/components/admin/AdminQrManager';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Cobascan Admin Center — Hardware Console',
+  title: 'Cobascan Admin Center: Hardware Console',
   description: 'Manufacturing batches, hardware provisioning, device fleet metrics, and partner businesses.',
 };
 

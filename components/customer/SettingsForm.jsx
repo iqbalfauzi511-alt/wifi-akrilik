@@ -52,7 +52,7 @@ export default function SettingsForm({ business, businesses = [] }) {
                 Pilih Outlet / Cabang Bisnis
               </span>
             </div>
-            <span className="text-[11px] font-semibold text-slate-400">
+            <span className="text-[11px] font-semibold text-slate-500">
               {stores.length} Cabang Terdaftar
             </span>
           </div>
@@ -83,7 +83,7 @@ export default function SettingsForm({ business, businesses = [] }) {
 
                   <div className="text-left">
                     <div className="leading-tight">{store.businessName}</div>
-                    <div className="text-[10px] font-normal text-slate-400">
+                    <div className="text-[10px] font-normal text-slate-500">
                       {store.wifiEnabled ? 'Wi-Fi Aktif' : 'Review Direct'}
                     </div>
                   </div>
@@ -188,7 +188,7 @@ function EditBranchForm({ store, onSuccess }) {
           </h3>
         </div>
         <div className="text-right">
-          <span className="text-[11px] text-slate-400 font-mono">
+          <span className="text-[11px] text-slate-500 font-mono">
             ID: {store.id.slice(0, 8)}...
           </span>
         </div>
@@ -217,7 +217,7 @@ function EditBranchForm({ store, onSuccess }) {
             defaultValue={store?.businessName || ''}
             error={fieldErrors.businessName}
             required
-            prefix={<Building className="w-4 h-4 text-slate-400" />}
+            prefix={<Building className="w-4 h-4 text-slate-500" />}
             helperText="Contoh: Kopi Kenangan - Senopati atau Kopi Kenangan - Kemang"
           />
 
@@ -291,7 +291,7 @@ function EditBranchForm({ store, onSuccess }) {
                 defaultValue={store?.wifiName || ''}
                 error={fieldErrors.wifiName}
                 required={isWifiEnabled}
-                prefix={<Wifi className="w-4 h-4 text-slate-400" />}
+                prefix={<Wifi className="w-4 h-4 text-slate-500" />}
                 helperText="Nama jaringan Wi-Fi lokal di lokasi cabang ini."
               />
 
@@ -302,7 +302,7 @@ function EditBranchForm({ store, onSuccess }) {
                 defaultValue={store?.wifiPassword || ''}
                 error={fieldErrors.wifiPassword}
                 required={isWifiEnabled}
-                prefix={<KeyRound className="w-4 h-4 text-slate-400" />}
+                prefix={<KeyRound className="w-4 h-4 text-slate-500" />}
                 helperText="Password Wi-Fi cabang ini. Aman dan hanya dibuka setelah pelanggan menyelesaikan ulasan."
               />
             </div>
@@ -314,7 +314,7 @@ function EditBranchForm({ store, onSuccess }) {
         </div>
 
         <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-          <p className="text-[11px] text-slate-400">
+          <p className="text-[11px] text-slate-500">
             Perubahan hanya berlaku untuk perangkat di cabang <strong>{store.businessName}</strong>.
           </p>
           <Button type="submit" isLoading={isSubmitting} size="md">

@@ -48,7 +48,7 @@ export default function Input({
             error
               ? 'border-rose-300 text-rose-900 focus:border-rose-500 focus:ring-rose-500'
               : 'border-slate-200 text-slate-900 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20'
-          } ${disabled ? 'bg-slate-50 text-slate-400 cursor-not-allowed' : 'bg-white'} ${className}`}
+          } ${disabled ? 'bg-slate-50 text-slate-500 cursor-not-allowed' : 'bg-white'} ${className}`}
           {...props}
         />
       </div>

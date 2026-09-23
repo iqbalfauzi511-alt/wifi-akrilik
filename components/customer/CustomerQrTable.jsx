@@ -640,7 +640,7 @@ export default function CustomerQrTable({
                 </p>
                 <QRCodeViewer
                   code={selectedQr.code}
-                  subtitle={`${selectedQr.businessName || businessName} — Wi-Fi`}
+                  subtitle={`${selectedQr.businessName || businessName}: Wi-Fi`}
                   size={220}
                   showActions={true}
                   path="/wifi"

@@ -10,7 +10,7 @@ import Button from '@/components/ui/Button';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Pengaturan — Cobascan',
+  title: 'Pengaturan: Cobascan',
 };
 
 export default async function CustomerSettingsPage() {

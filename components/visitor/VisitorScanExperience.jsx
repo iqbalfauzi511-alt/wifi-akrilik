@@ -163,7 +163,7 @@ export default function VisitorScanExperience({
             <Star className="w-3 h-3 fill-amber-400 text-amber-500" />
             <span>Google Review</span>
           </div>
-          <span className="text-[11px] text-slate-400 font-medium">
+          <span className="text-[11px] text-slate-500 font-medium">
             Hanya butuh ~15 detik
           </span>
         </div>
@@ -195,10 +195,11 @@ export default function VisitorScanExperience({
                 <button
                   key={star}
                   type="button"
+                  aria-label={`Beri penilaian ${star} bintang di Google Maps`}
                   onMouseEnter={() => setHoverRating(star)}
                   onMouseLeave={() => setHoverRating(0)}
                   onClick={() => handleRatingSelect(star)}
-                  className="p-1.5 transition-transform hover:scale-125 active:scale-95 focus:outline-none"
+                  className="p-1.5 transition-transform hover:scale-125 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 rounded-xl"
                   title={`Beri bintang ${star} di Google Maps`}
                 >
                   <Star
@@ -298,7 +299,7 @@ export default function VisitorScanExperience({
           {/* Wi-Fi Credentials Box */}
           <div className="bg-slate-50/90 rounded-2xl border border-slate-200/80 p-3.5 space-y-3 text-xs">
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-slate-400 text-[11px] uppercase tracking-wider">
+              <span className="font-semibold text-slate-500 text-[11px] uppercase tracking-wider">
                 NAMA WI-FI (SSID)
               </span>
               <span className="font-mono font-bold text-slate-900 text-xs sm:text-sm">
@@ -307,7 +308,7 @@ export default function VisitorScanExperience({
             </div>
 
             <div className="pt-2.5 border-t border-slate-200/70 flex items-center justify-between">
-              <span className="font-semibold text-slate-400 text-[11px] uppercase tracking-wider">
+              <span className="font-semibold text-slate-500 text-[11px] uppercase tracking-wider">
                 PASSWORD
               </span>
               <div className="flex items-center gap-2">
@@ -412,12 +413,12 @@ export default function VisitorScanExperience({
 
       {/* Clean Modern Footer */}
       <div className="py-4 text-center space-y-1">
-        <div className="flex items-center justify-center gap-1.5 text-xs text-slate-400 font-medium">
+        <div className="flex items-center justify-center gap-1.5 text-xs text-slate-500 font-medium">
           <span>Powered by</span>
           <strong className="text-slate-700 font-bold">Cobascan</strong>
           <span className="w-1.5 h-1.5 rounded-full bg-google-blue inline-block" />
         </div>
-        <p className="text-[10px] text-slate-400">
+        <p className="text-[10px] text-slate-500">
           Layanan Portal QR Code
         </p>
       </div>

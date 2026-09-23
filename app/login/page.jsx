@@ -4,7 +4,7 @@ import LoginForm from '@/components/auth/LoginForm';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Masuk — Cobascan',
+  title: 'Masuk: Cobascan',
   description: 'Platform QR + NFC untuk bisnis. Kelola ulasan Google Review dan fasilitas Wi-Fi.',
 };
 

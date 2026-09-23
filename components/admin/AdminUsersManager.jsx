@@ -208,7 +208,7 @@ export default function AdminUsersManager({
                         )}
                       </td>
                       <td className="py-3.5 px-4 text-xs font-semibold text-slate-800">
-                        {biz.wifiEnabled && biz.wifiName ? biz.wifiName : <span className="text-slate-400 italic">—</span>}
+                        {biz.wifiEnabled && biz.wifiName ? biz.wifiName : <span className="text-slate-500 italic">-</span>}
                       </td>
                       <td className="py-3.5 px-4 text-center font-bold text-slate-800">
                         {biz.qrCount} QR

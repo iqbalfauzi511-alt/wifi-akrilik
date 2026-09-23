@@ -42,9 +42,8 @@ export default function Navbar({ session }) {
         <div className="flex items-center gap-3">
           {session?.user ? (
             <Link href="/dashboard" className="hidden sm:block">
-              <Button variant="primary" size="sm" className="gap-1.5">
+              <Button variant="primary" size="sm">
                 Dashboard
-                <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
           ) : (
@@ -57,7 +56,9 @@ export default function Navbar({ session }) {
 
           {/* Mobile Menu Toggle */}
           <button 
-            className="md:hidden p-2 text-slate-600 hover:text-slate-900 focus:outline-none"
+            type="button"
+            aria-label={isMobileMenuOpen ? 'Tutup navigasi' : 'Buka navigasi'}
+            className="md:hidden p-2 text-slate-600 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 rounded-lg transition-colors"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -93,9 +94,8 @@ export default function Navbar({ session }) {
           <div className="pt-2">
             {session?.user ? (
               <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
-                <Button variant="primary" className="w-full gap-1.5 justify-center">
+                <Button variant="primary" className="w-full justify-center">
                   Dashboard
-                  <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
             ) : (

@@ -30,7 +30,7 @@ import CustomerQrTable from '@/components/customer/CustomerQrTable';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Dashboard — Cobascan',
+  title: 'Dashboard: Cobascan',
 };
 
 export default async function CustomerDashboardPage() {
@@ -240,11 +240,11 @@ export default async function CustomerDashboardPage() {
                   {business.wifiEnabled && (
                     <div className="mt-3 pt-2.5 border-t border-slate-200 flex flex-wrap items-center gap-4 text-xs text-slate-600">
                       <div>
-                        <span className="text-slate-400">Nama Wi-Fi:</span>{' '}
-                        <strong className="text-slate-900">{business.wifiName || '—'}</strong>
+                        <span className="text-slate-500">Nama Wi-Fi:</span>{' '}
+                        <strong className="text-slate-900">{business.wifiName || '-'}</strong>
                       </div>
                       <div>
-                        <span className="text-slate-400">Password:</span>{' '}
+                        <span className="text-slate-500">Password:</span>{' '}
                         <span className="font-mono font-bold text-slate-900 tracking-wider">••••••••••</span>
                       </div>
                       {myQrs.length > 0 && (

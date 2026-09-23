@@ -47,7 +47,7 @@ export default function MobileBottomNav({ role = 'customer' }) {
                 : 'text-slate-500 hover:text-slate-900 font-medium'
             }`}
           >
-            <Icon className={`w-5 h-5 ${isActive ? 'text-brand-600 stroke-[2.5]' : 'text-slate-400'}`} />
+            <Icon className={`w-5 h-5 ${isActive ? 'text-brand-600 stroke-[2.5]' : 'text-slate-500'}`} />
             <span className="text-[10px] mt-0.5 tracking-tight">{item.name}</span>
           </Link>
         );

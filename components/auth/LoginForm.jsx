@@ -140,7 +140,7 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
                 value={customEmail}
                 onChange={(e) => setCustomEmail(e.target.value)}
                 placeholder="nama@gmail.com / kafe@bisnis.com"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all bg-white"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all bg-white"
               />
               <p className="mt-1 text-[11px] text-slate-500">
                 Gunakan email yang sama saat membeli perangkat baru agar seluruh produk terkumpul di satu dashboard.
@@ -154,7 +154,6 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
               className="w-full shadow-md shadow-brand-600/20"
             >
               <span>{isActivationFlow ? 'Masuk & Lanjutkan Aktivasi' : 'Masuk ke Dashboard'}</span>
-              <ArrowRight className="w-4 h-4 ml-1.5" />
             </Button>
           </form>
 
@@ -164,7 +163,7 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
               <div className="w-full border-t border-slate-200" />
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="bg-white px-3 text-slate-400 font-bold uppercase tracking-wider text-[10px]">
+              <span className="bg-white px-3 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
                 ATAU DENGAN GOOGLE
               </span>
             </div>

@@ -201,7 +201,7 @@ export default function ActivationForm({
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
                 Pilih Toko / Cabang Tujuan:
               </label>
-              <span className="text-[11px] text-slate-400 font-mono">
+              <span className="text-[11px] text-slate-500 font-mono">
                 {selectedStoreId === 'new' ? 'Pendaftaran Cabang Baru' : 'Menautkan ke Cabang Terdaftar'}
               </span>
             </div>
@@ -230,7 +230,7 @@ export default function ActivationForm({
                             className="w-full h-full object-contain rounded-lg"
                           />
                         ) : (
-                          <Building className="w-4 h-4 text-slate-400" />
+                          <Building className="w-4 h-4 text-slate-500" />
                         )}
                       </div>
                       <div className="truncate">
@@ -288,7 +288,7 @@ export default function ActivationForm({
             autoComplete="off"
             error={fieldErrors.businessName}
             required
-            prefix={<Building className="w-4 h-4 text-slate-400" />}
+            prefix={<Building className="w-4 h-4 text-slate-500" />}
             helperText="Nama toko/cabang ini akan tampil di bagian atas halaman saat pelanggan scan QR atau tap NFC."
           />
         </div>
@@ -398,7 +398,7 @@ export default function ActivationForm({
                 autoComplete="off"
                 error={fieldErrors.wifiName}
                 required={isWifiEnabled}
-                prefix={<Wifi className="w-4 h-4 text-slate-400" />}
+                prefix={<Wifi className="w-4 h-4 text-slate-500" />}
                 helperText="Nama SSID jaringan Wi-Fi bisnis Anda."
               />
             </div>
@@ -414,7 +414,7 @@ export default function ActivationForm({
                 autoComplete="off"
                 error={fieldErrors.wifiPassword}
                 required={isWifiEnabled}
-                prefix={<KeyRound className="w-4 h-4 text-slate-400" />}
+                prefix={<KeyRound className="w-4 h-4 text-slate-500" />}
                 helperText="Password ini disembunyikan sampai customer selesai membuka Google Review."
               />
             </div>

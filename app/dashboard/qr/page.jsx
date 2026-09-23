@@ -11,7 +11,7 @@ import Button from '@/components/ui/Button';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Perangkat Cobascan — Cobascan',
+  title: 'Perangkat Cobascan: Cobascan',
 };
 
 export default async function CustomerQrPage() {

@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }) {
   const { code } = params;
   return {
-    title: `Cobascan — ${code}`,
+    title: `Cobascan: ${code}`,
     description: 'Cobascan: Google Review & akses bisnis.',
   };
 }
@@ -102,7 +102,7 @@ export default async function VisitorQrPage({ params }) {
   }
 
   // Case 4: QR Active!
-  // 1. Record visitor scan asynchronously in scan_logs (safely ignored if fails)
+  // Record visitor scan asynchronously in scan_logs
   try {
     const headersList = headers();
     const userAgent = headersList.get('user-agent') || 'Unknown';
@@ -111,7 +111,7 @@ export default async function VisitorQrPage({ params }) {
     console.warn('Scan logging error (ignored):', err);
   }
 
-  // 2. Validate Google Maps Review URL (strict database URL only, no query params)
+  // Validate Google Maps Review URL
   const rawMapsUrl = (qr.googleMapsReviewUrl || qr.googleMapsUrl)?.trim();
   const mapsValidation = validateGoogleMapsUrl(rawMapsUrl);
 
@@ -136,9 +136,7 @@ export default async function VisitorQrPage({ params }) {
     );
   }
 
-  // 3. Conditional behavior based on business configuration:
-  // JIKA MEMILIH WI-FI (wifi_enabled === true) ->
-  // Tampilkan halaman review-gate: pengunjung klik untuk beri review Google Maps, lalu kembali untuk melihat password Wi-Fi.
+  // Display review & Wi-Fi experience if enabled, otherwise redirect directly to Google Maps
   if (qr.wifiEnabled) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">

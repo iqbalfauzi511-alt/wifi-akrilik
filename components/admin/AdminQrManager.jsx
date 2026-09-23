@@ -1224,7 +1224,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
           <div className="pt-2">
             <QRCodeViewer
               code={selectedQr.code}
-              subtitle={selectedQr.businessName || `Batch ${selectedQr.batchCode || ''} — Siap Cetak`}
+              subtitle={selectedQr.businessName || `Batch ${selectedQr.batchCode || ''}: Siap Cetak`}
               size={220}
               showActions={true}
             />

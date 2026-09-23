@@ -8,7 +8,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: 'Cobascan — Scan. Tap. Connect. Review.',
+  title: 'Cobascan: Scan, Tap, Connect, Review',
   description:
     'Platform QR + NFC untuk bisnis. Hubungkan pelanggan langsung ke Google Review bisnis Anda dan sediakan akses Wi-Fi dalam satu scan atau tap.',
   keywords: 'cobascan, qr nfc bisnis, google review qr, nfc review, qr wifi, tap nfc, smart qr',

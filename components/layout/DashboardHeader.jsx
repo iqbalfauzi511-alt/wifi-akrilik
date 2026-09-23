@@ -32,14 +32,14 @@ export default function DashboardHeader({ title, subtitle, session }) {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <UserIcon className="w-4 h-4 text-slate-400" />
+              <UserIcon className="w-4 h-4 text-slate-500" />
             )}
           </div>
           <div className="hidden sm:block text-left">
             <div className="text-xs font-semibold text-slate-900 leading-none">
               {session?.user?.name || session?.user?.email || 'User'}
             </div>
-            <div className="text-[10px] text-slate-400 mt-0.5 truncate max-w-[140px]">
+            <div className="text-[10px] text-slate-500 mt-0.5 truncate max-w-[140px]">
               {session?.user?.email}
             </div>
           </div>
@@ -55,7 +55,8 @@ export default function DashboardHeader({ title, subtitle, session }) {
           <button
             type="submit"
             title="Keluar"
-            className="p-2 text-slate-400 hover:text-rose-600 rounded-xl hover:bg-rose-50 transition-colors"
+            aria-label="Keluar"
+            className="p-2 text-slate-500 hover:text-rose-600 rounded-xl hover:bg-rose-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
           >
             <LogOut className="w-4 h-4" />
           </button>
