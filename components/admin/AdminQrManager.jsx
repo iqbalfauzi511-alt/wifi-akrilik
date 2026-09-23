@@ -55,6 +55,10 @@ export default function AdminQrManager({ initialQrs = [] }) {
   const [statusFilter, setStatusFilter] = useState('all');
   const [batchFilter, setBatchFilter] = useState('all');
   const [selectedQr, setSelectedQr] = useState(null);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
 
   // Multi-select state
   const [selectedIds, setSelectedIds] = useState(new Set());
@@ -110,6 +114,17 @@ export default function AdminQrManager({ initialQrs = [] }) {
       return matchesStatus && matchesBatch && matchesSearch;
     });
   }, [qrList, statusFilter, batchFilter, searchTerm]);
+
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, statusFilter, batchFilter]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredQrs.length / itemsPerPage));
+  const paginatedQrs = filteredQrs.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   // Mass Generate handler (Creates 1 batch or individual QRs)
   const handleMassGenerate = async (e) => {
@@ -794,14 +809,14 @@ export default function AdminQrManager({ initialQrs = [] }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {filteredQrs.length === 0 ? (
+              {paginatedQrs.length === 0 ? (
                 <tr>
                   <td colSpan={11} className="py-12 text-center text-xs text-slate-400">
                     Tidak ditemukan QR Code yang cocok dengan filter atau pencarian.
                   </td>
                 </tr>
               ) : (
-                filteredQrs.map((qr) => {
+                paginatedQrs.map((qr) => {
                   const isSelected = selectedIds.has(qr.id);
                   return (
                     <tr
@@ -969,6 +984,39 @@ export default function AdminQrManager({ initialQrs = [] }) {
             )}
           </tbody>
           </table>
+        </div>
+        
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between px-4 py-3 border-t border-slate-200/80 bg-slate-50">
+            <div className="text-xs text-slate-500">
+              Menampilkan <span className="font-semibold text-slate-700">{(currentPage - 1) * itemsPerPage + 1}</span> - <span className="font-semibold text-slate-700">{Math.min(currentPage * itemsPerPage, filteredQrs.length)}</span> dari <span className="font-semibold text-slate-700">{filteredQrs.length}</span> QR Code
+            </div>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                className="text-xs py-1 px-2.5 h-auto shadow-none bg-white"
+              >
+                Sebelumnya
+              </Button>
+              <div className="px-3 text-xs font-medium text-slate-700">
+                Halaman {currentPage} dari {totalPages}
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                className="text-xs py-1 px-2.5 h-auto shadow-none bg-white"
+              >
+                Selanjutnya
+              </Button>
+            </div>
+          </div>
+        )}
         </div>
       </div>
 

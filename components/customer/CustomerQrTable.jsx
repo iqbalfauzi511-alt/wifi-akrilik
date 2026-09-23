@@ -44,6 +44,10 @@ export default function CustomerQrTable({
   const [selectedQr, setSelectedQr] = useState(null);
   const [activeTab, setActiveTab] = useState('review'); // 'review' | 'wifi'
   const [selectedStoreFilter, setSelectedStoreFilter] = useState('all');
+  
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   // Extract store options for filtering
   const storeOptions = React.useMemo(() => {
@@ -61,6 +65,16 @@ export default function CustomerQrTable({
       (q) => (q.businessName || businessName || 'Outlet Utama') === selectedStoreFilter
     );
   }, [qrList, businessName, selectedStoreFilter]);
+
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedStoreFilter]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredQrList.length / itemsPerPage));
+  const paginatedQrList = filteredQrList.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   // Multi-select state
   const [selectedIds, setSelectedIds] = useState(new Set());
@@ -397,7 +411,7 @@ export default function CustomerQrTable({
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {filteredQrList.map((qr) => {
+            {paginatedQrList.map((qr) => {
               const isSelected = selectedIds.has(qr.id);
               return (
                 <tr
@@ -497,6 +511,38 @@ export default function CustomerQrTable({
           </tbody>
         </table>
       </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="mt-4 flex items-center justify-between px-4 py-3 rounded-xl border border-slate-200 bg-white shadow-sm">
+          <div className="text-xs text-slate-500">
+            Menampilkan <span className="font-semibold text-slate-700">{(currentPage - 1) * itemsPerPage + 1}</span> - <span className="font-semibold text-slate-700">{Math.min(currentPage * itemsPerPage, filteredQrList.length)}</span> dari <span className="font-semibold text-slate-700">{filteredQrList.length}</span> perangkat
+          </div>
+          <div className="flex items-center gap-1">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              className="text-xs py-1 px-2.5 h-auto shadow-none"
+            >
+              Sebelumnya
+            </Button>
+            <div className="px-3 text-xs font-medium text-slate-700">
+              Halaman {currentPage} dari {totalPages}
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              className="text-xs py-1 px-2.5 h-auto shadow-none"
+            >
+              Selanjutnya
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Confirmation Modal for Bulk Unlink */}
       <Modal
