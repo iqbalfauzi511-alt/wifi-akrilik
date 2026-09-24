@@ -6,6 +6,8 @@ export async function GET(request) {
   const code = searchParams.get('code');
   const next = searchParams.get('next') || '/dashboard';
 
+  let errorMessage = 'oauth_failed';
+
   if (code) {
     const supabase = createClient();
     if (supabase) {
@@ -50,10 +52,17 @@ export async function GET(request) {
         }
 
         return NextResponse.redirect(`${origin}${targetUrl}`);
+      } else {
+        errorMessage = error.message;
+        console.error('OAuth exchange error:', error);
       }
+    } else {
+      errorMessage = 'Supabase client not configured';
     }
+  } else {
+    errorMessage = searchParams.get('error_description') || 'No code provided';
   }
 
   // Return the user to an error page or login with instructions
-  return NextResponse.redirect(`${origin}/login?error=oauth_failed`);
+  return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(errorMessage)}`);
 }
