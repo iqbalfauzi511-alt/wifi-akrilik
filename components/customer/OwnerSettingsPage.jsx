@@ -15,6 +15,7 @@ import {
   WifiOff,
   Settings,
   Layers,
+  ImageIcon,
 } from 'lucide-react';
 import { updateBusinessWifiAction } from '@/lib/actions/business-actions';
 import { createClient } from '@/lib/supabase/client';
@@ -96,6 +97,7 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
             ? {
                 ...s,
                 businessName: formData.get('businessName') || s.businessName,
+                logoUrl: formData.get('logoUrl') || s.logoUrl,
                 googleMapsReviewUrl: formData.get('googleMapsReviewUrl') || s.googleMapsReviewUrl,
                 whatsappNumber: formData.get('whatsappNumber') || s.whatsappNumber,
                 wifiEnabled: isWifiEnabled,
@@ -214,6 +216,16 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
                 placeholder="Kopi Senja"
                 required
                 icon={Building2}
+              />
+            </Field>
+
+            <Field label="URL Logo Bisnis" helperText="Link gambar logo (jpg/png). Tampil saat pengunjung scan QR.">
+              <TextInput
+                name="logoUrl"
+                type="url"
+                defaultValue={activeStore.logoUrl}
+                placeholder="https://..."
+                icon={ImageIcon}
               />
             </Field>
 

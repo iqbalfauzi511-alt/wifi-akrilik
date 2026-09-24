@@ -48,6 +48,7 @@ export default function ActivationForm({
   const [wifiNameVal, setWifiNameVal] = useState(storeList[0]?.wifiName || '');
   const [wifiPasswordVal, setWifiPasswordVal] = useState(storeList[0]?.wifiPassword || '');
   const [whatsappVal, setWhatsappVal] = useState('');
+  const [logoUrlVal, setLogoUrlVal] = useState(storeList[0]?.logoUrl || '');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -218,7 +219,26 @@ export default function ActivationForm({
             />
           </div>
 
-          {/* Field 3: Link Google Maps / Review */}
+          {/* Field: Logo Bisnis */}
+          <div>
+            <label htmlFor="logoUrlInput" className="block text-xs font-bold text-slate-800 mb-1.5">
+              URL Logo Bisnis <span className="text-slate-400 font-normal">(Opsional)</span>
+            </label>
+            <input
+              id="logoUrlInput"
+              name="logoUrl"
+              type="url"
+              value={logoUrlVal}
+              onChange={(e) => setLogoUrlVal(e.target.value)}
+              placeholder="https://..."
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1A73E8] focus:border-transparent transition-all bg-white"
+            />
+            <p className="mt-1.5 text-[11px] text-slate-500">
+              Paste URL gambar logo (jpg/png). Tampil di halaman pelanggan saat scan QR.
+            </p>
+          </div>
+
+          {/* Field: Link Google Maps / Review */}
           <div>
             <label htmlFor="mapsUrlInput" className="block text-xs font-bold text-slate-800 mb-1.5">
               Link Google Maps / Review <span className="text-rose-500">*</span>
