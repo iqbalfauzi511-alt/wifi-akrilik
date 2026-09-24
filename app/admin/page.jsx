@@ -18,6 +18,9 @@ import {
 } from 'lucide-react';
 import { getAdminStats } from '@/lib/db/queries/stats';
 import { getAllQrsAdmin, getAllBatchesAdmin } from '@/lib/db/queries/qr';
+import { db } from '@/lib/db';
+import { businesses, qrCodes } from '@/lib/db/schema';
+import { desc, eq, isNull } from 'drizzle-orm';
 import DashboardHeader from '@/components/layout/DashboardHeader';
 import AdminQrManager from '@/components/admin/AdminQrManager';
 
@@ -39,90 +42,47 @@ export default async function AdminDashboardPage() {
   const totalScan = stats.totalScans || 2841;
   const totalReview = Math.round(totalScan * 0.15) || 412;
 
-  // Recent business records matching Image 3 mockup
-  const recentBusinesses = [
-    {
-      id: '1',
-      name: 'Kopi Senja',
-      category: 'Kafe',
-      initials: 'KS',
-      color: 'bg-blue-100 text-blue-700',
-      devices: 3,
-      scans: 542,
-      reviews: 86,
-      status: 'Aktif',
-    },
-    {
-      id: '2',
-      name: 'Ruang Temu',
-      category: 'Restoran',
-      initials: 'RT',
-      color: 'bg-purple-100 text-purple-700',
-      devices: 2,
-      scans: 301,
-      reviews: 54,
-      status: 'Aktif',
-    },
-    {
-      id: '3',
-      name: 'Dapoer Kita',
-      category: 'Restoran',
-      initials: 'DK',
-      color: 'bg-amber-100 text-amber-700',
-      devices: 5,
-      scans: 728,
-      reviews: 112,
-      status: 'Aktif',
-    },
-    {
-      id: '4',
-      name: 'Titik Kumpul',
-      category: 'Kafe',
-      initials: 'TK',
-      color: 'bg-rose-100 text-rose-700',
-      devices: 1,
-      scans: 120,
-      reviews: 18,
-      status: 'Aktif',
-    },
-    {
-      id: '5',
-      name: 'Warung 77',
-      category: 'Kuliner',
-      initials: 'W7',
-      color: 'bg-sky-100 text-sky-700',
-      devices: 4,
-      scans: 416,
-      reviews: 64,
-      status: 'Nonaktif',
-    },
+  // Fetch actual recent businesses
+  const dbBusinesses = await db
+    .select()
+    .from(businesses)
+    .orderBy(desc(businesses.createdAt))
+    .limit(5)
+    .catch(() => []);
+
+  const colors = [
+    'bg-blue-100 text-blue-700',
+    'bg-purple-100 text-purple-700',
+    'bg-amber-100 text-amber-700',
+    'bg-rose-100 text-rose-700',
+    'bg-sky-100 text-sky-700',
   ];
 
-  // Devices needing attention
-  const attentionDevices = [
-    { code: 'QR #CSN-0721', business: 'Kopi Senja', issue: 'Tidak aktif', isAmber: false },
-    { code: 'NFC #CSN-0854', business: 'Ruang Temu', issue: 'Tidak aktif', isAmber: false },
-    { code: 'QR #CSN-0910', business: 'Dapoer Kita', issue: 'Perlu reset', isAmber: true },
-    { code: 'NFC #CSN-0922', business: 'Titik Kumpul', issue: 'Tidak aktif', isAmber: false },
-  ];
+  const recentBusinesses = dbBusinesses.map((b, idx) => ({
+    id: b.id,
+    name: b.businessName,
+    category: 'Bisnis',
+    initials: b.businessName.substring(0, 2).toUpperCase(),
+    color: colors[idx % colors.length],
+    devices: allQrs.filter((q) => q.businessId === b.id).length,
+    scans: 0, // Activity log not implemented yet
+    reviews: 0,
+    status: b.wifiEnabled ? 'Aktif' : 'Nonaktif',
+  }));
 
-  // Recent activity events
-  const recentActivities = [
-    {
-      icon: Users,
-      text: 'Pengunjung membuka Google Review',
-      business: 'Kopi Senja',
-      time: '2 menit lalu',
-      color: 'bg-blue-100 text-blue-600',
-    },
-    {
-      icon: Wifi,
-      text: 'Pengunjung melihat password Wi-Fi',
-      business: 'Ruang Temu',
-      time: '5 menit lalu',
-      color: 'bg-blue-100 text-blue-600',
-    },
-  ];
+  // Devices needing attention: Blank/Unassigned QR codes
+  const attentionDevices = allQrs
+    .filter((q) => q.status === 'blank' || !q.businessId)
+    .slice(0, 4)
+    .map((q) => ({
+      code: q.code.substring(0, 12) + '...',
+      business: 'Belum Terpasang',
+      issue: 'Siap Digunakan',
+      isAmber: false,
+    }));
+
+  // Recent activity events (Activity log not implemented, returning empty or placeholder)
+  const recentActivities = [];
 
   return (
     <div className="space-y-6 pb-12">
@@ -365,13 +325,6 @@ export default async function AdminDashboardPage() {
                 <div className="font-bold text-slate-900">980 <span className="text-slate-400 font-normal">35%</span></div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
-                  <span className="text-slate-600 font-medium">Buka Instagram</span>
-                </div>
-                <div className="font-bold text-slate-900">416 <span className="text-slate-400 font-normal">15%</span></div>
-              </div>
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
