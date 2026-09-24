@@ -143,7 +143,9 @@ export default async function VisitorWifiPage({ params }) {
         googleMapsReviewUrl={qr.googleMapsReviewUrl || qr.googleMapsUrl}
         googleMapsUrl={qr.googleMapsUrl}
         wifiEnabled={true}
-        wifiName={qr.wifiName}
+        wifiName={qr.wifiName || 'Wi-Fi Tamu'}
+        wifiPassword={qr.wifiPassword || ''}
+        whatsappNumber={qr.whatsappNumber || ''}
       />
     </div>
   );
