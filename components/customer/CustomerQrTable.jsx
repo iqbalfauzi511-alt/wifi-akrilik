@@ -629,9 +629,14 @@ export default function CustomerQrTable({
                   code={selectedQr.code}
                   subtitle={selectedQr.businessName || businessName}
                   size={220}
-                  showActions={true}
-                  path=""
+                  showActions={false}
+                  customUrl={selectedQr.googleMapsReviewUrl || selectedQr.googleMapsUrl || undefined}
                 />
+                {!(selectedQr.googleMapsReviewUrl || selectedQr.googleMapsUrl) && (
+                  <p className="text-[11px] text-amber-600 text-center mt-2">
+                    ⚠ URL Google Maps belum dikonfigurasi. Atur di menu Pengaturan.
+                  </p>
+                )}
               </div>
             ) : (
               <div>
@@ -642,11 +647,39 @@ export default function CustomerQrTable({
                   code={selectedQr.code}
                   subtitle={`${selectedQr.businessName || businessName}: Wi-Fi`}
                   size={220}
-                  showActions={true}
+                  showActions={false}
                   path="/wifi"
                 />
               </div>
             )}
+            {/* Only allow copy URL, no download */}
+            <div className="flex items-center gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  const origin = window.location.origin;
+                  const url = activeTab === 'review'
+                    ? (selectedQr.googleMapsReviewUrl || selectedQr.googleMapsUrl || `${origin}/q/${selectedQr.code}`)
+                    : `${origin}/q/${selectedQr.code}/wifi`;
+                  navigator.clipboard.writeText(url);
+                }}
+                className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl border border-slate-200 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                Salin URL
+              </button>
+              <a
+                href={activeTab === 'review'
+                  ? (selectedQr.googleMapsReviewUrl || selectedQr.googleMapsUrl || `/q/${selectedQr.code}`)
+                  : `/q/${selectedQr.code}/wifi`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 transition-colors"
+                title="Buka preview"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+              </a>
+            </div>
           </div>
         )}
       </Modal>
