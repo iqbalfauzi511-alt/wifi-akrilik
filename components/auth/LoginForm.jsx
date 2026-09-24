@@ -145,27 +145,6 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
     }
   };
 
-  // Quick Demo Shortcut for Evaluator
-  const handleQuickDemo = async (demoEmail) => {
-    setEmailVal(demoEmail);
-    setPasswordVal('cobascan2026');
-    setIsSubmitting(true);
-    setErrorMessage('');
-    try {
-      const isAdmin = demoEmail === 'admin@smartwifi.com';
-      await devLoginAction({
-        email: demoEmail,
-        name: isAdmin ? 'Admin Cobascan' : 'Kopi Senja',
-        nextUrl: isAdmin ? '/admin' : '/dashboard',
-        allowSignup: true,
-      });
-    } catch (err) {
-      setIsSubmitting(false);
-      if (err?.message?.includes('NEXT_REDIRECT')) return;
-      setErrorMessage(err?.message || 'Gagal masuk ke mode demo');
-    }
-  };
-
   return (
     <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xl shadow-slate-200/50 p-8 sm:p-10 max-w-md w-full mx-auto">
       {/* Brand Header matching Image 2 */}
@@ -388,29 +367,6 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
             </button>
           </p>
         )}
-      </div>
-
-      {/* Developer Demo Account Shortcuts */}
-      <div className="mt-8 pt-5 border-t border-slate-100">
-        <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider text-center mb-2.5">
-          Akun Demo Langsung
-        </div>
-        <div className="grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            onClick={() => handleQuickDemo('ahmad@kopisenja.com')}
-            className="py-2 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-[11px] font-semibold text-slate-700 text-center transition-colors"
-          >
-            Pemilik Bisnis
-          </button>
-          <button
-            type="button"
-            onClick={() => handleQuickDemo('admin@smartwifi.com')}
-            className="py-2 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-[11px] font-semibold text-slate-700 text-center transition-colors"
-          >
-            Admin Cobascan
-          </button>
-        </div>
       </div>
     </div>
   );

@@ -138,7 +138,7 @@ export default async function CustomerWifiPage() {
               <input
                 type="text"
                 name="wifiPassword"
-                defaultValue={business?.wifiPassword || 'kopisenja2026'}
+                defaultValue={business?.wifiPassword || ''}
                 required
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#1A73E8]"
               />
@@ -173,7 +173,7 @@ export default async function CustomerWifiPage() {
                   <div>
                     <span className="text-slate-400 block text-[11px]">Password:</span>
                     <span className="font-mono font-bold text-slate-800 tracking-wider">
-                      {business.wifiPassword || 'kopisenja2026'}
+                      {business.wifiPassword || ''}
                     </span>
                   </div>
                   <span className="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-lg text-[10px] font-bold">
