@@ -18,7 +18,8 @@ export async function generateMetadata({ params }) {
 
 export default async function VisitorWifiPage({ params }) {
   const { code } = params;
-  const qr = await getPublicQrByCode(code);
+  const normalizedCode = code?.trim().toUpperCase().replace(/[\u2013\u2014]/g, '-') || '';
+  const qr = await getPublicQrByCode(normalizedCode);
 
   // Case 1: QR not found
   if (!qr) {
@@ -30,7 +31,7 @@ export default async function VisitorWifiPage({ params }) {
           </div>
           <h2 className="text-xl font-bold text-slate-900 mb-2">Cobascan Tidak Ditemukan</h2>
           <p className="text-sm text-slate-500 mb-6 leading-relaxed">
-            Kode yang Anda akses (<span className="font-mono font-semibold">{code}</span>) tidak terdaftar pada sistem Cobascan.
+            Kode yang Anda akses (<span className="font-mono font-semibold">{normalizedCode}</span>) tidak terdaftar pada sistem Cobascan.
           </p>
           <Link href="/">
             <Button variant="outline" className="w-full">

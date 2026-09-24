@@ -18,14 +18,15 @@ export const metadata = {
 
 export default async function ActivateQrPage({ params }) {
   const { code } = params;
+  const normalizedCode = code?.trim().toUpperCase().replace(/[\u2013\u2014]/g, '-') || '';
   const session = await getCurrentSession();
 
   // If user is not authenticated, redirect to login with return URL
   if (!session?.user) {
-    redirect(`/login?next=/activate/${code}`);
+    redirect(`/login?next=/activate/${normalizedCode}`);
   }
 
-  const qr = await getQrByCode(code);
+  const qr = await getQrByCode(normalizedCode);
   const userBusinesses = session?.user?.id
     ? await getBusinessesByOwnerId(session.user.id)
     : [];
@@ -40,7 +41,7 @@ export default async function ActivateQrPage({ params }) {
           </div>
           <h2 className="text-xl font-bold text-slate-900 mb-2">QR Code Tidak Ditemukan</h2>
           <p className="text-sm text-slate-500 mb-6 leading-relaxed">
-            Kode QR <span className="font-mono font-semibold">{code}</span> tidak terdaftar dalam database kami.
+            Kode QR <span className="font-mono font-semibold">{normalizedCode}</span> tidak terdaftar dalam database kami.
           </p>
           <Link href="/dashboard">
             <Button variant="outline" className="w-full">
