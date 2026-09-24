@@ -15,14 +15,18 @@ export default function MobileBottomNav({ role = 'customer' }) {
 
   const customerNav = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, exact: true },
-    { name: 'Cobascan', href: '/dashboard/qr', icon: QrCode },
+    { name: 'Perangkat', href: '/dashboard/devices', icon: QrCode },
+    { name: 'Ulasan', href: '/dashboard/reviews', icon: Users },
+    { name: 'Wi-Fi', href: '/dashboard/wifi', icon: Settings },
     { name: 'Pengaturan', href: '/dashboard/settings', icon: Settings },
   ];
 
   const adminNav = [
-    { name: 'Ringkasan', href: '/admin', icon: LayoutDashboard, exact: true },
-    { name: 'Cobascan', href: '/admin/qr', icon: QrCode },
-    { name: 'Users', href: '/admin/users', icon: Users },
+    { name: 'Dashboard', href: '/admin', icon: LayoutDashboard, exact: true },
+    { name: 'Bisnis', href: '/admin/businesses', icon: Users },
+    { name: 'Perangkat', href: '/admin/devices', icon: QrCode },
+    { name: 'Pengguna', href: '/admin/users', icon: Users },
+    { name: 'Pengaturan', href: '/admin/settings', icon: Settings },
   ];
 
   const isAdminView = role === 'admin' && pathname.startsWith('/admin');

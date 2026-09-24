@@ -136,24 +136,19 @@ export default async function VisitorQrPage({ params }) {
     );
   }
 
-  // Display review & Wi-Fi experience if enabled, otherwise redirect directly to Google Maps
-  if (qr.wifiEnabled) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
-        <VisitorScanExperience
-          code={qr.code}
-          businessName={qr.businessName}
-          logoUrl={qr.logoUrl}
-          googleMapsReviewUrl={mapsValidation.normalized}
-          googleMapsUrl={mapsValidation.normalized}
-          wifiEnabled={true}
-          wifiName={qr.wifiName}
-        />
-      </div>
-    );
-  }
-
-  // JIKA HANYA MEMILIH MAPS (wifi_enabled === false) ->
-  // Langsung direct redirect 100% otomatis ke Google Maps Review URL!
-  redirect(mapsValidation.normalized);
+  return (
+    <div className="min-h-screen flex items-center justify-center p-4 bg-[#F8FAFC]">
+      <VisitorScanExperience
+        code={qr.code}
+        businessName={qr.businessName}
+        logoUrl={qr.logoUrl}
+        googleMapsReviewUrl={mapsValidation.normalized}
+        googleMapsUrl={mapsValidation.normalized}
+        wifiEnabled={Boolean(qr.wifiEnabled)}
+        wifiName={qr.wifiName || 'Wi-Fi Tamu'}
+        wifiPassword={qr.wifiPassword || ''}
+        whatsappNumber={qr.whatsappNumber || ''}
+      />
+    </div>
+  );
 }

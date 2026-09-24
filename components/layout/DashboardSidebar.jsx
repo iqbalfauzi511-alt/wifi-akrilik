@@ -22,30 +22,29 @@ export default function DashboardSidebar({ role = 'customer', session }) {
   const pathname = usePathname();
   const isAdmin = role === 'admin' || pathname.startsWith('/admin');
 
-  // Navigation items matching Image 3 design
+  // Navigation items matching user requirements
   const navItems = isAdmin
     ? [
         { name: 'Dashboard', href: '/admin', icon: LayoutDashboard, exact: true },
-        { name: 'Perangkat', href: '/admin/qr', icon: TabletSmartphone },
-        { name: 'Bisnis', href: '/admin/users', icon: Store },
-        { name: 'Statistik', href: '/admin#statistik', icon: BarChart3 },
+        { name: 'Bisnis', href: '/admin/businesses', icon: Store },
+        { name: 'Perangkat', href: '/admin/devices', icon: TabletSmartphone },
         { name: 'Pengguna', href: '/admin/users', icon: Users },
-        { name: 'QR Code', href: '/admin/qr', icon: QrCode },
-        { name: 'Pengaturan', href: '/admin/users', icon: Settings },
+        { name: 'Statistik', href: '/admin/stats', icon: BarChart3 },
+        { name: 'Pengaturan', href: '/admin/settings', icon: Settings },
       ]
     : [
         { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, exact: true },
-        { name: 'Perangkat', href: '/dashboard/qr', icon: TabletSmartphone },
-        { name: 'Bisnis', href: '/dashboard/settings', icon: Store },
-        { name: 'Statistik', href: '/dashboard#statistik', icon: BarChart3 },
-        { name: 'Aktivasi Baru', href: '/dashboard/setup', icon: QrCode },
+        { name: 'Perangkat', href: '/dashboard/devices', icon: TabletSmartphone },
+        { name: 'Statistik', href: '/dashboard/stats', icon: BarChart3 },
+        { name: 'Ulasan', href: '/dashboard/reviews', icon: Star },
+        { name: 'Wi-Fi', href: '/dashboard/wifi', icon: Wifi },
         { name: 'Pengaturan', href: '/dashboard/settings', icon: Settings },
       ];
 
   const userName = isAdmin
-    ? 'Admin'
-    : session?.user?.name || session?.user?.email?.split('@')[0] || 'Pemilik Usaha';
-  const userSub = isAdmin ? 'Administrator' : session?.user?.email || 'Partner Cobascan';
+    ? 'Admin Cobascan'
+    : session?.user?.name || session?.user?.email?.split('@')[0] || 'Pemilik Bisnis';
+  const userSub = isAdmin ? 'Administrator' : session?.business?.businessName || session?.user?.email || 'Pemilik Bisnis';
 
   return (
     <aside className="hidden lg:flex w-64 bg-white border-r border-slate-200 flex-col shrink-0 min-h-screen sticky top-0 h-screen justify-between z-30">

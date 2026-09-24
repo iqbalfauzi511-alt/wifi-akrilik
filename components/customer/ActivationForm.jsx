@@ -67,7 +67,13 @@ export default function ActivationForm({
     formData.set('googleMapsReviewUrl', mapsUrlVal);
     formData.set('wifiEnabled', isWifiEnabled ? 'true' : 'false');
     formData.set('wifiName', wifiNameVal);
-    formData.set('wifiPassword', wifiPasswordVal);
+    let cleanWhatsapp = (whatsappVal || '').replace(/[^0-9]/g, '');
+    if (cleanWhatsapp.startsWith('0')) {
+      cleanWhatsapp = '62' + cleanWhatsapp.substring(1);
+    } else if (cleanWhatsapp && !cleanWhatsapp.startsWith('62')) {
+      cleanWhatsapp = '62' + cleanWhatsapp;
+    }
+    formData.set('whatsappNumber', cleanWhatsapp);
     formData.set('targetBusinessId', selectedStoreId);
     formData.set('isNewBusiness', selectedStoreId === 'new' ? 'true' : 'false');
 

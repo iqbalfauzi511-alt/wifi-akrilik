@@ -239,6 +239,15 @@ function EditBranchForm({ store, onSuccess }) {
             helperText="Link review spesifik untuk outlet ini agar ulasan masuk ke lokasi cabang yang tepat di Google Maps."
           />
 
+          <Input
+            label="Nomor WhatsApp Penanggung Jawab"
+            name="whatsappNumber"
+            type="tel"
+            defaultValue={store?.whatsappNumber || ''}
+            prefix={<span className="text-xs font-bold text-slate-500">+62</span>}
+            helperText="Nomor WhatsApp untuk menerima keluhan langsung saat pelanggan memilih rating 1-2 bintang."
+          />
+
           {/* Wi-Fi Access Toggle */}
           <div className="pt-3 border-t border-slate-100">
             <div
