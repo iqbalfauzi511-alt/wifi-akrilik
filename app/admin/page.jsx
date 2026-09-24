@@ -23,6 +23,7 @@ import { businesses, qrCodes } from '@/lib/db/schema';
 import { desc, eq, isNull } from 'drizzle-orm';
 import DashboardHeader from '@/components/layout/DashboardHeader';
 import AdminQrManager from '@/components/admin/AdminQrManager';
+import ScanActivityChart from '@/components/charts/ScanActivityChart';
 
 export const dynamic = 'force-dynamic';
 
@@ -156,85 +157,9 @@ export default async function AdminDashboardPage() {
 
         {/* Middle Row: Charts matching Image 3 */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-          {/* Left Chart: Aktivitas Scan (Area Curve) */}
-          <div className="lg:col-span-8 bg-white rounded-3xl border border-slate-200/90 p-6 shadow-xs flex flex-col justify-between">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="font-extrabold text-slate-900 text-base">Aktivitas Scan</h2>
-              <button
-                type="button"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50"
-              >
-                <span>7 Hari Terakhir</span>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
-              </button>
-            </div>
-
-            {/* SVG Spline Area Chart matching Image 3 curve */}
-            <div className="w-full h-56 relative pt-4">
-              <svg className="w-full h-full overflow-visible" viewBox="0 0 600 180" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="scanGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#1A73E8" stopOpacity="0.25" />
-                    <stop offset="100%" stopColor="#1A73E8" stopOpacity="0.0" />
-                  </linearGradient>
-                </defs>
-
-                {/* Horizontal Grid lines */}
-                <line x1="0" y1="20" x2="600" y2="20" stroke="#F1F5F9" strokeWidth="1" />
-                <line x1="0" y1="60" x2="600" y2="60" stroke="#F1F5F9" strokeWidth="1" />
-                <line x1="0" y1="100" x2="600" y2="100" stroke="#F1F5F9" strokeWidth="1" />
-                <line x1="0" y1="140" x2="600" y2="140" stroke="#F1F5F9" strokeWidth="1" />
-
-                {/* Y-axis labels */}
-                <text x="10" y="24" fill="#94A3B8" fontSize="10" fontFamily="sans-serif">200</text>
-                <text x="10" y="64" fill="#94A3B8" fontSize="10" fontFamily="sans-serif">150</text>
-                <text x="10" y="104" fill="#94A3B8" fontSize="10" fontFamily="sans-serif">100</text>
-                <text x="10" y="144" fill="#94A3B8" fontSize="10" fontFamily="sans-serif">50</text>
-
-                {totalScan > 0 ? (
-                  <>
-                    {/* Area Gradient Path */}
-                    <path
-                      d="M 50 150 Q 130 110, 200 95 T 320 100 T 420 50 T 500 85 T 570 110 L 570 170 L 50 170 Z"
-                      fill="url(#scanGradient)"
-                    />
-
-                    {/* Smooth Spline Stroke Line */}
-                    <path
-                      d="M 50 150 Q 130 110, 200 95 T 320 100 T 420 50 T 500 85 T 570 110"
-                      fill="none"
-                      stroke="#1A73E8"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                    />
-
-                    {/* Data Points (dots) */}
-                    <circle cx="50" cy="150" r="4" fill="#1A73E8" stroke="#FFFFFF" strokeWidth="2" />
-                    <circle cx="130" cy="110" r="4" fill="#1A73E8" stroke="#FFFFFF" strokeWidth="2" />
-                    <circle cx="200" cy="95" r="4" fill="#1A73E8" stroke="#FFFFFF" strokeWidth="2" />
-                    <circle cx="320" cy="100" r="4" fill="#1A73E8" stroke="#FFFFFF" strokeWidth="2" />
-                    <circle cx="420" cy="50" r="5" fill="#1A73E8" stroke="#FFFFFF" strokeWidth="2" />
-                    <circle cx="500" cy="85" r="4" fill="#1A73E8" stroke="#FFFFFF" strokeWidth="2" />
-                    <circle cx="570" cy="110" r="4" fill="#1A73E8" stroke="#FFFFFF" strokeWidth="2" />
-                  </>
-                ) : (
-                  <>
-                    <path d="M 50 170 L 570 170" fill="none" stroke="#1A73E8" strokeWidth="3" strokeLinecap="round" />
-                  </>
-                )}
-              </svg>
-
-              {/* X-axis date labels */}
-              <div className="flex justify-between text-[11px] text-slate-400 px-6 mt-2">
-                <span>16 Sep</span>
-                <span>17 Sep</span>
-                <span>18 Sep</span>
-                <span>19 Sep</span>
-                <span>20 Sep</span>
-                <span>21 Sep</span>
-                <span>22 Sep</span>
-              </div>
-            </div>
+          {/* Left Chart: Aktivitas Scan — DYNAMIC */}
+          <div className="lg:col-span-8">
+            <ScanActivityChart initialPeriod="7d" />
           </div>
 
           {/* Right Chart: Sumber Aksi Pengunjung (Donut) */}

@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
+import ScanActivityChart from '@/components/charts/ScanActivityChart';
 import {
   QrCode,
   Users,
@@ -269,92 +270,9 @@ export default function OwnerDashboardView({
 
         {/* Middle Row: Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-          {/* Left Chart: Aktivitas Scan (Area Curve dynamically responding to filter) */}
-          <div className="lg:col-span-8 bg-white rounded-3xl border border-slate-200/90 p-6 shadow-xs flex flex-col justify-between">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="font-extrabold text-slate-900 text-base">Aktivitas Scan</h2>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  Total {chartData.totalForPeriod} scan pada {filterLabel}
-                </p>
-              </div>
-
-              <div className="flex items-center gap-1.5 p-1 bg-slate-50 rounded-xl border border-slate-200">
-                {[
-                  { id: '7d', label: '7 Hari' },
-                  { id: '30d', label: '30 Hari' },
-                  { id: 'this_month', label: 'Bulan Ini' },
-                ].map((tab) => (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    onClick={() => setFilterPeriod(tab.id)}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
-                      filterPeriod === tab.id
-                        ? 'bg-white text-[#1A73E8] shadow-xs'
-                        : 'text-slate-500 hover:text-slate-800'
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Dynamic SVG Spline Chart */}
-            <div className="w-full h-56 relative pt-4">
-              <svg className="w-full h-full overflow-visible" viewBox={`0 0 ${svgWidth} ${svgHeight}`} preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="ownerScanGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#1A73E8" stopOpacity="0.28" />
-                    <stop offset="100%" stopColor="#1A73E8" stopOpacity="0.0" />
-                  </linearGradient>
-                </defs>
-
-                {/* Horizontal Guide lines */}
-                <line x1="0" y1="30" x2={svgWidth} y2="30" stroke="#F1F5F9" strokeWidth="1" />
-                <line x1="0" y1="75" x2={svgWidth} y2="75" stroke="#F1F5F9" strokeWidth="1" />
-                <line x1="0" y1="120" x2={svgWidth} y2="120" stroke="#F1F5F9" strokeWidth="1" />
-                <line x1="0" y1="165" x2={svgWidth} y2="165" stroke="#F1F5F9" strokeWidth="1" />
-
-                {/* Area Gradient Path */}
-                {areaPath && <path d={areaPath} fill="url(#ownerScanGradient)" />}
-
-                {/* Spline Stroke Line */}
-                {curvePath && (
-                  <path
-                    d={curvePath}
-                    fill="none"
-                    stroke="#1A73E8"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                  />
-                )}
-
-                {/* Points */}
-                {points.map((pt, idx) => (
-                  <circle
-                    key={idx}
-                    cx={pt.x}
-                    cy={pt.y}
-                    r={chartData.values.length > 15 ? 2.5 : 4}
-                    fill="#1A73E8"
-                    stroke="#FFFFFF"
-                    strokeWidth="2"
-                  />
-                ))}
-              </svg>
-
-              {/* Date Labels */}
-              <div className="flex justify-between text-[10px] text-slate-400 px-4 mt-2 font-medium">
-                {chartData.labels.filter((_, idx, arr) => {
-                  if (arr.length <= 8) return true;
-                  return idx % Math.ceil(arr.length / 7) === 0 || idx === arr.length - 1;
-                }).map((lbl, idx) => (
-                  <span key={idx}>{lbl}</span>
-                ))}
-              </div>
-            </div>
+          {/* Left Chart: Aktivitas Scan — DYNAMIC */}
+          <div className="lg:col-span-8">
+            <ScanActivityChart initialPeriod="7d" />
           </div>
 
           {/* Right Chart: Sumber Aksi Pengunjung */}
