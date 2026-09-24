@@ -6,6 +6,13 @@ import { eq, desc } from 'drizzle-orm';
 export const dynamic = 'force-dynamic';
 
 export async function GET(request) {
+  // Admin-only: block in production from non-admins
+  const { getCurrentSession } = await import('@/lib/auth/session');
+  const session = await getCurrentSession();
+  if (session?.role !== 'admin') {
+    return NextResponse.json({ error: 'Forbidden.' }, { status: 403 });
+  }
+
   const { searchParams } = new URL(request.url);
   const testCode = searchParams.get('code') || 'CS-HHTHUZ';
 
