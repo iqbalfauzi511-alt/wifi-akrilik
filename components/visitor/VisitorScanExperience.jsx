@@ -81,8 +81,7 @@ export default function VisitorScanExperience({
       window.open(targetMapsUrl, '_blank', 'noopener,noreferrer');
       setStage(STAGE.REDIRECTED);
     } else {
-      // 1-2 stars: show feedback form, NO wifi earned
-      setWifiEarned(false);
+      // 1-2 stars: show feedback form
       setStage(STAGE.FEEDBACK);
     }
   };
@@ -120,13 +119,13 @@ export default function VisitorScanExperience({
     }
   };
 
-  // After feedback modal (1-2 star): close modal, mark done. No WiFi.
+  // After feedback submitted: WiFi earned for ALL ratings
   const handleFinishFeedback = () => {
-    setWifiEarned(false);
+    setWifiEarned(true);
     setStage(STAGE.DONE);
   };
 
-  // Reveal WiFi — only called from REDIRECTED (≥3 star path)
+  // Reveal WiFi — called from REDIRECTED (≥3 star path)
   const handleRevealWifi = () => {
     setWifiEarned(true);
     setStage(STAGE.DONE);
@@ -298,25 +297,29 @@ export default function VisitorScanExperience({
                 <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4">
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">Terima Kasih!</h3>
-                <p className="text-xs text-slate-600 mb-2 leading-relaxed">
-                  Masukan Anda telah dikirim. Tim pengelola <strong>{businessName}</strong> akan segera menindaklanjutinya.
+                <h3 className="text-xl font-bold text-slate-900 mb-2">Masukan Terkirim!</h3>
+                <p className="text-xs text-slate-600 mb-4 leading-relaxed">
+                  Terima kasih. Tim <strong>{businessName}</strong> akan segera menindaklanjuti.
                 </p>
 
                 {wifiEnabled ? (
-                  <p className="text-[11px] text-slate-400 mt-2">
-                    Maaf, akses Wi-Fi hanya tersedia untuk rating ≥3 bintang.
-                  </p>
-                ) : null}
-
-                <button
-                  type="button"
-                  onClick={handleFinishFeedback}
-                  className="w-full mt-4 py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition-colors cursor-pointer"
-                >
-                  Tutup
-                </button>
-
+                  <button
+                    type="button"
+                    onClick={handleFinishFeedback}
+                    className="w-full py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                  >
+                    <UnlockKeyhole className="w-4 h-4" />
+                    <span>Lihat Nama &amp; Password Wi-Fi</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleFinishFeedback}
+                    className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition-colors cursor-pointer"
+                  >
+                    Selesai
+                  </button>
+                )}
               </div>
             ) : (
               <div>
