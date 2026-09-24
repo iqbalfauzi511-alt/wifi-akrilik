@@ -134,14 +134,8 @@ export default function VisitorScanExperience({
       {/* Business Card */}
       <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xl shadow-slate-200/50 p-6 sm:p-8 text-center">
         {/* Logo */}
-        <div className="w-16 h-16 rounded-2xl bg-slate-50 border border-slate-200/80 mx-auto flex items-center justify-center mb-4 overflow-hidden shadow-xs">
-          {logoUrl ? (
-            <Image src={logoUrl} alt={businessName} width={64} height={64} className="w-full h-full object-cover" />
-          ) : (
-            <div className="font-extrabold text-[#1A73E8] text-xl">
-              {businessName.substring(0, 2).toUpperCase()}
-            </div>
-          )}
+        <div className="w-16 h-16 rounded-2xl bg-white border border-slate-200/80 mx-auto flex items-center justify-center mb-4 p-3 shadow-xs">
+          <Image src="/google-maps.svg" alt="Google Maps" width={48} height={48} className="w-full h-full object-contain" />
         </div>
 
         <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
