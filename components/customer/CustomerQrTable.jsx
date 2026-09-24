@@ -32,6 +32,7 @@ import EmptyState from '@/components/ui/EmptyState';
 import {
   customerBulkUpdateStatusAction,
   customerBulkUnlinkAction,
+  updateDeviceSettingsAction,
 } from '@/lib/actions/qr-actions';
 
 export default function CustomerQrTable({
@@ -42,6 +43,7 @@ export default function CustomerQrTable({
   const router = useRouter();
 
   const [selectedQr, setSelectedQr] = useState(null);
+  const [selectedEditQr, setSelectedEditQr] = useState(null);
   const [activeTab, setActiveTab] = useState('review'); // 'review' | 'wifi'
   const [selectedStoreFilter, setSelectedStoreFilter] = useState('all');
   
@@ -488,11 +490,21 @@ export default function CustomerQrTable({
                       <Button
                         variant="outline"
                         size="sm"
+                        onClick={() => setSelectedEditQr(qr)}
+                        className="text-xs py-1 px-2.5 bg-white hover:bg-slate-50 text-slate-700"
+                        title="Pengaturan Perangkat"
+                      >
+                        <svg className="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                        Atur
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => setSelectedQr(qr)}
                         className="text-xs py-1 px-2.5"
                       >
-                        <Eye className="w-3.5 h-3.5" />
-                        Lihat / Download
+                        <Eye className="w-3.5 h-3.5 mr-1" />
+                        Lihat
                       </Button>
                       <a
                         href={`/q/${qr.code}`}
@@ -681,6 +693,129 @@ export default function CustomerQrTable({
               </a>
             </div>
           </div>
+        )}
+      </Modal>
+
+      {/* Edit Device Settings Modal */}
+      <Modal
+        isOpen={!!selectedEditQr}
+        onClose={() => setSelectedEditQr(null)}
+        title="Pengaturan Perangkat"
+        description={`Konfigurasi khusus untuk perangkat ${selectedEditQr?.code || ''}`}
+      >
+        {selectedEditQr && (
+          <form
+            action={async (formData) => {
+              formData.append('qrId', selectedEditQr.id);
+              setIsProcessingBulk(true);
+              const result = await updateDeviceSettingsAction(null, formData);
+              setIsProcessingBulk(false);
+              
+              if (result.success) {
+                setNotification({ type: 'success', message: result.message || 'Pengaturan perangkat berhasil disimpan.' });
+                setSelectedEditQr(null);
+              } else {
+                setNotification({ type: 'error', message: result.error || 'Gagal menyimpan pengaturan.' });
+              }
+            }}
+            className="space-y-4 pt-2"
+          >
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                Nama Lokasi / Ruangan
+              </label>
+              <input
+                type="text"
+                name="deviceName"
+                defaultValue={selectedEditQr.deviceName || ''}
+                placeholder={selectedEditQr.businessName || businessName || 'Contoh: Lantai 1, Meja 5...'}
+                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
+              />
+              <p className="mt-1 text-[11px] text-slate-500">Bisa dikosongkan untuk memakai nama bisnis utama.</p>
+            </div>
+            
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                Link Google Review
+              </label>
+              <input
+                type="url"
+                name="googleMapsReviewUrl"
+                defaultValue={selectedEditQr.googleMapsReviewUrl || ''}
+                placeholder="https://g.page/r/..."
+                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
+              />
+            </div>
+
+            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <div className="relative inline-flex items-center">
+                  <input
+                    type="checkbox"
+                    name="wifiEnabled"
+                    value="true"
+                    defaultChecked={selectedEditQr.wifiEnabled}
+                    className="sr-only peer"
+                  />
+                  <div className="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-600"></div>
+                </div>
+                <div className="flex-1">
+                  <span className="text-sm font-semibold text-slate-900 block">Bagikan Wi-Fi Otomatis</span>
+                  <span className="text-[11px] text-slate-500">
+                    Beri akses Wi-Fi gratis jika tamu memberikan rating 3-5 bintang.
+                  </span>
+                </div>
+              </label>
+
+              <div className="mt-4 space-y-3 pl-10 border-l-2 border-slate-200 ml-5">
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Nama Wi-Fi (SSID)
+                  </label>
+                  <input
+                    type="text"
+                    name="wifiName"
+                    defaultValue={selectedEditQr.wifiName || ''}
+                    placeholder="Contoh: Cafe Kita Free Wi-Fi"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Password Wi-Fi
+                  </label>
+                  <input
+                    type="text"
+                    name="wifiPassword"
+                    defaultValue={selectedEditQr.wifiPassword || ''}
+                    placeholder="Masukkan password..."
+                    className="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-100">
+              <Button
+                variant="outline"
+                size="sm"
+                type="button"
+                onClick={() => setSelectedEditQr(null)}
+                disabled={isProcessingBulk}
+              >
+                Batal
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                type="submit"
+                isLoading={isProcessingBulk}
+                className="bg-brand-600 hover:bg-brand-700"
+              >
+                Simpan Konfigurasi
+              </Button>
+            </div>
+          </form>
         )}
       </Modal>
     </>
