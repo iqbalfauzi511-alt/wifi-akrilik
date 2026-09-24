@@ -260,6 +260,7 @@ function EditBranchForm({ store, onSuccess }) {
             >
               <input
                 type="checkbox"
+                name="wifiEnabled"
                 id={`wifiToggle_${store.id}`}
                 checked={isWifiEnabled}
                 onChange={(e) => setIsWifiEnabled(e.target.checked)}

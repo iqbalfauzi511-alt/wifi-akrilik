@@ -242,6 +242,7 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
 
             {/* Wi-Fi Toggle */}
             <div className="border-t border-slate-100 pt-4">
+              <input type="hidden" name="wifiEnabled" value={isWifiEnabled.toString()} />
               <button
                 type="button"
                 onClick={() => setIsWifiEnabled((prev) => !prev)}
