@@ -128,6 +128,12 @@ export default async function HomePage() {
                     priority
                     sizes="(max-width: 768px) 100vw, 480px"
                   />
+                  {/* Floating Logo Badge */}
+                  <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md p-2.5 rounded-xl shadow-lg border border-slate-100 flex items-center justify-center">
+                    <div className="w-8 h-8 relative">
+                      <Image src="/cobascan-logo.png" alt="Cobascan" fill className="object-contain" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -532,6 +538,12 @@ export default async function HomePage() {
               <div className="lg:col-span-4 flex items-center justify-center relative">
                 <div className="relative w-40 h-52">
                   <Image src="/images/acrylic-stand-hero.jpg" alt="Cobascan Stand" fill className="object-contain drop-shadow-xl" />
+                  {/* Floating Logo Badge */}
+                  <div className="absolute -top-3 -left-3 bg-white/95 backdrop-blur-md p-2 rounded-xl shadow-lg border border-slate-100 flex items-center justify-center rotate-[-6deg]">
+                    <div className="w-6 h-6 relative">
+                      <Image src="/cobascan-logo.png" alt="Cobascan" fill className="object-contain" />
+                    </div>
+                  </div>
                 </div>
                 <div className="absolute -bottom-2 -right-2 bg-white/95 backdrop-blur-sm border border-slate-200 rounded-2xl px-3.5 py-2 shadow-md text-[11px] font-bold text-slate-800 rotate-[-4deg]">
                   Bisnis Lebih Dikenal! ❤️
@@ -548,14 +560,11 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-slate-100">
             {/* Col 1 */}
             <div className="md:col-span-5">
-              <div className="flex items-center gap-2.5 mb-4">
-                <div className="w-8 h-8 relative mix-blend-multiply">
-                  <Image src="/logo.png" alt="Cobascan" width={100} height={100} className="w-full h-full object-contain" />
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 relative">
+                  <Image src="/cobascan-logo.png" alt="Cobascan" width={32} height={32} className="w-full h-full object-contain" />
                 </div>
-                <span className="font-extrabold text-slate-900 text-lg">cobascan</span>
-                <span className="text-[11px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
-                  QR • NFC
-                </span>
+                <span className="font-extrabold text-slate-900 text-xl pt-0.5">Cobascan</span>
               </div>
               <p className="text-xs sm:text-sm text-slate-500 max-w-sm leading-relaxed">
                 Solusi sederhana untuk pengalaman pelanggan yang lebih baik.

@@ -149,15 +149,12 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
     <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xl shadow-slate-200/50 p-8 sm:p-10 max-w-md w-full mx-auto">
       {/* Brand Header matching Image 2 */}
       <div className="text-center mb-6">
-        <Link href="/" className="inline-flex flex-col items-center gap-1 group">
-          <div className="w-12 h-12 flex items-center justify-center relative mix-blend-multiply group-hover:scale-105 transition-transform">
-            <Image src="/logo.png" alt="Cobascan" width={100} height={100} priority className="w-full h-full object-contain" />
+        <Link href="/" className="inline-flex items-center gap-2 group">
+          <div className="w-10 h-10 flex items-center justify-center relative group-hover:scale-105 transition-transform">
+            <Image src="/cobascan-logo.png" alt="Cobascan" width={40} height={40} priority className="w-full h-full object-contain" />
           </div>
-          <span className="font-extrabold text-slate-900 text-2xl tracking-tight leading-none mt-1">
-            cobascan
-          </span>
-          <span className="text-[11px] font-bold text-slate-400 tracking-wider uppercase">
-            QR • NFC
+          <span className="font-extrabold text-slate-900 text-3xl tracking-tight leading-none pt-0.5">
+            Cobascan
           </span>
         </Link>
 

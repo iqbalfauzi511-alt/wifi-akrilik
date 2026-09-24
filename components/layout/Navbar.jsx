@@ -13,16 +13,11 @@ export default function Navbar({ session }) {
     <header className="sticky top-0 z-40 w-full glass-nav">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 flex items-center justify-center group-hover:scale-105 transition-transform relative mix-blend-multiply">
-            <Image src="/logo.png" alt="Cobascan" width={100} height={100} priority className="w-full h-full object-contain" />
+        <Link href="/" className="flex items-center gap-2 group">
+          <div className="w-8 h-8 flex items-center justify-center group-hover:scale-105 transition-transform relative">
+            <Image src="/cobascan-logo.png" alt="Cobascan" width={32} height={32} priority className="w-full h-full object-contain" />
           </div>
-          <div>
-            <span className="heading-premium text-lg">Cobascan</span>
-            <span className="ml-1.5 text-[11px] font-bold px-1.5 py-0.5 rounded-md bg-[#F0FDF4] text-[#15803D] border border-[#BBF7D0] tracking-wide hidden sm:inline-block">
-              QR • NFC
-            </span>
-          </div>
+          <span className="heading-premium text-xl">Cobascan</span>
         </Link>
 
         {/* Desktop Links */}

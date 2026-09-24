@@ -54,17 +54,12 @@ export default function DashboardSidebar({ role = 'customer', session }) {
         {/* Brand Header */}
         <div className="p-6 border-b border-slate-100 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 flex items-center justify-center relative mix-blend-multiply group-hover:scale-105 transition-transform">
-              <Image src="/logo.png" alt="Cobascan" width={100} height={100} priority className="w-full h-full object-contain" />
+            <div className="w-8 h-8 flex items-center justify-center relative group-hover:scale-105 transition-transform">
+              <Image src="/cobascan-logo.png" alt="Cobascan" width={32} height={32} priority className="w-full h-full object-contain" />
             </div>
-            <div>
-              <span className="font-extrabold text-slate-900 text-lg tracking-tight block leading-none">
-                cobascan
-              </span>
-              <span className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">
-                QR • NFC
-              </span>
-            </div>
+            <span className="font-extrabold text-slate-900 text-xl tracking-tight block leading-none pt-0.5">
+              Cobascan
+            </span>
           </Link>
         </div>
 

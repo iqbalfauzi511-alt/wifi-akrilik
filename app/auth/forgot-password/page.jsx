@@ -36,18 +36,13 @@ export default function ForgotPasswordPage() {
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center mb-6">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-10 h-10 flex items-center justify-center relative mix-blend-multiply">
-              <Image src="/logo.png" alt="Cobascan" width={100} height={100} priority className="w-full h-full object-contain" />
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-10 h-10 flex items-center justify-center relative">
+              <Image src="/cobascan-logo.png" alt="Cobascan" width={40} height={40} priority className="w-full h-full object-contain" />
             </div>
-            <div>
-              <span className="font-extrabold text-slate-900 text-xl tracking-tight block leading-none">
-                cobascan
-              </span>
-              <span className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">
-                QR • NFC
-              </span>
-            </div>
+            <span className="font-extrabold text-slate-900 text-2xl tracking-tight block leading-none pt-0.5">
+              Cobascan
+            </span>
           </Link>
         </div>
 
