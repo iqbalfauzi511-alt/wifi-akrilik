@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Building2,
@@ -13,14 +13,16 @@ import {
   Save,
   AlertCircle,
   WifiOff,
-  Settings,
   Layers,
-  ImageIcon,
+  QrCode,
+  Users,
+  MessageSquare,
 } from 'lucide-react';
 import Image from 'next/image';
 import { updateBusinessWifiAction } from '@/lib/actions/business-actions';
 import { createClient } from '@/lib/supabase/client';
 import DeviceList from './DeviceList';
+import ScanActivityChart from '@/components/charts/ScanActivityChart';
 
 function Field({ label, helperText, error, children }) {
   return (
@@ -55,7 +57,7 @@ function TextInput({ name, type = 'text', defaultValue, placeholder, required, i
   );
 }
 
-export default function OwnerSettingsPage({ business, businesses = [], userEmail, userName, qrList = [] }) {
+export default function OwnerSettingsPage({ business, businesses = [], userEmail, userName, qrList = [], scanLogs = [], feedbacks = [] }) {
   const router = useRouter();
 
   const initialStores = businesses.length > 0 ? businesses : (business ? [business] : []);
@@ -124,6 +126,19 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
     router.push('/login');
   };
 
+  const filteredQrList = activeStore ? qrList.filter(q => q.businessId === activeStore.id) : [];
+
+  // Stats computed from real data - must be before any early return
+  const totalDevices = filteredQrList.length;
+  const totalScans = filteredQrList.reduce((sum, q) => sum + (q.scanCount || 0), 0);
+  const totalFeedbacks = useMemo(() => feedbacks.filter(f => f.businessId === activeStore?.id).length, [feedbacks, activeStore?.id]);
+  const avgRating = useMemo(() => {
+    const bFeedbacks = feedbacks.filter(f => f.businessId === activeStore?.id);
+    if (bFeedbacks.length === 0) return '0.0';
+    const sum = bFeedbacks.reduce((acc, f) => acc + (f.rating || 5), 0);
+    return (sum / bFeedbacks.length).toFixed(1);
+  }, [feedbacks, activeStore?.id]);
+
   if (!activeStore) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
@@ -131,8 +146,6 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
       </div>
     );
   }
-
-  const filteredQrList = qrList.filter(q => q.businessId === activeStore.id);
 
   return (
     <div className="min-h-screen bg-[#F7F8FA]">
@@ -161,6 +174,52 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
       </div>
 
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 space-y-4">
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-white rounded-2xl border border-slate-200 p-4 flex items-start gap-3">
+            <div className="w-9 h-9 rounded-xl bg-blue-50 text-[#1A73E8] flex items-center justify-center shrink-0">
+              <QrCode className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide">Perangkat</div>
+              <div className="text-xl font-black text-slate-900">{totalDevices}</div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200 p-4 flex items-start gap-3">
+            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+              <Users className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide">Total Scan</div>
+              <div className="text-xl font-black text-slate-900">{totalScans.toLocaleString('id-ID')}</div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200 p-4 flex items-start gap-3">
+            <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
+              <Star className="w-4 h-4 fill-amber-500" />
+            </div>
+            <div>
+              <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide">Rating</div>
+              <div className="text-xl font-black text-slate-900">{avgRating} <span className="text-sm text-amber-500">★</span></div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200 p-4 flex items-start gap-3">
+            <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+              <MessageSquare className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide">Masukan</div>
+              <div className="text-xl font-black text-slate-900">{totalFeedbacks}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Scan Activity Chart */}
+        <ScanActivityChart initialPeriod="7d" />
 
         {/* Branch switcher */}
         {stores.length > 1 && (

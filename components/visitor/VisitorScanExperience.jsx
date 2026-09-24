@@ -45,6 +45,8 @@ export default function VisitorScanExperience({
   const [selectedRating, setSelectedRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [copied, setCopied] = useState(false);
+  // Only true when visitor rated ≥3 and went through Google Maps path
+  const [wifiEarned, setWifiEarned] = useState(false);
 
   // Feedback form state
   const [feedbackMessage, setFeedbackMessage] = useState('');
@@ -76,12 +78,11 @@ export default function VisitorScanExperience({
   const handleStarClick = (value) => {
     setSelectedRating(value);
     if (value >= 3) {
-      // Open Google Maps URL in new tab
       window.open(targetMapsUrl, '_blank', 'noopener,noreferrer');
-      // Set to REDIRECTED stage (user must click button when they come back, or if no wifi, complete directly)
       setStage(STAGE.REDIRECTED);
     } else {
-      // Show feedback form (1-2 stars)
+      // 1-2 stars: show feedback form, NO wifi earned
+      setWifiEarned(false);
       setStage(STAGE.FEEDBACK);
     }
   };
@@ -106,6 +107,7 @@ export default function VisitorScanExperience({
       setIsSubmittingFeedback(false);
       if (res?.success) {
         setFeedbackSubmitted(true);
+        // Redirect to WhatsApp immediately if number is set
         if (res.whatsappUrl) {
           window.open(res.whatsappUrl, '_blank', 'noopener,noreferrer');
         }
@@ -118,13 +120,15 @@ export default function VisitorScanExperience({
     }
   };
 
-  // After feedback modal is completed by user clicking button
+  // After feedback modal (1-2 star): close modal, mark done. No WiFi.
   const handleFinishFeedback = () => {
+    setWifiEarned(false);
     setStage(STAGE.DONE);
   };
 
-  // Explicit click to reveal WiFi (or complete flow)
+  // Reveal WiFi — only called from REDIRECTED (≥3 star path)
   const handleRevealWifi = () => {
+    setWifiEarned(true);
     setStage(STAGE.DONE);
   };
 
@@ -234,8 +238,8 @@ export default function VisitorScanExperience({
         )}
       </div>
 
-      {/* WiFi Section — ONLY shown when wifiEnabled AND stage is DONE */}
-      {wifiEnabled && stage === STAGE.DONE && (
+      {/* WiFi Section — ONLY shown when wifiEnabled AND wifi was earned via ≥3 star path */}
+      {wifiEnabled && wifiEarned && stage === STAGE.DONE && (
         <div className="bg-white rounded-3xl border border-emerald-200 shadow-xl shadow-emerald-100/50 p-6 sm:p-7 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
@@ -300,23 +304,19 @@ export default function VisitorScanExperience({
                 </p>
 
                 {wifiEnabled ? (
-                  <button
-                    type="button"
-                    onClick={handleFinishFeedback}
-                    className="w-full mt-4 py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-md"
-                  >
-                    <UnlockKeyhole className="w-4 h-4" />
-                    <span>Lihat Nama &amp; Password Wi-Fi</span>
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleFinishFeedback}
-                    className="w-full mt-4 py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition-colors cursor-pointer"
-                  >
-                    Selesai
-                  </button>
-                )}
+                  <p className="text-[11px] text-slate-400 mt-2">
+                    Maaf, akses Wi-Fi hanya tersedia untuk rating ≥3 bintang.
+                  </p>
+                ) : null}
+
+                <button
+                  type="button"
+                  onClick={handleFinishFeedback}
+                  className="w-full mt-4 py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition-colors cursor-pointer"
+                >
+                  Tutup
+                </button>
+
               </div>
             ) : (
               <div>
