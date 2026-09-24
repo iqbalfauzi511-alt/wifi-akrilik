@@ -11,16 +11,23 @@ function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const email = searchParams.get('email') || '';
+  const nextUrl = searchParams.get('next') || '';
   const [isVerifying, setIsVerifying] = useState(false);
   const [verified, setVerified] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [code, setCode] = useState('');
 
-  const handleSimulateVerify = async () => {
+  const handleVerifyCode = async (e) => {
+    e?.preventDefault();
     if (!email) return;
+    if (!code || code.length < 6) {
+      setError('Masukkan 6 digit kode OTP.');
+      return;
+    }
     setIsVerifying(true);
     setError('');
-    const res = await verifyEmailAction(email);
+    const res = await verifyEmailAction(email, code);
     setIsVerifying(false);
     if (res?.success) {
       setVerified(true);
@@ -42,7 +49,7 @@ function VerifyEmailContent() {
             Akun Anda untuk <span className="font-semibold text-slate-900">{email}</span> telah aktif dan siap digunakan.
           </p>
           <Link
-            href="/login"
+            href={`/login${nextUrl ? `?next=${encodeURIComponent(nextUrl)}` : ''}`}
             className="w-full py-3 px-4 rounded-xl bg-[#1A73E8] hover:bg-blue-600 text-white font-bold text-sm shadow-md transition-all inline-flex items-center justify-center gap-2"
           >
             <span>Masuk Sekarang</span>
@@ -65,7 +72,7 @@ function VerifyEmailContent() {
 
           <div className="p-4 rounded-2xl bg-amber-50/80 border border-amber-200 text-left mb-6 text-xs text-amber-900 leading-relaxed">
             <p className="font-semibold mb-1">Penting:</p>
-            <p>Silakan buka kotak masuk atau folder spam email Anda, lalu klik tautan konfirmasi untuk mengaktifkan akun Pemilik Bisnis Anda.</p>
+            <p>Silakan periksa kotak masuk atau folder spam email Anda. Masukkan 6-digit kode OTP di bawah ini, atau klik tautan konfirmasi jika tersedia.</p>
           </div>
 
           {error && (
@@ -75,12 +82,22 @@ function VerifyEmailContent() {
             </div>
           )}
 
-          <div className="space-y-3">
+          <form onSubmit={handleVerifyCode} className="space-y-4">
+            <div>
+              <input
+                type="text"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="Masukkan 6 Digit OTP"
+                maxLength={6}
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#1A73E8] focus:ring-2 focus:ring-[#1A73E8]/20 transition-all outline-none text-center text-xl font-bold tracking-widest text-slate-900 placeholder:text-slate-300 placeholder:tracking-normal placeholder:font-normal placeholder:text-sm"
+                required
+              />
+            </div>
             <button
-              type="button"
-              onClick={handleSimulateVerify}
-              disabled={isVerifying}
-              className="w-full py-3 px-4 rounded-xl bg-[#1A73E8] hover:bg-blue-600 text-white font-bold text-sm shadow-md transition-all inline-flex items-center justify-center gap-2 disabled:opacity-50"
+              type="submit"
+              disabled={isVerifying || code.length < 6}
+              className="w-full py-3 px-4 rounded-xl bg-[#1A73E8] hover:bg-blue-600 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {isVerifying ? (
                 <>
@@ -89,19 +106,19 @@ function VerifyEmailContent() {
                 </>
               ) : (
                 <>
-                  <span>Konfirmasi Verifikasi Email</span>
+                  <span>Verifikasi Kode</span>
                   <CheckCircle2 className="w-4 h-4" />
                 </>
               )}
             </button>
 
             <Link
-              href="/login"
+              href={`/login${nextUrl ? `?next=${encodeURIComponent(nextUrl)}` : ''}`}
               className="w-full py-2.5 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-all inline-block"
             >
               Kembali ke Halaman Masuk
             </Link>
-          </div>
+          </form>
         </div>
       )}
     </div>

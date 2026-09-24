@@ -94,7 +94,7 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
       } else {
         setIsSubmitting(false);
         if (res?.requireVerification) {
-          router.push(`/auth/verify-email?email=${encodeURIComponent(emailVal)}`);
+          router.push(`/auth/verify-email?email=${encodeURIComponent(emailVal)}&next=${encodeURIComponent(nextUrl)}`);
         } else {
           setErrorMessage(res?.error || 'Gagal masuk. Periksa kembali email dan password Anda.');
         }
@@ -133,7 +133,7 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
       });
 
       if (res?.success) {
-        router.push(`/auth/verify-email?email=${encodeURIComponent(emailVal)}`);
+        router.push(`/auth/verify-email?email=${encodeURIComponent(emailVal)}&next=${encodeURIComponent(nextUrl)}`);
       } else {
         setIsSubmitting(false);
         setErrorMessage(res?.error || 'Gagal mendaftar akun.');
