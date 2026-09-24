@@ -15,6 +15,8 @@ import {
   ChevronRight,
   User as UserIcon,
   LogOut,
+  Star,
+  Wifi,
 } from 'lucide-react';
 import { logoutAction } from '@/lib/actions/auth-actions';
 
