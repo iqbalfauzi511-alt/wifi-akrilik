@@ -18,7 +18,7 @@ export async function generateMetadata({ params }) {
 
 export default async function VisitorWifiPage({ params }) {
   const { code } = params;
-  const normalizedCode = code?.trim().toUpperCase().replace(/[\u2013\u2014]/g, '-') || '';
+  const normalizedCode = code?.trim().toUpperCase().replace(/[\u2013\u2014\u2212]/g, '-') || '';
   const qr = await getPublicQrByCode(normalizedCode);
 
   // Case 1: QR not found

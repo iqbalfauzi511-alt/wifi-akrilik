@@ -60,7 +60,7 @@ export async function POST(request, { params }) {
       );
     }
 
-    const code = rawCode.trim().toUpperCase().replace(/[\u2013\u2014]/g, '-');
+    const code = rawCode.trim().toUpperCase().replace(/[\u2013\u2014\u2212]/g, '-');
 
     const result = await getQrWifiCredentials(code);
 

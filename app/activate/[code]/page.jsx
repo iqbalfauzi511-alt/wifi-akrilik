@@ -18,7 +18,7 @@ export const metadata = {
 
 export default async function ActivateQrPage({ params }) {
   const { code } = params;
-  const normalizedCode = code?.trim().toUpperCase().replace(/[\u2013\u2014]/g, '-') || '';
+  const normalizedCode = code?.trim().toUpperCase().replace(/[\u2013\u2014\u2212]/g, '-') || '';
   const session = await getCurrentSession();
 
   // If user is not authenticated, redirect to login with return URL
