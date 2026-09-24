@@ -32,9 +32,9 @@ export default function OwnerDashboardView({
   const wifiSSID = business?.wifiName || 'KopiSenja_Guest';
 
   // Compute metrics based on real data
-  const totalScans = scanLogs.length || 542;
-  const totalFeedbacks = feedbacks.length || 3;
-  const totalReviews = Math.round(totalScans * 0.16) || 86;
+  const totalScans = scanLogs.length;
+  const totalFeedbacks = feedbacks.length;
+  const totalReviews = Math.round(totalScans * 0.16);
 
   // Average rating
   const avgRating = useMemo(() => {
@@ -42,7 +42,7 @@ export default function OwnerDashboardView({
       const sum = feedbacks.reduce((acc, f) => acc + (f.rating || 5), 0);
       return (sum / feedbacks.length).toFixed(1);
     }
-    return '4.8';
+    return '0.0';
   }, [feedbacks]);
 
   // Dynamic Date Filter & Chart Data Generation
@@ -81,10 +81,7 @@ export default function OwnerDashboardView({
         );
       });
 
-      // If we have real scans for the day, use them; otherwise use realistic distribution
-      const dayValue = matchingScans.length > 0
-        ? matchingScans.length
-        : Math.round(15 + Math.sin(i * 1.2) * 8 + (d.getDay() === 0 || d.getDay() === 6 ? 12 : 3));
+      const dayValue = matchingScans.length;
 
       labels.push(dayLabel);
       values.push(dayValue);
@@ -214,9 +211,6 @@ export default function OwnerDashboardView({
               <div className="text-xs font-semibold text-slate-500">Perangkat Aktif</div>
               <div className="flex items-baseline gap-2 mt-1">
                 <span className="text-2xl font-black text-slate-900">{totalDevices}</span>
-                <span className="text-xs font-bold text-emerald-600 flex items-center">
-                  <ArrowUp className="w-3 h-3 stroke-[3]" /> +1
-                </span>
               </div>
               <div className="text-[11px] text-slate-400 mt-0.5">Meja terhubung</div>
             </div>
@@ -232,9 +226,6 @@ export default function OwnerDashboardView({
               <div className="flex items-baseline gap-2 mt-1">
                 <span className="text-2xl font-black text-slate-900">
                   {totalScans.toLocaleString('id-ID')}
-                </span>
-                <span className="text-xs font-bold text-emerald-600 flex items-center">
-                  <ArrowUp className="w-3 h-3 stroke-[3]" /> +18%
                 </span>
               </div>
               <div className="text-[11px] text-slate-400 mt-0.5">Interaksi pelanggan</div>
@@ -380,50 +371,54 @@ export default function OwnerDashboardView({
               <div className="relative w-36 h-36 flex items-center justify-center">
                 <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="38" fill="none" stroke="#E2E8F0" strokeWidth="16" />
-                  {/* Google Review (48%) */}
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="38"
-                    fill="none"
-                    stroke="#1A73E8"
-                    strokeWidth="16"
-                    strokeDasharray="114 238"
-                    strokeDashoffset="0"
-                  />
-                  {/* Wi-Fi (34%) */}
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="38"
-                    fill="none"
-                    stroke="#10B981"
-                    strokeWidth="16"
-                    strokeDasharray="81 238"
-                    strokeDashoffset="-114"
-                  />
-                  {/* WhatsApp Feedback (12%) */}
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="38"
-                    fill="none"
-                    stroke="#F43F5E"
-                    strokeWidth="16"
-                    strokeDasharray="28 238"
-                    strokeDashoffset="-195"
-                  />
-                  {/* Lainnya (6%) */}
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="38"
-                    fill="none"
-                    stroke="#94A3B8"
-                    strokeWidth="16"
-                    strokeDasharray="15 238"
-                    strokeDashoffset="-223"
-                  />
+                  {totalScans > 0 && (
+                    <>
+                      {/* Google Review (48%) */}
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="38"
+                        fill="none"
+                        stroke="#1A73E8"
+                        strokeWidth="16"
+                        strokeDasharray="114 238"
+                        strokeDashoffset="0"
+                      />
+                      {/* Wi-Fi (34%) */}
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="38"
+                        fill="none"
+                        stroke="#10B981"
+                        strokeWidth="16"
+                        strokeDasharray="81 238"
+                        strokeDashoffset="-114"
+                      />
+                      {/* WhatsApp Feedback (12%) */}
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="38"
+                        fill="none"
+                        stroke="#F43F5E"
+                        strokeWidth="16"
+                        strokeDasharray="28 238"
+                        strokeDashoffset="-195"
+                      />
+                      {/* Lainnya (6%) */}
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="38"
+                        fill="none"
+                        stroke="#94A3B8"
+                        strokeWidth="16"
+                        strokeDasharray="15 238"
+                        strokeDashoffset="-223"
+                      />
+                    </>
+                  )}
                 </svg>
 
                 <div className="absolute text-center">
@@ -443,7 +438,7 @@ export default function OwnerDashboardView({
                   <span className="text-slate-600 font-medium">Buka Google Review</span>
                 </div>
                 <div className="font-bold text-slate-900">
-                  {Math.round(totalScans * 0.48).toLocaleString('id-ID')} <span className="text-slate-400 font-normal">48%</span>
+                  {totalScans > 0 ? Math.round(totalScans * 0.48).toLocaleString('id-ID') : 0} <span className="text-slate-400 font-normal">{totalScans > 0 ? '48%' : '0%'}</span>
                 </div>
               </div>
 
@@ -453,7 +448,7 @@ export default function OwnerDashboardView({
                   <span className="text-slate-600 font-medium">Lihat Wi-Fi</span>
                 </div>
                 <div className="font-bold text-slate-900">
-                  {Math.round(totalScans * 0.34).toLocaleString('id-ID')} <span className="text-slate-400 font-normal">34%</span>
+                  {totalScans > 0 ? Math.round(totalScans * 0.34).toLocaleString('id-ID') : 0} <span className="text-slate-400 font-normal">{totalScans > 0 ? '34%' : '0%'}</span>
                 </div>
               </div>
 
@@ -463,7 +458,7 @@ export default function OwnerDashboardView({
                   <span className="text-slate-600 font-medium">Masukan WhatsApp</span>
                 </div>
                 <div className="font-bold text-slate-900">
-                  {Math.round(totalScans * 0.12).toLocaleString('id-ID')} <span className="text-slate-400 font-normal">12%</span>
+                  {totalScans > 0 ? Math.round(totalScans * 0.12).toLocaleString('id-ID') : 0} <span className="text-slate-400 font-normal">{totalScans > 0 ? '12%' : '0%'}</span>
                 </div>
               </div>
 
@@ -473,7 +468,7 @@ export default function OwnerDashboardView({
                   <span className="text-slate-600 font-medium">Lainnya</span>
                 </div>
                 <div className="font-bold text-slate-900">
-                  {Math.round(totalScans * 0.06).toLocaleString('id-ID')} <span className="text-slate-400 font-normal">6%</span>
+                  {totalScans > 0 ? Math.round(totalScans * 0.06).toLocaleString('id-ID') : 0} <span className="text-slate-400 font-normal">{totalScans > 0 ? '6%' : '0%'}</span>
                 </div>
               </div>
             </div>

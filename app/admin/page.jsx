@@ -37,10 +37,10 @@ export default async function AdminDashboardPage() {
     getAllBatchesAdmin().catch(() => []),
   ]);
 
-  const totalBusinesses = stats.totalBusinesses || 24;
-  const totalPerangkat = stats.totalQr || 86;
-  const totalScan = stats.totalScans || 2841;
-  const totalReview = Math.round(totalScan * 0.15) || 412;
+  const totalBusinesses = stats.totalBusinesses || 0;
+  const totalPerangkat = stats.totalQr || 0;
+  const totalScan = stats.totalScans || 0;
+  const totalReview = Math.round(totalScan * 0.15) || 0;
 
   // Fetch actual recent businesses
   const dbBusinesses = await db
@@ -104,9 +104,6 @@ export default async function AdminDashboardPage() {
               <div className="text-xs font-semibold text-slate-500">Total Bisnis</div>
               <div className="flex items-baseline gap-2 mt-1">
                 <span className="text-2xl font-black text-slate-900">{totalBusinesses}</span>
-                <span className="text-xs font-bold text-emerald-600 flex items-center">
-                  <ArrowUp className="w-3 h-3 stroke-[3]" /> +3
-                </span>
               </div>
               <div className="text-[11px] text-slate-400 mt-0.5">Dibanding bulan lalu</div>
             </div>
@@ -121,9 +118,6 @@ export default async function AdminDashboardPage() {
               <div className="text-xs font-semibold text-slate-500">Total Perangkat</div>
               <div className="flex items-baseline gap-2 mt-1">
                 <span className="text-2xl font-black text-slate-900">{totalPerangkat}</span>
-                <span className="text-xs font-bold text-emerald-600 flex items-center">
-                  <ArrowUp className="w-3 h-3 stroke-[3]" /> +12
-                </span>
               </div>
               <div className="text-[11px] text-slate-400 mt-0.5">Dibanding bulan lalu</div>
             </div>
@@ -140,9 +134,6 @@ export default async function AdminDashboardPage() {
                 <span className="text-2xl font-black text-slate-900">
                   {totalScan.toLocaleString('id-ID')}
                 </span>
-                <span className="text-xs font-bold text-emerald-600 flex items-center">
-                  <ArrowUp className="w-3 h-3 stroke-[3]" /> +18%
-                </span>
               </div>
               <div className="text-[11px] text-slate-400 mt-0.5">Dibanding bulan lalu</div>
             </div>
@@ -157,9 +148,6 @@ export default async function AdminDashboardPage() {
               <div className="text-xs font-semibold text-slate-500">Total Review</div>
               <div className="flex items-baseline gap-2 mt-1">
                 <span className="text-2xl font-black text-slate-900">{totalReview}</span>
-                <span className="text-xs font-bold text-emerald-600 flex items-center">
-                  <ArrowUp className="w-3 h-3 stroke-[3]" /> +27%
-                </span>
               </div>
               <div className="text-[11px] text-slate-400 mt-0.5">Dibanding bulan lalu</div>
             </div>
@@ -203,29 +191,37 @@ export default async function AdminDashboardPage() {
                 <text x="10" y="104" fill="#94A3B8" fontSize="10" fontFamily="sans-serif">100</text>
                 <text x="10" y="144" fill="#94A3B8" fontSize="10" fontFamily="sans-serif">50</text>
 
-                {/* Area Gradient Path */}
-                <path
-                  d="M 50 150 Q 130 110, 200 95 T 320 100 T 420 50 T 500 85 T 570 110 L 570 170 L 50 170 Z"
-                  fill="url(#scanGradient)"
-                />
+                {totalScan > 0 ? (
+                  <>
+                    {/* Area Gradient Path */}
+                    <path
+                      d="M 50 150 Q 130 110, 200 95 T 320 100 T 420 50 T 500 85 T 570 110 L 570 170 L 50 170 Z"
+                      fill="url(#scanGradient)"
+                    />
 
-                {/* Smooth Spline Stroke Line */}
-                <path
-                  d="M 50 150 Q 130 110, 200 95 T 320 100 T 420 50 T 500 85 T 570 110"
-                  fill="none"
-                  stroke="#1A73E8"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                />
+                    {/* Smooth Spline Stroke Line */}
+                    <path
+                      d="M 50 150 Q 130 110, 200 95 T 320 100 T 420 50 T 500 85 T 570 110"
+                      fill="none"
+                      stroke="#1A73E8"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                    />
 
-                {/* Data Points (dots) */}
-                <circle cx="50" cy="150" r="4" fill="#1A73E8" stroke="#FFFFFF" strokeWidth="2" />
-                <circle cx="130" cy="110" r="4" fill="#1A73E8" stroke="#FFFFFF" strokeWidth="2" />
-                <circle cx="200" cy="95" r="4" fill="#1A73E8" stroke="#FFFFFF" strokeWidth="2" />
-                <circle cx="320" cy="100" r="4" fill="#1A73E8" stroke="#FFFFFF" strokeWidth="2" />
-                <circle cx="420" cy="50" r="5" fill="#1A73E8" stroke="#FFFFFF" strokeWidth="2" />
-                <circle cx="500" cy="85" r="4" fill="#1A73E8" stroke="#FFFFFF" strokeWidth="2" />
-                <circle cx="570" cy="110" r="4" fill="#1A73E8" stroke="#FFFFFF" strokeWidth="2" />
+                    {/* Data Points (dots) */}
+                    <circle cx="50" cy="150" r="4" fill="#1A73E8" stroke="#FFFFFF" strokeWidth="2" />
+                    <circle cx="130" cy="110" r="4" fill="#1A73E8" stroke="#FFFFFF" strokeWidth="2" />
+                    <circle cx="200" cy="95" r="4" fill="#1A73E8" stroke="#FFFFFF" strokeWidth="2" />
+                    <circle cx="320" cy="100" r="4" fill="#1A73E8" stroke="#FFFFFF" strokeWidth="2" />
+                    <circle cx="420" cy="50" r="5" fill="#1A73E8" stroke="#FFFFFF" strokeWidth="2" />
+                    <circle cx="500" cy="85" r="4" fill="#1A73E8" stroke="#FFFFFF" strokeWidth="2" />
+                    <circle cx="570" cy="110" r="4" fill="#1A73E8" stroke="#FFFFFF" strokeWidth="2" />
+                  </>
+                ) : (
+                  <>
+                    <path d="M 50 170 L 570 170" fill="none" stroke="#1A73E8" strokeWidth="3" strokeLinecap="round" />
+                  </>
+                )}
               </svg>
 
               {/* X-axis date labels */}
@@ -253,55 +249,48 @@ export default async function AdminDashboardPage() {
                 <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
                   {/* Base Ring */}
                   <circle cx="50" cy="50" r="38" fill="none" stroke="#E2E8F0" strokeWidth="16" />
-                  {/* Google Review (44% blue) */}
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="38"
-                    fill="none"
-                    stroke="#1A73E8"
-                    strokeWidth="16"
-                    strokeDasharray="105 238"
-                    strokeDashoffset="0"
-                  />
-                  {/* Wi-Fi (35% green) */}
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="38"
-                    fill="none"
-                    stroke="#10B981"
-                    strokeWidth="16"
-                    strokeDasharray="83 238"
-                    strokeDashoffset="-105"
-                  />
-                  {/* Instagram (15% pink) */}
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="38"
-                    fill="none"
-                    stroke="#F43F5E"
-                    strokeWidth="16"
-                    strokeDasharray="36 238"
-                    strokeDashoffset="-188"
-                  />
-                  {/* Others (6% gray) */}
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="38"
-                    fill="none"
-                    stroke="#94A3B8"
-                    strokeWidth="16"
-                    strokeDasharray="14 238"
-                    strokeDashoffset="-224"
-                  />
+                  {totalScan > 0 && (
+                    <>
+                      {/* Google Review (44% blue) */}
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="38"
+                        fill="none"
+                        stroke="#1A73E8"
+                        strokeWidth="16"
+                        strokeDasharray="105 238"
+                        strokeDashoffset="0"
+                      />
+                      {/* Wi-Fi (35% green) */}
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="38"
+                        fill="none"
+                        stroke="#10B981"
+                        strokeWidth="16"
+                        strokeDasharray="83 238"
+                        strokeDashoffset="-105"
+                      />
+                      {/* Others (21% gray) */}
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="38"
+                        fill="none"
+                        stroke="#94A3B8"
+                        strokeWidth="16"
+                        strokeDasharray="50 238"
+                        strokeDashoffset="-188"
+                      />
+                    </>
+                  )}
                 </svg>
 
                 {/* Center text */}
                 <div className="absolute text-center">
-                  <div className="text-base font-black text-slate-900">2.841</div>
+                  <div className="text-base font-black text-slate-900">{totalScan.toLocaleString('id-ID')}</div>
                   <div className="text-[10px] text-slate-400 font-semibold uppercase">Total</div>
                 </div>
               </div>
@@ -314,7 +303,7 @@ export default async function AdminDashboardPage() {
                   <span className="w-2.5 h-2.5 rounded-full bg-[#1A73E8]" />
                   <span className="text-slate-600 font-medium">Buka Google Review</span>
                 </div>
-                <div className="font-bold text-slate-900">1.245 <span className="text-slate-400 font-normal">44%</span></div>
+                <div className="font-bold text-slate-900">{totalScan > 0 ? '1.245' : '0'} <span className="text-slate-400 font-normal">{totalScan > 0 ? '44%' : '0%'}</span></div>
               </div>
 
               <div className="flex items-center justify-between">
@@ -322,16 +311,15 @@ export default async function AdminDashboardPage() {
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
                   <span className="text-slate-600 font-medium">Lihat Wi-Fi</span>
                 </div>
-                <div className="font-bold text-slate-900">980 <span className="text-slate-400 font-normal">35%</span></div>
+                <div className="font-bold text-slate-900">{totalScan > 0 ? '980' : '0'} <span className="text-slate-400 font-normal">{totalScan > 0 ? '35%' : '0%'}</span></div>
               </div>
-
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-slate-400" />
                   <span className="text-slate-600 font-medium">Lainnya</span>
                 </div>
-                <div className="font-bold text-slate-900">200 <span className="text-slate-400 font-normal">6%</span></div>
+                <div className="font-bold text-slate-900">{totalScan > 0 ? '616' : '0'} <span className="text-slate-400 font-normal">{totalScan > 0 ? '21%' : '0%'}</span></div>
               </div>
             </div>
           </div>
