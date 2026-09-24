@@ -315,13 +315,12 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
 
           {authMode === 'login' && (
             <div className="flex justify-end mt-1.5">
-              <button
-                type="button"
-                onClick={() => alert('Silakan hubungi administrator jika Anda lupa password.')}
+              <Link
+                href="/auth/forgot-password"
                 className="text-xs font-semibold text-[#1A73E8] hover:underline"
               >
                 Lupa password?
-              </button>
+              </Link>
             </div>
           )}
         </div>
@@ -353,9 +352,13 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
             <button
               type="button"
               onClick={() => {
-                setAuthMode('register');
-                setErrorMessage('');
-                setSuccessMessage('');
+                if (nextUrl?.includes('/activate')) {
+                  setAuthMode('register');
+                  setErrorMessage('');
+                  setSuccessMessage('');
+                } else {
+                  setErrorMessage('Pendaftaran akun baru hanya dapat dilakukan dengan memindai (scan) fisik QR Code perangkat Cobascan Anda yang belum aktif.');
+                }
               }}
               className="text-[#1A73E8] font-bold hover:underline"
             >
