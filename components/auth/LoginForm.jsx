@@ -14,7 +14,8 @@ import {
 
 export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
   const router = useRouter();
-  const [authMode, setAuthMode] = useState('login'); // 'login' | 'register'
+  const isFromActivation = nextUrl?.includes('/activate');
+  const [authMode, setAuthMode] = useState(isFromActivation ? 'register' : 'login');
   const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -182,12 +183,18 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
         </Link>
 
         <h1 className="text-2xl font-black text-slate-900 tracking-tight mt-5">
-          {authMode === 'login' ? 'Masuk ke Cobascan' : 'Daftar Akun Baru'}
+          {authMode === 'login'
+            ? (isFromActivation ? 'Masuk ke Cobascan' : 'Masuk ke Cobascan')
+            : (isFromActivation ? 'Daftar untuk Aktivasi' : 'Daftar Akun Baru')}
         </h1>
         <p className="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed">
           {authMode === 'login'
-            ? 'Kelola perangkat dan informasi bisnis Anda dengan mudah.'
-            : 'Daftarkan bisnis Anda untuk mengaktifkan stand Cobascan.'}
+            ? (isFromActivation
+                ? 'Sudah punya akun? Masuk lalu lanjutkan aktivasi perangkat Anda.'
+                : 'Kelola perangkat dan informasi bisnis Anda dengan mudah.')
+            : (isFromActivation
+                ? 'Buat akun untuk mengaktifkan stand Cobascan yang baru Anda scan.'
+                : 'Daftarkan bisnis Anda untuk mengaktifkan stand Cobascan.')}
         </p>
       </div>
 

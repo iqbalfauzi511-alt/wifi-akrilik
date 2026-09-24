@@ -2,8 +2,9 @@ import React from 'react';
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { AlertTriangle, ShieldOff, Sparkles, ArrowRight, MapPin } from 'lucide-react';
+import { AlertTriangle, ShieldOff, Sparkles, ArrowRight, MapPin, LogIn, UserPlus } from 'lucide-react';
 import { getPublicQrByCode, recordScanLog } from '@/lib/db/queries/qr';
+import { getCurrentSession } from '@/lib/auth/session';
 import { validateGoogleMapsUrl } from '@/lib/utils/validation';
 import VisitorScanExperience from '@/components/visitor/VisitorScanExperience';
 import Button from '@/components/ui/Button';
@@ -67,8 +68,13 @@ export default async function VisitorQrPage({ params }) {
     );
   }
 
-  // Case 3: QR Blank or Sold (Unactivated)
+  // Case 3: QR Blank or Sold — require login before activation
   if (qr.status === 'blank' || qr.status === 'sold') {
+    const session = await getCurrentSession();
+    const isLoggedIn = Boolean(session?.user);
+    const activateUrl = `/activate/${normalizedCode}`;
+    const loginUrl = `/login?next=${encodeURIComponent(activateUrl)}`;
+
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
         <div className="max-w-md w-full bento-card p-8 text-center">
@@ -82,15 +88,31 @@ export default async function VisitorQrPage({ params }) {
           )}
           <h2 className="text-2xl font-extrabold text-slate-900 mb-2">Cobascan Belum Diaktifkan</h2>
           <p className="text-sm text-slate-500 mb-6 leading-relaxed">
-            QR Code ini belum diaktifkan. Jika Anda pemilik bisnis, silakan lakukan aktivasi.
+            {isLoggedIn
+              ? 'Anda sudah masuk. Lanjutkan aktivasi perangkat Cobascan ini untuk bisnis Anda.'
+              : 'Daftarkan akun atau masuk terlebih dahulu untuk mengaktifkan perangkat Cobascan ini.'}
           </p>
           <div className="space-y-3">
-            <Link href={`/activate/${code}`}>
-              <Button size="lg" className="w-full">
-                Aktivasi Sekarang
-                <ArrowRight className="w-4 h-4 ml-1.5" />
-              </Button>
-            </Link>
+            {isLoggedIn ? (
+              <Link href={activateUrl}>
+                <Button size="lg" className="w-full">
+                  Aktivasi Sekarang
+                  <ArrowRight className="w-4 h-4 ml-1.5" />
+                </Button>
+              </Link>
+            ) : (
+              <>
+                <Link href={loginUrl}>
+                  <Button size="lg" className="w-full">
+                    <UserPlus className="w-4 h-4 mr-1.5" />
+                    Daftar / Masuk untuk Aktivasi
+                  </Button>
+                </Link>
+                <p className="text-[11px] text-slate-400">
+                  Anda perlu memiliki akun Cobascan untuk mengaktifkan perangkat ini.
+                </p>
+              </>
+            )}
             <Link href="/">
               <Button variant="ghost" size="sm" className="w-full text-xs">
                 Tentang Cobascan
