@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { updateBusinessWifiAction } from '@/lib/actions/business-actions';
 import { createClient } from '@/lib/supabase/client';
+import CustomerQrTable from './CustomerQrTable';
 
 function Field({ label, helperText, error, children }) {
   return (
@@ -52,7 +53,7 @@ function TextInput({ name, type = 'text', defaultValue, placeholder, required, p
   );
 }
 
-export default function OwnerSettingsPage({ business, businesses = [], userEmail, userName }) {
+export default function OwnerSettingsPage({ business, businesses = [], userEmail, userName, qrList = [] }) {
   const router = useRouter();
 
   const initialStores = businesses.length > 0 ? businesses : (business ? [business] : []);
@@ -324,10 +325,22 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
         </form>
 
         {/* Info note */}
-        <p className="text-[11px] text-center text-slate-400 leading-relaxed">
-          Semua perangkat QR &amp; NFC yang terhubung ke bisnis ini akan otomatis sinkron setelah simpan.
-          Tidak perlu cetak ulang.
+        <p className="text-[11px] text-center text-slate-400 leading-relaxed mb-6">
+          Pengaturan di atas adalah pengaturan Default (Bawaan). Semua perangkat QR &amp; NFC akan menggunakan setelan ini KECUALI Anda mengaturnya secara khusus di bawah ini.
         </p>
+
+        {/* Devices Table */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+          <div className="p-5 sm:p-6 border-b border-slate-100">
+            <h2 className="text-lg font-bold text-slate-900">Perangkat Anda ({qrList.length})</h2>
+            <p className="text-xs text-slate-500 mt-1">Klik tombol <strong>Atur</strong> pada masing-masing perangkat untuk mengatur nama lokasi, link maps, dan Wi-Fi yang berbeda untuk tiap meja/ruangan.</p>
+          </div>
+          <CustomerQrTable
+            qrList={qrList.filter(q => q.businessId === activeStore.id)}
+            businessName={activeStore.businessName}
+            wifiEnabled={activeStore.wifiEnabled}
+          />
+        </div>
       </div>
     </div>
   );

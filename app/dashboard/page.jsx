@@ -2,6 +2,7 @@ import React from 'react';
 import { redirect } from 'next/navigation';
 import { getCurrentSession } from '@/lib/auth/session';
 import { getBusinessesByOwnerId } from '@/lib/db/queries/business';
+import { getQrsByOwnerUserId } from '@/lib/db/queries/qr';
 import { ensureDatabaseInitialized } from '@/lib/db';
 import OwnerSettingsPage from '@/components/customer/OwnerSettingsPage';
 
@@ -24,9 +25,12 @@ export default async function CustomerDashboardPage() {
   }
 
   const userId = session?.user?.id;
-  const userBusinesses = userId
-    ? await getBusinessesByOwnerId(userId).catch(() => [])
-    : (session?.businesses || []);
+  const [userBusinesses, qrList] = userId
+    ? await Promise.all([
+        getBusinessesByOwnerId(userId).catch(() => []),
+        getQrsByOwnerUserId(userId).catch(() => []),
+      ])
+    : [(session?.businesses || []), []];
 
   const business = userBusinesses[0] || session?.business;
 
@@ -40,6 +44,7 @@ export default async function CustomerDashboardPage() {
       businesses={userBusinesses}
       userEmail={session.user.email}
       userName={session.user.name}
+      qrList={qrList}
     />
   );
 }
