@@ -5,8 +5,14 @@ import { sql } from 'drizzle-orm';
 
 export const dynamic = 'force-dynamic';
 
-// Temporary public diagnostic endpoint — remove auth check for debugging
 export async function GET() {
+  // Enforce Administrator-only access
+  const { getCurrentSession } = await import('@/lib/auth/session');
+  const session = await getCurrentSession();
+  if (session?.role !== 'admin') {
+    return NextResponse.json({ error: 'Forbidden.' }, { status: 403 });
+  }
+
   const rawUrl = process.env.DATABASE_URL || '';
   const hasDbUrl = Boolean(rawUrl);
   const startsWithPostgres = rawUrl.startsWith('postgres');
