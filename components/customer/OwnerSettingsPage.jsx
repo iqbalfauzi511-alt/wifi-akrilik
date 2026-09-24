@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  Building,
+  Building2,
   Star,
   Phone,
   Wifi,
@@ -12,33 +12,33 @@ import {
   LogOut,
   Save,
   AlertCircle,
-  ChevronDown,
-  ChevronUp,
   WifiOff,
+  Settings,
+  Layers,
 } from 'lucide-react';
 import { updateBusinessWifiAction } from '@/lib/actions/business-actions';
 import { createClient } from '@/lib/supabase/client';
-import CustomerQrTable from './CustomerQrTable';
+import DeviceList from './DeviceList';
 
 function Field({ label, helperText, error, children }) {
   return (
     <div className="space-y-1.5">
-      <label className="block text-sm font-semibold text-slate-800">{label}</label>
+      <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider">{label}</label>
       {children}
       {helperText && !error && (
         <p className="text-[11px] text-slate-400 leading-relaxed">{helperText}</p>
       )}
-      {error && <p className="text-[11px] text-rose-600 font-medium">{error}</p>}
+      {error && <p className="text-[11px] text-rose-500 font-medium">{error}</p>}
     </div>
   );
 }
 
-function TextInput({ name, type = 'text', defaultValue, placeholder, required, prefix }) {
+function TextInput({ name, type = 'text', defaultValue, placeholder, required, icon: Icon }) {
   return (
     <div className="relative flex items-center">
-      {prefix && (
+      {Icon && (
         <div className="absolute left-3.5 flex items-center text-slate-400 pointer-events-none">
-          {prefix}
+          <Icon className="w-4 h-4" />
         </div>
       )}
       <input
@@ -47,7 +47,7 @@ function TextInput({ name, type = 'text', defaultValue, placeholder, required, p
         defaultValue={defaultValue || ''}
         placeholder={placeholder}
         required={required}
-        className={`w-full py-3 pr-4 ${prefix ? 'pl-10' : 'pl-4'} rounded-xl border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-400 transition-colors`}
+        className={`w-full py-2.5 pr-4 ${Icon ? 'pl-10' : 'pl-4'} rounded-xl border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-colors`}
       />
     </div>
   );
@@ -67,7 +67,6 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
   const [fieldErrors, setFieldErrors] = useState({});
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  // Sync wifi toggle when switching stores
   const handleStoreChange = (id) => {
     setSelectedId(id);
     const s = stores.find((s) => s.id === id);
@@ -119,7 +118,6 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
       const supabase = createClient();
       if (supabase) await supabase.auth.signOut();
     } catch {}
-    // Clear dev session cookie
     document.cookie = 'smartwifi_session=; Max-Age=0; path=/';
     router.push('/login');
   };
@@ -132,41 +130,50 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
     );
   }
 
-  return (
-    <div className="min-h-screen bg-slate-50 p-4 sm:p-6 lg:p-10">
-      <div className="max-w-lg mx-auto space-y-5">
+  const filteredQrList = qrList.filter(q => q.businessId === activeStore.id);
 
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-black text-slate-900 tracking-tight">Pengaturan</h1>
-            <p className="text-xs text-slate-500 mt-0.5">{userEmail}</p>
+  return (
+    <div className="min-h-screen bg-[#F7F8FA]">
+      {/* Top Bar */}
+      <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-slate-900 flex items-center justify-center">
+              <Settings className="w-3.5 h-3.5 text-white" />
+            </div>
+            <div>
+              <span className="text-sm font-bold text-slate-900">Cobascan</span>
+              <span className="hidden sm:inline text-xs text-slate-400 ml-2">— {userEmail}</span>
+            </div>
           </div>
           <button
             type="button"
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:border-slate-300 transition-colors shadow-xs disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-50"
           >
             <LogOut className="w-3.5 h-3.5" />
             {isLoggingOut ? 'Keluar...' : 'Logout'}
           </button>
         </div>
+      </div>
 
-        {/* Branch switcher (if multiple stores) */}
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 space-y-4">
+
+        {/* Branch switcher */}
         {stores.length > 1 && (
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-4">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Pilih Cabang</p>
+          <div className="bg-white rounded-2xl border border-slate-200 p-4">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2.5">Pilih Cabang</p>
             <div className="flex flex-wrap gap-2">
               {stores.map((s) => (
                 <button
                   key={s.id}
                   type="button"
                   onClick={() => handleStoreChange(s.id)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
                     s.id === selectedId
-                      ? 'bg-blue-600 text-white border-blue-600'
-                      : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                      ? 'bg-slate-900 text-white border-slate-900'
+                      : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'
                   }`}
                 >
                   {s.businessName}
@@ -176,171 +183,154 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
           </div>
         )}
 
-        {/* Main Settings Form */}
-        <form
-          key={activeStore.id}
-          onSubmit={handleSubmit}
-          className="bg-white rounded-2xl border border-slate-200 shadow-xs p-5 sm:p-6 space-y-5"
-        >
-          {/* Status message */}
-          {statusMsg && (
-            <div
-              className={`flex items-center gap-2 p-3 rounded-xl text-xs font-medium border ${
+        {/* Settings Card */}
+        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+          <div className="px-5 pt-5 pb-4 border-b border-slate-100">
+            <h2 className="text-sm font-bold text-slate-900">Pengaturan Default</h2>
+            <p className="text-[11px] text-slate-400 mt-0.5">Berlaku untuk semua perangkat kecuali diatur khusus per perangkat.</p>
+          </div>
+
+          <form key={activeStore.id} onSubmit={handleSubmit} className="p-5 space-y-4">
+            {/* Status message */}
+            {statusMsg && (
+              <div className={`flex items-center gap-2 p-3 rounded-xl text-xs font-medium border ${
                 statusMsg.type === 'success'
                   ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
                   : 'bg-rose-50 text-rose-800 border-rose-200'
-              }`}
-            >
-              {statusMsg.type === 'success'
-                ? <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                : <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />}
-              {statusMsg.text}
-            </div>
-          )}
+              }`}>
+                {statusMsg.type === 'success'
+                  ? <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  : <AlertCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />}
+                {statusMsg.text}
+              </div>
+            )}
 
-          <input type="hidden" name="businessId" value={activeStore.id} />
+            <input type="hidden" name="businessId" value={activeStore.id} />
 
-          {/* Business Name */}
-          <Field
-            label="Nama Bisnis"
-            error={fieldErrors.businessName}
-            helperText="Nama yang tampil saat pelanggan scan QR."
-          >
-            <TextInput
-              name="businessName"
-              defaultValue={activeStore.businessName}
-              placeholder="Kopi Senja"
-              required
-              prefix={<Building className="w-4 h-4" />}
-            />
-          </Field>
+            <Field label="Nama Bisnis" error={fieldErrors.businessName}>
+              <TextInput
+                name="businessName"
+                defaultValue={activeStore.businessName}
+                placeholder="Kopi Senja"
+                required
+                icon={Building2}
+              />
+            </Field>
 
-          {/* Google Review URL */}
-          <Field
-            label="Link Google Review"
-            error={fieldErrors.googleMapsReviewUrl}
-            helperText="URL halaman ulasan Google Maps bisnis Anda."
-          >
-            <TextInput
-              name="googleMapsReviewUrl"
-              type="url"
-              defaultValue={activeStore.googleMapsReviewUrl || activeStore.googleMapsUrl}
-              placeholder="https://g.page/r/..."
-              required
-              prefix={<Star className="w-4 h-4 text-amber-500" />}
-            />
-          </Field>
+            <Field label="Link Google Review" error={fieldErrors.googleMapsReviewUrl}>
+              <TextInput
+                name="googleMapsReviewUrl"
+                type="url"
+                defaultValue={activeStore.googleMapsReviewUrl || activeStore.googleMapsUrl}
+                placeholder="https://g.page/r/..."
+                required
+                icon={Star}
+              />
+            </Field>
 
-          {/* WhatsApp Number */}
-          <Field
-            label="Nomor WhatsApp"
-            helperText="Menerima keluhan pelanggan yang memberi rating 1–2 bintang. Format: 08xx atau 628xx."
-          >
-            <TextInput
-              name="whatsappNumber"
-              type="tel"
-              defaultValue={activeStore.whatsappNumber}
-              placeholder="081234567890"
-              prefix={<Phone className="w-4 h-4" />}
-            />
-          </Field>
+            <Field label="Nomor WhatsApp" helperText="Menerima keluhan rating 1–2 bintang. Format: 08xx atau 628xx.">
+              <TextInput
+                name="whatsappNumber"
+                type="tel"
+                defaultValue={activeStore.whatsappNumber}
+                placeholder="081234567890"
+                icon={Phone}
+              />
+            </Field>
 
-          {/* Wi-Fi Toggle */}
-          <div className="pt-1 border-t border-slate-100">
-            <button
-              type="button"
-              onClick={() => setIsWifiEnabled((prev) => !prev)}
-              className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all ${
-                isWifiEnabled
-                  ? 'bg-blue-50 border-blue-300 ring-1 ring-blue-300'
-                  : 'bg-slate-50 border-slate-200 hover:border-slate-300'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${isWifiEnabled ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-500'}`}>
-                  {isWifiEnabled ? <Wifi className="w-4 h-4" /> : <WifiOff className="w-4 h-4" />}
-                </div>
-                <div className="text-left">
-                  <div className="text-sm font-bold text-slate-900">Fitur Wi-Fi</div>
-                  <div className={`text-[11px] font-medium ${isWifiEnabled ? 'text-blue-600' : 'text-slate-400'}`}>
-                    {isWifiEnabled ? 'Aktif — Pelanggan perlu beri rating dulu' : 'Nonaktif — Langsung ke Google Review'}
+            {/* Wi-Fi Toggle */}
+            <div className="border-t border-slate-100 pt-4">
+              <button
+                type="button"
+                onClick={() => setIsWifiEnabled((prev) => !prev)}
+                className={`w-full flex items-center justify-between p-3.5 rounded-xl border transition-all ${
+                  isWifiEnabled
+                    ? 'bg-slate-900 border-slate-900'
+                    : 'bg-slate-50 border-slate-200 hover:border-slate-300'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isWifiEnabled ? 'bg-white/20' : 'bg-slate-200'}`}>
+                    {isWifiEnabled
+                      ? <Wifi className="w-4 h-4 text-white" />
+                      : <WifiOff className="w-4 h-4 text-slate-500" />}
+                  </div>
+                  <div className="text-left">
+                    <div className={`text-sm font-bold ${isWifiEnabled ? 'text-white' : 'text-slate-800'}`}>Fitur Wi-Fi</div>
+                    <div className={`text-[11px] ${isWifiEnabled ? 'text-white/70' : 'text-slate-400'}`}>
+                      {isWifiEnabled ? 'Aktif — Pelanggan beri rating dulu' : 'Nonaktif — Langsung ke Google Review'}
+                    </div>
                   </div>
                 </div>
-              </div>
-              {/* Toggle pill */}
-              <div className={`relative w-11 h-6 rounded-full transition-colors shrink-0 ${isWifiEnabled ? 'bg-blue-600' : 'bg-slate-300'}`}>
-                <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform ${isWifiEnabled ? 'translate-x-5' : 'translate-x-0.5'}`} />
-              </div>
-            </button>
-          </div>
+                <div className={`relative w-10 h-5.5 rounded-full transition-colors shrink-0 ${isWifiEnabled ? 'bg-white/30' : 'bg-slate-300'}`}
+                  style={{ height: '22px', minWidth: '40px' }}>
+                  <div className={`absolute top-0.5 w-4.5 h-4.5 bg-white rounded-full shadow-sm transition-transform ${isWifiEnabled ? 'translate-x-5' : 'translate-x-0.5'}`}
+                    style={{ width: '18px', height: '18px' }} />
+                </div>
+              </button>
 
-          {/* Wi-Fi Credentials (conditional) */}
-          {isWifiEnabled && (
-            <div className="space-y-4 p-4 rounded-xl bg-slate-50 border border-slate-200 animate-in fade-in slide-in-from-top-1 duration-200">
-              <p className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                <Wifi className="w-3.5 h-3.5 text-blue-600" />
-                Kredensial Wi-Fi
-              </p>
-
-              <Field label="Nama Wi-Fi (SSID)" error={fieldErrors.wifiName}>
-                <TextInput
-                  name="wifiName"
-                  defaultValue={activeStore.wifiName}
-                  placeholder="NamaWifi_Guest"
-                  required={isWifiEnabled}
-                  prefix={<Wifi className="w-4 h-4" />}
-                />
-              </Field>
-
-              <Field label="Password Wi-Fi" error={fieldErrors.wifiPassword}>
-                <TextInput
-                  name="wifiPassword"
-                  defaultValue={activeStore.wifiPassword}
-                  placeholder="PasswordWifi123"
-                  required={isWifiEnabled}
-                  prefix={<KeyRound className="w-4 h-4" />}
-                />
-              </Field>
+              {isWifiEnabled && (
+                <div className="mt-3 space-y-3 p-4 rounded-xl bg-slate-50 border border-slate-200">
+                  <Field label="Nama Wi-Fi (SSID)" error={fieldErrors.wifiName}>
+                    <TextInput
+                      name="wifiName"
+                      defaultValue={activeStore.wifiName}
+                      placeholder="NamaWifi_Guest"
+                      required={isWifiEnabled}
+                      icon={Wifi}
+                    />
+                  </Field>
+                  <Field label="Password Wi-Fi" error={fieldErrors.wifiPassword}>
+                    <TextInput
+                      name="wifiPassword"
+                      defaultValue={activeStore.wifiPassword}
+                      placeholder="PasswordWifi123"
+                      required={isWifiEnabled}
+                      icon={KeyRound}
+                    />
+                  </Field>
+                </div>
+              )}
             </div>
-          )}
 
-          {/* Save Button */}
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md shadow-blue-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
-          >
-            {isSubmitting ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                Menyimpan...
-              </>
-            ) : (
-              <>
-                <Save className="w-4 h-4" />
-                Simpan
-              </>
-            )}
-          </button>
-        </form>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+            >
+              {isSubmitting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Menyimpan...
+                </>
+              ) : (
+                <>
+                  <Save className="w-4 h-4" />
+                  Simpan
+                </>
+              )}
+            </button>
+          </form>
+        </div>
 
-        {/* Info note */}
-        <p className="text-[11px] text-center text-slate-400 leading-relaxed mb-6">
-          Pengaturan di atas adalah pengaturan Default (Bawaan). Semua perangkat QR &amp; NFC akan menggunakan setelan ini KECUALI Anda mengaturnya secara khusus di bawah ini.
-        </p>
-
-        {/* Devices Table */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-          <div className="p-5 sm:p-6 border-b border-slate-100">
-            <h2 className="text-lg font-bold text-slate-900">Perangkat Anda ({qrList.length})</h2>
-            <p className="text-xs text-slate-500 mt-1">Klik tombol <strong>Atur</strong> pada masing-masing perangkat untuk mengatur nama lokasi, link maps, dan Wi-Fi yang berbeda untuk tiap meja/ruangan.</p>
+        {/* Devices Section */}
+        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+          <div className="px-5 pt-5 pb-4 border-b border-slate-100 flex items-center justify-between">
+            <div>
+              <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <Layers className="w-4 h-4 text-slate-400" />
+                Perangkat ({filteredQrList.length})
+              </h2>
+              <p className="text-[11px] text-slate-400 mt-0.5">Klik <strong>Atur</strong> untuk setting nama lokasi, Wi-Fi, dan link Maps per perangkat.</p>
+            </div>
           </div>
-          <CustomerQrTable
-            qrList={qrList.filter(q => q.businessId === activeStore.id)}
+          <DeviceList
+            qrList={filteredQrList}
             businessName={activeStore.businessName}
-            wifiEnabled={activeStore.wifiEnabled}
+            defaultWifiEnabled={activeStore.wifiEnabled}
           />
         </div>
+
       </div>
     </div>
   );
