@@ -21,15 +21,12 @@ export default async function ActivateQrPage({ params }) {
   const normalizedCode = code?.trim().toUpperCase().replace(/[\u2013\u2014\u2212]/g, '-') || '';
   const session = await getCurrentSession();
 
-  // If user is not authenticated, redirect to login with return URL
-  if (!session?.user) {
-    redirect(`/login?next=/activate/${normalizedCode}`);
-  }
-
-  const qr = await getQrByCode(normalizedCode);
+  // If already logged in owner, get their businesses to pre-fill
   const userBusinesses = session?.user?.id
     ? await getBusinessesByOwnerId(session.user.id)
     : [];
+
+  const qr = await getQrByCode(normalizedCode);
 
   // Check 1: QR not found
   if (!qr) {
@@ -189,8 +186,9 @@ export default async function ActivateQrPage({ params }) {
           code={code}
           initialBusiness={userBusinesses[0] || null}
           businesses={userBusinesses}
-          userEmail={session?.user?.email}
+          userEmail={session?.user?.email || ''}
           batchCode={qr?.batchCode}
+          existingOwnerId={session?.user?.id || null}
         />
       </div>
     </div>
