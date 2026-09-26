@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Phone, Eye, EyeOff, AlertCircle, ArrowRight, Lock } from 'lucide-react';
 import { ownerLoginAction } from '@/lib/actions/owner-auth-actions';
 
-const ADMIN_WA = process.env.NEXT_PUBLIC_ADMIN_WA || '6281234567890';
+const ADMIN_WA = process.env.NEXT_PUBLIC_ADMIN_WA || '6285888159265';
 
 export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
   const router = useRouter();
@@ -175,14 +175,8 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
             </p>
           </div>
         </div>
-
-        {/* Admin login link — tersembunyi di bawah */}
-        <p className="text-center text-[11px] text-slate-400 mt-6">
-          <Link href="/admin/login" className="hover:text-slate-600 transition-colors">
-            Masuk sebagai Admin
-          </Link>
-        </p>
       </div>
     </div>
   );
 }
+
