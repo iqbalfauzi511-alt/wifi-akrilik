@@ -388,14 +388,22 @@ export default function AdminQrManager({ initialQrs = [] }) {
   };
 
   // Multi-select toggle helpers
-  const allSelected = filteredQrs.length > 0 && selectedIds.size === filteredQrs.length;
-  const isIndeterminate = selectedIds.size > 0 && selectedIds.size < filteredQrs.length;
+  const allSelected = paginatedQrs.length > 0 && paginatedQrs.every((q) => selectedIds.has(q.id));
+  const isIndeterminate = paginatedQrs.some((q) => selectedIds.has(q.id)) && !allSelected;
 
   const handleToggleSelectAll = () => {
     if (allSelected) {
-      setSelectedIds(new Set());
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        paginatedQrs.forEach((q) => next.delete(q.id));
+        return next;
+      });
     } else {
-      setSelectedIds(new Set(filteredQrs.map((q) => q.id)));
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        paginatedQrs.forEach((q) => next.add(q.id));
+        return next;
+      });
     }
   };
 
@@ -894,7 +902,9 @@ export default function AdminQrManager({ initialQrs = [] }) {
                         {qr.businessName ? (
                           <div>
                             <div className="font-bold text-slate-900 text-xs">{qr.businessName}</div>
-                            <div className="text-[10px] text-slate-400">Café &amp; Specialty Venue</div>
+                            <div className="text-[10px] text-slate-400">
+                              {qr.deviceName ? `📍 ${qr.deviceName}` : 'Lokasi Utama'}
+                            </div>
                           </div>
                         ) : (
                           <span className="text-slate-400 italic text-[11px] font-mono">Unassigned (In Warehouse Stock)</span>

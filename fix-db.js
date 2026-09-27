@@ -1,12 +1,12 @@
-const { createClient } = require('@supabase/supabase-js');
-require('dotenv').config({ path: '.env.local' });
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+import { getDb } from './lib/db/index.js';
+
 async function run() {
-  const { data: qrs } = await supabase.from('qr_codes').select('*').eq('code', 'CS-YAGHKF');
-  if (qrs && qrs.length > 0) {
-    const qr = qrs[0];
-    await supabase.from('businesses').update({ wifiEnabled: true }).eq('id', qr.businessId);
-    console.log('Fixed business wifi for CS-YAGHKF');
+  const db = await getDb();
+  try {
+    await db.execute(`ALTER TABLE scan_logs ADD COLUMN action_type VARCHAR(32) NOT NULL DEFAULT 'page_view';`);
+    console.log("Column added successfully!");
+  } catch(e) {
+    console.error("Error adding column (maybe it already exists or syntax error):", e.message);
   }
 }
 run();

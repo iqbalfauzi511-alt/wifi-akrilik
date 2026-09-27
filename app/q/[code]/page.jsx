@@ -68,7 +68,7 @@ export default async function VisitorQrPage({ params }) {
     );
   }
 
-  // Case 3: QR Blank or Sold — require login before activation
+  // Case 3: QR Blank or Sold: require login before activation
   if (qr.status === 'blank' || qr.status === 'sold') {
     const session = await getCurrentSession();
     const isLoggedIn = Boolean(session?.user);
@@ -102,15 +102,18 @@ export default async function VisitorQrPage({ params }) {
               </Link>
             ) : (
               <>
-                <Link href={loginUrl}>
-                  <Button size="lg" className="w-full">
+                <Link href={activateUrl}>
+                  <Button size="lg" className="w-full bg-brand-600 hover:bg-brand-700 text-white">
                     <UserPlus className="w-4 h-4 mr-1.5" />
-                    Daftar / Masuk untuk Aktivasi
+                    Mulai Aktivasi & Daftar Akun
                   </Button>
                 </Link>
-                <p className="text-[11px] text-slate-400">
-                  Anda perlu memiliki akun Cobascan untuk mengaktifkan perangkat ini.
-                </p>
+                <Link href={loginUrl}>
+                  <Button variant="outline" size="sm" className="w-full mt-2">
+                    <LogIn className="w-4 h-4 mr-1.5" />
+                    Login (Sudah Punya Akun)
+                  </Button>
+                </Link>
               </>
             )}
             <Link href="/">
@@ -163,13 +166,12 @@ export default async function VisitorQrPage({ params }) {
     <div className="min-h-screen flex items-center justify-center p-4 bg-[#F8FAFC]">
       <VisitorScanExperience
         code={qr.code}
-        businessName={qr.businessName}
+        businessName={qr.deviceName || qr.businessName}
         logoUrl={qr.logoUrl}
         googleMapsReviewUrl={mapsValidation.normalized}
         googleMapsUrl={mapsValidation.normalized}
         wifiEnabled={Boolean(qr.wifiEnabled)}
         wifiName={qr.wifiName || 'Wi-Fi Tamu'}
-        wifiPassword={qr.wifiPassword || ''}
         whatsappNumber={qr.whatsappNumber || ''}
       />
     </div>

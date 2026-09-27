@@ -603,7 +603,7 @@ export default function CustomerQrTable({
         {selectedQr && (
           <div className="pt-2 space-y-4">
             {/* Tab Selection if Wi-Fi Enabled for this specific QR */}
-            {Boolean(selectedQr.wifiEnabled ?? wifiEnabled) && (
+            {Boolean(selectedQr.wifiEnabled) && (
               <div className="flex p-1 bg-slate-100 rounded-xl">
                 <button
                   type="button"

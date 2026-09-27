@@ -17,7 +17,7 @@ import Badge from '@/components/ui/Badge';
 import Modal from '@/components/ui/Modal';
 import { updateDeviceSettingsAction } from '@/lib/actions/qr-actions';
 
-export default function DeviceList({ qrList = [], businessName, defaultWifiEnabled }) {
+export default function DeviceList({ qrList = [], business, businessName, defaultWifiEnabled }) {
   const router = useRouter();
   const [editQr, setEditQr] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -80,7 +80,7 @@ export default function DeviceList({ qrList = [], businessName, defaultWifiEnabl
         {qrList.map((qr) => {
           const hasCustomConfig = !!(qr.deviceName || qr.qrGoogleMapsReviewUrl || qr.qrWifiEnabled !== null);
           const wifiOn = qr.wifiEnabled;
-          const locationName = qr.deviceName || businessName || '—';
+          const locationName = qr.deviceName || businessName || '-';
 
           return (
             <li key={qr.id} className="flex items-center justify-between px-5 py-3.5 hover:bg-slate-50/70 transition-colors group">
@@ -139,19 +139,19 @@ export default function DeviceList({ qrList = [], businessName, defaultWifiEnabl
             action={handleSave}
             className="space-y-4 pt-1"
           >
-            {/* Nama Lokasi */}
+            {/* Nama Tampilan */}
             <div>
               <label className="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1.5">
-                Nama Lokasi / Ruangan
+                Nama Usaha Tampilan
               </label>
               <input
                 type="text"
                 name="deviceName"
                 defaultValue={editQr.deviceName || ''}
-                placeholder={businessName || 'Contoh: Meja 1, Lantai 2...'}
+                placeholder={business?.businessName || businessName || 'Contoh: Kopi Senja Cabang B'}
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-all"
               />
-              <p className="mt-1 text-[11px] text-slate-400">Kosongkan untuk pakai nama bisnis utama.</p>
+              <p className="mt-1 text-[11px] text-slate-400">Ini yang akan dilihat pelanggan. Kosongkan untuk pakai nama profil utama.</p>
             </div>
 
             {/* Link Google Review */}
@@ -162,7 +162,7 @@ export default function DeviceList({ qrList = [], businessName, defaultWifiEnabl
               <input
                 type="url"
                 name="googleMapsReviewUrl"
-                defaultValue={editQr.googleMapsReviewUrl || ''}
+                defaultValue={editQr.googleMapsReviewUrl || editQr.googleMapsUrl || business?.googleMapsReviewUrl || business?.googleMapsUrl || ''}
                 placeholder="https://g.page/r/..."
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-all"
               />
@@ -176,7 +176,7 @@ export default function DeviceList({ qrList = [], businessName, defaultWifiEnabl
                     type="checkbox"
                     name="wifiEnabled"
                     value="true"
-                    defaultChecked={editQr.wifiEnabled}
+                    defaultChecked={editQr.wifiEnabled ?? business?.wifiEnabled ?? false}
                     className="sr-only peer"
                     id="wifi-toggle"
                   />
@@ -194,7 +194,7 @@ export default function DeviceList({ qrList = [], businessName, defaultWifiEnabl
                   <input
                     type="text"
                     name="wifiName"
-                    defaultValue={editQr.wifiName || ''}
+                    defaultValue={editQr.wifiName || business?.wifiName || ''}
                     placeholder="Nama jaringan Wi-Fi..."
                     className="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-all"
                   />
@@ -204,7 +204,7 @@ export default function DeviceList({ qrList = [], businessName, defaultWifiEnabl
                   <input
                     type="text"
                     name="wifiPassword"
-                    defaultValue={editQr.wifiPassword || ''}
+                    defaultValue={editQr.wifiPassword || business?.wifiPassword || ''}
                     placeholder="Password Wi-Fi..."
                     className="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-all"
                   />

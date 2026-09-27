@@ -31,7 +31,6 @@ export default function DashboardSidebar({ role = 'customer', session }) {
         { name: 'Bisnis', href: '/admin/businesses', icon: Store },
         { name: 'Perangkat', href: '/admin/devices', icon: TabletSmartphone },
         { name: 'Pengguna', href: '/admin/users', icon: Users },
-        { name: 'Statistik', href: '/admin/stats', icon: BarChart3 },
         { name: 'Pengaturan', href: '/admin/settings', icon: Settings },
       ]
     : [

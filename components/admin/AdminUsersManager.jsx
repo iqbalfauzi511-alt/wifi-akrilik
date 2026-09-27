@@ -12,12 +12,13 @@ import {
   MailCheck,
   MailWarning,
   Building,
+  KeyRound,
 } from 'lucide-react';
 import Card, { CardHeader } from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
-import { deleteUserAction } from '@/lib/actions/admin-actions';
+import { deleteUserAction, resetUserPinAction } from '@/lib/actions/admin-actions';
 
 export default function AdminUsersManager({
   initialUsers = [],
@@ -28,7 +29,9 @@ export default function AdminUsersManager({
   const [users, setUsers] = useState(initialUsers);
   const [userSearch, setUserSearch] = useState('');
   const [userToDelete, setUserToDelete] = useState(null);
+  const [userToReset, setUserToReset] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
   const [notification, setNotification] = useState(null);
 
   // Filter users
@@ -77,6 +80,31 @@ export default function AdminUsersManager({
     }
   };
 
+  // Handle Reset PIN
+  const handleResetPin = async () => {
+    if (!userToReset) return;
+    
+    try {
+      setIsResetting(true);
+      const res = await resetUserPinAction(userToReset.id);
+      setIsResetting(false);
+      
+      if (res?.success) {
+        setNotification({
+          type: 'success',
+          message: `PIN berhasil direset ke "123456" untuk ${userToReset.email || userToReset.name}. Akun juga telah di-unlock.`,
+        });
+      } else {
+        alert(res?.error || 'Gagal mereset PIN');
+      }
+      setUserToReset(null);
+    } catch {
+      setIsResetting(false);
+      alert('Terjadi kendala saat mereset PIN');
+      setUserToReset(null);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Metrics Row */}
@@ -97,7 +125,7 @@ export default function AdminUsersManager({
           <div className="text-[11px] text-slate-400 mt-0.5">Hak akses sistem</div>
         </div>
         <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-xs">
-          <div className="text-slate-400 text-xs font-medium">Email Terverifikasi</div>
+          <div className="text-slate-400 text-xs font-medium">Akses Login Aktif</div>
           <div className="text-2xl font-black text-emerald-600 mt-1">{verifiedUsers}</div>
           <div className="text-[11px] text-slate-400 mt-0.5">Dari {totalUsers} akun</div>
         </div>
@@ -130,7 +158,7 @@ export default function AdminUsersManager({
       <Card>
         <CardHeader
           title={`Daftar Pengguna (${users.length})`}
-          subtitle="Kelola seluruh akun pengguna terdaftar, status verifikasi, dan hak akses"
+          subtitle="Kelola seluruh akun pengguna terdaftar, nomor WhatsApp, dan hak akses"
           action={
             <div className="w-full sm:w-72 relative">
               <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -151,7 +179,7 @@ export default function AdminUsersManager({
               <tr>
                 <th className="py-3 px-4 font-semibold">Pengguna</th>
                 <th className="py-3 px-4 font-semibold">Role</th>
-                <th className="py-3 px-4 font-semibold">Verifikasi Email</th>
+                <th className="py-3 px-4 font-semibold">Nomor WhatsApp</th>
                 <th className="py-3 px-4 font-semibold">Bisnis</th>
                 <th className="py-3 px-4 font-semibold">Tanggal Terdaftar</th>
                 <th className="py-3 px-4 font-semibold text-right">Aksi</th>
@@ -167,7 +195,6 @@ export default function AdminUsersManager({
               ) : (
                 filteredUsers.map((u) => {
                   const isAdmin =
-                    u.role === 'admin' ||
                     u.email === currentAdminEmail ||
                     u.email === 'admin@smartwifi.com' ||
                     u.email === 'distrapness@gmail.com';
@@ -199,16 +226,12 @@ export default function AdminUsersManager({
                         )}
                       </td>
                       <td className="py-3.5 px-4">
-                        {u.emailVerified ? (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60">
-                            <MailCheck className="w-3 h-3 text-emerald-600" />
-                            Terverifikasi
-                          </span>
+                        {u.whatsappNumber ? (
+                          <div className="flex items-center gap-1.5 text-slate-800 font-medium">
+                            <span className="font-mono text-xs">{u.whatsappNumber}</span>
+                          </div>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/60">
-                            <MailWarning className="w-3 h-3 text-amber-600" />
-                            Belum Verifikasi
-                          </span>
+                          <span className="text-slate-400 italic text-[11px]">-</span>
                         )}
                       </td>
                       <td className="py-3.5 px-4">
@@ -217,6 +240,8 @@ export default function AdminUsersManager({
                             <Building className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                             <span>{u.businessName}</span>
                           </div>
+                        ) : u.role === 'admin' ? (
+                          <span className="text-slate-400 italic text-[11px]">- (Admin)</span>
                         ) : (
                           <span className="text-slate-400 italic text-[11px]">Belum aktivasi bisnis</span>
                         )}
@@ -234,15 +259,26 @@ export default function AdminUsersManager({
                             Dilindungi
                           </span>
                         ) : (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setUserToDelete(u)}
-                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50"
-                            title="Hapus Akun Pengguna ini"
-                          >
-                            <Trash2 className="w-4 h-4 text-rose-500" />
-                          </Button>
+                          <div className="flex items-center justify-end gap-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setUserToReset(u)}
+                              className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50"
+                              title="Reset PIN ke 123456"
+                            >
+                              <KeyRound className="w-4 h-4 text-blue-500" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setUserToDelete(u)}
+                              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50"
+                              title="Hapus Akun Pengguna ini"
+                            >
+                              <Trash2 className="w-4 h-4 text-rose-500" />
+                            </Button>
+                          </div>
                         )}
                       </td>
                     </tr>
@@ -291,6 +327,49 @@ export default function AdminUsersManager({
                 onClick={handleDeleteUser}
               >
                 Hapus Pengguna
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* Reset PIN Confirmation Modal */}
+      <Modal
+        isOpen={!!userToReset}
+        onClose={() => setUserToReset(null)}
+        title="Reset PIN Pengguna"
+        description="Kembalikan PIN pengguna ke default."
+      >
+        {userToReset && (
+          <div className="space-y-4 pt-2">
+            <div className="p-4 bg-blue-50 rounded-2xl border border-blue-200 text-blue-800 text-xs flex items-start gap-3">
+              <KeyRound className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-sm text-blue-900">
+                  Reset PIN {userToReset.email || userToReset.name}?
+                </p>
+                <p className="mt-1 leading-relaxed text-blue-700">
+                  PIN pengguna ini akan direset menjadi <strong className="font-mono bg-blue-100 px-1 py-0.5 rounded">123456</strong>. Sampaikan PIN baru ini kepada pemilik akun agar mereka dapat login kembali dan mengganti PIN-nya. Jika akun terkunci, tindakan ini juga akan membuka kuncinya.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setUserToReset(null)}
+                disabled={isResetting}
+              >
+                Batal
+              </Button>
+              <Button
+                size="sm"
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+                isLoading={isResetting}
+                onClick={handleResetPin}
+              >
+                Ya, Reset ke 123456
               </Button>
             </div>
           </div>

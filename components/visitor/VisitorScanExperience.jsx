@@ -18,6 +18,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { submitCustomerFeedbackAction } from '@/lib/actions/feedback-actions';
+import { trackVisitorAction } from '@/lib/actions/qr-actions';
 
 // Stage constants
 const STAGE = {
@@ -47,6 +48,9 @@ export default function VisitorScanExperience({
   const [copied, setCopied] = useState(false);
   // Only true when visitor rated ≥3 and went through Google Maps path
   const [wifiEarned, setWifiEarned] = useState(false);
+  const [revealedPassword, setRevealedPassword] = useState(wifiPassword || '');
+  const [revealedSsid, setRevealedSsid] = useState(wifiName || 'Wi-Fi Tamu');
+  const [isRevealingWifi, setIsRevealingWifi] = useState(false);
 
   // Feedback form state
   const [feedbackMessage, setFeedbackMessage] = useState('');
@@ -55,14 +59,34 @@ export default function VisitorScanExperience({
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Copy WiFi password
-  const handleCopyPassword = () => {
-    if (!wifiPassword) return;
+  const fetchWifiCredentials = useCallback(async () => {
+    if (!wifiEnabled) return;
+    if (revealedPassword) return;
+    setIsRevealingWifi(true);
     try {
-      navigator.clipboard.writeText(wifiPassword);
+      const res = await fetch(`/api/q/${encodeURIComponent(code)}/reveal-wifi`, {
+        method: 'POST',
+      });
+      const data = await res.json();
+      if (data?.success && data?.wifi_password) {
+        setRevealedPassword(data.wifi_password);
+        if (data.wifi_name) setRevealedSsid(data.wifi_name);
+      }
+    } catch (err) {
+      console.error('Failed to reveal wifi:', err);
+    } finally {
+      setIsRevealingWifi(false);
+    }
+  }, [code, wifiEnabled, revealedPassword]);
+
+  const handleCopyPassword = () => {
+    const pw = revealedPassword || wifiPassword;
+    if (!pw) return;
+    try {
+      navigator.clipboard.writeText(pw);
     } catch {
       const el = document.createElement('textarea');
-      el.value = wifiPassword;
+      el.value = pw;
       el.style.position = 'absolute';
       el.style.left = '-9999px';
       document.body.appendChild(el);
@@ -72,6 +96,8 @@ export default function VisitorScanExperience({
     }
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
+    // Track Salin Password
+    trackVisitorAction(code, 'salin_wifi').catch(() => {});
   };
 
   // Star click handler
@@ -80,6 +106,8 @@ export default function VisitorScanExperience({
     if (value >= 3) {
       window.open(targetMapsUrl, '_blank', 'noopener,noreferrer');
       setStage(STAGE.REDIRECTED);
+      // Track Buka Google Review
+      trackVisitorAction(code, 'buka_review').catch(() => {});
     } else {
       // 1-2 stars: show feedback form
       setStage(STAGE.FEEDBACK);
@@ -106,6 +134,8 @@ export default function VisitorScanExperience({
       setIsSubmittingFeedback(false);
       if (res?.success) {
         setFeedbackSubmitted(true);
+        // Track Feedback Terkirim
+        trackVisitorAction(code, 'kirim_feedback').catch(() => {});
         // Redirect to WhatsApp immediately if number is set
         if (res.whatsappUrl) {
           window.open(res.whatsappUrl, '_blank', 'noopener,noreferrer');
@@ -123,12 +153,16 @@ export default function VisitorScanExperience({
   const handleFinishFeedback = () => {
     setWifiEarned(true);
     setStage(STAGE.DONE);
+    fetchWifiCredentials();
   };
 
-  // Reveal WiFi — called from REDIRECTED (≥3 star path)
+  // Reveal WiFi: called from REDIRECTED (≥3 star path)
   const handleRevealWifi = () => {
     setWifiEarned(true);
     setStage(STAGE.DONE);
+    fetchWifiCredentials();
+    // Track Lihat WiFi
+    trackVisitorAction(code, 'lihat_wifi').catch(() => {});
   };
 
   // ------- RENDER -------
@@ -137,8 +171,12 @@ export default function VisitorScanExperience({
       {/* Business Card */}
       <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xl shadow-slate-200/50 p-6 sm:p-8 text-center">
         {/* Logo */}
-        <div className="w-16 h-16 rounded-2xl bg-white border border-slate-200/80 mx-auto flex items-center justify-center mb-4 p-3 shadow-xs">
-          <Image src="/google-maps.svg" alt="Google Maps" width={48} height={48} className="w-full h-full object-contain" />
+        <div className="w-16 h-16 rounded-2xl bg-white border border-slate-200/80 mx-auto flex items-center justify-center mb-4 p-3 shadow-xs overflow-hidden">
+          {logoUrl ? (
+            <Image src={logoUrl} alt={businessName} width={64} height={64} unoptimized className="w-full h-full object-contain" />
+          ) : (
+            <Image src="/google-maps.svg" alt="Google Maps" width={48} height={48} className="w-full h-full object-contain" />
+          )}
         </div>
 
         <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
@@ -237,7 +275,7 @@ export default function VisitorScanExperience({
         )}
       </div>
 
-      {/* WiFi Section — ONLY shown when wifiEnabled AND wifi was earned via ≥3 star path */}
+      {/* WiFi Section: ONLY shown when wifiEnabled AND wifi was earned via ≥3 star path */}
       {wifiEnabled && wifiEarned && stage === STAGE.DONE && (
         <div className="bg-white rounded-3xl border border-emerald-200 shadow-xl shadow-emerald-100/50 p-6 sm:p-7 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="flex items-center gap-3 mb-4">
@@ -253,18 +291,22 @@ export default function VisitorScanExperience({
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-3">
             <div>
               <div className="text-[11px] font-semibold text-slate-400">Nama Wi-Fi (SSID)</div>
-              <div className="text-sm font-bold text-slate-900 mt-0.5">{wifiName || 'Wi-Fi Tamu'}</div>
+              <div className="text-sm font-bold text-slate-900 mt-0.5">{revealedSsid || wifiName || 'Wi-Fi Tamu'}</div>
             </div>
 
             <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between gap-3">
               <div>
                 <div className="text-[11px] font-semibold text-slate-400">Password Wi-Fi</div>
                 <div className="font-mono text-sm font-extrabold text-slate-900 tracking-wider mt-0.5">
-                  {wifiPassword || '(tidak ada password)'}
+                  {isRevealingWifi ? (
+                    <span className="text-xs text-slate-400 animate-pulse font-normal">Mengambil akses Wi-Fi...</span>
+                  ) : (
+                    (revealedPassword || wifiPassword) || '(tidak ada password)'
+                  )}
                 </div>
               </div>
 
-              {wifiPassword && (
+              {(revealedPassword || wifiPassword) && !isRevealingWifi && (
                 <button
                   type="button"
                   onClick={handleCopyPassword}
@@ -288,7 +330,7 @@ export default function VisitorScanExperience({
         </div>
       )}
 
-      {/* Feedback Modal — Rating 1-2 stars */}
+      {/* Feedback Modal: Rating 1-2 stars */}
       {stage === STAGE.FEEDBACK && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-md w-full p-6 sm:p-8 animate-in fade-in zoom-in-95 duration-200">

@@ -33,10 +33,11 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
     setIsSubmitting(true);
     setErrorMessage('');
 
-    const result = await ownerLoginAction({ whatsapp: waVal.trim(), pin: pinVal });
+    const result = await ownerLoginAction({ whatsapp: waVal.trim(), pin: pinVal, nextUrl });
 
     if (result?.success) {
-      router.push(nextUrl || '/dashboard');
+      const target = nextUrl && nextUrl !== '/dashboard' ? nextUrl : (result.redirectTo || '/dashboard');
+      router.push(target);
       router.refresh();
     } else {
       setIsSubmitting(false);

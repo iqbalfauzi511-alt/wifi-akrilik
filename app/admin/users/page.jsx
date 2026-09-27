@@ -22,6 +22,7 @@ export default async function AdminUsersPage() {
       email: users.email,
       role: users.role,
       emailVerified: users.emailVerified,
+      whatsappNumber: users.whatsappNumber,
       createdAt: users.createdAt,
       businessName: businesses.businessName,
     })
@@ -40,7 +41,7 @@ export default async function AdminUsersPage() {
           Daftar Pengguna
         </h1>
         <p className="text-xs sm:text-sm text-slate-500 mt-2">
-          Kelola seluruh akun pengguna terdaftar, status verifikasi email, dan hak akses.
+          Kelola seluruh akun pengguna terdaftar, nomor WhatsApp, dan hak akses.
         </p>
       </div>
 

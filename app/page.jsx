@@ -101,13 +101,13 @@ export default async function HomePage() {
               <div className="flex items-center justify-center lg:justify-start gap-3 pt-2">
                 <div className="flex -space-x-2 overflow-hidden">
                   <div className="w-8 h-8 rounded-full ring-2 ring-white bg-slate-200 overflow-hidden relative shrink-0">
-                    <Image src="/images/cafe-latte.jpg" alt="Pengguna" fill className="object-cover" />
+                    <Image src="/images/cafe-latte.jpg" alt="Pengguna" fill sizes="100vw" className="object-cover" />
                   </div>
                   <div className="w-8 h-8 rounded-full ring-2 ring-white bg-slate-200 overflow-hidden relative shrink-0">
-                    <Image src="/images/beauty-clinic.jpg" alt="Pengguna" fill className="object-cover" />
+                    <Image src="/images/beauty-clinic.jpg" alt="Pengguna" fill sizes="100vw" className="object-cover" />
                   </div>
                   <div className="w-8 h-8 rounded-full ring-2 ring-white bg-slate-200 overflow-hidden relative shrink-0">
-                    <Image src="/images/restaurant-dish.jpg" alt="Pengguna" fill className="object-cover" />
+                    <Image src="/images/restaurant-dish.jpg" alt="Pengguna" fill sizes="100vw" className="object-cover" />
                   </div>
                 </div>
                 <p className="text-xs text-slate-600">
@@ -131,7 +131,7 @@ export default async function HomePage() {
                   {/* Floating Logo Badge */}
                   <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md p-2.5 rounded-xl shadow-lg border border-slate-100 flex items-center justify-center">
                     <div className="w-8 h-8 relative">
-                      <Image src="/cobascan-logo.png" alt="Cobascan" fill className="object-contain" />
+                      <Image src="/cobascan-logo.png" alt="Cobascan" fill sizes="100vw" className="object-contain" />
                     </div>
                   </div>
                 </div>
@@ -157,28 +157,28 @@ export default async function HomePage() {
             </div>
           </div>
 
-          {/* NTAG213 */}
+          {/* Chip NFC */}
           <div className="flex items-start gap-3.5">
             <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-blue-500/20">
               <Cpu className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-base font-black text-slate-900">NTAG213</div>
+              <div className="text-base font-black text-slate-900">Chip NFC Pintar</div>
               <div className="text-xs text-slate-600 leading-snug mt-0.5">
-                Chip NFC pasif yang kompatibel dengan semua iPhone &amp; Android.
+                Otomatis terbaca oleh semua smartphone (iPhone &amp; Android) yang memiliki fitur NFC.
               </div>
             </div>
           </div>
 
-          {/* Akrilik 3mm */}
+          {/* Stand Akrilik */}
           <div className="flex items-start gap-3.5">
             <div className="w-10 h-10 rounded-xl bg-red-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-red-500/20">
               <Layers className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-base font-black text-slate-900">Akrilik 3mm</div>
+              <div className="text-base font-black text-slate-900">Stand Akrilik</div>
               <div className="text-xs text-slate-600 leading-snug mt-0.5">
-                Kokoh, tahan tumpahan minuman &amp; tidak menguning karena UV.
+                Desain elegan, kokoh, tahan tumpahan minuman &amp; sangat cocok untuk meja pengunjung.
               </div>
             </div>
           </div>
@@ -214,7 +214,7 @@ export default async function HomePage() {
             {/* Step 01 */}
             <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
               <div className="relative aspect-[4/3] w-full bg-slate-100">
-                <Image src="/images/step-tap-nfc.jpg" alt="Tamu Tap atau Scan" fill className="object-cover" />
+                <Image src="/images/step-tap-nfc.jpg" alt="Tamu Tap atau Scan" fill sizes="100vw" className="object-cover" />
                 <div className="absolute top-3 left-3 w-8 h-8 rounded-full bg-[#1A73E8] text-white font-bold text-xs flex items-center justify-center shadow">
                   01
                 </div>
@@ -230,15 +230,15 @@ export default async function HomePage() {
             {/* Step 02 */}
             <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
               <div className="relative aspect-[4/3] w-full bg-slate-100">
-                <Image src="/images/step-google-review.jpg" alt="Halaman Google Maps Terbuka" fill className="object-cover" />
+                <Image src="/images/step-google-review.jpg" alt="Sistem Penilaian Cerdas Terbuka" fill sizes="100vw" className="object-cover" />
                 <div className="absolute top-3 left-3 w-8 h-8 rounded-full bg-[#EA4335] text-white font-bold text-xs flex items-center justify-center shadow">
                   02
                 </div>
               </div>
               <div className="p-6">
-                <h3 className="text-base font-bold text-slate-900 mb-2">Halaman Google Maps Terbuka</h3>
+                <h3 className="text-base font-bold text-slate-900 mb-2">Sistem Penilaian Cerdas Terbuka</h3>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  Browser HP langsung menampilkan form resmi ulasan Google Profil Bisnis Anda agar tamu bisa langsung klik bintang 5.
+                  Tamu mengisi rating 1-5 bintang. Bintang 3-5 diarahkan otomatis ke halaman Google Maps. Bintang 1-2 diarahkan ke WhatsApp untuk masukan privat.
                 </p>
               </div>
             </div>
@@ -246,15 +246,15 @@ export default async function HomePage() {
             {/* Step 03 */}
             <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
               <div className="relative aspect-[4/3] w-full bg-slate-100">
-                <Image src="/images/step-wifi-success.jpg" alt="Akses Wi-Fi & Pantau Statistik" fill className="object-cover" />
+                <Image src="/images/step-wifi-success.jpg" alt="Akses Wi-Fi Terbuka Otomatis" fill sizes="100vw" className="object-cover" />
                 <div className="absolute top-3 left-3 w-8 h-8 rounded-full bg-[#34A853] text-white font-bold text-xs flex items-center justify-center shadow">
                   03
                 </div>
               </div>
               <div className="p-6">
-                <h3 className="text-base font-bold text-slate-900 mb-2">Akses Wi-Fi &amp; Pantau Statistik</h3>
+                <h3 className="text-base font-bold text-slate-900 mb-2">Akses Wi-Fi Terbuka Otomatis</h3>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  Password Wi-Fi tamu otomatis ditampilkan setelah ulasan, dan pemilik toko bisa memantau statistik scan di dashboard.
+                  Setelah memberikan penilaian, tamu akan langsung diberikan kata sandi Wi-Fi bisnis Anda secara instan tanpa perlu repot bertanya ke staf.
                 </p>
               </div>
             </div>
@@ -338,7 +338,7 @@ export default async function HomePage() {
             {/* Kafe & Coffee Shop */}
             <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
               <div className="relative aspect-[16/9] w-full bg-slate-100">
-                <Image src="/images/cafe-latte.jpg" alt="Kafe & Coffee Shop" fill className="object-cover" />
+                <Image src="/images/cafe-latte.jpg" alt="Kafe & Coffee Shop" fill sizes="100vw" className="object-cover" />
               </div>
               <div className="p-6">
                 <h3 className="text-base font-bold text-slate-900 mb-2">Kafe &amp; Coffee Shop</h3>
@@ -351,7 +351,7 @@ export default async function HomePage() {
             {/* Klinik & Salon Kecantikan */}
             <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
               <div className="relative aspect-[16/9] w-full bg-slate-100">
-                <Image src="/images/beauty-clinic.jpg" alt="Klinik & Salon Kecantikan" fill className="object-cover" />
+                <Image src="/images/beauty-clinic.jpg" alt="Klinik & Salon Kecantikan" fill sizes="100vw" className="object-cover" />
               </div>
               <div className="p-6">
                 <h3 className="text-base font-bold text-slate-900 mb-2">Klinik &amp; Salon Kecantikan</h3>
@@ -364,7 +364,7 @@ export default async function HomePage() {
             {/* Restoran & Retail Offline */}
             <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
               <div className="relative aspect-[16/9] w-full bg-slate-100">
-                <Image src="/images/restaurant-dish.jpg" alt="Restoran & Retail Offline" fill className="object-cover" />
+                <Image src="/images/restaurant-dish.jpg" alt="Restoran & Retail Offline" fill sizes="100vw" className="object-cover" />
               </div>
               <div className="p-6">
                 <h3 className="text-base font-bold text-slate-900 mb-2">Restoran &amp; Retail Offline</h3>
@@ -377,135 +377,149 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section id="harga" className="py-20 sm:py-28 bg-white border-t border-slate-200">
+      {/* Apa Kata Mereka (Testimonials) */}
+      <section className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="text-xs font-bold uppercase tracking-wider text-[#1A73E8] mb-2 block">
-              HARGA
+              APA KATA MEREKA
             </span>
             <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900">
-              Pilih Paket yang Sesuai untuk Bisnis Anda
+              Lebih dari 1.000 Pemilik Bisnis Telah Membuktikan
+            </h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Testimonial 1 */}
+            <div className="bg-[#FAFAFA] rounded-2xl border border-slate-200 p-6 flex flex-col justify-between">
+              <div>
+                <div className="flex gap-1 mb-4">
+                  {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
+                </div>
+                <p className="text-sm text-slate-700 italic mb-6 leading-relaxed">
+                  "Semenjak pakai Cobascan di setiap meja kafe, rating Google Maps kami naik drastis dari 4.1 jadi 4.8. Pelanggan seneng dapet Wi-Fi dengan mudah, dan yang komplain masalah pesanan masuknya ke WA, jadi aman gak merusak rating publik!"
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden relative shrink-0">
+                  <Image src="/images/cafe-latte.jpg" alt="Reviewer" fill sizes="100vw" className="object-cover" />
+                </div>
+                <div>
+                  <div className="font-bold text-sm text-slate-900">Budi Santoso</div>
+                  <div className="text-xs text-slate-500">Pemilik Kedai Kopi Senja</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial 2 */}
+            <div className="bg-[#FAFAFA] rounded-2xl border border-slate-200 p-6 flex flex-col justify-between">
+              <div>
+                <div className="flex gap-1 mb-4">
+                  {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
+                </div>
+                <p className="text-sm text-slate-700 italic mb-6 leading-relaxed">
+                  "Sangat mempermudah operasional. Kasir tidak perlu lagi repot menjawab pertanyaan password Wi-Fi berulang kali. Bentuk stand akriliknya juga elegan, bikin meja restoran terlihat lebih profesional."
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden relative shrink-0">
+                  <Image src="/images/restaurant-dish.jpg" alt="Reviewer" fill sizes="100vw" className="object-cover" />
+                </div>
+                <div>
+                  <div className="font-bold text-sm text-slate-900">Diana Safira</div>
+                  <div className="text-xs text-slate-500">Manajer Resto Nusantara</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial 3 */}
+            <div className="bg-[#FAFAFA] rounded-2xl border border-slate-200 p-6 flex flex-col justify-between">
+              <div>
+                <div className="flex gap-1 mb-4">
+                  {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
+                </div>
+                <p className="text-sm text-slate-700 italic mb-6 leading-relaxed">
+                  "Dulu pelanggan salon sering lupa kasih review walau puas. Sekarang karena mau Wi-Fi sambil nunggu antrian, mereka otomatis nge-tap dan ninggalin review positif. Efeknya luar biasa ke pencarian lokal!"
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden relative shrink-0">
+                  <Image src="/images/beauty-clinic.jpg" alt="Reviewer" fill sizes="100vw" className="object-cover" />
+                </div>
+                <div>
+                  <div className="font-bold text-sm text-slate-900">Sari Wulandari</div>
+                  <div className="text-xs text-slate-500">Owner Klinik Cantik Ayu</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section id="harga" className="py-20 sm:py-28 bg-[#F8FAFC] border-t border-slate-200">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#1A73E8] mb-2 block">
+              HARGA SPESIAL
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900">
+              Investasi Kecil, Dampak Besar
             </h2>
             <p className="mt-2 text-slate-600 text-xs sm:text-sm">
-              Beli putus, tanpa biaya bulanan. Investasi sekali, manfaat jangka panjang.
+              Beli putus, tanpa biaya langganan bulanan. Tingkatkan bintang Google Maps Anda mulai hari ini!
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch pt-4">
-            {/* Paket 1 Stand */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-8 flex flex-col justify-between shadow-sm">
-              <div>
-                <h3 className="text-lg font-bold text-slate-900 mb-1">Paket Starter</h3>
-                <div className="text-xs text-slate-500 mb-4">1 Stand</div>
-                <div className="text-3xl font-black text-slate-900 mb-6">Rp 249.000</div>
-                <ul className="space-y-3 text-xs sm:text-sm text-slate-600">
-                  <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#1A73E8] shrink-0" />
-                    <span>1 stand akrilik (QR + NFC)</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#1A73E8] shrink-0" />
-                    <span>Kode aktivasi unik</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#1A73E8] shrink-0" />
-                    <span>Panduan aktivasi</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#1A73E8] shrink-0" />
-                    <span>Cocok untuk meja kasir/uji coba</span>
-                  </li>
-                </ul>
-              </div>
-              <a
-                href={`${whatsappBaseUrl}?text=Halo%2C%20saya%20ingin%20memesan%20Paket%20Starter%201%20Stand%20Cobascan`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-8"
-              >
-                <button className="w-full py-3 px-4 rounded-xl border border-[#1A73E8] text-[#1A73E8] hover:bg-blue-50 font-bold text-sm transition-colors">
-                  Pesan Sekarang
-                </button>
-              </a>
-            </div>
-
-            {/* Paket 5 Stand (Best Seller) */}
-            <div className="bg-white rounded-2xl border-2 border-[#1A73E8] p-8 flex flex-col justify-between shadow-xl relative scale-[1.02]">
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#1A73E8] text-white text-xs font-bold px-4 py-1 rounded-full shadow flex items-center gap-1.5">
+          <div className="max-w-md mx-auto pt-4">
+            <div className="bg-white rounded-3xl border-2 border-[#1A73E8] p-8 flex flex-col justify-between shadow-2xl relative">
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#1A73E8] text-white text-xs font-bold px-4 py-1 rounded-full shadow-lg flex items-center gap-1.5">
                 <Star className="w-3.5 h-3.5 fill-white" />
-                <span>Best Seller</span>
+                <span>Tanpa Biaya Bulanan</span>
               </div>
-              <div>
-                <h3 className="text-lg font-bold text-slate-900 mb-1">Paket Meja Kafe</h3>
-                <div className="text-xs text-slate-500 mb-4">5 Stand</div>
-                <div className="text-3xl font-black text-slate-900 mb-6">Rp 999.000</div>
-                <ul className="space-y-3 text-xs sm:text-sm text-slate-600">
-                  <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#1A73E8] shrink-0" />
-                    <span>5 stand akrilik (QR + NFC)</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#1A73E8] shrink-0" />
-                    <span>Kode aktivasi unik</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#1A73E8] shrink-0" />
-                    <span>Panduan aktivasi</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#1A73E8] shrink-0" />
-                    <span>Pas untuk kafe dengan 5 meja utama</span>
-                  </li>
-                </ul>
+              <div className="text-center">
+                <h3 className="text-xl font-black text-slate-900 mb-2">Stand Akrilik Pintar</h3>
+                <div className="flex items-end justify-center gap-1 mb-8">
+                  <div className="text-5xl font-black text-[#1A73E8]">Rp 89</div>
+                  <div className="text-xl font-bold text-slate-500 mb-1">.000</div>
+                  <div className="text-sm font-medium text-slate-400 mb-2">/ pcs</div>
+                </div>
+                
+                <div className="space-y-4 text-left bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                  <div className="flex items-start gap-3">
+                    <Check className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
+                    <span className="text-sm font-medium text-slate-700">1x Stand Akrilik Kokoh (NFC & QR Code Terintegrasi)</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Check className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
+                    <span className="text-sm font-medium text-slate-700">Akses Dashboard Owner Sepanjang Masa</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Check className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
+                    <span className="text-sm font-medium text-slate-700">Filter Rating Otomatis (Cegah Bintang 1)</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Check className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
+                    <span className="text-sm font-medium text-slate-700">Sistem Bagikan Password Wi-Fi Instan</span>
+                  </div>
+                </div>
               </div>
+              
               <a
-                href={`${whatsappBaseUrl}?text=Halo%2C%20saya%20ingin%20memesan%20Paket%20Meja%20Kafe%205%20Stand%20Cobascan`}
+                href={`${whatsappBaseUrl}?text=Halo%2C%20saya%20ingin%20memesan%20Stand%20Akrilik%20Cobascan%20seharga%20Rp89.000`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-8"
+                className="mt-8 block"
               >
-                <button className="w-full py-3 px-4 rounded-xl bg-[#1A73E8] hover:bg-[#1557B0] text-white font-bold text-sm shadow-md shadow-blue-500/20 transition-all hover:scale-[1.01]">
-                  Pesan Sekarang
+                <button className="w-full py-4 px-4 rounded-xl bg-[#1A73E8] hover:bg-[#1557B0] text-white font-bold text-base shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] flex items-center justify-center gap-2">
+                  <MessageCircle className="w-5 h-5 fill-white" />
+                  <span>Pesan Sekarang via WA</span>
                 </button>
               </a>
-            </div>
-
-            {/* Paket 10 Stand */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-8 flex flex-col justify-between shadow-sm">
-              <div>
-                <h3 className="text-lg font-bold text-slate-900 mb-1">Paket Multi-Cabang</h3>
-                <div className="text-xs text-slate-500 mb-4">10 Stand</div>
-                <div className="text-3xl font-black text-slate-900 mb-6">Rp 1.790.000</div>
-                <ul className="space-y-3 text-xs sm:text-sm text-slate-600">
-                  <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#1A73E8] shrink-0" />
-                    <span>10 stand akrilik (QR + NFC)</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#1A73E8] shrink-0" />
-                    <span>Kode aktivasi unik</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#1A73E8] shrink-0" />
-                    <span>Panduan aktivasi</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#1A73E8] shrink-0" />
-                    <span>Untuk restoran besar atau banyak cabang</span>
-                  </li>
-                </ul>
-              </div>
-              <a
-                href={`${whatsappBaseUrl}?text=Halo%2C%20saya%20ingin%20memesan%20Paket%2010%20Stand%20Cobascan`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-8"
-              >
-                <button className="w-full py-3 px-4 rounded-xl border border-[#1A73E8] text-[#1A73E8] hover:bg-blue-50 font-bold text-sm transition-colors">
-                  Pesan Sekarang
-                </button>
-              </a>
+              
+              <p className="text-[11px] text-slate-400 text-center mt-4">
+                *Beli berapa pun harganya tetap sama. Belum termasuk ongkos kirim.
+              </p>
             </div>
           </div>
         </div>
@@ -537,11 +551,11 @@ export default async function HomePage() {
 
               <div className="lg:col-span-4 flex items-center justify-center relative">
                 <div className="relative w-40 h-52">
-                  <Image src="/images/acrylic-stand-hero.jpg" alt="Cobascan Stand" fill className="object-contain drop-shadow-xl" />
+                  <Image src="/images/acrylic-stand-hero.jpg" alt="Cobascan Stand" fill sizes="100vw" className="object-contain drop-shadow-xl" />
                   {/* Floating Logo Badge */}
                   <div className="absolute -top-3 -left-3 bg-white/95 backdrop-blur-md p-2 rounded-xl shadow-lg border border-slate-100 flex items-center justify-center rotate-[-6deg]">
                     <div className="w-6 h-6 relative">
-                      <Image src="/cobascan-logo.png" alt="Cobascan" fill className="object-contain" />
+                      <Image src="/cobascan-logo.png" alt="Cobascan" fill sizes="100vw" className="object-contain" />
                     </div>
                   </div>
                 </div>

@@ -38,7 +38,7 @@ export async function middleware(request) {
   }
 
 
-  let isAuthenticated = !!supabaseUser || !!devCookie || hasSupabaseCookie;
+  let isAuthenticated = !!supabaseUser || !!devCookie;
   let userRole = 'customer';
 
   // Check role from authenticated Supabase user first

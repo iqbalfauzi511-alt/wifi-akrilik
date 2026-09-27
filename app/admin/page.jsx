@@ -41,7 +41,9 @@ export default async function AdminDashboardPage() {
   const totalBusinesses = stats.totalBusinesses || 0;
   const totalPerangkat = stats.totalQr || 0;
   const totalScan = stats.totalScans || 0;
-  const totalReview = Math.round(totalScan * 0.15) || 0;
+  const totalReview = stats.actionReview || 0;
+  
+  const totalActionScans = (stats.actionReview || 0) + (stats.actionWifi || 0) + (stats.actionOther || 0);
 
   // Fetch actual recent businesses
   const dbBusinesses = await db
@@ -59,17 +61,21 @@ export default async function AdminDashboardPage() {
     'bg-sky-100 text-sky-700',
   ];
 
-  const recentBusinesses = dbBusinesses.map((b, idx) => ({
-    id: b.id,
-    name: b.businessName,
-    category: 'Bisnis',
-    initials: b.businessName.substring(0, 2).toUpperCase(),
-    color: colors[idx % colors.length],
-    devices: allQrs.filter((q) => q.businessId === b.id).length,
-    scans: 0, // Activity log not implemented yet
-    reviews: 0,
-    status: b.wifiEnabled ? 'Aktif' : 'Nonaktif',
-  }));
+  const recentBusinesses = dbBusinesses.map((b, idx) => {
+    const bizQrs = allQrs.filter((q) => q.businessId === b.id);
+    const bizScans = bizQrs.reduce((acc, q) => acc + (q.scanCount || 0), 0);
+    return {
+      id: b.id,
+      name: b.businessName,
+      category: 'Bisnis',
+      initials: b.businessName.substring(0, 2).toUpperCase(),
+      color: colors[idx % colors.length],
+      devices: bizQrs.length,
+      scans: bizScans,
+      reviews: b.googleMapsReviewUrl ? 'Tersedia' : 'Belum diatur',
+      status: b.wifiEnabled ? 'Aktif' : 'Nonaktif',
+    };
+  });
 
   // Devices needing attention: Blank/Unassigned QR codes
   const attentionDevices = allQrs
@@ -157,7 +163,7 @@ export default async function AdminDashboardPage() {
 
         {/* Middle Row: Charts matching Image 3 */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-          {/* Left Chart: Aktivitas Scan — DYNAMIC */}
+          {/* Left Chart: Aktivitas Scan: DYNAMIC */}
           <div className="lg:col-span-8">
             <ScanActivityChart initialPeriod="7d" />
           </div>
@@ -174,9 +180,9 @@ export default async function AdminDashboardPage() {
                 <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
                   {/* Base Ring */}
                   <circle cx="50" cy="50" r="38" fill="none" stroke="#E2E8F0" strokeWidth="16" />
-                  {totalScan > 0 && (
+                  {totalActionScans > 0 && (
                     <>
-                      {/* Google Review (44% blue) */}
+                      {/* Google Review (blue) */}
                       <circle
                         cx="50"
                         cy="50"
@@ -184,10 +190,10 @@ export default async function AdminDashboardPage() {
                         fill="none"
                         stroke="#1A73E8"
                         strokeWidth="16"
-                        strokeDasharray="105 238"
+                        strokeDasharray={`${(stats.actionReview / totalActionScans) * 238} 238`}
                         strokeDashoffset="0"
                       />
-                      {/* Wi-Fi (35% green) */}
+                      {/* Wi-Fi (green) */}
                       <circle
                         cx="50"
                         cy="50"
@@ -195,10 +201,10 @@ export default async function AdminDashboardPage() {
                         fill="none"
                         stroke="#10B981"
                         strokeWidth="16"
-                        strokeDasharray="83 238"
-                        strokeDashoffset="-105"
+                        strokeDasharray={`${(stats.actionWifi / totalActionScans) * 238} 238`}
+                        strokeDashoffset={`-${(stats.actionReview / totalActionScans) * 238}`}
                       />
-                      {/* Others (21% gray) */}
+                      {/* Others (gray) */}
                       <circle
                         cx="50"
                         cy="50"
@@ -206,8 +212,8 @@ export default async function AdminDashboardPage() {
                         fill="none"
                         stroke="#94A3B8"
                         strokeWidth="16"
-                        strokeDasharray="50 238"
-                        strokeDashoffset="-188"
+                        strokeDasharray={`${(stats.actionOther / totalActionScans) * 238} 238`}
+                        strokeDashoffset={`-${((stats.actionReview + stats.actionWifi) / totalActionScans) * 238}`}
                       />
                     </>
                   )}
@@ -215,28 +221,28 @@ export default async function AdminDashboardPage() {
 
                 {/* Center text */}
                 <div className="absolute text-center">
-                  <div className="text-base font-black text-slate-900">{totalScan.toLocaleString('id-ID')}</div>
-                  <div className="text-[10px] text-slate-400 font-semibold uppercase">Total</div>
+                  <div className="text-base font-black text-slate-900">{totalActionScans.toLocaleString('id-ID')}</div>
+                  <div className="text-[10px] text-slate-400 font-semibold uppercase">Total Aksi</div>
                 </div>
               </div>
             </div>
 
-            {/* Legend list matching Image 3 */}
+            {/* Legend list */}
             <div className="space-y-2 mt-4 text-xs">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-[#1A73E8]" />
                   <span className="text-slate-600 font-medium">Buka Google Review</span>
                 </div>
-                <div className="font-bold text-slate-900">{totalScan > 0 ? '1.245' : '0'} <span className="text-slate-400 font-normal">{totalScan > 0 ? '44%' : '0%'}</span></div>
+                <div className="font-bold text-slate-900">{stats.actionReview.toLocaleString('id-ID')} <span className="text-slate-400 font-normal">{totalActionScans > 0 ? Math.round((stats.actionReview / totalActionScans) * 100) : 0}%</span></div>
               </div>
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                  <span className="text-slate-600 font-medium">Lihat Wi-Fi</span>
+                  <span className="text-slate-600 font-medium">Akses Wi-Fi</span>
                 </div>
-                <div className="font-bold text-slate-900">{totalScan > 0 ? '980' : '0'} <span className="text-slate-400 font-normal">{totalScan > 0 ? '35%' : '0%'}</span></div>
+                <div className="font-bold text-slate-900">{stats.actionWifi.toLocaleString('id-ID')} <span className="text-slate-400 font-normal">{totalActionScans > 0 ? Math.round((stats.actionWifi / totalActionScans) * 100) : 0}%</span></div>
               </div>
 
               <div className="flex items-center justify-between">
@@ -244,7 +250,7 @@ export default async function AdminDashboardPage() {
                   <span className="w-2.5 h-2.5 rounded-full bg-slate-400" />
                   <span className="text-slate-600 font-medium">Lainnya</span>
                 </div>
-                <div className="font-bold text-slate-900">{totalScan > 0 ? '616' : '0'} <span className="text-slate-400 font-normal">{totalScan > 0 ? '21%' : '0%'}</span></div>
+                <div className="font-bold text-slate-900">{stats.actionOther.toLocaleString('id-ID')} <span className="text-slate-400 font-normal">{totalActionScans > 0 ? Math.round((stats.actionOther / totalActionScans) * 100) : 0}%</span></div>
               </div>
             </div>
           </div>

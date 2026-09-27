@@ -11,7 +11,7 @@ export const metadata = {
   description: 'Aktivasi stand akrilik Cobascan baru untuk meja bisnis Anda.',
 };
 
-export default async function BusinessSetupPage() {
+export default async function BusinessSetupPage({ searchParams }) {
   const session = await getCurrentSession();
   if (!session?.user) {
     redirect('/login?next=/dashboard/setup');
@@ -21,12 +21,16 @@ export default async function BusinessSetupPage() {
     ? await getBusinessesByOwnerId(session.user.id)
     : [];
 
+  const initialCode = (searchParams?.code || '').toString().trim().toUpperCase();
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] py-6 px-4 sm:px-6 lg:px-8">
       <ActivationForm
+        code={initialCode}
         initialBusiness={userBusinesses[0] || null}
         businesses={userBusinesses}
         userEmail={session?.user?.email}
+        existingOwnerId={session.user.id}
       />
     </div>
   );

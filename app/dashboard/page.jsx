@@ -9,7 +9,7 @@ import OwnerSettingsPage from '@/components/customer/OwnerSettingsPage';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Dashboard — Cobascan',
+  title: 'Dashboard: Cobascan',
 };
 
 export default async function CustomerDashboardPage() {
@@ -44,6 +44,7 @@ export default async function CustomerDashboardPage() {
       businesses={userBusinesses}
       userEmail={session.user.email}
       userName={session.user.name}
+      userWa={session.user.whatsappNumber}
       qrList={qrList}
     />
   );
