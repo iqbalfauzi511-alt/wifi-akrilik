@@ -397,7 +397,7 @@ export default async function HomePage() {
                   {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
                 </div>
                 <p className="text-sm text-slate-700 italic mb-6 leading-relaxed">
-                  "Semenjak pakai Cobascan di setiap meja kafe, rating Google Maps kami naik drastis dari 4.1 jadi 4.8. Pelanggan seneng dapet Wi-Fi dengan mudah, dan yang komplain masalah pesanan masuknya ke WA, jadi aman gak merusak rating publik!"
+                  &quot;Semenjak pakai Cobascan di setiap meja kafe, rating Google Maps kami naik drastis dari 4.1 jadi 4.8. Pelanggan seneng dapet Wi-Fi dengan mudah, dan yang komplain masalah pesanan masuknya ke WA, jadi aman gak merusak rating publik!&quot;
                 </p>
               </div>
               <div className="flex items-center gap-3">
@@ -418,7 +418,7 @@ export default async function HomePage() {
                   {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
                 </div>
                 <p className="text-sm text-slate-700 italic mb-6 leading-relaxed">
-                  "Sangat mempermudah operasional. Kasir tidak perlu lagi repot menjawab pertanyaan password Wi-Fi berulang kali. Bentuk stand akriliknya juga elegan, bikin meja restoran terlihat lebih profesional."
+                  &quot;Sangat mempermudah operasional. Kasir tidak perlu lagi repot menjawab pertanyaan password Wi-Fi berulang kali. Bentuk stand akriliknya juga elegan, bikin meja restoran terlihat lebih profesional.&quot;
                 </p>
               </div>
               <div className="flex items-center gap-3">
@@ -439,7 +439,7 @@ export default async function HomePage() {
                   {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
                 </div>
                 <p className="text-sm text-slate-700 italic mb-6 leading-relaxed">
-                  "Dulu pelanggan salon sering lupa kasih review walau puas. Sekarang karena mau Wi-Fi sambil nunggu antrian, mereka otomatis nge-tap dan ninggalin review positif. Efeknya luar biasa ke pencarian lokal!"
+                  &quot;Dulu pelanggan salon sering lupa kasih review walau puas. Sekarang karena mau Wi-Fi sambil nunggu antrian, mereka otomatis nge-tap dan ninggalin review positif. Efeknya luar biasa ke pencarian lokal!&quot;
                 </p>
               </div>
               <div className="flex items-center gap-3">
