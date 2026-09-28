@@ -188,10 +188,9 @@ export default function VisitorScanExperience({
     setSelectedRating(value);
     if (value >= 3) {
       setRedirectType('maps');
-      window.open(targetMapsUrl, '_blank', 'noopener,noreferrer');
+      const trackUrl = `/api/q/${encodeURIComponent(code)}/track?action=buka_review&url=${encodeURIComponent(targetMapsUrl)}`;
+      window.open(trackUrl, '_blank', 'noopener,noreferrer');
       setStage(STAGE.WAITING_RETURN);
-      // Track Buka Google Review
-      trackVisitorAction(code, 'buka_review').catch(() => {});
     } else {
       // 1-2 stars: open feedback modal to collect input before WA
       setStage(STAGE.FEEDBACK);
