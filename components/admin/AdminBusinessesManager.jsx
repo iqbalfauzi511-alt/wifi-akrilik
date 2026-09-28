@@ -119,7 +119,6 @@ export default function AdminBusinessesManager({ initialBusinesses = [] }) {
                 <th className="py-3 px-4 font-semibold">Nama Bisnis</th>
                 <th className="py-3 px-4 font-semibold">Pemilik</th>
                 <th className="py-3 px-4 font-semibold text-center">Perangkat</th>
-                <th className="py-3 px-4 font-semibold">Status Wi-Fi</th>
                 <th className="py-3 px-4 font-semibold">WhatsApp</th>
                 <th className="py-3 px-4 font-semibold">Review Google</th>
                 <th className="py-3 px-4 font-semibold text-right">Aksi</th>
@@ -156,20 +155,6 @@ export default function AdminBusinessesManager({ initialBusinesses = [] }) {
                       </td>
                       <td className="py-3.5 px-4 text-center">
                         <span className="font-bold text-slate-900">{b.qrCount || 0} unit</span>
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <span
-                          className={`inline-flex items-center gap-1.5 text-xs font-medium ${
-                            b.wifiEnabled ? 'text-emerald-700' : 'text-slate-400'
-                          }`}
-                        >
-                          <span
-                            className={`w-1.5 h-1.5 rounded-full ${
-                              b.wifiEnabled ? 'bg-emerald-500' : 'bg-slate-300'
-                            }`}
-                          />
-                          {b.wifiEnabled ? `Aktif (${b.wifiName || 'SSID'})` : 'Nonaktif'}
-                        </span>
                       </td>
                       <td className="py-3.5 px-4 font-mono text-slate-600">
                         {b.whatsappNumber ? `+${b.whatsappNumber}` : '-'}
