@@ -387,8 +387,8 @@ export default function ActivationForm({
               </div>
             )}
 
-            {/* Jika sudah punya akun, langsung arahkan ke Dashboard */}
-            {existingOwnerId ? (
+            {/* Jika sudah punya akun DAN profil bisnis, arahkan ke Dashboard untuk tambah perangkat */}
+            {existingOwnerId && businesses.length > 0 ? (
               <div className="p-4 rounded-xl border border-blue-200 bg-blue-50 text-center space-y-3">
                 <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto text-blue-600">
                   <Building2 className="w-6 h-6" />
