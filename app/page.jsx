@@ -119,21 +119,15 @@ export default async function HomePage() {
             {/* Right Showcase Card */}
             <div className="lg:col-span-5 relative mx-auto w-full max-w-[420px] lg:max-w-none">
               <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 bg-white p-3 group">
-                <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-slate-100">
+                <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-slate-50 border border-slate-100">
                   <Image
-                    src="/images/acrylic-stand-hero.jpg"
-                    alt="Stand Akrilik Cobascan di Meja Kafe"
+                    src="/images/acrylic-table-plate.jpg"
+                    alt="Plat Akrilik Cobascan Nempel di Meja Kasir"
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                     priority
                     sizes="(max-width: 768px) 100vw, 480px"
                   />
-                  {/* Floating Logo Badge */}
-                  <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md p-2.5 rounded-xl shadow-lg border border-slate-100 flex items-center justify-center">
-                    <div className="w-8 h-8 relative">
-                      <Image src="/cobascan-logo.png" alt="Cobascan" fill sizes="100vw" className="object-contain" />
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -550,14 +544,14 @@ export default async function HomePage() {
               </div>
 
               <div className="lg:col-span-4 flex items-center justify-center relative">
-                <div className="relative w-40 h-52">
-                  <Image src="/images/acrylic-stand-hero.jpg" alt="Cobascan Stand" fill sizes="100vw" className="object-contain drop-shadow-xl" />
-                  {/* Floating Logo Badge */}
-                  <div className="absolute -top-3 -left-3 bg-white/95 backdrop-blur-md p-2 rounded-xl shadow-lg border border-slate-100 flex items-center justify-center rotate-[-6deg]">
-                    <div className="w-6 h-6 relative">
-                      <Image src="/cobascan-logo.png" alt="Cobascan" fill sizes="100vw" className="object-contain" />
-                    </div>
-                  </div>
+                <div className="relative w-44 h-44 sm:w-52 sm:h-52 bg-white rounded-2xl p-2 shadow-xl border border-slate-200/80 overflow-hidden">
+                  <Image
+                    src="/images/acrylic-table-plate.jpg"
+                    alt="Plat Akrilik Cobascan Nempel di Meja Kasir"
+                    fill
+                    sizes="(max-width: 768px) 176px, 208px"
+                    className="object-cover"
+                  />
                 </div>
                 <div className="absolute -bottom-2 -right-2 bg-white/95 backdrop-blur-sm border border-slate-200 rounded-2xl px-3.5 py-2 shadow-md text-[11px] font-bold text-slate-800 rotate-[-4deg]">
                   Bisnis Lebih Dikenal! ❤️
