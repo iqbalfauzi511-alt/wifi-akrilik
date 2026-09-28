@@ -244,6 +244,21 @@ export default function ActivationForm({
           </div>
         )}
 
+        {existingOwnerId && (
+          <div className="mb-6 flex items-center justify-between bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <span className="text-xs font-semibold text-slate-600">
+              Anda masuk sebagai: <span className="font-bold text-slate-900">{userEmail || 'Owner'}</span>
+            </span>
+            <button 
+              type="button"
+              onClick={() => router.push('/api/auth/logout')} 
+              className="text-xs font-bold text-rose-600 hover:text-rose-700 underline"
+            >
+              Ganti Akun / Logout
+            </button>
+          </div>
+        )}
+
         <form onSubmit={handleUnifiedSubmit} className="space-y-8">
           
           {/* Bagian Akun */}
