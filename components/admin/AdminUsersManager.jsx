@@ -196,7 +196,6 @@ export default function AdminUsersManager({
                 filteredUsers.map((u) => {
                   const isAdmin =
                     u.email === currentAdminEmail ||
-                    u.email === 'admin@smartwifi.com' ||
                     u.email === 'distrapness@gmail.com';
 
                   return (

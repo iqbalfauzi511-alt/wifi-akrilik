@@ -2,8 +2,7 @@ import { NextResponse } from 'next/server';
 import { updateSession } from '@/lib/supabase/middleware';
 
 const ADMIN_EMAILS = [
-  'distrapness@gmail.com',
-  'admin@smartwifi.com',
+  'distrapness@gmail.com'
 ];
 
 function isUserAdmin(email) {

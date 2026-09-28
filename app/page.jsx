@@ -28,7 +28,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   const session = await getCurrentSession();
-  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '6281234567890';
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '6285888159265';
   const whatsappBaseUrl = `https://wa.me/${whatsappNumber}`;
 
   return (
@@ -603,11 +603,11 @@ export default async function HomePage() {
               <ul className="space-y-3 text-xs sm:text-sm text-slate-600">
                 <li className="flex items-center gap-2.5">
                   <Phone className="w-4 h-4 text-slate-400" />
-                  <span>+62 812-3456-7890</span>
+                  <span>+62 858-8815-9265</span>
                 </li>
                 <li className="flex items-center gap-2.5">
                   <Mail className="w-4 h-4 text-slate-400" />
-                  <span>halo@cobascan.id</span>
+                  <span>halo@cobascan.my.id</span>
                 </li>
                 <li className="flex items-center gap-2.5">
                   <Instagram className="w-4 h-4 text-slate-400" />

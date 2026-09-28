@@ -14,9 +14,7 @@ export async function GET(request) {
       const { data, error } = await supabase.auth.exchangeCodeForSession(code);
       if (!error) {
         const userEmail = (data?.user?.email || '').toLowerCase().trim();
-        const isAdmin =
-          userEmail === 'distrapness@gmail.com' ||
-          userEmail === 'admin@smartwifi.com';
+        const isAdmin = userEmail === 'distrapness@gmail.com';
 
         let targetUrl = next;
         if (targetUrl === '/dashboard' && isAdmin) {
