@@ -15,11 +15,12 @@ import {
   Clock,
   Layers,
   Sparkles,
+  MessageSquare,
 } from 'lucide-react';
 import { getAdminStats } from '@/lib/db/queries/stats';
 import { getAllQrsAdmin, getAllBatchesAdmin } from '@/lib/db/queries/qr';
 import { db } from '@/lib/db';
-import { businesses, qrCodes } from '@/lib/db/schema';
+import { businesses, qrCodes, scanLogs } from '@/lib/db/schema';
 import { desc, eq, isNull } from 'drizzle-orm';
 import DashboardHeader from '@/components/layout/DashboardHeader';
 import AdminQrManager from '@/components/admin/AdminQrManager';
@@ -88,8 +89,63 @@ export default async function AdminDashboardPage() {
       isAmber: false,
     }));
 
-  // Recent activity events (Activity log not implemented, returning empty or placeholder)
-  const recentActivities = [];
+  // Fetch recent activity events
+  const dbActivities = await db
+    .select({
+      id: scanLogs.id,
+      actionType: scanLogs.actionType,
+      time: scanLogs.scannedAt,
+      businessName: businesses.businessName,
+      deviceName: qrCodes.deviceName,
+    })
+    .from(scanLogs)
+    .innerJoin(qrCodes, eq(scanLogs.qrId, qrCodes.id))
+    .leftJoin(businesses, eq(qrCodes.businessId, businesses.id))
+    .orderBy(desc(scanLogs.scannedAt))
+    .limit(5)
+    .catch(() => []);
+
+  const getRelativeTime = (date) => {
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return 'Baru saja';
+    if (diffMins < 60) return `${diffMins} menit lalu`;
+    if (diffHours < 24) return `${diffHours} jam lalu`;
+    if (diffDays === 1) return 'Kemarin';
+    return `${diffDays} hari lalu`;
+  };
+
+  const recentActivities = dbActivities.map(act => {
+    let text = 'Scan perangkat';
+    let icon = Sparkles;
+    let color = 'bg-blue-100 text-blue-700';
+    
+    if (act.actionType === 'buka_review') {
+      text = 'Klik Buka Google Review';
+      icon = Star;
+      color = 'bg-amber-100 text-amber-700';
+    } else if (act.actionType === 'lihat_wifi' || act.actionType === 'salin_wifi') {
+      text = 'Akses Wi-Fi';
+      icon = Wifi;
+      color = 'bg-emerald-100 text-emerald-700';
+    } else if (act.actionType === 'kirim_feedback') {
+      text = 'Kirim Feedback/Keluhan';
+      icon = MessageSquare;
+      color = 'bg-rose-100 text-rose-700';
+    }
+
+    return {
+      text,
+      business: act.deviceName || act.businessName || 'Perangkat Anonim',
+      time: getRelativeTime(new Date(act.time)),
+      icon,
+      color,
+    };
+  });
 
   return (
     <div className="space-y-6 pb-12">
