@@ -76,7 +76,7 @@ export default async function HomePage() {
               {/* Primary Action Buttons */}
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-8">
                 <a
-                  href={`${whatsappBaseUrl}?text=Halo%2C%20saya%20tertarik%20dengan%20stand%20akrilik%20Cobascan`}
+                  href={`${whatsappBaseUrl}?text=Halo%2C%20saya%20tertarik%20dengan%20stand%20akrilik%20COBASCAN`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full sm:w-auto"
@@ -122,7 +122,7 @@ export default async function HomePage() {
                 <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-slate-50 border border-slate-100">
                   <Image
                     src="/images/acrylic-table-plate.jpg"
-                    alt="Plat Akrilik Cobascan Nempel di Meja Kasir"
+                    alt="Plat Akrilik COBASCAN Nempel di Meja Kasir"
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                     priority
@@ -391,7 +391,7 @@ export default async function HomePage() {
                   {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
                 </div>
                 <p className="text-sm text-slate-700 italic mb-6 leading-relaxed">
-                  &quot;Semenjak pakai Cobascan di setiap meja kafe, rating Google Maps kami naik drastis dari 4.1 jadi 4.8. Pelanggan seneng dapet Wi-Fi dengan mudah, dan yang komplain masalah pesanan masuknya ke WA, jadi aman gak merusak rating publik!&quot;
+                  &quot;Semenjak pakai COBASCAN di setiap meja kafe, rating Google Maps kami naik drastis dari 4.1 jadi 4.8. Pelanggan seneng dapet Wi-Fi dengan mudah, dan yang komplain masalah pesanan masuknya ke WA, jadi aman gak merusak rating publik!&quot;
                 </p>
               </div>
               <div className="flex items-center gap-3">
@@ -500,7 +500,7 @@ export default async function HomePage() {
               </div>
               
               <a
-                href={`${whatsappBaseUrl}?text=Halo%2C%20saya%20ingin%20memesan%20Stand%20Akrilik%20Cobascan%20seharga%20Rp89.000`}
+                href={`${whatsappBaseUrl}?text=Halo%2C%20saya%20ingin%20memesan%20Stand%20Akrilik%20COBASCAN%20seharga%20Rp89.000`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-8 block"
@@ -529,10 +529,10 @@ export default async function HomePage() {
                   Siap Tingkatkan Reputasi Bisnis Anda?
                 </h2>
                 <p className="text-sm text-slate-600 mb-8 max-w-xl">
-                  Pesan sekarang melalui WhatsApp dan dapatkan stand akrilik Cobascan.
+                  Pesan sekarang melalui WhatsApp dan dapatkan stand akrilik COBASCAN.
                 </p>
                 <a
-                  href={`${whatsappBaseUrl}?text=Halo%2C%20saya%20ingin%20konsultasi%20pemesanan%20Cobascan`}
+                  href={`${whatsappBaseUrl}?text=Halo%2C%20saya%20ingin%20konsultasi%20pemesanan%20COBASCAN`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -547,7 +547,7 @@ export default async function HomePage() {
                 <div className="relative w-44 h-44 sm:w-52 sm:h-52 bg-white rounded-2xl p-2 shadow-xl border border-slate-200/80 overflow-hidden">
                   <Image
                     src="/images/acrylic-table-plate.jpg"
-                    alt="Plat Akrilik Cobascan Nempel di Meja Kasir"
+                    alt="Plat Akrilik COBASCAN Nempel di Meja Kasir"
                     fill
                     sizes="(max-width: 768px) 176px, 208px"
                     className="object-cover"
@@ -570,9 +570,9 @@ export default async function HomePage() {
             <div className="md:col-span-5">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 relative">
-                  <Image src="/cobascan-logo.png" alt="Cobascan" width={32} height={32} className="w-full h-full object-contain" />
+                  <Image src="/cobascan-logo.png" alt="COBASCAN" width={32} height={32} className="w-full h-full object-contain" />
                 </div>
-                <span className="font-extrabold text-slate-900 text-xl pt-0.5">Cobascan</span>
+                <span className="font-extrabold text-slate-900 text-xl pt-0.5">COBASCAN</span>
               </div>
               <p className="text-xs sm:text-sm text-slate-500 max-w-sm leading-relaxed">
                 Solusi sederhana untuk pengalaman pelanggan yang lebih baik.
@@ -616,7 +616,7 @@ export default async function HomePage() {
           </div>
 
           <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-            <p>© 2026 Cobascan. All rights reserved.</p>
+            <p>© 2026 COBASCAN. All rights reserved.</p>
             <p className="flex items-center gap-1">
               Scan, Tap, Connect. <span className="text-red-500">❤️</span>
             </p>
