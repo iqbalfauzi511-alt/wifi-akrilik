@@ -8,7 +8,8 @@ export const dynamic = 'force-dynamic';
 // Build a full array of days for a range, filling 0 for missing days
 function buildDayRange(rows, days) {
   const result = [];
-  const now = new Date();
+  // Use Asia/Jakarta time for the 'now' baseline to match database query
+  const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta' }));
   const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
   for (let i = days - 1; i >= 0; i--) {
