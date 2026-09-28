@@ -526,8 +526,8 @@ export default function CustomerQrTable({
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div className="mt-4 flex items-center justify-between px-4 py-3 rounded-xl border border-slate-200 bg-white shadow-sm">
-          <div className="text-xs text-slate-500">
+        <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 px-4 py-3 rounded-xl border border-slate-200 bg-white shadow-sm">
+          <div className="text-xs text-slate-500 text-center sm:text-left">
             Menampilkan <span className="font-semibold text-slate-700">{(currentPage - 1) * itemsPerPage + 1}</span> - <span className="font-semibold text-slate-700">{Math.min(currentPage * itemsPerPage, filteredQrList.length)}</span> dari <span className="font-semibold text-slate-700">{filteredQrList.length}</span> perangkat
           </div>
           <div className="flex items-center gap-1">

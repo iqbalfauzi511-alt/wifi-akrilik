@@ -998,8 +998,8 @@ export default function AdminQrManager({ initialQrs = [] }) {
         
         {/* Pagination Controls */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between px-4 py-3 border-t border-slate-200/80 bg-slate-50">
-            <div className="text-xs text-slate-500">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 px-4 py-3 border-t border-slate-200/80 bg-slate-50">
+            <div className="text-xs text-slate-500 text-center sm:text-left">
               Menampilkan <span className="font-semibold text-slate-700">{(currentPage - 1) * itemsPerPage + 1}</span> - <span className="font-semibold text-slate-700">{Math.min(currentPage * itemsPerPage, filteredQrs.length)}</span> dari <span className="font-semibold text-slate-700">{filteredQrs.length}</span> QR Code
             </div>
             <div className="flex items-center gap-1">
@@ -1241,6 +1241,9 @@ export default function AdminQrManager({ initialQrs = [] }) {
             {(selectedQr.googleMapsReviewUrl || selectedQr.googleMapsUrl) && (
               <div className="mt-3 p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-center justify-between">
                 <span className="truncate max-w-[200px]">📍 <strong>Review Google Maps:</strong> Aktif</span>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${selectedQr.wifiEnabled ? 'bg-brand-100 text-brand-800' : 'bg-slate-200 text-slate-600'}`}>
+                  {selectedQr.wifiEnabled ? 'Wi-Fi ON' : 'Wi-Fi OFF'}
+                </span>
               </div>
             )}
           </div>

@@ -30,6 +30,7 @@ import Image from 'next/image';
 import { updateBusinessWifiAction } from '@/lib/actions/business-actions';
 import { createClient } from '@/lib/supabase/client';
 import { ownerChangePinAction, ownerAddDeviceAction, ownerChangeWaAction } from '@/lib/actions/owner-auth-actions';
+import { logoutAction } from '@/lib/actions/auth-actions';
 import DeviceList from './DeviceList';
 import LogoUploader from '@/components/ui/LogoUploader';
 
@@ -133,11 +134,12 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      const supabase = createClient();
-      if (supabase) await supabase.auth.signOut();
+      await fetch('/api/auth/logout', { method: 'POST' });
     } catch {}
-    document.cookie = 'smartwifi_session=; Max-Age=0; path=/';
-    router.push('/login');
+    try {
+      await logoutAction();
+    } catch {}
+    window.location.href = '/login';
   };
 
   const handleChangePin = async (e) => {
@@ -241,7 +243,7 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
             type="button"
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-50"
+            className="flex items-center justify-center min-h-[44px] gap-1.5 px-4 py-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-50"
           >
             <LogOut className="w-3.5 h-3.5" />
             {isLoggingOut ? 'Keluar...' : 'Logout'}
@@ -301,9 +303,9 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
 
         {/* Add Device Modal */}
         {showAddDevice && (
-          <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-4">
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl w-full max-w-sm animate-in fade-in slide-in-from-bottom-4 sm:slide-in-from-bottom-0 duration-200">
-              <div className="px-5 pt-5 pb-4 border-b border-slate-100 flex items-center justify-between">
+          <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-4 sm:p-6 z-[100]">
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl w-full max-w-sm max-h-[90vh] overflow-y-auto animate-in fade-in slide-in-from-bottom-4 sm:slide-in-from-bottom-0 duration-200">
+              <div className="px-5 pt-5 pb-4 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-sm z-10">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center">
                     <QrCode className="w-4 h-4" />

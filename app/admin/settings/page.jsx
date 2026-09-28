@@ -4,6 +4,7 @@ import { getCurrentSession, ADMIN_EMAILS } from '@/lib/auth/session';
 import { db, ensureDatabaseInitialized } from '@/lib/db';
 import { users } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
+import LogoutButton from '@/components/auth/LogoutButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -131,6 +132,11 @@ export default async function AdminSettingsPage() {
             </div>
           </div>
         </div>
+      </div>
+      
+      {/* Logout Button Section for Mobile Accessibility */}
+      <div className="pt-2 pb-2 lg:hidden">
+        <LogoutButton variant="danger-block" />
       </div>
     </div>
   );

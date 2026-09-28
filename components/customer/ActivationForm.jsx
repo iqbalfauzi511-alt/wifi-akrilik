@@ -317,7 +317,11 @@ export default function ActivationForm({
                     required
                     className="w-full pl-10 pr-12 py-3 rounded-xl border border-slate-200 bg-slate-50/50 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1A73E8] tracking-widest font-mono"
                   />
-                  <button type="button" onClick={() => setShowPin((s) => !s)} className="absolute right-3.5 text-slate-400 hover:text-slate-600">
+                  <button 
+                    type="button" 
+                    onClick={() => setShowPin((s) => !s)} 
+                    className="absolute right-2 p-2 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                  >
                     {showPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>

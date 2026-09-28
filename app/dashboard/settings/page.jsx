@@ -6,6 +6,7 @@ import { getBusinessesByOwnerId } from '@/lib/db/queries/business';
 import SettingsForm from '@/components/customer/SettingsForm';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
+import LogoutButton from '@/components/auth/LogoutButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,6 +48,11 @@ export default async function CustomerSettingsPage() {
           businesses={userBusinesses}
         />
       )}
+      
+      {/* Logout Button Section for Mobile Accessibility */}
+      <div className="pt-6 pb-2">
+        <LogoutButton variant="danger-block" />
+      </div>
     </div>
   );
 }

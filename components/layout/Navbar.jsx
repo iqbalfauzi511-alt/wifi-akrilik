@@ -56,7 +56,7 @@ export default function Navbar({ session }) {
           <button 
             type="button"
             aria-label={isMobileMenuOpen ? 'Tutup navigasi' : 'Buka navigasi'}
-            className="md:hidden p-2 text-slate-600 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 rounded-lg transition-colors"
+            className="md:hidden flex items-center justify-center min-w-[44px] min-h-[44px] text-slate-600 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 rounded-lg transition-colors"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

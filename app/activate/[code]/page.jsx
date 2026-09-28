@@ -21,10 +21,13 @@ export default async function ActivateQrPage({ params }) {
   const normalizedCode = code?.trim().toUpperCase().replace(/[\u2013\u2014\u2212]/g, '-') || '';
   const session = await getCurrentSession();
 
-  // If already logged in owner, get their businesses to pre-fill
-  const userBusinesses = session?.user?.id
+  // Only real customer owners can prefill and attach to existing owner business.
+  // Admin accounts must NOT be treated as owner accounts during activation.
+  const isOwnerSession = session?.user && session?.role !== 'admin';
+  const userBusinesses = isOwnerSession
     ? await getBusinessesByOwnerId(session.user.id)
     : [];
+  const existingOwnerId = isOwnerSession ? session.user.id : null;
 
   const qr = await getQrByCode(normalizedCode);
 
@@ -173,6 +176,19 @@ export default async function ActivateQrPage({ params }) {
             </div>
           )}
 
+          {session?.role === 'admin' && (
+            <div className="my-3 p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-left">
+              <div>
+                <span className="font-bold">Mode Administrator:</span> Anda sedang login sebagai Admin. Formulir ini akan mendaftarkan nomor WhatsApp pemilik baru untuk perangkat ini.
+              </div>
+              <Link href="/admin">
+                <Button size="xs" variant="outline" className="shrink-0 bg-white">
+                  Dashboard Admin
+                </Button>
+              </Link>
+            </div>
+          )}
+
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             Aktifkan Cobascan
           </h1>
@@ -186,9 +202,9 @@ export default async function ActivateQrPage({ params }) {
           code={code}
           initialBusiness={userBusinesses[0] || null}
           businesses={userBusinesses}
-          userEmail={session?.user?.email || ''}
+          userEmail={isOwnerSession ? (session?.user?.email || '') : ''}
           batchCode={qr?.batchCode}
-          existingOwnerId={session?.user?.id || null}
+          existingOwnerId={existingOwnerId}
         />
       </div>
     </div>

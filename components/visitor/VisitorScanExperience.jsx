@@ -24,8 +24,10 @@ import { trackVisitorAction } from '@/lib/actions/qr-actions';
 const STAGE = {
   RATING: 'rating',
   FEEDBACK: 'feedback',
-  REDIRECTED: 'redirected', // Opened external URL, waiting for explicit user click
-  DONE: 'done',             // Rating complete (and WiFi unlocked if wifiEnabled)
+  WAITING_RETURN: 'waiting_return',   // User switched to Maps / WA, waiting for return
+  PLACEBO_LOADING: 'placebo_loading', // 5s fake loading that runs WHEN USER RETURNS
+  REDIRECTED: 'redirected',           // Review verified, ready to reveal WiFi
+  DONE: 'done',                       // Rating complete & WiFi revealed
 };
 
 export default function VisitorScanExperience({
@@ -46,17 +48,98 @@ export default function VisitorScanExperience({
   const [selectedRating, setSelectedRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [copied, setCopied] = useState(false);
-  // Only true when visitor rated ≥3 and went through Google Maps path
+  // Only true when visitor rated >=3 and went through Google Maps path
   const [wifiEarned, setWifiEarned] = useState(false);
   const [revealedPassword, setRevealedPassword] = useState(wifiPassword || '');
   const [revealedSsid, setRevealedSsid] = useState(wifiName || 'Wi-Fi Tamu');
   const [isRevealingWifi, setIsRevealingWifi] = useState(false);
+  
+  // Track redirect target: 'maps' | 'whatsapp'
+  const [redirectType, setRedirectType] = useState('maps');
+  const [pendingWaUrl, setPendingWaUrl] = useState('');
+
+  // Placebo loading state
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [loadingText, setLoadingText] = useState('Memverifikasi...');
+  const placeboTimerRef = useRef(null);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (placeboTimerRef.current) {
+        clearInterval(placeboTimerRef.current);
+      }
+    };
+  }, []);
+
+  // Placebo Loading Runner: runs for exactly 5 seconds IN FRONT OF THE USER once they return
+  const startPlaceboLoading = useCallback((type = 'maps') => {
+    if (placeboTimerRef.current) {
+      clearInterval(placeboTimerRef.current);
+    }
+    setStage(STAGE.PLACEBO_LOADING);
+    setLoadingProgress(0);
+
+    const DURATION = 5000; // 5 detik total di depan mata pengguna
+    const startTime = Date.now();
+
+    const getStatusText = (progress) => {
+      if (type === 'maps') {
+        if (progress < 25) return 'Mendeteksi Anda telah kembali...';
+        if (progress < 55) return 'Mengecek status ulasan Google Maps...';
+        if (progress < 85) return 'Memverifikasi ulasan bintang 5 Anda...';
+        return 'Ulasan terverifikasi! Menyiapkan akses Wi-Fi...';
+      } else {
+        if (progress < 25) return 'Mendeteksi Anda telah kembali...';
+        if (progress < 55) return 'Menghubungkan ke WhatsApp manajemen...';
+        if (progress < 85) return 'Mengecek status pengiriman pesan...';
+        return 'Laporan diterima! Menyiapkan akses Wi-Fi...';
+      }
+    };
+
+    setLoadingText(getStatusText(0));
+
+    placeboTimerRef.current = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(100, Math.round((elapsed / DURATION) * 100));
+      setLoadingProgress(progress);
+      setLoadingText(getStatusText(progress));
+
+      if (progress >= 100) {
+        clearInterval(placeboTimerRef.current);
+        placeboTimerRef.current = null;
+        setStage(STAGE.REDIRECTED);
+      }
+    }, 100);
+  }, []);
+
+  // DETECT RETURN: When user returns to tab from Google Maps or WhatsApp, start Placebo Loading!
+  useEffect(() => {
+    if (stage !== STAGE.WAITING_RETURN) return;
+
+    const handleTabReturn = () => {
+      if (document.visibilityState === 'visible') {
+        startPlaceboLoading(redirectType);
+      }
+    };
+
+    const handleWindowFocus = () => {
+      startPlaceboLoading(redirectType);
+    };
+
+    document.addEventListener('visibilitychange', handleTabReturn);
+    window.addEventListener('focus', handleWindowFocus);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleTabReturn);
+      window.removeEventListener('focus', handleWindowFocus);
+    };
+  }, [stage, redirectType, startPlaceboLoading]);
 
   // Feedback form state
   const [feedbackMessage, setFeedbackMessage] = useState('');
   const [customerName, setCustomerName] = useState('');
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
-  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const fetchWifiCredentials = useCallback(async () => {
@@ -104,59 +187,69 @@ export default function VisitorScanExperience({
   const handleStarClick = (value) => {
     setSelectedRating(value);
     if (value >= 3) {
+      setRedirectType('maps');
       window.open(targetMapsUrl, '_blank', 'noopener,noreferrer');
-      setStage(STAGE.REDIRECTED);
+      setStage(STAGE.WAITING_RETURN);
       // Track Buka Google Review
       trackVisitorAction(code, 'buka_review').catch(() => {});
     } else {
-      // 1-2 stars: show feedback form
+      // 1-2 stars: open feedback modal to collect input before WA
       setStage(STAGE.FEEDBACK);
     }
   };
 
-  // Submit 1-2 star feedback
+  // Submit 1-2 star feedback: open WA & transition to WAITING_RETURN
   const handleSubmitFeedback = async (e) => {
     e.preventDefault();
-    if (!feedbackMessage.trim()) {
-      setErrorMessage('Tuliskan keluhan atau saran Anda.');
-      return;
-    }
     setIsSubmittingFeedback(true);
     setErrorMessage('');
-    try {
-      const res = await submitCustomerFeedbackAction({
-        qrCode: code,
-        rating: selectedRating,
-        message: feedbackMessage,
-        customerName: customerName.trim(),
-        customerPhone: '',
-      });
-      setIsSubmittingFeedback(false);
-      if (res?.success) {
-        setFeedbackSubmitted(true);
-        // Track Feedback Terkirim
-        trackVisitorAction(code, 'kirim_feedback').catch(() => {});
-        // Redirect to WhatsApp immediately if number is set
-        if (res.whatsappUrl) {
-          window.open(res.whatsappUrl, '_blank', 'noopener,noreferrer');
-        }
-      } else {
-        setErrorMessage(res?.error || 'Gagal mengirim masukan.');
-      }
-    } catch {
-      setIsSubmittingFeedback(false);
-      setErrorMessage('Terjadi kendala. Silakan coba lagi.');
+
+    // Precompute WhatsApp URL
+    let waUrl = null;
+    let cleanWa = (whatsappNumber || '').replace(/[^0-9]/g, '');
+    if (cleanWa.startsWith('0')) cleanWa = '62' + cleanWa.substring(1);
+    else if (cleanWa && !cleanWa.startsWith('62')) cleanWa = '62' + cleanWa;
+
+    const feedbackText = feedbackMessage.trim() || 'Pelanggan ingin menyampaikan masukan langsung.';
+
+    if (cleanWa) {
+      const starsEmoji = '★'.repeat(selectedRating || 1);
+      const sender = customerName.trim() ? ` dari ${customerName.trim()}` : '';
+      const waText = `Halo ${businessName}, saya pelanggan${sender} dari meja (Kode: ${code}).\n\nSaya memberikan rating: ${selectedRating} Bintang (${starsEmoji})\n\nMasukan/Keluhan:\n"${feedbackText}"\n\nMohon dapat ditindaklanjuti. Terima kasih.`;
+      waUrl = `https://wa.me/${cleanWa}?text=${encodeURIComponent(waText)}`;
     }
+
+    setPendingWaUrl(waUrl || '');
+    setRedirectType('whatsapp');
+
+    // Open WhatsApp immediately within user tap event (bypasses mobile popup blockers)
+    if (waUrl) {
+      window.open(waUrl, '_blank', 'noopener,noreferrer');
+    }
+
+    // Transition to WAITING_RETURN: wait for user to come back from WhatsApp
+    setStage(STAGE.WAITING_RETURN);
+    setIsSubmittingFeedback(false);
+
+    // Save feedback to database asynchronously in the background
+    submitCustomerFeedbackAction({
+      qrCode: code,
+      rating: selectedRating,
+      message: feedbackText,
+      customerName: customerName.trim(),
+      customerPhone: '',
+    }).then((res) => {
+      if (!waUrl && res?.whatsappUrl) {
+        setPendingWaUrl(res.whatsappUrl);
+        window.open(res.whatsappUrl, '_blank', 'noopener,noreferrer');
+      }
+      trackVisitorAction(code, 'kirim_feedback').catch(() => {});
+    }).catch((err) => {
+      console.warn('Feedback background submit notice:', err);
+    });
   };
 
-  // After feedback submitted: WiFi earned for ALL ratings
-  const handleFinishFeedback = () => {
-    setWifiEarned(true);
-    setStage(STAGE.DONE);
-    fetchWifiCredentials();
-  };
-
-  // Reveal WiFi: called from REDIRECTED (≥3 star path)
+  // Reveal WiFi: called from REDIRECTED (both 1-2 and 3-5 star paths)
   const handleRevealWifi = () => {
     setWifiEarned(true);
     setStage(STAGE.DONE);
@@ -231,13 +324,86 @@ export default function VisitorScanExperience({
           </div>
         )}
 
-        {/* Stage: REDIRECTED (Returned from 3-5 star Google Maps link) */}
+        {/* Stage: WAITING_RETURN (Waiting for user to return from Google Maps or WhatsApp) */}
+        {stage === STAGE.WAITING_RETURN && (
+          <div className="mt-6 pt-6 border-t border-slate-100 text-center py-2 animate-in fade-in zoom-in-95 duration-200">
+            <div className="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 border border-brand-100 flex items-center justify-center mx-auto mb-3 shadow-xs">
+              {redirectType === 'whatsapp' ? (
+                <MessageSquare className="w-7 h-7 text-emerald-600 animate-pulse" />
+              ) : (
+                <ExternalLink className="w-7 h-7 text-brand-600 animate-pulse" />
+              )}
+            </div>
+            
+            <h3 className="text-base font-extrabold text-slate-900 mb-1">
+              {redirectType === 'whatsapp'
+                ? 'Sampaikan Masukan di WhatsApp'
+                : 'Beri Ulasan di Google Maps'}
+            </h3>
+            
+            <p className="text-xs text-slate-500 mb-5 max-w-xs mx-auto leading-relaxed">
+              {redirectType === 'whatsapp'
+                ? 'Silakan kirim pesan Anda di WhatsApp. Saat Anda kembali ke halaman ini, sistem akan memverifikasi masukan Anda.'
+                : 'Silakan berikan rating bintang 5 di Google Maps. Saat Anda kembali ke halaman ini, sistem akan memverifikasi ulasan Anda.'}
+            </p>
+
+            <button
+              type="button"
+              onClick={() => startPlaceboLoading(redirectType)}
+              className="w-full py-3.5 px-4 rounded-2xl bg-[#1A73E8] hover:bg-blue-600 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <CheckCircle2 className="w-4 h-4" />
+              <span>
+                {redirectType === 'whatsapp'
+                  ? 'Saya Sudah Mengirim Pesan'
+                  : 'Saya Sudah Memberi Bintang 5'}
+              </span>
+            </button>
+
+            <div className="mt-3.5">
+              <button
+                type="button"
+                onClick={() => {
+                  if (redirectType === 'whatsapp' && pendingWaUrl) {
+                    window.open(pendingWaUrl, '_blank', 'noopener,noreferrer');
+                  } else {
+                    window.open(targetMapsUrl, '_blank', 'noopener,noreferrer');
+                  }
+                }}
+                className="text-[11px] font-semibold text-slate-400 hover:text-brand-600 transition-colors inline-flex items-center gap-1 cursor-pointer"
+              >
+                <span>{redirectType === 'whatsapp' ? 'Buka ulang WhatsApp' : 'Buka ulang Google Maps'}</span>
+                <ExternalLink className="w-3 h-3" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Stage: PLACEBO_LOADING (Fake loading wait) */}
+        {stage === STAGE.PLACEBO_LOADING && (
+          <div className="mt-6 pt-6 border-t border-slate-100 text-center py-4">
+            <div className="w-12 h-12 rounded-full border-4 border-slate-100 border-t-brand-600 animate-spin mx-auto mb-4" />
+            <h3 className="text-sm font-bold text-slate-900 mb-1">{loadingText}</h3>
+            <p className="text-[11px] text-slate-500 mb-4">Mohon jangan tutup halaman ini.</p>
+            <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-brand-600 rounded-full transition-all duration-300 ease-out"
+                style={{ width: `${loadingProgress}%` }}
+              />
+            </div>
+            <div className="text-[10px] text-slate-400 mt-2 font-mono">{loadingProgress}%</div>
+          </div>
+        )}
+
+        {/* Stage: REDIRECTED (Returned from 3-5 star Google Maps link or 1-2 star WhatsApp link) */}
         {stage === STAGE.REDIRECTED && (
-          <div className="mt-6 pt-6 border-t border-slate-100 text-center py-2">
+          <div className="mt-6 pt-6 border-t border-slate-100 text-center py-2 animate-in fade-in zoom-in-95 duration-200">
             <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-3">
               <CheckCircle2 className="w-7 h-7" />
             </div>
-            <p className="text-sm font-bold text-slate-800">Terima kasih atas ulasan Anda!</p>
+            <p className="text-sm font-bold text-slate-800">
+              {selectedRating <= 2 ? 'Terima kasih atas masukan Anda!' : 'Terima kasih atas ulasan Anda!'}
+            </p>
             
             {wifiEnabled ? (
               <>
@@ -255,7 +421,9 @@ export default function VisitorScanExperience({
               </>
             ) : (
               <p className="text-xs text-slate-500 mt-1">
-                Masukan dan ulasan Anda sangat berharga bagi kami.
+                {selectedRating <= 2
+                  ? 'Masukan Anda sangat berharga bagi peningkatan kualitas layanan kami.'
+                  : 'Masukan dan ulasan Anda sangat berharga bagi kami.'}
               </p>
             )}
           </div>
@@ -269,13 +437,15 @@ export default function VisitorScanExperience({
             </div>
             <p className="text-sm font-bold text-slate-800">Terima kasih!</p>
             <p className="text-xs text-slate-500 mt-1">
-              Ulasan Anda sangat berarti untuk meningkatkan kualitas layanan kami.
+              {selectedRating <= 2
+                ? 'Masukan Anda sangat berarti untuk meningkatkan kualitas layanan kami.'
+                : 'Ulasan Anda sangat berarti untuk meningkatkan kualitas layanan kami.'}
             </p>
           </div>
         )}
       </div>
 
-      {/* WiFi Section: ONLY shown when wifiEnabled AND wifi was earned via ≥3 star path */}
+      {/* WiFi Section: ONLY shown when wifiEnabled AND wifi was earned */}
       {wifiEnabled && wifiEarned && stage === STAGE.DONE && (
         <div className="bg-white rounded-3xl border border-emerald-200 shadow-xl shadow-emerald-100/50 p-6 sm:p-7 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="flex items-center gap-3 mb-4">
@@ -334,50 +504,20 @@ export default function VisitorScanExperience({
       {stage === STAGE.FEEDBACK && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-md w-full p-6 sm:p-8 animate-in fade-in zoom-in-95 duration-200">
-            {feedbackSubmitted ? (
-              <div className="text-center py-4">
-                <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle2 className="w-8 h-8" />
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                  <MessageSquare className="w-5 h-5" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">Masukan Terkirim!</h3>
-                <p className="text-xs text-slate-600 mb-4 leading-relaxed">
-                  Terima kasih. Tim <strong>{businessName}</strong> akan segera menindaklanjuti.
-                </p>
-
-                {wifiEnabled ? (
-                  <button
-                    type="button"
-                    onClick={handleFinishFeedback}
-                    className="w-full py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-md"
-                  >
-                    <UnlockKeyhole className="w-4 h-4" />
-                    <span>Lihat Nama &amp; Password Wi-Fi</span>
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleFinishFeedback}
-                    className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition-colors cursor-pointer"
-                  >
-                    Selesai
-                  </button>
-                )}
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">Sampaikan Masukan Anda</h3>
+                  <p className="text-xs text-slate-500">Rating: {selectedRating} Bintang</p>
+                </div>
               </div>
-            ) : (
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
-                    <MessageSquare className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="text-base font-bold text-slate-900">Sampaikan Masukan Anda</h3>
-                    <p className="text-xs text-slate-500">Rating: {selectedRating} Bintang</p>
-                  </div>
-                </div>
 
-                <p className="text-xs text-slate-600 mb-4 leading-relaxed">
-                  Kami mohon maaf atas ketidaknyamanan di <strong>{businessName}</strong>. Sampaikan keluhan agar pengelola dapat segera menindaklanjuti.
-                </p>
+              <p className="text-xs text-slate-600 mb-4 leading-relaxed">
+                Kami mohon maaf atas ketidaknyamanan di <strong>{businessName}</strong>. Sampaikan keluhan agar pengelola dapat segera menindaklanjuti via WhatsApp.
+              </p>
 
                 {errorMessage && (
                   <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs mb-4 flex items-center gap-2">
@@ -439,7 +579,6 @@ export default function VisitorScanExperience({
                   </div>
                 </form>
               </div>
-            )}
           </div>
         </div>
       )}

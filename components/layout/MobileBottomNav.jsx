@@ -33,7 +33,7 @@ export default function MobileBottomNav({ role = 'customer' }) {
   const navItems = isAdminView ? adminNav : customerNav;
 
   return (
-    <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 shadow-lg px-2 py-1 flex items-center justify-around">
+    <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 shadow-lg px-2 pt-1 pb-[calc(0.25rem+env(safe-area-inset-bottom))] flex items-center justify-around">
       {navItems.map((item) => {
         const isActive = item.exact
           ? pathname === item.href
