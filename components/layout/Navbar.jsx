@@ -15,9 +15,9 @@ export default function Navbar({ session }) {
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2 group">
           <div className="w-8 h-8 flex items-center justify-center group-hover:scale-105 transition-transform relative">
-            <Image src="/cobascan-logo.png" alt="Cobascan" width={32} height={32} priority className="w-full h-full object-contain" />
+            <Image src="/cobascan-logo.png" alt="COBASCAN" width={32} height={32} priority className="w-full h-full object-contain" />
           </div>
-          <span className="heading-premium text-xl">Cobascan</span>
+          <span className="heading-premium text-xl">COBASCAN</span>
         </Link>
 
         {/* Desktop Links */}
