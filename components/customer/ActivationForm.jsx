@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import {
   Phone, Lock, Eye, EyeOff, ArrowRight, CheckCircle2,
   ExternalLink, Wifi, WifiOff, Building2, Star, AlertCircle,
-  KeyRound, User, Info, Plus
+  KeyRound, User, Info, Plus, Check
 } from 'lucide-react';
 import { ownerRegisterAction, checkWaRegisteredAction } from '@/lib/actions/owner-auth-actions';
 import { activateQrAction } from '@/lib/actions/qr-actions';
@@ -497,6 +497,11 @@ export default function ActivationForm({
                     </button>
                   </div>
                   {generateError && <p className="mt-2 text-xs text-rose-500 font-medium flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5"/> {generateError}</p>}
+                  {generateSuccess && !generateError && (
+                    <p className="mt-2 text-xs text-emerald-600 font-medium flex items-center gap-1">
+                      <Check className="w-3.5 h-3.5" /> Berhasil diproses jadi link Review!
+                    </p>
+                  )}
                 </div>
 
                 {/* Wi-Fi Toggle */}
