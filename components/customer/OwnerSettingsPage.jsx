@@ -25,6 +25,9 @@ import {
   ShieldCheck,
   ChevronDown,
   MapPin,
+  Store,
+  BarChart3,
+  TrendingUp,
 } from 'lucide-react';
 import Image from 'next/image';
 import { updateBusinessWifiAction } from '@/lib/actions/business-actions';
@@ -33,6 +36,7 @@ import { ownerChangePinAction, ownerAddDeviceAction, ownerChangeWaAction } from 
 import { logoutAction } from '@/lib/actions/auth-actions';
 import DeviceList from './DeviceList';
 import LogoUploader from '@/components/ui/LogoUploader';
+import ScanActivityChart from '@/components/charts/ScanActivityChart';
 
 function Field({ label, helperText, error, children }) {
   return (
@@ -67,7 +71,7 @@ function TextInput({ name, type = 'text', defaultValue, placeholder, required, i
   );
 }
 
-export default function OwnerSettingsPage({ business, businesses = [], userEmail, userName, userWa, qrList = [], scanLogs = [], feedbacks = [] }) {
+export default function OwnerSettingsPage({ business, businesses = [], userEmail, userName, userWa, qrList = [], scanLogs = [], feedbacks = [], stats = {} }) {
   const router = useRouter();
 
   const initialStores = businesses.length > 0 ? businesses : (business ? [business] : []);
@@ -207,8 +211,10 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
   const filteredQrList = activeStore ? qrList.filter(q => q.businessId === activeStore.id) : [];
 
   // Stats computed from real data - must be before any early return
-  const totalDevices = filteredQrList.length;
-  const totalScans = filteredQrList.reduce((sum, q) => sum + (q.scanCount || 0), 0);
+  const totalDevices = stats.totalQrCount || 0;
+  const totalScans = stats.totalScans || 0;
+  const totalReview = stats.actionReview || 0;
+  const totalActionScans = (stats.actionReview || 0) + (stats.actionWifi || 0) + (stats.actionOther || 0);
   const totalFeedbacks = useMemo(() => feedbacks.filter(f => f.businessId === activeStore?.id).length, [feedbacks, activeStore?.id]);
   const avgRating = useMemo(() => {
     const bFeedbacks = feedbacks.filter(f => f.businessId === activeStore?.id);
@@ -251,7 +257,89 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 space-y-4">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+
+        {/* 4 Bento Overview Cards */}
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex flex-col justify-between">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#1A73E8] flex items-center justify-center shrink-0">
+                <Store className="w-4 h-4" />
+              </div>
+              <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide">Bisnis</div>
+            </div>
+            <div className="text-xl sm:text-2xl font-black text-slate-900 leading-none">{businesses.length}</div>
+            <div className="text-[10px] text-slate-400 font-medium mt-1">Lokasi terdaftar</div>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex flex-col justify-between">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                <QrCode className="w-4 h-4" />
+              </div>
+              <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide">Perangkat</div>
+            </div>
+            <div className="text-xl sm:text-2xl font-black text-slate-900 leading-none">{stats.totalQrCount || 0}</div>
+            <div className="text-[10px] text-emerald-600 font-bold mt-1">{stats.activeQrCount || 0} Aktif</div>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex flex-col justify-between">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+                <Users className="w-4 h-4" />
+              </div>
+              <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide">Total Scan</div>
+            </div>
+            <div className="text-xl sm:text-2xl font-black text-slate-900 leading-none">{totalScans.toLocaleString('id-ID')}</div>
+            <div className="text-[10px] text-emerald-600 font-bold mt-1">Pengunjung Riil</div>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex flex-col justify-between">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
+                <Star className="w-4 h-4 fill-amber-500" />
+              </div>
+              <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide">Review</div>
+            </div>
+            <div className="text-xl sm:text-2xl font-black text-slate-900 leading-none">{totalReview}</div>
+            <div className="text-[10px] text-amber-500 font-bold mt-1">Klik Terkonversi</div>
+          </div>
+        </div>
+
+        {/* Aktivitas Scan Chart */}
+        <ScanActivityChart />
+
+        {/* Aggregated Action Breakdown */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-sm">
+          <h2 className="text-sm font-extrabold text-slate-900 mb-4">
+            Distribusi Aksi Pengunjung
+          </h2>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between p-3 rounded-xl bg-blue-50/60 border border-blue-100">
+              <div>
+                <div className="text-[11px] font-bold text-[#1A73E8] mb-0.5">Membuka Google Review</div>
+                <div className="text-[10px] text-slate-500">Redirect ke profil maps</div>
+              </div>
+              <div className="text-lg font-black text-slate-900">{stats.actionReview || 0}</div>
+            </div>
+
+            <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-50/60 border border-emerald-100">
+              <div>
+                <div className="text-[11px] font-bold text-emerald-600 mb-0.5">Akses Wi-Fi Tamu</div>
+                <div className="text-[10px] text-slate-500">Melihat atau menyalin sandi</div>
+              </div>
+              <div className="text-lg font-black text-slate-900">{stats.actionWifi || 0}</div>
+            </div>
+
+            <div className="flex items-center justify-between p-3 rounded-xl bg-purple-50/60 border border-purple-100">
+              <div>
+                <div className="text-[11px] font-bold text-purple-600 mb-0.5">Aksi Lainnya</div>
+                <div className="text-[10px] text-slate-500">Membaca panduan, dsb</div>
+              </div>
+              <div className="text-lg font-black text-slate-900">{stats.actionOther || 0}</div>
+            </div>
+          </div>
+        </div>
 
         {/* Profil Section */}
         <div className="bg-white rounded-2xl border border-slate-200 p-5 flex items-center justify-between">
