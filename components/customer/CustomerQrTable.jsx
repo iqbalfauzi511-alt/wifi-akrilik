@@ -23,6 +23,7 @@ import {
   Sparkles,
   Building,
   Store,
+  Check,
 } from 'lucide-react';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
