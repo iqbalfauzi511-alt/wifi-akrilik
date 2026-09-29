@@ -260,17 +260,7 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 space-y-6">
 
         {/* 4 Bento Overview Cards */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-4">
-          <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex flex-col justify-between">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#1A73E8] flex items-center justify-center shrink-0">
-                <Store className="w-4 h-4" />
-              </div>
-              <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide">Bisnis</div>
-            </div>
-            <div className="text-xl sm:text-2xl font-black text-slate-900 leading-none">{businesses.length}</div>
-            <div className="text-[10px] text-slate-400 font-medium mt-1">Lokasi terdaftar</div>
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
 
           <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex flex-col justify-between">
             <div className="flex items-center gap-2 mb-2">
@@ -308,38 +298,6 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
 
         {/* Aktivitas Scan Chart */}
         <ScanActivityChart />
-
-        {/* Aggregated Action Breakdown */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-sm">
-          <h2 className="text-sm font-extrabold text-slate-900 mb-4">
-            Distribusi Aksi Pengunjung
-          </h2>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between p-3 rounded-xl bg-blue-50/60 border border-blue-100">
-              <div>
-                <div className="text-[11px] font-bold text-[#1A73E8] mb-0.5">Membuka Google Review</div>
-                <div className="text-[10px] text-slate-500">Redirect ke profil maps</div>
-              </div>
-              <div className="text-lg font-black text-slate-900">{stats.actionReview || 0}</div>
-            </div>
-
-            <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-50/60 border border-emerald-100">
-              <div>
-                <div className="text-[11px] font-bold text-emerald-600 mb-0.5">Akses Wi-Fi Tamu</div>
-                <div className="text-[10px] text-slate-500">Melihat atau menyalin sandi</div>
-              </div>
-              <div className="text-lg font-black text-slate-900">{stats.actionWifi || 0}</div>
-            </div>
-
-            <div className="flex items-center justify-between p-3 rounded-xl bg-purple-50/60 border border-purple-100">
-              <div>
-                <div className="text-[11px] font-bold text-purple-600 mb-0.5">Aksi Lainnya</div>
-                <div className="text-[10px] text-slate-500">Membaca panduan, dsb</div>
-              </div>
-              <div className="text-lg font-black text-slate-900">{stats.actionOther || 0}</div>
-            </div>
-          </div>
-        </div>
 
         {/* Profil Section */}
         <div className="bg-white rounded-2xl border border-slate-200 p-5 flex items-center justify-between">
