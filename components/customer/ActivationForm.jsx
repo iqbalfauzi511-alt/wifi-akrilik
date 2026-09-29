@@ -47,6 +47,9 @@ export default function ActivationForm({
   const [wifiNameVal, setWifiNameVal] = useState(initialBusiness?.wifiName || '');
   const [wifiPasswordVal, setWifiPasswordVal] = useState(initialBusiness?.wifiPassword || '');
   const [whatsappBusinessVal, setWhatsappBusinessVal] = useState('');
+  const [isGeneratingLink, setIsGeneratingLink] = useState(false);
+  const [generateError, setGenerateError] = useState('');
+  const [generateSuccess, setGenerateSuccess] = useState(false);
 
   // Check WA registration on blur
   const handleWaBlur = async () => {
@@ -56,6 +59,30 @@ export default function ActivationForm({
     const result = await checkWaRegisteredAction(wa);
     setWaCheckResult(result);
     setIsCheckingWa(false);
+  };
+
+  const handleGenerateReviewLink = async () => {
+    if (!mapsUrlVal) {
+      setGenerateError('Masukkan link Google Maps terlebih dahulu.');
+      return;
+    }
+    setGenerateError('');
+    setIsGeneratingLink(true);
+    try {
+      const { generateReviewLinkAction } = await import('@/lib/actions/maps-actions');
+      const res = await generateReviewLinkAction(mapsUrlVal);
+      if (res.success) {
+        setMapsUrlVal(res.result);
+        setGenerateSuccess(true);
+      } else {
+        setGenerateError(res.error);
+        setGenerateSuccess(false);
+      }
+    } catch (e) {
+      setGenerateError('Gagal memproses link.');
+    } finally {
+      setIsGeneratingLink(false);
+    }
   };
 
   const handleUnifiedSubmit = async (e) => {
@@ -445,17 +472,31 @@ export default function ActivationForm({
                   <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">
                     Link Google Review <span className="text-rose-500">*</span>
                   </label>
-                  <div className="relative flex items-center">
-                    <div className="absolute left-3.5 text-slate-400 pointer-events-none"><Star className="w-4 h-4" /></div>
-                    <input
-                      type="url"
-                      value={mapsUrlVal}
-                      onChange={(e) => setMapsUrlVal(e.target.value)}
-                      placeholder="https://g.page/r/..."
-                      required
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1A73E8]"
-                    />
+                  <div className="flex gap-2">
+                    <div className="relative flex items-center flex-1">
+                      <div className="absolute left-3.5 text-slate-400 pointer-events-none"><Star className="w-4 h-4" /></div>
+                      <input
+                        type="url"
+                        value={mapsUrlVal}
+                        onChange={(e) => {
+                          setMapsUrlVal(e.target.value);
+                          setGenerateSuccess(false);
+                        }}
+                        placeholder="https://g.page/r/..."
+                        required
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1A73E8]"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleGenerateReviewLink}
+                      disabled={isGeneratingLink || !mapsUrlVal}
+                      className="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all disabled:opacity-50 flex items-center gap-2 shrink-0"
+                    >
+                      {isGeneratingLink ? 'Memproses...' : '🔍 Generate Review Link'}
+                    </button>
                   </div>
+                  {generateError && <p className="mt-2 text-xs text-rose-500 font-medium flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5"/> {generateError}</p>}
                 </div>
 
                 {/* Wi-Fi Toggle */}

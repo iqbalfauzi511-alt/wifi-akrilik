@@ -44,6 +44,10 @@ export default function CustomerQrTable({
 
   const [selectedQr, setSelectedQr] = useState(null);
   const [selectedEditQr, setSelectedEditQr] = useState(null);
+  const [editMapsUrl, setEditMapsUrl] = useState('');
+  const [isGeneratingLink, setIsGeneratingLink] = useState(false);
+  const [generateError, setGenerateError] = useState('');
+  const [generateSuccess, setGenerateSuccess] = useState(false);
   const [activeTab, setActiveTab] = useState('review'); // 'review' | 'wifi'
   const [selectedStoreFilter, setSelectedStoreFilter] = useState('all');
   
@@ -116,6 +120,36 @@ export default function CustomerQrTable({
       }
       return next;
     });
+  };
+
+  const handleOpenEdit = (qr) => {
+    setSelectedEditQr(qr);
+    setEditMapsUrl(qr.googleMapsReviewUrl || '');
+    setGenerateError('');
+  };
+
+  const handleGenerateReviewLink = async () => {
+    if (!editMapsUrl) {
+      setGenerateError('Masukkan link Google Maps terlebih dahulu.');
+      return;
+    }
+    setGenerateError('');
+    setIsGeneratingLink(true);
+    try {
+      const { generateReviewLinkAction } = await import('@/lib/actions/maps-actions');
+      const res = await generateReviewLinkAction(editMapsUrl);
+      if (res.success) {
+        setEditMapsUrl(res.result);
+        setGenerateSuccess(true);
+      } else {
+        setGenerateError(res.error);
+        setGenerateSuccess(false);
+      }
+    } catch (e) {
+      setGenerateError('Gagal memproses link.');
+    } finally {
+      setIsGeneratingLink(false);
+    }
   };
 
   // Bulk Status Update (Active / Disabled)
@@ -490,7 +524,7 @@ export default function CustomerQrTable({
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => setSelectedEditQr(qr)}
+                        onClick={() => handleOpenEdit(qr)}
                         className="text-xs py-1 px-2.5 bg-white hover:bg-slate-50 text-slate-700"
                         title="Pengaturan Perangkat"
                       >
@@ -738,13 +772,33 @@ export default function CustomerQrTable({
               <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Link Google Review
               </label>
-              <input
-                type="url"
-                name="googleMapsReviewUrl"
-                defaultValue={selectedEditQr.googleMapsReviewUrl || ''}
-                placeholder="https://g.page/r/..."
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
-              />
+              <div className="flex gap-2">
+                <input
+                  type="url"
+                  name="googleMapsReviewUrl"
+                  value={editMapsUrl}
+                  onChange={(e) => {
+                    setEditMapsUrl(e.target.value);
+                    setGenerateSuccess(false);
+                  }}
+                  placeholder="https://g.page/r/..."
+                  className="flex-1 px-3 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
+                />
+                <button
+                  type="button"
+                  onClick={handleGenerateReviewLink}
+                  disabled={isGeneratingLink || !editMapsUrl}
+                  className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all disabled:opacity-50 flex items-center gap-1 shrink-0"
+                >
+                  {isGeneratingLink ? 'Memproses...' : '🔍 Generate Review Link'}
+                </button>
+              </div>
+              {generateError && <p className="mt-1.5 text-xs text-rose-500 font-medium flex items-center gap-1"><AlertTriangle className="w-3 h-3"/> {generateError}</p>}
+              {generateSuccess && !generateError && (
+                <p className="mt-1.5 text-[11px] text-emerald-600 font-medium flex items-center gap-1">
+                  <Check className="w-3 h-3" /> Berhasil!
+                </p>
+              )}
             </div>
 
             <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50">

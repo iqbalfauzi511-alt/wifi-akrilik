@@ -26,6 +26,7 @@ export default function DeviceList({ qrList = [], business, businessName, defaul
   const [editMapsUrl, setEditMapsUrl] = useState('');
   const [isGeneratingLink, setIsGeneratingLink] = useState(false);
   const [generateError, setGenerateError] = useState('');
+  const [generateSuccess, setGenerateSuccess] = useState(false);
 
   const showNotif = (type, message) => {
     setNotification({ type, message });
@@ -58,8 +59,10 @@ export default function DeviceList({ qrList = [], business, businessName, defaul
       const res = await generateReviewLinkAction(editMapsUrl);
       if (res.success) {
         setEditMapsUrl(res.result);
+        setGenerateSuccess(true);
       } else {
         setGenerateError(res.error);
+        setGenerateSuccess(false);
       }
     } catch (e) {
       setGenerateError('Gagal memproses link.');
@@ -145,6 +148,7 @@ export default function DeviceList({ qrList = [], business, businessName, defaul
                     setEditQr(qr);
                     setEditMapsUrl(qr.googleMapsReviewUrl || qr.googleMapsUrl || business?.googleMapsReviewUrl || business?.googleMapsUrl || '');
                     setGenerateError('');
+                    setGenerateSuccess(false);
                   }}
                   className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-700 border border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all"
                 >
@@ -194,7 +198,10 @@ export default function DeviceList({ qrList = [], business, businessName, defaul
                   type="url"
                   name="googleMapsReviewUrl"
                   value={editMapsUrl}
-                  onChange={(e) => setEditMapsUrl(e.target.value)}
+                  onChange={(e) => {
+                    setEditMapsUrl(e.target.value);
+                    setGenerateSuccess(false);
+                  }}
                   placeholder="https://g.page/r/..."
                   className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-all"
                 />
@@ -208,6 +215,11 @@ export default function DeviceList({ qrList = [], business, businessName, defaul
                 </button>
               </div>
               {generateError && <p className="mt-1.5 text-xs text-rose-500 font-medium flex items-center gap-1"><AlertTriangle className="w-3 h-3"/> {generateError}</p>}
+              {generateSuccess && !generateError && (
+                <p className="mt-1.5 text-[11px] text-emerald-600 font-medium flex items-center gap-1">
+                  <Check className="w-3 h-3" /> Berhasil diproses jadi link Review!
+                </p>
+              )}
             </div>
 
             {/* Wi-Fi Section */}
