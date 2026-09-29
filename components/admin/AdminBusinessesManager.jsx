@@ -190,6 +190,7 @@ export default function AdminBusinessesManager({ initialBusinesses = [] }) {
                   );
                 })
               )}
+            </tbody>
           </table>
         </div>
 
