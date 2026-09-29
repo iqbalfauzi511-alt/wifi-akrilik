@@ -110,6 +110,10 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
   const [addDeviceSubmitting, setAddDeviceSubmitting] = useState(false);
   const [addDeviceMsg, setAddDeviceMsg] = useState(null);
 
+  const [isGeneratingLink, setIsGeneratingLink] = useState(false);
+  const [generateError, setGenerateError] = useState('');
+  const [generateSuccess, setGenerateSuccess] = useState(false);
+
   // WA change state
   const [showWaSection, setShowWaSection] = useState(false);
   const [newWa, setNewWa] = useState('');
@@ -132,6 +136,8 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
     setAddDeviceWifiName(activeStore?.wifiName || '');
     setAddDeviceWifiPassword(activeStore?.wifiPassword || '');
     setAddDeviceMsg(null);
+    setGenerateError('');
+    setGenerateSuccess(false);
     setShowAddDevice(true);
   };
 
@@ -230,6 +236,30 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
       </div>
     );
   }
+
+  const handleGenerateReviewLink = async () => {
+    if (!addDeviceMapsUrl) {
+      setGenerateError('Masukkan link Google Maps terlebih dahulu.');
+      return;
+    }
+    setGenerateError('');
+    setIsGeneratingLink(true);
+    try {
+      const { generateReviewLinkAction } = await import('@/lib/actions/maps-actions');
+      const res = await generateReviewLinkAction(addDeviceMapsUrl);
+      if (res.success) {
+        setAddDeviceMapsUrl(res.result);
+        setGenerateSuccess(true);
+      } else {
+        setGenerateError(res.error);
+        setGenerateSuccess(false);
+      }
+    } catch (e) {
+      setGenerateError('Gagal memproses link.');
+    } finally {
+      setIsGeneratingLink(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#F7F8FA]">
@@ -410,16 +440,35 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
                   
                   <div>
                     <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Link Google Maps (Opsional)</label>
-                    <div className="relative flex items-center">
-                      <div className="absolute left-3.5 text-slate-400 pointer-events-none"><Star className="w-4 h-4" /></div>
-                      <input
-                        type="url"
-                        value={addDeviceMapsUrl}
-                        onChange={(e) => setAddDeviceMapsUrl(e.target.value)}
-                        placeholder="https://g.page/r/..."
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-colors"
-                      />
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <div className="relative flex-1">
+                        <div className="absolute top-3 left-3.5 text-slate-400 pointer-events-none"><Star className="w-4 h-4" /></div>
+                        <input
+                          type="url"
+                          value={addDeviceMapsUrl}
+                          onChange={(e) => {
+                            setAddDeviceMapsUrl(e.target.value);
+                            setGenerateSuccess(false);
+                          }}
+                          placeholder="https://g.page/r/..."
+                          className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-colors"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleGenerateReviewLink}
+                        disabled={isGeneratingLink || !addDeviceMapsUrl}
+                        className="w-full sm:w-auto px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-1.5 shrink-0"
+                      >
+                        {isGeneratingLink ? 'Memproses...' : '🔍 Generate Review Link'}
+                      </button>
                     </div>
+                    {generateError && <p className="mt-1.5 text-xs text-rose-500 font-medium">{generateError}</p>}
+                    {generateSuccess && !generateError && (
+                      <p className="mt-1.5 text-[11px] text-emerald-600 font-medium flex items-center gap-1">
+                        <Check className="w-3 h-3" /> Berhasil diproses jadi link Review!
+                      </p>
+                    )}
                   </div>
 
                   <div className="pt-2">
