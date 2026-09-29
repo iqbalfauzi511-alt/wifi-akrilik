@@ -1093,24 +1093,24 @@ export default function AdminQrManager({ initialQrs = [] }) {
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center justify-end gap-2 pt-1 ml-9">
-                    <button type="button" onClick={() => setSelectedQr(qr)} className="px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 shadow-sm transition-colors">Preview</button>
-                    <button type="button" onClick={() => handleDownloadSinglePng(qr)} className="px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 shadow-sm transition-colors">Download</button>
+                  <div className="flex flex-wrap items-center justify-start gap-1.5 pt-2 border-t border-slate-100/60 mt-1">
+                    <button type="button" onClick={() => setSelectedQr(qr)} className="px-2.5 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 shadow-sm transition-colors">Preview</button>
+                    <button type="button" onClick={() => handleDownloadSinglePng(qr)} className="px-2.5 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 shadow-sm transition-colors">Download</button>
                     
                     {(qr.status !== 'blank' || qr.businessName) && (
-                      <button type="button" onClick={() => setQrToReset(qr)} className="px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white hover:bg-rose-50 hover:border-rose-200 text-rose-600 shadow-sm transition-colors">Reset</button>
+                      <button type="button" onClick={() => setQrToReset(qr)} className="px-2.5 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white hover:bg-rose-50 hover:border-rose-200 text-rose-600 shadow-sm transition-colors">Reset</button>
                     )}
 
                     {qr.status === 'active' && (
-                      <button type="button" disabled={statusUpdatingId === qr.id} onClick={() => handleStatusChange(qr.id, 'disabled')} className="px-3 py-1.5 rounded-lg text-xs font-bold border border-rose-200 bg-rose-50/60 hover:bg-rose-100 text-rose-700 shadow-sm transition-colors">Disable</button>
+                      <button type="button" disabled={statusUpdatingId === qr.id} onClick={() => handleStatusChange(qr.id, 'disabled')} className="px-2.5 py-1.5 rounded-lg text-xs font-bold border border-rose-200 bg-rose-50/60 hover:bg-rose-100 text-rose-700 shadow-sm transition-colors">Disable</button>
                     )}
 
                     {qr.status === 'disabled' && (
-                      <button type="button" disabled={statusUpdatingId === qr.id} onClick={() => handleStatusChange(qr.id, 'active')} className="px-3 py-1.5 rounded-lg text-xs font-bold border border-emerald-200 bg-emerald-50/60 hover:bg-emerald-100 text-emerald-700 shadow-sm transition-colors">Activate</button>
+                      <button type="button" disabled={statusUpdatingId === qr.id} onClick={() => handleStatusChange(qr.id, 'active')} className="px-2.5 py-1.5 rounded-lg text-xs font-bold border border-emerald-200 bg-emerald-50/60 hover:bg-emerald-100 text-emerald-700 shadow-sm transition-colors">Activate</button>
                     )}
 
                     {qr.status === 'blank' && (
-                      <button type="button" disabled={statusUpdatingId === qr.id} onClick={() => handleStatusChange(qr.id, 'sold')} className="px-3 py-1.5 rounded-lg text-xs font-bold border border-blue-200 bg-blue-50/60 hover:bg-blue-100 text-blue-700 shadow-sm transition-colors">Packaged</button>
+                      <button type="button" disabled={statusUpdatingId === qr.id} onClick={() => handleStatusChange(qr.id, 'sold')} className="px-2.5 py-1.5 rounded-lg text-xs font-bold border border-blue-200 bg-blue-50/60 hover:bg-blue-100 text-blue-700 shadow-sm transition-colors">Packaged</button>
                     )}
                   </div>
                 </div>
