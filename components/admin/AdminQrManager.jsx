@@ -660,6 +660,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
                   </option>
                 ))}
               </select>
+            </div>
 
               {batchFilter !== 'all' && (
                 <div className="flex items-center gap-1.5">
@@ -720,25 +721,35 @@ export default function AdminQrManager({ initialQrs = [] }) {
 
       {/* Floating Batch Action Bar when items selected */}
       {selectedIds.size > 0 && (
-        <div className="p-4 rounded-2xl bg-slate-900 text-white shadow-xl border border-slate-800 flex flex-wrap items-center justify-between gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
-          <div className="flex items-center gap-2.5">
-            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-brand-500 text-white text-xs font-black">
-              {selectedIds.size}
-            </span>
-            <span className="text-xs font-bold text-slate-200">
-              QR Code Dipilih
-            </span>
+        <div className="fixed bottom-[72px] left-4 right-4 lg:static lg:bottom-auto lg:left-auto lg:right-auto z-40 p-4 rounded-2xl bg-slate-900 text-white shadow-2xl lg:shadow-xl border border-slate-800 flex flex-col lg:flex-row items-center justify-between gap-3 lg:gap-4 animate-in fade-in slide-in-from-bottom-4 lg:slide-in-from-top-2 duration-200">
+          <div className="flex items-center justify-between w-full lg:w-auto">
+            <div className="flex items-center gap-2.5">
+              <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-brand-500 text-white text-xs font-black">
+                {selectedIds.size}
+              </span>
+              <span className="text-xs font-bold text-slate-200">
+                QR Dipilih
+              </span>
+            </div>
+            
+            <button
+              type="button"
+              onClick={() => setSelectedIds(new Set())}
+              className="lg:hidden text-xs font-semibold text-slate-400 hover:text-white px-2 py-1 transition-colors"
+            >
+              Batal
+            </button>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center overflow-x-auto w-full lg:w-auto gap-2 pb-1 lg:pb-0 scrollbar-hide">
             <Button
               variant="outline"
               size="sm"
               disabled={isBulkProcessing}
               onClick={() => setBulkStatusModal(true)}
-              className="text-xs !bg-indigo-600 hover:!bg-indigo-700 !text-white !border-transparent py-1 px-3 shadow-none"
+              className="shrink-0 text-xs !bg-indigo-600 hover:!bg-indigo-700 !text-white !border-transparent py-1.5 px-3 shadow-none"
             >
-              <ToggleRight className="w-3.5 h-3.5 mr-1" />
+              <ToggleRight className="w-3.5 h-3.5 mr-1.5" />
               Ubah Status
             </Button>
 
@@ -747,9 +758,9 @@ export default function AdminQrManager({ initialQrs = [] }) {
               size="sm"
               disabled={isBulkProcessing}
               onClick={handleBulkZipSelected}
-              className="text-xs !bg-slate-800 hover:!bg-slate-700 !text-slate-200 !border-slate-700 py-1 px-3 shadow-none"
+              className="shrink-0 text-xs !bg-slate-800 hover:!bg-slate-700 !text-slate-200 !border-slate-700 py-1.5 px-3 shadow-none"
             >
-              <Download className="w-3.5 h-3.5 mr-1" />
+              <Download className="w-3.5 h-3.5 mr-1.5" />
               Download ZIP
             </Button>
 
@@ -758,9 +769,9 @@ export default function AdminQrManager({ initialQrs = [] }) {
               size="sm"
               disabled={isBulkProcessing}
               onClick={() => setBulkResetModal(true)}
-              className="text-xs !bg-amber-600 hover:!bg-amber-700 !text-white !border-transparent py-1 px-3 shadow-none"
+              className="shrink-0 text-xs !bg-amber-600 hover:!bg-amber-700 !text-white !border-transparent py-1.5 px-3 shadow-none"
             >
-              <RotateCcw className="w-3.5 h-3.5 mr-1" />
+              <RotateCcw className="w-3.5 h-3.5 mr-1.5" />
               Reset ke Blank
             </Button>
 
@@ -769,16 +780,16 @@ export default function AdminQrManager({ initialQrs = [] }) {
               size="sm"
               disabled={isBulkProcessing}
               onClick={() => setBulkDeleteModal(true)}
-              className="text-xs !bg-rose-600 hover:!bg-rose-700 !text-white !border-transparent py-1 px-3 shadow-none"
+              className="shrink-0 text-xs !bg-rose-600 hover:!bg-rose-700 !text-white !border-transparent py-1.5 px-3 shadow-none"
             >
-              <Trash2 className="w-3.5 h-3.5 mr-1" />
+              <Trash2 className="w-3.5 h-3.5 mr-1.5" />
               Hapus Permanen
             </Button>
 
             <button
               type="button"
               onClick={() => setSelectedIds(new Set())}
-              className="text-xs text-slate-400 hover:text-white px-2 py-1 transition-colors"
+              className="hidden lg:block shrink-0 text-xs font-semibold text-slate-400 hover:text-white px-2 py-1 transition-colors ml-2"
             >
               Batal
             </button>
