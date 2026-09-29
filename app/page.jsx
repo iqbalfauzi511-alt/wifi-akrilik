@@ -20,6 +20,10 @@ import {
   Mail,
   Instagram,
   MapPin,
+  Smartphone,
+  UserPlus,
+  Store,
+  LayoutDashboard
 } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import { getCurrentSession } from '@/lib/auth/session';
@@ -251,6 +255,68 @@ export default async function HomePage() {
                   Setelah memberikan penilaian, tamu akan langsung diberikan kata sandi Wi-Fi bisnis Anda secara instan tanpa perlu repot bertanya ke staf.
                 </p>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Cara Aktivasi Section (Untuk Pemilik) */}
+      <section className="py-20 sm:py-24 bg-slate-50 border-t border-slate-200">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#1A73E8] mb-2 block">
+              SETUP PERANGKAT
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 mb-4">
+              Aktivasi Cepat Kurang Dari 3 Menit
+            </h2>
+            <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto">
+              Anda tidak perlu mendaftar ribet. Beli produknya, scan dengan HP Anda, dan perangkat siap digunakan untuk bisnis Anda.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+            {/* Connecting line for desktop */}
+            <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-0.5 bg-slate-200 -translate-y-1/2 z-0" />
+
+            {/* Step 1 */}
+            <div className="relative z-10 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center text-center">
+              <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-4 ring-4 ring-white">
+                <Smartphone className="w-5 h-5" />
+              </div>
+              <div className="w-6 h-6 bg-slate-900 text-white rounded-full flex items-center justify-center text-xs font-bold absolute -top-3 shadow-md">1</div>
+              <h3 className="font-bold text-slate-900 mb-2">Scan atau Tap Perangkat</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">Scan QR atau tap NFC pada perangkat Cobascan, lalu pilih "Mulai Aktivasi & Daftar Akun".</p>
+            </div>
+
+            {/* Step 2 */}
+            <div className="relative z-10 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center text-center">
+              <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-4 ring-4 ring-white">
+                <UserPlus className="w-5 h-5" />
+              </div>
+              <div className="w-6 h-6 bg-slate-900 text-white rounded-full flex items-center justify-center text-xs font-bold absolute -top-3 shadow-md">2</div>
+              <h3 className="font-bold text-slate-900 mb-2">Buat Akun Pemilik</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">Masukkan Nomor WhatsApp dan buat PIN rahasia untuk akun dashboard Anda.</p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="relative z-10 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center text-center">
+              <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mb-4 ring-4 ring-white">
+                <Store className="w-5 h-5" />
+              </div>
+              <div className="w-6 h-6 bg-slate-900 text-white rounded-full flex items-center justify-center text-xs font-bold absolute -top-3 shadow-md">3</div>
+              <h3 className="font-bold text-slate-900 mb-2">Lengkapi Data Bisnis</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">Isi nama bisnis, link Google Maps, dan kata sandi Wi-Fi untuk kemudahan pelanggan.</p>
+            </div>
+
+            {/* Step 4 */}
+            <div className="relative z-10 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center text-center">
+              <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mb-4 ring-4 ring-white">
+                <LayoutDashboard className="w-5 h-5" />
+              </div>
+              <div className="w-6 h-6 bg-slate-900 text-white rounded-full flex items-center justify-center text-xs font-bold absolute -top-3 shadow-md">4</div>
+              <h3 className="font-bold text-slate-900 mb-2">Kelola dari Dashboard</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">Pantau metrik ulasan, atur Wi-Fi, dan kelola banyak perangkat secara *real-time*.</p>
             </div>
           </div>
         </div>
