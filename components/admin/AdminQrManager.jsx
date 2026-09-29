@@ -1073,7 +1073,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 bg-slate-50/80 rounded-xl p-3 border border-slate-100/80 ml-9">
-                    <div>
+                    <div className="col-span-2">
                       <div className="text-[10px] text-slate-400 font-medium mb-0.5">Assigned Partner</div>
                       <div className="font-bold text-slate-700 text-xs truncate">
                         {qr.businessName || <span className="italic font-normal text-slate-400">Unassigned</span>}
@@ -1082,6 +1082,14 @@ export default function AdminQrManager({ initialQrs = [] }) {
                     <div>
                       <div className="text-[10px] text-slate-400 font-medium mb-0.5">Scans</div>
                       <div className="font-bold text-slate-700 text-xs">{qr.scanCount}</div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] text-slate-400 font-medium mb-0.5">Dibuat Pada</div>
+                      <div className="font-bold text-slate-700 text-xs">
+                        {new Date(qr.createdAt).toLocaleDateString('id-ID', {
+                          day: 'numeric', month: 'short', year: 'numeric',
+                        })}
+                      </div>
                     </div>
                   </div>
 

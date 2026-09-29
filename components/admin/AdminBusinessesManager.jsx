@@ -112,7 +112,8 @@ export default function AdminBusinessesManager({ initialBusinesses = [] }) {
           }
         />
 
-        <div className="overflow-x-auto">
+        {/* Desktop Table View */}
+        <div className="hidden lg:block overflow-x-auto">
           <table className="w-full text-left text-xs text-slate-600">
             <thead className="bg-slate-50 text-[11px] uppercase tracking-wider text-slate-400 border-y border-slate-200/80">
               <tr>
@@ -189,8 +190,77 @@ export default function AdminBusinessesManager({ initialBusinesses = [] }) {
                   );
                 })
               )}
-            </tbody>
           </table>
+        </div>
+
+        {/* Mobile Card View */}
+        <div className="lg:hidden flex flex-col divide-y divide-slate-100">
+          {filteredBusinesses.length === 0 ? (
+            <div className="p-8 text-center text-xs text-slate-400">
+              Tidak ada bisnis yang cocok dengan kriteria pencarian.
+            </div>
+          ) : (
+            filteredBusinesses.map((b) => {
+              const mapsUrl = b.googleMapsReviewUrl || b.googleMapsUrl;
+              return (
+                <div key={b.id} className="p-4 bg-white hover:bg-slate-50/60 transition-colors flex flex-col gap-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-2xl bg-blue-100 text-[#1A73E8] font-bold text-sm flex items-center justify-center shrink-0">
+                        {b.businessName?.substring(0, 2).toUpperCase() || 'CS'}
+                      </div>
+                      <div>
+                        <div className="font-bold text-slate-900 leading-tight">{b.businessName}</div>
+                        <div className="text-[10px] text-slate-500 mt-0.5">
+                          Terdaftar: {new Date(b.createdAt).toLocaleDateString('id-ID', { dateStyle: 'medium' })}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 bg-slate-50/80 rounded-xl p-3 border border-slate-100/80 mt-1">
+                    <div>
+                      <div className="text-[10px] text-slate-400 font-medium mb-0.5">Pemilik</div>
+                      <div className="font-bold text-slate-700 text-xs truncate">{b.ownerName || '-'}</div>
+                      <div className="text-[9px] text-slate-500 font-mono mt-0.5 truncate">{b.ownerEmail}</div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] text-slate-400 font-medium mb-0.5">Perangkat</div>
+                      <div className="font-bold text-slate-700 text-xs">{b.qrCount || 0} unit</div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] text-slate-400 font-medium mb-0.5">WhatsApp</div>
+                      <div className="font-bold text-slate-700 text-xs">
+                        {b.whatsappNumber ? <span className="font-mono">+{b.whatsappNumber}</span> : <span className="italic font-normal text-slate-400">-</span>}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] text-slate-400 font-medium mb-0.5">Review Link</div>
+                      <div className="font-bold text-slate-700 text-xs">
+                        {mapsUrl ? (
+                          <a href={mapsUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 flex items-center gap-1 hover:underline">
+                            Lihat Link <ExternalLink className="w-3 h-3" />
+                          </a>
+                        ) : (
+                          <span className="italic font-normal text-slate-400">Belum diatur</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-end mt-1">
+                    <button
+                      type="button"
+                      onClick={() => setBusinessToDelete(b)}
+                      className="px-3 py-1.5 rounded-lg text-xs font-bold border border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 shadow-sm transition-colors flex items-center gap-1"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" /> Hapus
+                    </button>
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
       </Card>
 
