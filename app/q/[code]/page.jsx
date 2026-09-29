@@ -103,15 +103,15 @@ export default async function VisitorQrPage({ params }) {
             ) : (
               <>
                 <Link href={activateUrl}>
-                  <Button size="lg" className="w-full bg-brand-600 hover:bg-brand-700 text-white">
-                    <UserPlus className="w-4 h-4 mr-1.5" />
-                    Mulai Aktivasi & Daftar Akun
+                  <Button size="lg" className="w-full bg-brand-600 hover:bg-brand-700 text-white text-[13px] sm:text-base leading-tight py-3 h-auto">
+                    <UserPlus className="w-4 h-4 mr-1.5 shrink-0" />
+                    <span>Mulai Aktivasi & Daftar Akun</span>
                   </Button>
                 </Link>
                 <Link href={loginUrl}>
-                  <Button variant="outline" size="sm" className="w-full mt-2">
-                    <LogIn className="w-4 h-4 mr-1.5" />
-                    Login (Sudah Punya Akun)
+                  <Button variant="outline" size="sm" className="w-full mt-2 text-xs sm:text-sm h-auto py-2">
+                    <LogIn className="w-4 h-4 mr-1.5 shrink-0" />
+                    <span>Login (Sudah Punya Akun)</span>
                   </Button>
                 </Link>
               </>

@@ -271,7 +271,7 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
               <Image src="/cobascan-logo.png" alt="Cobascan" width={32} height={32} className="w-full h-full object-contain" priority />
             </div>
             <div>
-              <span className="font-extrabold text-slate-900 text-lg tracking-tight leading-none pt-0.5">Cobascan</span>
+              <span className="font-extrabold text-slate-900 text-lg tracking-tight leading-none pt-0.5">COBASCAN</span>
               <span className="hidden sm:inline text-xs text-slate-400 ml-2 font-medium">({userName || 'Pemilik'})</span>
             </div>
           </div>
@@ -289,8 +289,8 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
 
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 space-y-6">
 
-        {/* 4 Bento Overview Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        {/* 3 Bento Overview Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
 
           <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex flex-col justify-between">
             <div className="flex items-center gap-2 mb-2">
@@ -351,21 +351,21 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
 
         {/* Devices Section */}
         <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-          <div className="px-5 pt-5 pb-4 border-b border-slate-100 flex items-center justify-between">
-            <div>
+          <div className="px-5 pt-5 pb-4 border-b border-slate-100 flex items-start sm:items-center justify-between gap-3">
+            <div className="flex-1">
               <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <Layers className="w-4 h-4 text-slate-400" />
-                Perangkat ({filteredQrList.length})
+                <Layers className="w-4 h-4 text-slate-400 shrink-0" />
+                <span>Perangkat ({filteredQrList.length})</span>
               </h2>
-              <p className="text-[11px] text-slate-400 mt-0.5">Klik <strong>Atur</strong> untuk setting nama lokasi, Wi-Fi, dan link Maps per perangkat.</p>
+              <p className="text-[11px] text-slate-400 mt-0.5 leading-relaxed">Klik <strong>Atur</strong> untuk setting nama lokasi, Wi-Fi, dan link Maps per perangkat.</p>
             </div>
             <button
               type="button"
               onClick={openAddDevice}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 text-white text-xs font-semibold hover:bg-slate-700 transition-colors"
+              className="flex items-center justify-center gap-1.5 px-3 py-2 sm:py-1.5 rounded-lg bg-slate-900 text-white text-[11px] sm:text-xs font-semibold hover:bg-slate-700 transition-colors shrink-0"
             >
               <Plus className="w-3.5 h-3.5" />
-              Tambah QR
+              <span>Tambah QR</span>
             </button>
           </div>
 
@@ -379,9 +379,9 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
 
         {/* Add Device Modal */}
         {showAddDevice && (
-          <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-4 sm:p-6 z-[100]">
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl w-full max-w-sm max-h-[90vh] overflow-y-auto animate-in fade-in slide-in-from-bottom-4 sm:slide-in-from-bottom-0 duration-200">
-              <div className="px-5 pt-5 pb-4 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-sm z-10">
+          <div className="fixed inset-0 z-[100] bg-white sm:bg-slate-900/80 sm:backdrop-blur-sm flex flex-col sm:items-center sm:justify-center p-0 sm:p-6 animate-in fade-in slide-in-from-bottom-4 sm:slide-in-from-bottom-0 duration-200">
+            <div className="bg-white sm:rounded-2xl sm:border border-slate-200 sm:shadow-2xl w-full sm:max-w-sm h-full sm:h-auto sm:max-h-[90vh] overflow-y-auto flex flex-col">
+              <div className="px-5 pt-5 sm:pt-4 pb-4 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white z-10 shrink-0 shadow-sm sm:shadow-none">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center">
                     <QrCode className="w-4 h-4" />
@@ -394,7 +394,7 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
                 <button type="button" onClick={() => setShowAddDevice(false)} className="text-slate-400 hover:text-slate-600 p-1">✕</button>
               </div>
 
-              <form onSubmit={handleAddDevice} className="px-5 py-4 space-y-4">
+              <form onSubmit={handleAddDevice} className="px-5 py-4 flex flex-col flex-1 space-y-4">
                 {addDeviceMsg && (
                   <div className={`p-3 rounded-xl text-xs flex items-start gap-2 ${
                     addDeviceMsg.type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'
@@ -525,7 +525,7 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
                   </div>
                 </div>
 
-                <div className="flex gap-2 pt-1">
+                <div className="flex gap-2 pt-4 mt-auto border-t sm:border-0 border-slate-100 pb-4 sm:pb-0">
                   <button type="button" onClick={() => setShowAddDevice(false)}
                     className="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-semibold text-sm hover:bg-slate-50 transition-colors">
                     Batal

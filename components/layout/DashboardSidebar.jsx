@@ -57,7 +57,7 @@ export default function DashboardSidebar({ role = 'customer', session }) {
               <Image src="/cobascan-logo.png" alt="Cobascan" width={32} height={32} priority className="w-full h-full object-contain" />
             </div>
             <span className="font-extrabold text-slate-900 text-xl tracking-tight block leading-none pt-0.5">
-              Cobascan
+              COBASCAN
             </span>
           </Link>
         </div>

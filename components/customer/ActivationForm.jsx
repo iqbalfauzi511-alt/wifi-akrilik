@@ -472,7 +472,7 @@ export default function ActivationForm({
                   <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">
                     Link Google Review <span className="text-rose-500">*</span>
                   </label>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <div className="relative flex items-center flex-1">
                       <div className="absolute left-3.5 text-slate-400 pointer-events-none"><Star className="w-4 h-4" /></div>
                       <input
@@ -491,7 +491,7 @@ export default function ActivationForm({
                       type="button"
                       onClick={handleGenerateReviewLink}
                       disabled={isGeneratingLink || !mapsUrlVal}
-                      className="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all disabled:opacity-50 flex items-center gap-2 shrink-0"
+                      className="w-full sm:w-auto px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2 shrink-0"
                     >
                       {isGeneratingLink ? 'Memproses...' : '🔍 Generate Review Link'}
                     </button>

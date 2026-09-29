@@ -29,7 +29,7 @@ export default async function AdminLayout({ children }) {
                 <Image src="/cobascan-logo.png" alt="Cobascan" width={32} height={32} className="w-full h-full object-contain" priority />
               </div>
               <div>
-                <span className="font-extrabold text-slate-900 text-lg tracking-tight leading-none pt-0.5">Cobascan</span>
+                <span className="font-extrabold text-slate-900 text-lg tracking-tight leading-none pt-0.5">COBASCAN</span>
                 <span className="text-xs text-slate-400 ml-2 font-medium">(Admin)</span>
               </div>
             </div>

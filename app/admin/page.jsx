@@ -156,64 +156,54 @@ export default async function AdminDashboardPage() {
       />
 
       <div className="px-4 sm:px-8 space-y-6 max-w-7xl mx-auto w-full">
-        {/* 4 Bento Metric Cards matching Image 3 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {/* 4 Bento Metric Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {/* Card 1: Total Bisnis */}
-          <div className="bg-white rounded-3xl border border-slate-200/90 p-6 shadow-xs flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#1A73E8] flex items-center justify-center shrink-0">
-              <Store className="w-6 h-6" />
-            </div>
-            <div>
-              <div className="text-xs font-semibold text-slate-500">Total Bisnis</div>
-              <div className="flex items-baseline gap-2 mt-1">
-                <span className="text-2xl font-black text-slate-900">{totalBusinesses}</span>
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex flex-col justify-between">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#1A73E8] flex items-center justify-center shrink-0">
+                <Store className="w-4 h-4" />
               </div>
-              <div className="text-[11px] text-slate-400 mt-0.5">Dibanding bulan lalu</div>
+              <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide">Total Bisnis</div>
             </div>
+            <div className="text-xl sm:text-2xl font-black text-slate-900 leading-none">{totalBusinesses}</div>
+            <div className="text-[10px] text-slate-400 font-medium mt-1">Sistem terdaftar</div>
           </div>
 
           {/* Card 2: Total Perangkat */}
-          <div className="bg-white rounded-3xl border border-slate-200/90 p-6 shadow-xs flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-              <QrCode className="w-6 h-6" />
-            </div>
-            <div>
-              <div className="text-xs font-semibold text-slate-500">Total Perangkat</div>
-              <div className="flex items-baseline gap-2 mt-1">
-                <span className="text-2xl font-black text-slate-900">{totalPerangkat}</span>
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex flex-col justify-between">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                <QrCode className="w-4 h-4" />
               </div>
-              <div className="text-[11px] text-slate-400 mt-0.5">Dibanding bulan lalu</div>
+              <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide">Perangkat</div>
             </div>
+            <div className="text-xl sm:text-2xl font-black text-slate-900 leading-none">{totalPerangkat}</div>
+            <div className="text-[10px] text-slate-400 font-medium mt-1">Perangkat fisik</div>
           </div>
 
           {/* Card 3: Total Scan */}
-          <div className="bg-white rounded-3xl border border-slate-200/90 p-6 shadow-xs flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
-              <Users className="w-6 h-6" />
-            </div>
-            <div>
-              <div className="text-xs font-semibold text-slate-500">Total Scan</div>
-              <div className="flex items-baseline gap-2 mt-1">
-                <span className="text-2xl font-black text-slate-900">
-                  {totalScan.toLocaleString('id-ID')}
-                </span>
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex flex-col justify-between">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+                <Users className="w-4 h-4" />
               </div>
-              <div className="text-[11px] text-slate-400 mt-0.5">Dibanding bulan lalu</div>
+              <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide">Total Scan</div>
             </div>
+            <div className="text-xl sm:text-2xl font-black text-slate-900 leading-none">{totalScan.toLocaleString('id-ID')}</div>
+            <div className="text-[10px] text-slate-400 font-medium mt-1">Pengunjung Riil</div>
           </div>
 
           {/* Card 4: Total Review */}
-          <div className="bg-white rounded-3xl border border-slate-200/90 p-6 shadow-xs flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
-              <Star className="w-6 h-6 fill-amber-500" />
-            </div>
-            <div>
-              <div className="text-xs font-semibold text-slate-500">Total Review</div>
-              <div className="flex items-baseline gap-2 mt-1">
-                <span className="text-2xl font-black text-slate-900">{totalReview}</span>
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex flex-col justify-between">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
+                <Star className="w-4 h-4 fill-amber-500" />
               </div>
-              <div className="text-[11px] text-slate-400 mt-0.5">Dibanding bulan lalu</div>
+              <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide">Review</div>
             </div>
+            <div className="text-xl sm:text-2xl font-black text-slate-900 leading-none">{totalReview.toLocaleString('id-ID')}</div>
+            <div className="text-[10px] text-slate-400 font-medium mt-1">Klik Terkonversi</div>
           </div>
         </div>
 
@@ -323,7 +313,8 @@ export default async function AdminDashboardPage() {
               </Link>
             </div>
 
-            <div className="overflow-x-auto">
+            {/* Desktop Table View */}
+            <div className="hidden sm:block overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
                   <tr className="border-b border-slate-100 text-slate-400 font-semibold">
@@ -378,6 +369,53 @@ export default async function AdminDashboardPage() {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="sm:hidden space-y-3">
+              {recentBusinesses.map((b) => (
+                <div key={b.id} className="p-4 rounded-2xl border border-slate-100 bg-slate-50/50 flex flex-col gap-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-2xl ${b.color} font-bold text-xs flex items-center justify-center shrink-0`}>
+                        {b.initials}
+                      </div>
+                      <div>
+                        <div className="font-bold text-slate-900 leading-tight">{b.name}</div>
+                        <div className="text-[10px] text-slate-500 mt-0.5">{b.category}</div>
+                      </div>
+                    </div>
+                    <span className={`inline-flex items-center px-2 py-1 rounded-lg text-[9px] font-bold uppercase tracking-wider shrink-0 ${
+                      b.status === 'Aktif' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-600'
+                    }`}>
+                      {b.status}
+                    </span>
+                  </div>
+                  
+                  <div className="grid grid-cols-3 gap-2 pt-3 border-t border-slate-200/60">
+                    <div>
+                      <div className="text-[10px] text-slate-400 font-medium mb-0.5">Perangkat</div>
+                      <div className="font-bold text-slate-700 text-xs">{b.devices}</div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] text-slate-400 font-medium mb-0.5">Total Scan</div>
+                      <div className="font-bold text-slate-700 text-xs">{b.scans}</div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] text-slate-400 font-medium mb-0.5">Review</div>
+                      <div className="font-bold text-slate-700 text-xs truncate max-w-[80px]" title={b.reviews}>{b.reviews}</div>
+                    </div>
+                  </div>
+                  
+                  <div className="pt-2">
+                    <Link href={`/admin/users`} className="block w-full">
+                      <button className="w-full py-2 bg-white hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-bold border border-slate-200 shadow-sm transition-colors">
+                        Lihat Detail Bisnis
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
