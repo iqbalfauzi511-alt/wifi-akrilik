@@ -10,6 +10,7 @@ import {
   MapPin,
   Check,
   AlertCircle,
+  AlertTriangle,
   X,
   ChevronRight,
 } from 'lucide-react';
@@ -22,6 +23,9 @@ export default function DeviceList({ qrList = [], business, businessName, defaul
   const [editQr, setEditQr] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   const [notification, setNotification] = useState(null);
+  const [editMapsUrl, setEditMapsUrl] = useState('');
+  const [isGeneratingLink, setIsGeneratingLink] = useState(false);
+  const [generateError, setGenerateError] = useState('');
 
   const showNotif = (type, message) => {
     setNotification({ type, message });
@@ -39,6 +43,28 @@ export default function DeviceList({ qrList = [], business, businessName, defaul
       router.refresh();
     } else {
       showNotif('error', result?.error || 'Gagal menyimpan.');
+    }
+  };
+
+  const handleGenerateReviewLink = async () => {
+    if (!editMapsUrl) {
+      setGenerateError('Masukkan link Google Maps terlebih dahulu.');
+      return;
+    }
+    setGenerateError('');
+    setIsGeneratingLink(true);
+    try {
+      const { generateReviewLinkAction } = await import('@/lib/actions/maps-actions');
+      const res = await generateReviewLinkAction(editMapsUrl);
+      if (res.success) {
+        setEditMapsUrl(res.result);
+      } else {
+        setGenerateError(res.error);
+      }
+    } catch (e) {
+      setGenerateError('Gagal memproses link.');
+    } finally {
+      setIsGeneratingLink(false);
     }
   };
 
@@ -115,7 +141,11 @@ export default function DeviceList({ qrList = [], business, businessName, defaul
                 </a>
                 <button
                   type="button"
-                  onClick={() => setEditQr(qr)}
+                  onClick={() => {
+                    setEditQr(qr);
+                    setEditMapsUrl(qr.googleMapsReviewUrl || qr.googleMapsUrl || business?.googleMapsReviewUrl || business?.googleMapsUrl || '');
+                    setGenerateError('');
+                  }}
                   className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-700 border border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all"
                 >
                   Atur
@@ -159,13 +189,25 @@ export default function DeviceList({ qrList = [], business, businessName, defaul
               <label className="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1.5">
                 Link Google Review
               </label>
-              <input
-                type="url"
-                name="googleMapsReviewUrl"
-                defaultValue={editQr.googleMapsReviewUrl || editQr.googleMapsUrl || business?.googleMapsReviewUrl || business?.googleMapsUrl || ''}
-                placeholder="https://g.page/r/..."
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-all"
-              />
+              <div className="flex gap-2">
+                <input
+                  type="url"
+                  name="googleMapsReviewUrl"
+                  value={editMapsUrl}
+                  onChange={(e) => setEditMapsUrl(e.target.value)}
+                  placeholder="https://g.page/r/..."
+                  className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-all"
+                />
+                <button
+                  type="button"
+                  onClick={handleGenerateReviewLink}
+                  disabled={isGeneratingLink || !editMapsUrl}
+                  className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all disabled:opacity-50 flex items-center gap-1 shrink-0"
+                >
+                  {isGeneratingLink ? 'Memproses...' : '🔍 Generate Review Link'}
+                </button>
+              </div>
+              {generateError && <p className="mt-1.5 text-xs text-rose-500 font-medium flex items-center gap-1"><AlertTriangle className="w-3 h-3"/> {generateError}</p>}
             </div>
 
             {/* Wi-Fi Section */}
