@@ -172,8 +172,8 @@ export default function AdminUsersManager({
             </div>
           }
         />
-
-        <div className="overflow-x-auto">
+        {/* Desktop Table View */}
+        <div className="hidden lg:block overflow-x-auto">
           <table className="w-full text-left text-xs text-slate-600">
             <thead className="bg-slate-50 text-[11px] uppercase tracking-wider text-slate-400 border-y border-slate-200/80">
               <tr>
@@ -286,6 +286,105 @@ export default function AdminUsersManager({
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile Card View */}
+        <div className="lg:hidden flex flex-col divide-y divide-slate-100">
+          {filteredUsers.length === 0 ? (
+            <div className="p-8 text-center text-xs text-slate-400">
+              Tidak ada pengguna yang cocok dengan kriteria pencarian.
+            </div>
+          ) : (
+            filteredUsers.map((u) => {
+              const isAdmin =
+                u.email === currentAdminEmail ||
+                u.email === 'distrapness@gmail.com';
+
+              return (
+                <div key={u.id} className="p-4 bg-white hover:bg-slate-50/60 transition-colors flex flex-col gap-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-2xl bg-slate-100 text-slate-700 font-bold text-sm flex items-center justify-center shrink-0">
+                        {u.name ? u.name.charAt(0).toUpperCase() : u.email.charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <div className="font-bold text-slate-900 leading-tight">{u.name || '-'}</div>
+                        <div className="text-[10px] text-slate-500 font-mono mt-0.5">{u.email}</div>
+                      </div>
+                    </div>
+                    <div className="shrink-0">
+                      {u.role === 'admin' ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[9px] font-bold bg-purple-50 text-purple-700 border border-purple-200/60">
+                          <ShieldCheck className="w-2.5 h-2.5" /> Admin
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-200/60">
+                          <User className="w-2.5 h-2.5" /> Pemilik
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 bg-slate-50/80 rounded-xl p-3 border border-slate-100/80 mt-1">
+                    <div>
+                      <div className="text-[10px] text-slate-400 font-medium mb-0.5">WhatsApp</div>
+                      <div className="font-bold text-slate-700 text-xs">
+                        {u.whatsappNumber ? (
+                          <span className="font-mono">{u.whatsappNumber}</span>
+                        ) : (
+                          <span className="italic font-normal text-slate-400">-</span>
+                        )}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] text-slate-400 font-medium mb-0.5">Bisnis</div>
+                      <div className="font-bold text-slate-700 text-xs truncate">
+                        {u.businessName ? (
+                          u.businessName
+                        ) : u.role === 'admin' ? (
+                          <span className="italic font-normal text-slate-400">- (Admin)</span>
+                        ) : (
+                          <span className="italic font-normal text-slate-400">Belum aktivasi</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between mt-1">
+                    <div className="text-[10px] text-slate-400 font-medium">
+                      Gabung: {new Date(u.createdAt).toLocaleDateString('id-ID', {
+                        day: 'numeric', month: 'short', year: 'numeric',
+                      })}
+                    </div>
+                    <div>
+                      {isAdmin ? (
+                        <span className="text-[10px] font-bold text-slate-400 px-2 py-1 rounded-md bg-slate-100 border border-slate-200">
+                          Dilindungi
+                        </span>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setUserToReset(u)}
+                            className="px-3 py-1.5 rounded-lg text-xs font-bold border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 shadow-sm transition-colors flex items-center gap-1"
+                          >
+                            <KeyRound className="w-3.5 h-3.5" /> Reset
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setUserToDelete(u)}
+                            className="px-3 py-1.5 rounded-lg text-xs font-bold border border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 shadow-sm transition-colors flex items-center gap-1"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" /> Hapus
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
       </Card>
 

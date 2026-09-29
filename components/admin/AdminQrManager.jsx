@@ -786,7 +786,8 @@ export default function AdminQrManager({ initialQrs = [] }) {
 
       {/* Table of QR Codes */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
+        {/* Desktop Table View */}
+        <div className="hidden lg:block overflow-x-auto">
           <table className="w-full text-left text-sm text-slate-600">
             <thead className="bg-slate-50 text-[11px] uppercase tracking-wider text-slate-400 border-b border-slate-200/80">
               <tr>
@@ -994,6 +995,120 @@ export default function AdminQrManager({ initialQrs = [] }) {
             )}
           </tbody>
           </table>
+        </div>
+
+        {/* Mobile Card View */}
+        <div className="lg:hidden flex flex-col divide-y divide-slate-100">
+          {/* Mobile Select All Header */}
+          {paginatedQrs.length > 0 && (
+            <div className="p-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={handleToggleSelectAll}
+                  className="p-1 rounded hover:bg-slate-200 transition-colors"
+                >
+                  {allSelected ? (
+                    <CheckSquare className="w-5 h-5 text-brand-600" />
+                  ) : isIndeterminate ? (
+                    <MinusSquare className="w-5 h-5 text-brand-600" />
+                  ) : (
+                    <Square className="w-5 h-5 text-slate-400" />
+                  )}
+                </button>
+                <span className="text-xs font-semibold text-slate-500 uppercase">Pilih Semua</span>
+              </div>
+            </div>
+          )}
+
+          {paginatedQrs.length === 0 ? (
+            <div className="p-8 text-center text-xs text-slate-400">
+              Tidak ditemukan QR Code yang cocok dengan filter atau pencarian.
+            </div>
+          ) : (
+            paginatedQrs.map((qr) => {
+              const isSelected = selectedIds.has(qr.id);
+              return (
+                <div
+                  key={qr.id}
+                  className={`p-4 transition-colors flex flex-col gap-3 ${
+                    isSelected ? 'bg-brand-50/30' : 'bg-white'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-start gap-3">
+                      <button
+                        type="button"
+                        onClick={() => handleToggleSelect(qr.id)}
+                        className="p-1 rounded hover:bg-slate-100 transition-colors mt-0.5"
+                      >
+                        {isSelected ? (
+                          <CheckSquare className="w-5 h-5 text-brand-600" />
+                        ) : (
+                          <Square className="w-5 h-5 text-slate-300" />
+                        )}
+                      </button>
+                      <div>
+                        <div className="font-mono font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                          <QrCode className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                          <span className="truncate">{qr.code}</span>
+                        </div>
+                        <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                          {qr.batchCode ? (
+                            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-slate-700 bg-slate-100 border border-slate-200 font-mono text-[9px] font-bold">
+                              {qr.batchCode}
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-slate-50 text-slate-500 text-[9px] font-mono border border-slate-100">
+                              SINGLE
+                            </span>
+                          )}
+                          {qr.status === 'active' && <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">Active</span>}
+                          {qr.status === 'blank' && <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-50 text-amber-700 border border-amber-200">Available</span>}
+                          {qr.status === 'sold' && <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-200">Packaged</span>}
+                          {qr.status === 'disabled' && <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-rose-50 text-rose-700 border border-rose-200">Disabled</span>}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 bg-slate-50/80 rounded-xl p-3 border border-slate-100/80 ml-9">
+                    <div>
+                      <div className="text-[10px] text-slate-400 font-medium mb-0.5">Assigned Partner</div>
+                      <div className="font-bold text-slate-700 text-xs truncate">
+                        {qr.businessName || <span className="italic font-normal text-slate-400">Unassigned</span>}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] text-slate-400 font-medium mb-0.5">Scans</div>
+                      <div className="font-bold text-slate-700 text-xs">{qr.scanCount}</div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap items-center justify-end gap-2 pt-1 ml-9">
+                    <button type="button" onClick={() => setSelectedQr(qr)} className="px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 shadow-sm transition-colors">Preview</button>
+                    <button type="button" onClick={() => handleDownloadSinglePng(qr)} className="px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 shadow-sm transition-colors">Download</button>
+                    
+                    {(qr.status !== 'blank' || qr.businessName) && (
+                      <button type="button" onClick={() => setQrToReset(qr)} className="px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white hover:bg-rose-50 hover:border-rose-200 text-rose-600 shadow-sm transition-colors">Reset</button>
+                    )}
+
+                    {qr.status === 'active' && (
+                      <button type="button" disabled={statusUpdatingId === qr.id} onClick={() => handleStatusChange(qr.id, 'disabled')} className="px-3 py-1.5 rounded-lg text-xs font-bold border border-rose-200 bg-rose-50/60 hover:bg-rose-100 text-rose-700 shadow-sm transition-colors">Disable</button>
+                    )}
+
+                    {qr.status === 'disabled' && (
+                      <button type="button" disabled={statusUpdatingId === qr.id} onClick={() => handleStatusChange(qr.id, 'active')} className="px-3 py-1.5 rounded-lg text-xs font-bold border border-emerald-200 bg-emerald-50/60 hover:bg-emerald-100 text-emerald-700 shadow-sm transition-colors">Activate</button>
+                    )}
+
+                    {qr.status === 'blank' && (
+                      <button type="button" disabled={statusUpdatingId === qr.id} onClick={() => handleStatusChange(qr.id, 'sold')} className="px-3 py-1.5 rounded-lg text-xs font-bold border border-blue-200 bg-blue-50/60 hover:bg-blue-100 text-blue-700 shadow-sm transition-colors">Packaged</button>
+                    )}
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
         
         {/* Pagination Controls */}
