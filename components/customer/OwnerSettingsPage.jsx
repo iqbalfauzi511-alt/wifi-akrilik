@@ -268,26 +268,26 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
     <div className="min-h-screen bg-[#F7F8FA]">
       {/* Top Bar */}
       <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 flex items-center justify-center relative">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-8 h-8 flex items-center justify-center relative shrink-0">
               <Image src="/cobascan-logo.png" alt="Cobascan" width={32} height={32} className="w-full h-full object-contain" priority />
             </div>
-            <div>
-              <span className="font-extrabold text-slate-900 text-lg tracking-tight leading-none pt-0.5">COBASCAN</span>
+            <div className="min-w-0">
+              <span className="font-extrabold text-slate-900 text-base sm:text-lg tracking-tight leading-none block truncate">COBASCAN</span>
               <span className="hidden sm:inline text-xs text-slate-400 ml-2 font-medium">({userName || 'Pemilik'})</span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <button
               type="button"
               onClick={() => document.getElementById('ulasan-section')?.scrollIntoView({ behavior: 'smooth' })}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-semibold text-slate-700 transition-colors cursor-pointer"
+              className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-semibold text-slate-700 transition-colors cursor-pointer"
             >
-              <MessageSquare className="w-3.5 h-3.5 text-amber-500" />
+              <MessageSquare className="w-3.5 h-3.5 text-amber-500 shrink-0" />
               <span>Ulasan</span>
               {feedbacks.length > 0 && (
-                <span className="px-1.5 py-0.2 rounded-full bg-rose-500 text-white text-[10px] font-bold">
+                <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center">
                   {feedbacks.length}
                 </span>
               )}
@@ -296,10 +296,11 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
               type="button"
               onClick={handleLogout}
               disabled={isLoggingOut}
-              className="flex items-center justify-center min-h-[44px] gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-50 cursor-pointer"
+              className="flex items-center justify-center h-8 sm:min-h-[44px] gap-1 px-2.5 sm:px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-50 cursor-pointer"
+              title="Keluar"
             >
-              <LogOut className="w-3.5 h-3.5" />
-              {isLoggingOut ? 'Keluar...' : 'Logout'}
+              <LogOut className="w-3.5 h-3.5 shrink-0" />
+              <span className="hidden xs:inline sm:inline">{isLoggingOut ? '...' : 'Logout'}</span>
             </button>
           </div>
         </div>
@@ -334,25 +335,36 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
 
           <div 
             onClick={() => document.getElementById('ulasan-section')?.scrollIntoView({ behavior: 'smooth' })}
-            className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex flex-col justify-between cursor-pointer hover:border-amber-300 hover:shadow-md transition-all group"
+            className="col-span-2 sm:col-span-1 bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex flex-col justify-between cursor-pointer hover:border-amber-300 hover:shadow-md transition-all group"
           >
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                   <Star className="w-4 h-4 fill-amber-500" />
                 </div>
-                <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide">Review</div>
+                <div>
+                  <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide">Review &amp; Masukan</div>
+                  <div className="sm:hidden text-base font-black text-slate-900 leading-tight mt-0.5">
+                    {totalReview} <span className="text-[10px] font-bold text-amber-600">Klik Terkonversi</span>
+                  </div>
+                </div>
               </div>
-              {feedbacks.length > 0 && (
-                <span className="px-1.5 py-0.5 rounded-full bg-rose-50 text-rose-600 text-[10px] font-bold border border-rose-100">
-                  {feedbacks.length} Masukan
+              {feedbacks.length > 0 ? (
+                <span className="px-2 py-0.5 rounded-full bg-rose-50 text-rose-600 text-[10px] font-bold border border-rose-100 flex items-center gap-1 shrink-0">
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+                  {feedbacks.length} Masukan Tamu
+                </span>
+              ) : (
+                <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-medium shrink-0">
+                  0 Keluhan
                 </span>
               )}
             </div>
-            <div className="text-xl sm:text-2xl font-black text-slate-900 leading-none">{totalReview}</div>
-            <div className="text-[10px] text-amber-600 font-bold mt-1 flex items-center gap-1">
-              <span>{feedbacks.length > 0 ? `${feedbacks.length} Masukan Tamu` : 'Klik Terkonversi'}</span>
-              <ChevronDown className="w-3 h-3 text-slate-400 group-hover:translate-y-0.5 transition-transform" />
+            <div className="hidden sm:block text-xl sm:text-2xl font-black text-slate-900 leading-none">{totalReview}</div>
+            <div className="text-[10px] text-amber-600 font-semibold mt-1 flex items-center justify-between sm:justify-start gap-1">
+              <span className="hidden sm:inline">{feedbacks.length > 0 ? `${feedbacks.length} Masukan Tamu Bintang 1–2` : 'Klik Terkonversi'}</span>
+              <span className="sm:hidden text-slate-500 font-normal">Ketuk untuk lihat masukan tamu</span>
+              <ChevronDown className="w-3 h-3 text-slate-400 group-hover:translate-y-0.5 transition-transform shrink-0" />
             </div>
           </div>
         </div>
@@ -578,7 +590,7 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
 
         {/* Masukan & Keluhan Pelanggan (Rating 1 & 2) */}
         <div id="ulasan-section" className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-          <div className="px-5 pt-5 pb-4 border-b border-slate-100 flex items-center justify-between gap-3">
+          <div className="px-4 sm:px-5 pt-4 sm:pt-5 pb-3.5 sm:pb-4 border-b border-slate-100 flex items-center justify-between gap-3">
             <div>
               <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
                 <MessageSquare className="w-4 h-4 text-amber-500 shrink-0" />
@@ -601,7 +613,7 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
             )}
           </div>
 
-          <div className="p-5">
+          <div className="p-4 sm:p-5">
             {feedbacks.length === 0 ? (
               <div className="text-center py-8">
                 <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-2.5">
