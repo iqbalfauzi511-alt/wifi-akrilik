@@ -28,6 +28,9 @@ import {
   Store,
   BarChart3,
   TrendingUp,
+  Calendar,
+  CheckCircle2,
+  ExternalLink,
 } from 'lucide-react';
 import Image from 'next/image';
 import { updateBusinessWifiAction } from '@/lib/actions/business-actions';
@@ -275,15 +278,30 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
               <span className="hidden sm:inline text-xs text-slate-400 ml-2 font-medium">({userName || 'Pemilik'})</span>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={handleLogout}
-            disabled={isLoggingOut}
-            className="flex items-center justify-center min-h-[44px] gap-1.5 px-4 py-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-50"
-          >
-            <LogOut className="w-3.5 h-3.5" />
-            {isLoggingOut ? 'Keluar...' : 'Logout'}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => document.getElementById('ulasan-section')?.scrollIntoView({ behavior: 'smooth' })}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-semibold text-slate-700 transition-colors cursor-pointer"
+            >
+              <MessageSquare className="w-3.5 h-3.5 text-amber-500" />
+              <span>Ulasan</span>
+              {feedbacks.length > 0 && (
+                <span className="px-1.5 py-0.2 rounded-full bg-rose-500 text-white text-[10px] font-bold">
+                  {feedbacks.length}
+                </span>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className="flex items-center justify-center min-h-[44px] gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-50 cursor-pointer"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              {isLoggingOut ? 'Keluar...' : 'Logout'}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -314,15 +332,28 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
             <div className="text-[10px] text-emerald-600 font-bold mt-1">Pengunjung Riil</div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex flex-col justify-between">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
-                <Star className="w-4 h-4 fill-amber-500" />
+          <div 
+            onClick={() => document.getElementById('ulasan-section')?.scrollIntoView({ behavior: 'smooth' })}
+            className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex flex-col justify-between cursor-pointer hover:border-amber-300 hover:shadow-md transition-all group"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                  <Star className="w-4 h-4 fill-amber-500" />
+                </div>
+                <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide">Review</div>
               </div>
-              <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide">Review</div>
+              {feedbacks.length > 0 && (
+                <span className="px-1.5 py-0.5 rounded-full bg-rose-50 text-rose-600 text-[10px] font-bold border border-rose-100">
+                  {feedbacks.length} Masukan
+                </span>
+              )}
             </div>
             <div className="text-xl sm:text-2xl font-black text-slate-900 leading-none">{totalReview}</div>
-            <div className="text-[10px] text-amber-500 font-bold mt-1">Klik Terkonversi</div>
+            <div className="text-[10px] text-amber-600 font-bold mt-1 flex items-center gap-1">
+              <span>{feedbacks.length > 0 ? `${feedbacks.length} Masukan Tamu` : 'Klik Terkonversi'}</span>
+              <ChevronDown className="w-3 h-3 text-slate-400 group-hover:translate-y-0.5 transition-transform" />
+            </div>
           </div>
         </div>
 
@@ -544,6 +575,100 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
             </div>
           </div>
         )}
+
+        {/* Masukan & Keluhan Pelanggan (Rating 1 & 2) */}
+        <div id="ulasan-section" className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div className="px-5 pt-5 pb-4 border-b border-slate-100 flex items-center justify-between gap-3">
+            <div>
+              <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <MessageSquare className="w-4 h-4 text-amber-500 shrink-0" />
+                <span>Ulasan &amp; Masukan Tamu ({feedbacks.length})</span>
+              </h2>
+              <p className="text-[11px] text-slate-400 mt-0.5 leading-relaxed">
+                Keluhan atau masukan dari tamu rating 1–2 bintang masuk secara privat di sini.
+              </p>
+            </div>
+            {activeStore?.googleMapsReviewUrl && (
+              <a
+                href={activeStore.googleMapsReviewUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 text-[11px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors shrink-0"
+              >
+                <span>Google Review</span>
+                <ExternalLink className="w-3 h-3 text-slate-400" />
+              </a>
+            )}
+          </div>
+
+          <div className="p-5">
+            {feedbacks.length === 0 ? (
+              <div className="text-center py-8">
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-2.5">
+                  <CheckCircle2 className="w-5 h-5" />
+                </div>
+                <p className="text-xs font-bold text-slate-800">Belum Ada Keluhan Masuk</p>
+                <p className="text-[11px] text-slate-400 mt-1 max-w-sm mx-auto leading-relaxed">
+                  Pelayanan berjalan baik! Jika ada pengunjung yang memberikan rating 1–2 bintang saat scan, kritik &amp; saran mereka akan tercatat di sini.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {feedbacks.map((item) => (
+                  <div
+                    key={item.id}
+                    className="p-4 rounded-xl border border-slate-200/80 bg-slate-50/70 hover:bg-slate-50 transition-colors"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mb-2">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <div className="flex items-center text-amber-400">
+                          {[...Array(item.rating || 1)].map((_, i) => (
+                            <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
+                          ))}
+                        </div>
+                        <span className="text-xs font-bold text-slate-900">
+                          {item.customerName || 'Pelanggan'}
+                        </span>
+                        {(item.deviceName || item.qrCode) && (
+                          <span className="text-[10px] font-semibold text-slate-600 bg-white px-2 py-0.5 rounded-full border border-slate-200">
+                            {item.deviceName ? `${item.deviceName} (${item.qrCode})` : item.qrCode}
+                          </span>
+                        )}
+                        {item.customerPhone && (
+                          <span className="text-[10px] font-mono text-slate-500 bg-white px-1.5 py-0.5 rounded border border-slate-200">
+                            {item.customerPhone}
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-[10px] text-slate-400 flex items-center gap-1 shrink-0">
+                        <Calendar className="w-3 h-3" />
+                        <span>{new Date(item.createdAt).toLocaleDateString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}</span>
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-slate-700 leading-relaxed bg-white p-3 rounded-lg border border-slate-200/60">
+                      &ldquo;{item.message}&rdquo;
+                    </p>
+
+                    {item.customerPhone && (
+                      <div className="mt-2.5 flex justify-end">
+                        <a
+                          href={`https://wa.me/${item.customerPhone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Halo ${item.customerName || ''}, terima kasih atas masukan Anda di ${activeStore?.businessName || ''}. Kami ingin menindaklanjuti keluhan Anda.`)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] inline-flex items-center gap-1.5 transition-colors"
+                        >
+                          <Phone className="w-3 h-3" />
+                          <span>Hubungi Pelanggan via WhatsApp</span>
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
 
         {/* PIN Change Section */}
         <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">

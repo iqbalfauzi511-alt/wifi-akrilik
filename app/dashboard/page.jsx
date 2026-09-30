@@ -3,7 +3,9 @@ import { redirect } from 'next/navigation';
 import { getCurrentSession } from '@/lib/auth/session';
 import { getBusinessesByOwnerId } from '@/lib/db/queries/business';
 import { getQrsByOwnerUserId } from '@/lib/db/queries/qr';
-import { ensureDatabaseInitialized } from '@/lib/db';
+import { db, ensureDatabaseInitialized } from '@/lib/db';
+import { customerFeedback, qrCodes } from '@/lib/db/schema';
+import { eq, desc } from 'drizzle-orm';
 import { getCustomerStatsByUserId } from '@/lib/db/queries/stats';
 import OwnerSettingsPage from '@/components/customer/OwnerSettingsPage';
 
@@ -40,6 +42,26 @@ export default async function CustomerDashboardPage() {
     redirect('/dashboard/setup');
   }
 
+  let feedbacks = [];
+  if (business?.id) {
+    feedbacks = await db
+      .select({
+        id: customerFeedback.id,
+        rating: customerFeedback.rating,
+        message: customerFeedback.message,
+        customerName: customerFeedback.customerName,
+        customerPhone: customerFeedback.customerPhone,
+        createdAt: customerFeedback.createdAt,
+        qrCode: qrCodes.code,
+        deviceName: qrCodes.deviceName,
+      })
+      .from(customerFeedback)
+      .leftJoin(qrCodes, eq(customerFeedback.qrId, qrCodes.id))
+      .where(eq(customerFeedback.businessId, business.id))
+      .orderBy(desc(customerFeedback.createdAt))
+      .catch(() => []);
+  }
+
   return (
     <OwnerSettingsPage
       business={business}
@@ -49,6 +71,7 @@ export default async function CustomerDashboardPage() {
       userWa={session.user.whatsappNumber}
       qrList={qrList}
       stats={userStats}
+      feedbacks={feedbacks}
     />
   );
 }
