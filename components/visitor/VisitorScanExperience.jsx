@@ -197,55 +197,42 @@ export default function VisitorScanExperience({
     }
   };
 
-  // Submit 1-2 star feedback: open WA & transition to WAITING_RETURN
+  // Submit 1-2 star feedback: directly saves to database, viewable in Owner's Dashboard
   const handleSubmitFeedback = async (e) => {
     e.preventDefault();
+    const feedbackText = feedbackMessage.trim();
+    if (!feedbackText) {
+      setErrorMessage('Silakan tuliskan keluhan atau saran Anda.');
+      return;
+    }
+
     setIsSubmittingFeedback(true);
     setErrorMessage('');
 
-    // Precompute WhatsApp URL
-    let waUrl = null;
-    let cleanWa = (whatsappNumber || '').replace(/[^0-9]/g, '');
-    if (cleanWa.startsWith('0')) cleanWa = '62' + cleanWa.substring(1);
-    else if (cleanWa && !cleanWa.startsWith('62')) cleanWa = '62' + cleanWa;
+    try {
+      const res = await submitCustomerFeedbackAction({
+        qrCode: code,
+        rating: selectedRating,
+        message: feedbackText,
+        customerName: customerName.trim(),
+        customerPhone: '',
+      });
 
-    const feedbackText = feedbackMessage.trim() || 'Pelanggan ingin menyampaikan masukan langsung.';
-
-    if (cleanWa) {
-      const starsEmoji = '★'.repeat(selectedRating || 1);
-      const sender = customerName.trim() ? ` dari ${customerName.trim()}` : '';
-      const waText = `Halo ${businessName}, saya pelanggan${sender} dari meja (Kode: ${code}).\n\nSaya memberikan rating: ${selectedRating} Bintang (${starsEmoji})\n\nMasukan/Keluhan:\n"${feedbackText}"\n\nMohon dapat ditindaklanjuti. Terima kasih.`;
-      waUrl = `https://wa.me/${cleanWa}?text=${encodeURIComponent(waText)}`;
-    }
-
-    setPendingWaUrl(waUrl || '');
-    setRedirectType('whatsapp');
-
-    // Open WhatsApp immediately within user tap event (bypasses mobile popup blockers)
-    if (waUrl) {
-      window.open(waUrl, '_blank', 'noopener,noreferrer');
-    }
-
-    // Transition to WAITING_RETURN: wait for user to come back from WhatsApp
-    setStage(STAGE.WAITING_RETURN);
-    setIsSubmittingFeedback(false);
-
-    // Save feedback to database asynchronously in the background
-    submitCustomerFeedbackAction({
-      qrCode: code,
-      rating: selectedRating,
-      message: feedbackText,
-      customerName: customerName.trim(),
-      customerPhone: '',
-    }).then((res) => {
-      if (!waUrl && res?.whatsappUrl) {
-        setPendingWaUrl(res.whatsappUrl);
-        window.open(res.whatsappUrl, '_blank', 'noopener,noreferrer');
+      if (!res?.success) {
+        setErrorMessage(res?.error || 'Gagal mengirimkan masukan. Silakan coba lagi.');
+        setIsSubmittingFeedback(false);
+        return;
       }
+
       trackVisitorAction(code, 'kirim_feedback').catch(() => {});
-    }).catch((err) => {
-      console.warn('Feedback background submit notice:', err);
-    });
+      setIsSubmittingFeedback(false);
+      setRedirectType('feedback');
+      setStage(STAGE.REDIRECTED);
+    } catch (err) {
+      console.warn('Feedback submit error:', err);
+      setErrorMessage('Terjadi kendala jaringan. Silakan coba lagi.');
+      setIsSubmittingFeedback(false);
+    }
   };
 
   // Reveal WiFi: called from REDIRECTED (both 1-2 and 3-5 star paths)
@@ -363,15 +350,11 @@ export default function VisitorScanExperience({
               <button
                 type="button"
                 onClick={() => {
-                  if (redirectType === 'whatsapp' && pendingWaUrl) {
-                    window.open(pendingWaUrl, '_blank', 'noopener,noreferrer');
-                  } else {
-                    window.open(targetMapsUrl, '_blank', 'noopener,noreferrer');
-                  }
+                  window.open(targetMapsUrl, '_blank', 'noopener,noreferrer');
                 }}
                 className="text-[11px] font-semibold text-slate-400 hover:text-brand-600 transition-colors inline-flex items-center gap-1 cursor-pointer"
               >
-                <span>{redirectType === 'whatsapp' ? 'Buka ulang WhatsApp' : 'Buka ulang Google Maps'}</span>
+                <span>Buka ulang Google Maps</span>
                 <ExternalLink className="w-3 h-3" />
               </button>
             </div>
@@ -394,20 +377,22 @@ export default function VisitorScanExperience({
           </div>
         )}
 
-        {/* Stage: REDIRECTED (Returned from 3-5 star Google Maps link or 1-2 star WhatsApp link) */}
+        {/* Stage: REDIRECTED (Returned from 3-5 star Google Maps or submitted 1-2 star feedback) */}
         {stage === STAGE.REDIRECTED && (
           <div className="mt-6 pt-6 border-t border-slate-100 text-center py-2 animate-in fade-in zoom-in-95 duration-200">
             <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-3">
               <CheckCircle2 className="w-7 h-7" />
             </div>
             <p className="text-sm font-bold text-slate-800">
-              {selectedRating <= 2 ? 'Terima kasih atas masukan Anda!' : 'Terima kasih atas ulasan Anda!'}
+              {selectedRating <= 2 ? 'Masukan Anda Telah Diterima' : 'Terima kasih atas ulasan Anda!'}
             </p>
             
             {wifiEnabled ? (
               <>
-                <p className="text-xs text-slate-500 mt-1 mb-4">
-                  Klik tombol di bawah untuk melihat nama dan password Wi-Fi.
+                <p className="text-xs text-slate-500 mt-1 mb-4 leading-relaxed">
+                  {selectedRating <= 2
+                    ? 'Terima kasih telah membantu kami meningkatkan kualitas layanan. Silakan nikmati akses Wi-Fi di tempat kami.'
+                    : 'Klik tombol di bawah untuk melihat nama dan password Wi-Fi.'}
                 </p>
                 <button
                   type="button"
@@ -419,9 +404,9 @@ export default function VisitorScanExperience({
                 </button>
               </>
             ) : (
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-slate-500 mt-2 leading-relaxed">
                 {selectedRating <= 2
-                  ? 'Masukan Anda sangat berharga bagi peningkatan kualitas layanan kami.'
+                  ? 'Masukan Anda telah diteruskan langsung ke pihak pengelola untuk evaluasi layanan. Terima kasih atas perhatian Anda.'
                   : 'Masukan dan ulasan Anda sangat berharga bagi kami.'}
               </p>
             )}
@@ -515,7 +500,7 @@ export default function VisitorScanExperience({
               </div>
 
               <p className="text-xs text-slate-600 mb-4 leading-relaxed">
-                Kami mohon maaf atas ketidaknyamanan di <strong>{businessName}</strong>. Sampaikan keluhan agar pengelola dapat segera menindaklanjuti via WhatsApp.
+                Kami memohon maaf atas ketidaknyamanan Anda di <strong>{businessName}</strong>. Masukan Anda akan langsung diteruskan ke dashboard pengelola agar dapat segera dievaluasi.
               </p>
 
                 {errorMessage && (
@@ -534,7 +519,7 @@ export default function VisitorScanExperience({
                       rows={3}
                       value={feedbackMessage}
                       onChange={(e) => setFeedbackMessage(e.target.value)}
-                      placeholder="Contoh: Makanan agak lama atau ruangan kurang dingin..."
+                      placeholder="Tuliskan saran atau keluhan Anda di sini..."
                       required
                       className="w-full p-3 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1A73E8] bg-slate-50/50"
                     />
@@ -549,7 +534,7 @@ export default function VisitorScanExperience({
                       value={customerName}
                       onChange={(e) => setCustomerName(e.target.value)}
                       placeholder="Nama Anda"
-                      className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1A73E8] bg-slate-50/50"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1A73E8] bg-slate-50/50"
                     />
                   </div>
 
@@ -567,10 +552,10 @@ export default function VisitorScanExperience({
                       className="flex-1 py-2.5 px-4 rounded-xl bg-[#1A73E8] hover:bg-blue-600 text-white font-bold text-xs shadow-md transition-all inline-flex items-center justify-center gap-1.5 disabled:opacity-50"
                     >
                       {isSubmittingFeedback ? (
-                        <span>Mengirim...</span>
+                        <span>Mengirimkan...</span>
                       ) : (
                         <>
-                          <span>Kirim ke WhatsApp</span>
+                          <span>Kirim Masukan</span>
                           <Send className="w-3.5 h-3.5" />
                         </>
                       )}

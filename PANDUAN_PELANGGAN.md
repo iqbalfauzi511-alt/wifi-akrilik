@@ -19,7 +19,7 @@ Perangkat Anda saat ini masih dalam keadaan "Kosong". Anda harus menghubungkanny
 
 Anda akan diarahkan ke halaman *Form Aktivasi*. Langkah pertama adalah membuat akun agar Anda bisa memantau dan mengubah data sewaktu-waktu:
 - **Nama**: Isi dengan nama Anda (Opsional).
-- **Nomor WhatsApp**: Masukkan nomor WA aktif Anda (Contoh: *08123456789*).
+- **Nomor WhatsApp**: Masukkan nomor WA aktif Anda (Contoh: *08123456789*). Nomor ini **HANYA digunakan untuk Login & Identitas Akun Pemilik** (disimpan privat & aman di database, **tidak pernah dibagikan kepada pengunjung/tamu**).
 - **PIN 6 Angka**: Buat sandi berupa 6 digit angka untuk keamanan (Contoh: *123456*), lalu ketik ulang di kolom Konfirmasi PIN.
 - *Penting: Ingat baik-baik PIN Anda! Ini akan digunakan untuk Login (Masuk) ke Dashboard.*
 
@@ -48,8 +48,9 @@ Selamat! Akrilik Anda kini sudah berfungsi sepenuhnya untuk pelanggan. Kapan pun
 2. Masukkan **Nomor WhatsApp** dan **PIN** yang telah Anda buat di Langkah 2.
 3. Di Dashboard Anda bisa:
    - **Melihat Statistik**: Berapa banyak pelanggan yang sudah men-scan dan menekan tombol review.
+   - **Membaca Masukan Privat (Rating 1 & 2)**: Kritik dan saran dari tamu yang memberi rating 1-2 bintang akan langsung masuk ke menu **Ulasan & Masukan** secara privat tanpa mengotori Google Maps atau mengekspos kontak pribadi Anda.
    - **Merubah Data**: Klik tombol **"Atur"** pada perangkat untuk mengganti password Wi-Fi jika sewaktu-waktu password toko Anda berubah.
-   - **Menambah Perangkat**: Jika Anda membeli akrilik Cobascan baru, cukup klik **"Tambah QR"** dari Dashboard tanpa perlu repot mendaftar ulang.
+   - **Menambah Perangkat**: Jika Anda membeli akrilik Cobascan baru, Anda bisa menautkannya langsung ke akun WhatsApp Anda yang sudah ada dari Dashboard tanpa perlu membuat akun baru.
 
 ---
 

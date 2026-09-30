@@ -236,7 +236,7 @@ export default async function HomePage() {
               <div className="p-6">
                 <h3 className="text-base font-bold text-slate-900 mb-2">Sistem Penilaian Cerdas Terbuka</h3>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  Tamu mengisi rating 1-5 bintang. Bintang 3-5 diarahkan otomatis ke halaman Google Maps. Bintang 1-2 diarahkan ke WhatsApp untuk masukan privat.
+                  Tamu mengisi rating 1-5 bintang. Bintang 3-5 diarahkan otomatis ke halaman Google Maps. Bintang 1-2 ditampung ke formulir masukan privat yang langsung masuk ke dashboard pemilik tanpa menyebarkan kontak pribadi.
                 </p>
               </div>
             </div>
