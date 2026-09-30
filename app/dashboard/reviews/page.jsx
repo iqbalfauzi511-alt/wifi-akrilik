@@ -156,7 +156,7 @@ export default async function CustomerReviewsPage() {
 
                   <div className="text-[11px] text-slate-400 flex items-center gap-1 shrink-0">
                     <Calendar className="w-3 h-3" />
-                    <span>{new Date(item.createdAt).toLocaleDateString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}</span>
+                    <span>{new Date(item.createdAt).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}</span>
                   </div>
                 </div>
 

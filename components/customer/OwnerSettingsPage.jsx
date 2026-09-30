@@ -642,7 +642,7 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
                       </div>
                       <div className="text-[10px] text-slate-400 flex items-center gap-1 shrink-0">
                         <Calendar className="w-3 h-3" />
-                        <span>{new Date(item.createdAt).toLocaleDateString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}</span>
+                        <span>{new Date(item.createdAt).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}</span>
                       </div>
                     </div>
 
