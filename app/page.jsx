@@ -286,7 +286,7 @@ export default async function HomePage() {
               </div>
               <div className="w-6 h-6 bg-slate-900 text-white rounded-full flex items-center justify-center text-xs font-bold absolute -top-3 shadow-md">1</div>
               <h3 className="font-bold text-slate-900 mb-2">Scan atau Tap Perangkat</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">Scan QR atau tap NFC pada perangkat Cobascan, lalu pilih "Mulai Aktivasi & Daftar Akun".</p>
+              <p className="text-xs text-slate-600 leading-relaxed">Scan QR atau tap NFC pada perangkat Cobascan, lalu pilih &quot;Mulai Aktivasi &amp; Daftar Akun&quot;.</p>
             </div>
 
             {/* Step 2 */}
