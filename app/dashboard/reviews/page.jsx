@@ -5,7 +5,7 @@ import { Star, MessageSquare, ExternalLink, Calendar, User, Phone, CheckCircle2 
 import { getCurrentSession } from '@/lib/auth/session';
 import { getBusinessesByOwnerId } from '@/lib/db/queries/business';
 import { db, ensureDatabaseInitialized } from '@/lib/db';
-import { customerFeedback } from '@/lib/db/schema';
+import { customerFeedback, qrCodes } from '@/lib/db/schema';
 import { eq, desc } from 'drizzle-orm';
 import Button from '@/components/ui/Button';
 
@@ -32,8 +32,18 @@ export default async function CustomerReviewsPage() {
   let feedbacks = [];
   if (business?.id) {
     feedbacks = await db
-      .select()
+      .select({
+        id: customerFeedback.id,
+        rating: customerFeedback.rating,
+        message: customerFeedback.message,
+        customerName: customerFeedback.customerName,
+        customerPhone: customerFeedback.customerPhone,
+        createdAt: customerFeedback.createdAt,
+        qrCode: qrCodes.code,
+        deviceName: qrCodes.deviceName,
+      })
       .from(customerFeedback)
+      .leftJoin(qrCodes, eq(customerFeedback.qrId, qrCodes.id))
       .where(eq(customerFeedback.businessId, business.id))
       .orderBy(desc(customerFeedback.createdAt))
       .catch(() => []);
@@ -123,7 +133,7 @@ export default async function CustomerReviewsPage() {
                 className="p-4 rounded-2xl border border-slate-200/80 bg-slate-50/50 hover:bg-slate-50 transition-colors"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-                  <div className="flex items-center gap-2.5">
+                  <div className="flex items-center gap-2.5 flex-wrap">
                     <div className="flex items-center text-amber-500">
                       {[...Array(item.rating || 1)].map((_, i) => (
                         <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
@@ -132,6 +142,11 @@ export default async function CustomerReviewsPage() {
                     <span className="text-xs font-bold text-slate-900">
                       {item.customerName || 'Pelanggan'}
                     </span>
+                    {(item.deviceName || item.qrCode) && (
+                      <span className="text-[10px] font-semibold text-slate-600 bg-white px-2.5 py-0.5 rounded-full border border-slate-200">
+                        {item.deviceName ? `${item.deviceName} (${item.qrCode})` : item.qrCode}
+                      </span>
+                    )}
                     {item.customerPhone && (
                       <span className="text-[11px] font-mono text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-200">
                         {item.customerPhone}
@@ -139,9 +154,9 @@ export default async function CustomerReviewsPage() {
                     )}
                   </div>
 
-                  <div className="text-[11px] text-slate-400 flex items-center gap-1">
+                  <div className="text-[11px] text-slate-400 flex items-center gap-1 shrink-0">
                     <Calendar className="w-3 h-3" />
-                    <span>{new Date(item.createdAt).toLocaleDateString('id-ID', { dateStyle: 'medium' })}</span>
+                    <span>{new Date(item.createdAt).toLocaleDateString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}</span>
                   </div>
                 </div>
 
