@@ -7,7 +7,6 @@ import QRCode from 'qrcode';
 import {
   ExternalLink,
   Eye,
-  QrCode,
   Download,
   Star,
   Wifi,
@@ -20,8 +19,6 @@ import {
   AlertTriangle,
   X,
   CheckCircle2,
-  Sparkles,
-  Building,
   Store,
   Check,
 } from 'lucide-react';

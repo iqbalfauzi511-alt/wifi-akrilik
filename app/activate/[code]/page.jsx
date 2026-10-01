@@ -1,7 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import { QrCode, Radio, AlertCircle, ArrowLeft, ShieldAlert, CheckCircle2, ExternalLink } from 'lucide-react';
+import { QrCode, AlertCircle, ArrowLeft, CheckCircle2, ExternalLink } from 'lucide-react';
 import { getCurrentSession } from '@/lib/auth/session';
 import { getQrByCode } from '@/lib/db/queries/qr';
 import { getBusinessesByOwnerId } from '@/lib/db/queries/business';

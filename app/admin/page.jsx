@@ -5,23 +5,17 @@ import {
   QrCode,
   Users,
   Star,
-  ChevronDown,
-  ArrowUp,
   MoreHorizontal,
   ChevronRight,
   Wifi,
   Smartphone,
-  AlertTriangle,
-  Clock,
-  Layers,
   Sparkles,
-  MessageSquare,
 } from 'lucide-react';
 import { getAdminStats } from '@/lib/db/queries/stats';
 import { getAllQrsAdmin, getAllBatchesAdmin } from '@/lib/db/queries/qr';
 import { db } from '@/lib/db';
 import { businesses, qrCodes, scanLogs } from '@/lib/db/schema';
-import { desc, eq, isNull } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import DashboardHeader from '@/components/layout/DashboardHeader';
 import AdminQrManager from '@/components/admin/AdminQrManager';
 import ScanActivityChart from '@/components/charts/ScanActivityChart';

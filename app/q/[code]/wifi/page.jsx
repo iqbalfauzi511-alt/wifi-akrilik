@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
-import { AlertTriangle, ShieldOff, Sparkles, ArrowRight, WifiOff, Star, ExternalLink } from 'lucide-react';
+import { AlertTriangle, ShieldOff, Sparkles, ArrowRight } from 'lucide-react';
 import { getPublicQrByCode, recordScanLog } from '@/lib/db/queries/qr';
 import VisitorScanExperience from '@/components/visitor/VisitorScanExperience';
 import Button from '@/components/ui/Button';

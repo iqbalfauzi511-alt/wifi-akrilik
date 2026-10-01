@@ -1,40 +1,28 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
-  Building2,
   Star,
   Phone,
   Wifi,
   KeyRound,
   Check,
   LogOut,
-  Save,
   AlertCircle,
   WifiOff,
   Layers,
   QrCode,
   Users,
-  MessageSquare,
   Lock,
   Eye,
   EyeOff,
   Plus,
   ShieldCheck,
-  ChevronDown,
   MapPin,
-  Store,
-  BarChart3,
-  TrendingUp,
-  Calendar,
-  CheckCircle2,
-  ExternalLink,
 } from 'lucide-react';
 import Image from 'next/image';
-import { updateBusinessWifiAction } from '@/lib/actions/business-actions';
-import { createClient } from '@/lib/supabase/client';
 import { ownerChangePinAction, ownerAddDeviceAction, ownerChangeWaAction } from '@/lib/actions/owner-auth-actions';
 import { logoutAction } from '@/lib/actions/auth-actions';
 import DeviceList from './DeviceList';

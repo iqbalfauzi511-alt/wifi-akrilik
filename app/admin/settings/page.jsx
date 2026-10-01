@@ -1,6 +1,6 @@
 import React from 'react';
-import { Settings, ShieldCheck, Database, Server, Mail, UserCheck } from 'lucide-react';
-import { getCurrentSession, ADMIN_EMAILS } from '@/lib/auth/session';
+import { ShieldCheck, Database, Server, Mail } from 'lucide-react';
+import { getCurrentSession } from '@/lib/auth/session';
 import { db, ensureDatabaseInitialized } from '@/lib/db';
 import { users } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';

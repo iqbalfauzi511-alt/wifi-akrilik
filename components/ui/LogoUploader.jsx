@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { UploadCloud, Image as ImageIcon, Link as LinkIcon, X, Check, RefreshCw } from 'lucide-react';
+import { UploadCloud, X, Check, RefreshCw } from 'lucide-react';
 import Button from './Button';
 
 /**

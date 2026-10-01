@@ -9,8 +9,6 @@ import {
   ShieldCheck,
   Search,
   CheckCircle2,
-  MailCheck,
-  MailWarning,
   Building,
   KeyRound,
 } from 'lucide-react';

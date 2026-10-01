@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import {
   Phone, Lock, Eye, EyeOff, ArrowRight, CheckCircle2,
   ExternalLink, Wifi, WifiOff, Building2, Star, AlertCircle,
-  KeyRound, User, Info, Plus, Check
+  KeyRound, User, Info, Check
 } from 'lucide-react';
 import { ownerRegisterAction, checkWaRegisteredAction } from '@/lib/actions/owner-auth-actions';
 import { activateQrAction } from '@/lib/actions/qr-actions';

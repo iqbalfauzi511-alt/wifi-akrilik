@@ -1,9 +1,7 @@
 import React from 'react';
-import { BarChart3, Store, QrCode, Users, Star, TrendingUp } from 'lucide-react';
+import { Store, QrCode, Users, Star } from 'lucide-react';
 import { getAdminStats } from '@/lib/db/queries/stats';
-import { db, ensureDatabaseInitialized } from '@/lib/db';
-import { businesses, qrCodes, scanLogs } from '@/lib/db/schema';
-import { sql } from 'drizzle-orm';
+import { ensureDatabaseInitialized } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 

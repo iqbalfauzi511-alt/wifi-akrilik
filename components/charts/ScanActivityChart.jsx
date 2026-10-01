@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Calendar, ChevronDown, TrendingUp } from 'lucide-react';
+import { Calendar, ChevronDown } from 'lucide-react';
 
 const PERIOD_OPTIONS = [
   { id: '7d', label: '7 Hari Terakhir' },

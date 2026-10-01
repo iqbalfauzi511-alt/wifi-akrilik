@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { LogOut } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 
 import { logoutAction } from '@/lib/actions/auth-actions';

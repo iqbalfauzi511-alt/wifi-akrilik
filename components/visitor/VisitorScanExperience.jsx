@@ -3,8 +3,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import {
-  Wifi,
-  WifiOff,
   Star,
   Copy,
   Check,

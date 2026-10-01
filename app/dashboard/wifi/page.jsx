@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { Wifi, Copy, Check, ShieldCheck, Settings } from 'lucide-react';
+import { Wifi, Settings } from 'lucide-react';
 import { getCurrentSession } from '@/lib/auth/session';
 import { getBusinessesByOwnerId } from '@/lib/db/queries/business';
 import { updateBusinessSettingsAction } from '@/lib/actions/business-actions';

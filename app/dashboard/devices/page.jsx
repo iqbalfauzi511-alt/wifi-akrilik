@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { TabletSmartphone, Plus, ArrowLeft } from 'lucide-react';
+import { TabletSmartphone, Plus } from 'lucide-react';
 import { getCurrentSession } from '@/lib/auth/session';
 import { getBusinessesByOwnerId } from '@/lib/db/queries/business';
 import { getQrsByOwnerUserId } from '@/lib/db/queries/qr';

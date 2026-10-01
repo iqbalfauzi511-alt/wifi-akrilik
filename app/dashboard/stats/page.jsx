@@ -1,6 +1,6 @@
 import React from 'react';
 import { redirect } from 'next/navigation';
-import { Store, QrCode, Users, Star, MessageSquare, Wifi } from 'lucide-react';
+import { Store, QrCode, Users, Star } from 'lucide-react';
 import { getCurrentSession } from '@/lib/auth/session';
 import { getBusinessesByOwnerId } from '@/lib/db/queries/business';
 import { getQrsByOwnerUserId } from '@/lib/db/queries/qr';

@@ -5,13 +5,9 @@ import { useRouter } from 'next/navigation';
 import {
   Trash2,
   AlertTriangle,
-  Building,
   ExternalLink,
   Search,
   CheckCircle2,
-  Store,
-  Wifi,
-  Phone,
 } from 'lucide-react';
 import Card, { CardHeader } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';

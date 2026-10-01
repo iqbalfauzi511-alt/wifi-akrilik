@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import Link from 'next/link';
-import { AlertCircle, RefreshCw, Database, Home, ShieldAlert } from 'lucide-react';
+import { RefreshCw, Database, Home, ShieldAlert } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
 export default function AdminError({ error, reset }) {

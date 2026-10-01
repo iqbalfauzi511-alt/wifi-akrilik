@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Mail, CheckCircle2, AlertCircle, ArrowRight } from 'lucide-react';
+import { Mail, CheckCircle2, AlertCircle } from 'lucide-react';
 import { requestPasswordResetAction } from '@/lib/actions/auth-actions';
 
 export default function ForgotPasswordPage() {
