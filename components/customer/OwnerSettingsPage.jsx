@@ -268,21 +268,23 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
     <div className="min-h-screen bg-[#F7F8FA]">
       {/* Top Bar */}
       <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 min-w-0">
-            <div className="w-8 h-8 flex items-center justify-center relative shrink-0">
-              <Image src="/cobascan-logo.png" alt="Cobascan" width={32} height={32} className="w-full h-full object-contain" priority />
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center relative shrink-0">
+              <Image src="/cobascan-logo.png" alt="Cobascan" width={36} height={36} className="w-full h-full object-contain" priority />
             </div>
-            <div className="min-w-0">
+            <div className="flex items-center gap-2 min-w-0">
               <span className="font-extrabold text-slate-900 text-base sm:text-lg tracking-tight leading-none block truncate">COBASCAN</span>
-              <span className="hidden sm:inline text-xs text-slate-400 ml-2 font-medium">({userName || 'Pemilik'})</span>
+              <span className="hidden sm:inline-block px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-xs font-medium truncate max-w-[200px]">
+                {userName || 'Pemilik'}
+              </span>
             </div>
           </div>
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <button
               type="button"
               onClick={() => document.getElementById('ulasan-section')?.scrollIntoView({ behavior: 'smooth' })}
-              className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-semibold text-slate-700 transition-colors cursor-pointer"
+              className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-semibold text-slate-700 transition-colors cursor-pointer"
             >
               <MessageSquare className="w-3.5 h-3.5 text-amber-500 shrink-0" />
               <span>Ulasan</span>
@@ -296,7 +298,7 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
               type="button"
               onClick={handleLogout}
               disabled={isLoggingOut}
-              className="flex items-center justify-center h-8 sm:min-h-[44px] gap-1 px-2.5 sm:px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-50 cursor-pointer"
+              className="flex items-center justify-center h-8 sm:h-9 gap-1 px-2.5 sm:px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-50 cursor-pointer"
               title="Keluar"
             >
               <LogOut className="w-3.5 h-3.5 shrink-0" />
@@ -306,65 +308,67 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
 
         {/* 3 Bento Overview Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 lg:gap-5">
 
-          <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex flex-col justify-between">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-                <QrCode className="w-4 h-4" />
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-sm flex flex-col justify-between">
+            <div className="flex items-center gap-2 mb-2 sm:mb-3">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                <QrCode className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
               </div>
               <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide">Perangkat</div>
             </div>
-            <div className="text-xl sm:text-2xl font-black text-slate-900 leading-none">{stats.totalQrCount || 0}</div>
-            <div className="text-[10px] text-emerald-600 font-bold mt-1">{stats.activeQrCount || 0} Aktif</div>
+            <div className="text-xl sm:text-3xl font-black text-slate-900 leading-none">{stats.totalQrCount || 0}</div>
+            <div className="text-[10px] sm:text-xs text-emerald-600 font-bold mt-1.5">{stats.activeQrCount || 0} Aktif</div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex flex-col justify-between">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
-                <Users className="w-4 h-4" />
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-sm flex flex-col justify-between">
+            <div className="flex items-center gap-2 mb-2 sm:mb-3">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+                <Users className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
               </div>
               <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide">Total Scan</div>
             </div>
-            <div className="text-xl sm:text-2xl font-black text-slate-900 leading-none">{totalScans.toLocaleString('id-ID')}</div>
-            <div className="text-[10px] text-emerald-600 font-bold mt-1">Pengunjung Riil</div>
+            <div className="text-xl sm:text-3xl font-black text-slate-900 leading-none">{totalScans.toLocaleString('id-ID')}</div>
+            <div className="text-[10px] sm:text-xs text-emerald-600 font-bold mt-1.5">Pengunjung Riil</div>
           </div>
 
           <div 
             onClick={() => document.getElementById('ulasan-section')?.scrollIntoView({ behavior: 'smooth' })}
-            className="col-span-2 sm:col-span-1 bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex flex-col justify-between cursor-pointer hover:border-amber-300 hover:shadow-md transition-all group"
+            className="col-span-2 sm:col-span-1 bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-sm flex flex-col justify-between cursor-pointer hover:border-amber-300 hover:shadow-md transition-all group"
           >
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                  <Star className="w-4 h-4 fill-amber-500" />
+            <div className="flex items-center justify-between mb-2 sm:mb-3 gap-1">
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                  <Star className="w-4 h-4 sm:w-4.5 sm:h-4.5 fill-amber-500" />
                 </div>
-                <div>
-                  <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide">Review &amp; Masukan</div>
+                <div className="min-w-0">
+                  <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide whitespace-nowrap">Review &amp; Masukan</div>
                   <div className="sm:hidden text-base font-black text-slate-900 leading-tight mt-0.5">
                     {totalReview} <span className="text-[10px] font-bold text-amber-600">Klik Terkonversi</span>
                   </div>
                 </div>
               </div>
               {feedbacks.length > 0 ? (
-                <span className="px-2 py-0.5 rounded-full bg-rose-50 text-rose-600 text-[10px] font-bold border border-rose-100 flex items-center gap-1 shrink-0">
+                <span className="px-2 py-0.5 rounded-full bg-rose-50 text-rose-600 text-[10px] font-bold border border-rose-100 flex items-center gap-1 shrink-0 whitespace-nowrap">
                   <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
-                  {feedbacks.length} Masukan Tamu
+                  {feedbacks.length} Masukan
                 </span>
               ) : (
-                <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-medium shrink-0">
-                  0 Keluhan
+                <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[10px] font-medium shrink-0 whitespace-nowrap">
+                  0 Masukan
                 </span>
               )}
             </div>
-            <div className="hidden sm:block text-xl sm:text-2xl font-black text-slate-900 leading-none">{totalReview}</div>
-            <div className="text-[10px] text-amber-600 font-semibold mt-1 flex items-center justify-between sm:justify-start gap-1">
-              <span className="hidden sm:inline">{feedbacks.length > 0 ? `${feedbacks.length} Masukan Tamu Bintang 1–2` : 'Klik Terkonversi'}</span>
-              <span className="sm:hidden text-slate-500 font-normal">Ketuk untuk lihat masukan tamu</span>
-              <ChevronDown className="w-3 h-3 text-slate-400 group-hover:translate-y-0.5 transition-transform shrink-0" />
+            <div className="hidden sm:block text-xl sm:text-3xl font-black text-slate-900 leading-none">{totalReview}</div>
+            <div className="text-[10px] sm:text-xs text-amber-600 font-semibold mt-1.5 flex items-center justify-between sm:justify-start gap-1">
+              <span className="hidden sm:inline">
+                {feedbacks.length > 0 ? `${feedbacks.length} Masukan Tamu Bintang 1–2` : 'Klik Terkonversi'}
+              </span>
+              <span className="sm:hidden text-slate-500 font-normal">Ketuk untuk lihat masukan</span>
+              <ChevronDown className="w-3.5 h-3.5 text-amber-500 group-hover:translate-y-0.5 transition-transform shrink-0" />
             </div>
           </div>
         </div>
@@ -375,19 +379,25 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
         {/* Profil Section */}
         <div className="bg-white rounded-2xl border border-slate-200 p-5 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center font-bold text-lg border border-slate-200 shadow-sm">
+            <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-lg border border-slate-200 shadow-sm shrink-0">
               {(userName || 'P').charAt(0).toUpperCase()}
             </div>
             <div>
-              <h2 className="text-sm font-bold text-slate-900">{userName || 'Pemilik Bisnis'}</h2>
-              <div className="flex items-center gap-1.5 mt-0.5 text-[11px] text-slate-500 font-medium font-mono">
-                <Phone className="w-3 h-3" />
-                {userWa || userEmail?.replace('@owner.cobascan.local', '') || '-'}
+              <div className="flex items-center gap-2">
+                <h2 className="text-sm sm:text-base font-bold text-slate-900">{userName || 'Pemilik Bisnis'}</h2>
+                <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold border border-blue-100">
+                  Owner
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5 mt-1 text-xs text-slate-500 font-medium font-mono">
+                <Phone className="w-3.5 h-3.5 text-slate-400" />
+                <span>{userWa || userEmail?.replace('@owner.cobascan.local', '') || '-'}</span>
               </div>
             </div>
           </div>
-          <div className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold border border-blue-100">
-            Owner
+          <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500 bg-slate-50 px-3.5 py-2 rounded-xl border border-slate-200">
+            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span className="font-medium">Akun Terverifikasi</span>
           </div>
         </div>
 
@@ -682,45 +692,123 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
           </div>
         </div>
 
-        {/* PIN Change Section */}
-        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-          <button
-            type="button"
-            onClick={() => { setShowPinSection((v) => !v); setPinMsg(null); }}
-            className="w-full px-5 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center">
-                <ShieldCheck className="w-4 h-4" />
-              </div>
-              <div className="text-left">
-                <p className="text-sm font-bold text-slate-900">Keamanan: Ganti PIN</p>
-                <p className="text-[11px] text-slate-400">Ubah PIN login dashboard Anda</p>
-              </div>
-            </div>
-            <span className="text-xs text-slate-400">{showPinSection ? '▲' : '▼'}</span>
-          </button>
-
-          {showPinSection && (
-            <div className="px-5 pb-5 border-t border-slate-100">
-              {pinMsg && (
-                <div className={`mt-4 p-3 rounded-xl text-xs flex items-center gap-2 ${
-                  pinMsg.type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'
-                }`}>
-                  {pinMsg.type === 'success' ? <Check className="w-4 h-4 shrink-0" /> : <AlertCircle className="w-4 h-4 shrink-0" />}
-                  {pinMsg.text}
+        {/* Settings: PIN & WA side-by-side on desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-start">
+          {/* PIN Change Section */}
+          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+            <button
+              type="button"
+              onClick={() => { setShowPinSection((v) => !v); setPinMsg(null); }}
+              className="w-full px-5 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0">
+                  <ShieldCheck className="w-4 h-4" />
                 </div>
-              )}
-              <form onSubmit={handleChangePin} className="mt-4 space-y-3">
-                {[{ label: 'PIN Lama', val: oldPin, setVal: setOldPin }, { label: 'PIN Baru', val: newPin, setVal: setNewPin }, { label: 'Konfirmasi PIN Baru', val: confirmNewPin, setVal: setConfirmNewPin }].map(({ label, val, setVal }) => (
-                  <div key={label}>
-                    <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">{label}</label>
+                <div className="text-left min-w-0">
+                  <p className="text-sm font-bold text-slate-900 truncate">Keamanan: Ganti PIN</p>
+                  <p className="text-[11px] text-slate-400">Ubah PIN login dashboard Anda</p>
+                </div>
+              </div>
+              <span className="text-xs text-slate-400 ml-2">{showPinSection ? '▲' : '▼'}</span>
+            </button>
+
+            {showPinSection && (
+              <div className="px-5 pb-5 border-t border-slate-100">
+                {pinMsg && (
+                  <div className={`mt-4 p-3 rounded-xl text-xs flex items-center gap-2 ${
+                    pinMsg.type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'
+                  }`}>
+                    {pinMsg.type === 'success' ? <Check className="w-4 h-4 shrink-0" /> : <AlertCircle className="w-4 h-4 shrink-0" />}
+                    <span>{pinMsg.text}</span>
+                  </div>
+                )}
+                <form onSubmit={handleChangePin} className="mt-4 space-y-3">
+                  {[{ label: 'PIN Lama', val: oldPin, setVal: setOldPin }, { label: 'PIN Baru', val: newPin, setVal: setNewPin }, { label: 'Konfirmasi PIN Baru', val: confirmNewPin, setVal: setConfirmNewPin }].map(({ label, val, setVal }) => (
+                    <div key={label}>
+                      <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">{label}</label>
+                      <div className="relative flex items-center">
+                        <div className="absolute left-3.5 text-slate-400 pointer-events-none"><Lock className="w-4 h-4" /></div>
+                        <input
+                          type={showPins ? 'text' : 'password'}
+                          value={val}
+                          onChange={(e) => setVal(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                          placeholder="••••••"
+                          inputMode="numeric"
+                          maxLength={6}
+                          required
+                          className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm font-mono tracking-widest placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1A73E8]"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                  <div className="flex items-center gap-2 pt-1">
+                    <button type="button" onClick={() => setShowPins(s => !s)} className="text-xs text-slate-400 hover:text-slate-600 flex items-center gap-1">
+                      {showPins ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      {showPins ? 'Sembunyikan' : 'Tampilkan'} PIN
+                    </button>
+                  </div>
+                  <button type="submit" disabled={pinSubmitting}
+                    className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-60">
+                    {pinSubmitting ? <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Menyimpan...</> : 'Simpan PIN Baru'}
+                  </button>
+                </form>
+              </div>
+            )}
+          </div>
+
+          {/* Ganti WA Section */}
+          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+            <button
+              type="button"
+              onClick={() => { setShowWaSection((v) => !v); setWaMsg(null); }}
+              className="w-full px-5 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <div className="text-left min-w-0">
+                  <p className="text-sm font-bold text-slate-900 truncate">Ganti Nomor WhatsApp</p>
+                  <p className="text-[11px] text-slate-400">Ubah nomor WA yang terdaftar</p>
+                </div>
+              </div>
+              <span className="text-xs text-slate-400 ml-2">{showWaSection ? '▲' : '▼'}</span>
+            </button>
+
+            {showWaSection && (
+              <div className="px-5 pb-5 border-t border-slate-100">
+                {waMsg && (
+                  <div className={`mt-4 p-3 rounded-xl text-xs flex items-center gap-2 ${
+                    waMsg.type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'
+                  }`}>
+                    {waMsg.type === 'success' ? <Check className="w-4 h-4 shrink-0" /> : <AlertCircle className="w-4 h-4 shrink-0" />}
+                    <span>{waMsg.text}</span>
+                  </div>
+                )}
+                <form onSubmit={handleChangeWa} className="mt-4 space-y-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Nomor WA Baru</label>
+                    <div className="relative flex items-center">
+                      <div className="absolute left-3.5 text-slate-400 pointer-events-none"><Phone className="w-4 h-4" /></div>
+                      <input
+                        type="tel"
+                        value={newWa}
+                        onChange={(e) => setNewWa(e.target.value)}
+                        placeholder="08123456789"
+                        required
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1A73E8]"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Masukkan PIN Saat Ini</label>
                     <div className="relative flex items-center">
                       <div className="absolute left-3.5 text-slate-400 pointer-events-none"><Lock className="w-4 h-4" /></div>
                       <input
                         type={showPins ? 'text' : 'password'}
-                        value={val}
-                        onChange={(e) => setVal(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                        value={waPin}
+                        onChange={(e) => setWaPin(e.target.value.replace(/\D/g, '').slice(0, 6))}
                         placeholder="••••••"
                         inputMode="numeric"
                         maxLength={6}
@@ -729,89 +817,14 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
                       />
                     </div>
                   </div>
-                ))}
-                <div className="flex items-center gap-2 pt-1">
-                  <button type="button" onClick={() => setShowPins(s => !s)} className="text-xs text-slate-400 hover:text-slate-600 flex items-center gap-1">
-                    {showPins ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                    {showPins ? 'Sembunyikan' : 'Tampilkan'} PIN
+                  <button type="submit" disabled={waSubmitting}
+                    className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-60 mt-2">
+                    {waSubmitting ? <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Memproses...</> : 'Simpan Nomor WA'}
                   </button>
-                </div>
-                <button type="submit" disabled={pinSubmitting}
-                  className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-60">
-                  {pinSubmitting ? <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Menyimpan...</> : 'Simpan PIN Baru'}
-                </button>
-              </form>
-            </div>
-          )}
-        </div>
-
-        {/* Ganti WA Section */}
-        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-          <button
-            type="button"
-            onClick={() => { setShowWaSection((v) => !v); setWaMsg(null); }}
-            className="w-full px-5 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center">
-                <Phone className="w-4 h-4" />
+                </form>
               </div>
-              <div className="text-left">
-                <p className="text-sm font-bold text-slate-900">Ganti Nomor WhatsApp</p>
-                <p className="text-[11px] text-slate-400">Ubah nomor WA yang terdaftar</p>
-              </div>
-            </div>
-            <span className="text-xs text-slate-400">{showWaSection ? '▲' : '▼'}</span>
-          </button>
-
-          {showWaSection && (
-            <div className="px-5 pb-5 border-t border-slate-100">
-              {waMsg && (
-                <div className={`mt-4 p-3 rounded-xl text-xs flex items-center gap-2 ${
-                  waMsg.type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'
-                }`}>
-                  {waMsg.type === 'success' ? <Check className="w-4 h-4 shrink-0" /> : <AlertCircle className="w-4 h-4 shrink-0" />}
-                  {waMsg.text}
-                </div>
-              )}
-              <form onSubmit={handleChangeWa} className="mt-4 space-y-3">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Nomor WA Baru</label>
-                  <div className="relative flex items-center">
-                    <div className="absolute left-3.5 text-slate-400 pointer-events-none"><Phone className="w-4 h-4" /></div>
-                    <input
-                      type="tel"
-                      value={newWa}
-                      onChange={(e) => setNewWa(e.target.value)}
-                      placeholder="08123456789"
-                      required
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1A73E8]"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Masukkan PIN Saat Ini</label>
-                  <div className="relative flex items-center">
-                    <div className="absolute left-3.5 text-slate-400 pointer-events-none"><Lock className="w-4 h-4" /></div>
-                    <input
-                      type={showPins ? 'text' : 'password'}
-                      value={waPin}
-                      onChange={(e) => setWaPin(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                      placeholder="••••••"
-                      inputMode="numeric"
-                      maxLength={6}
-                      required
-                      className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm font-mono tracking-widest placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1A73E8]"
-                    />
-                  </div>
-                </div>
-                <button type="submit" disabled={waSubmitting}
-                  className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-60 mt-2">
-                  {waSubmitting ? <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Memproses...</> : 'Simpan Nomor WA'}
-                </button>
-              </form>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
       </div>
