@@ -107,8 +107,15 @@ export default async function VisitorWifiPage({ params }) {
 
   const targetMapsUrl = (qr.googleMapsReviewUrl || qr.googleMapsUrl)?.trim() || 'https://maps.google.com/';
 
-  // Case 4: QR Active but Wi-Fi disabled -> redirect langsung ke Google Maps
+  // Case 4: QR Active but Wi-Fi disabled -> catat ulasan dan redirect langsung ke Google Maps
   if (!qr.wifiEnabled) {
+    try {
+      const headersList = headers();
+      const userAgent = headersList.get('user-agent') || 'Unknown';
+      await recordScanLog(qr.id, userAgent, 'buka_review');
+    } catch (err) {
+      console.warn('Scan review logging error:', err);
+    }
     redirect(targetMapsUrl);
   }
 

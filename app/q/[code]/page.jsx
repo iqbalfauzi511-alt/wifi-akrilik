@@ -162,8 +162,15 @@ export default async function VisitorQrPage({ params }) {
     );
   }
 
-  // Jika owner TIDAK menambahkan / mengaktifkan Wi-Fi, langsung arahkan ke Google Maps tanpa harus pilih bintang dulu
+  // Jika owner TIDAK menambahkan / mengaktifkan Wi-Fi, langsung catat ulasan dan arahkan ke Google Maps tanpa harus pilih bintang dulu
   if (!qr.wifiEnabled) {
+    try {
+      const headersList = headers();
+      const userAgent = headersList.get('user-agent') || 'Unknown';
+      await recordScanLog(qr.id, userAgent, 'buka_review');
+    } catch (err) {
+      console.warn('Scan review logging error:', err);
+    }
     redirect(mapsValidation.normalized);
   }
 
