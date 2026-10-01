@@ -132,11 +132,8 @@ export default async function AdminDashboardPage() {
       text = 'Akses Wi-Fi';
       icon = Wifi;
       color = 'bg-emerald-100 text-emerald-700';
-    } else if (act.actionType === 'kirim_feedback') {
-      text = 'Kirim Feedback/Keluhan';
-      icon = MessageSquare;
-      color = 'bg-rose-100 text-rose-700';
     }
+
 
     return {
       text,

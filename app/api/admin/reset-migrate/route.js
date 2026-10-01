@@ -36,19 +36,7 @@ export async function POST(request) {
       results.push(`⚠️ QR reset: ${e.message}`);
     }
 
-    // Step 2: Delete customer feedback linked to owner businesses
-    try {
-      await db.execute(sql`
-        DELETE FROM customer_feedback 
-        WHERE business_id IN (
-          SELECT id FROM businesses 
-          WHERE owner_id IN (SELECT id FROM users WHERE role != 'admin')
-        )
-      `);
-      results.push('✅ Customer feedback dihapus');
-    } catch (e) {
-      results.push(`⚠️ Feedback: ${e.message}`);
-    }
+
 
     // Step 3: Delete owner businesses
     try {

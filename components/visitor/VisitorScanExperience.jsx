@@ -9,22 +9,16 @@ import {
   Copy,
   Check,
   ExternalLink,
-  MessageSquare,
-  Send,
-  AlertCircle,
   CheckCircle2,
   LockKeyhole,
   UnlockKeyhole,
-  ArrowRight,
 } from 'lucide-react';
-import { submitCustomerFeedbackAction } from '@/lib/actions/feedback-actions';
 import { trackVisitorAction } from '@/lib/actions/qr-actions';
 
 // Stage constants
 const STAGE = {
   RATING: 'rating',
-  FEEDBACK: 'feedback',
-  WAITING_RETURN: 'waiting_return',   // User switched to Maps / WA, waiting for return
+  WAITING_RETURN: 'waiting_return',   // User switched to Maps, waiting for return
   PLACEBO_LOADING: 'placebo_loading', // 5s fake loading that runs WHEN USER RETURNS
   REDIRECTED: 'redirected',           // Review verified, ready to reveal WiFi
   DONE: 'done',                       // Rating complete & WiFi revealed
@@ -48,15 +42,13 @@ export default function VisitorScanExperience({
   const [selectedRating, setSelectedRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [copied, setCopied] = useState(false);
-  // Only true when visitor rated >=3 and went through Google Maps path
+  // True once visitor goes through Google Maps path
   const [wifiEarned, setWifiEarned] = useState(false);
   const [revealedPassword, setRevealedPassword] = useState(wifiPassword || '');
   const [revealedSsid, setRevealedSsid] = useState(wifiName || 'Wi-Fi Tamu');
   const [isRevealingWifi, setIsRevealingWifi] = useState(false);
-  
-  // Track redirect target: 'maps' | 'whatsapp'
-  const [redirectType, setRedirectType] = useState('maps');
-  const [pendingWaUrl, setPendingWaUrl] = useState('');
+
+  const redirectType = 'maps';
 
   // Placebo loading state
   const [loadingProgress, setLoadingProgress] = useState(0);
@@ -136,12 +128,6 @@ export default function VisitorScanExperience({
     };
   }, [stage, redirectType, startPlaceboLoading]);
 
-  // Feedback form state
-  const [feedbackMessage, setFeedbackMessage] = useState('');
-  const [customerName, setCustomerName] = useState('');
-  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-
   const fetchWifiCredentials = useCallback(async () => {
     if (!wifiEnabled) return;
     if (revealedPassword) return;
@@ -183,59 +169,15 @@ export default function VisitorScanExperience({
     trackVisitorAction(code, 'salin_wifi').catch(() => {});
   };
 
-  // Star click handler
+  // Star click handler — all ratings go to Google Maps
   const handleStarClick = (value) => {
     setSelectedRating(value);
-    if (value >= 3) {
-      setRedirectType('maps');
-      const trackUrl = `/api/q/${encodeURIComponent(code)}/track?action=buka_review&url=${encodeURIComponent(targetMapsUrl)}`;
-      window.open(trackUrl, '_blank', 'noopener,noreferrer');
-      setStage(STAGE.WAITING_RETURN);
-    } else {
-      // 1-2 stars: open feedback modal to collect input before WA
-      setStage(STAGE.FEEDBACK);
-    }
+    const trackUrl = `/api/q/${encodeURIComponent(code)}/track?action=buka_review&url=${encodeURIComponent(targetMapsUrl)}`;
+    window.open(trackUrl, '_blank', 'noopener,noreferrer');
+    setStage(STAGE.WAITING_RETURN);
   };
 
-  // Submit 1-2 star feedback: directly saves to database, viewable in Owner's Dashboard
-  const handleSubmitFeedback = async (e) => {
-    e.preventDefault();
-    const feedbackText = feedbackMessage.trim();
-    if (!feedbackText) {
-      setErrorMessage('Silakan tuliskan keluhan atau saran Anda.');
-      return;
-    }
-
-    setIsSubmittingFeedback(true);
-    setErrorMessage('');
-
-    try {
-      const res = await submitCustomerFeedbackAction({
-        qrCode: code,
-        rating: selectedRating,
-        message: feedbackText,
-        customerName: customerName.trim(),
-        customerPhone: '',
-      });
-
-      if (!res?.success) {
-        setErrorMessage(res?.error || 'Gagal mengirimkan masukan. Silakan coba lagi.');
-        setIsSubmittingFeedback(false);
-        return;
-      }
-
-      trackVisitorAction(code, 'kirim_feedback').catch(() => {});
-      setIsSubmittingFeedback(false);
-      setRedirectType('feedback');
-      setStage(STAGE.REDIRECTED);
-    } catch (err) {
-      console.warn('Feedback submit error:', err);
-      setErrorMessage('Terjadi kendala jaringan. Silakan coba lagi.');
-      setIsSubmittingFeedback(false);
-    }
-  };
-
-  // Reveal WiFi: called from REDIRECTED (both 1-2 and 3-5 star paths)
+  // Reveal WiFi: called from REDIRECTED stage
   const handleRevealWifi = () => {
     setWifiEarned(true);
     setStage(STAGE.DONE);
@@ -263,8 +205,8 @@ export default function VisitorScanExperience({
         </h1>
         <p className="text-xs text-slate-500 mt-1">
           {wifiEnabled
-            ? 'Beri ulasan untuk membuka akses Wi-Fi gratis.'
-            : 'Selamat datang! Berikan ulasan pengalaman Anda.'}
+            ? 'Beri ulasan di Google Maps untuk membuka akses Wi-Fi gratis.'
+            : 'Selamat datang! Berikan ulasan pengalaman Anda di Google Maps.'}
         </p>
 
         {/* Stage: RATING */}
@@ -310,40 +252,28 @@ export default function VisitorScanExperience({
           </div>
         )}
 
-        {/* Stage: WAITING_RETURN (Waiting for user to return from Google Maps or WhatsApp) */}
+        {/* Stage: WAITING_RETURN (Waiting for user to return from Google Maps) */}
         {stage === STAGE.WAITING_RETURN && (
           <div className="mt-6 pt-6 border-t border-slate-100 text-center py-2 animate-in fade-in zoom-in-95 duration-200">
             <div className="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 border border-brand-100 flex items-center justify-center mx-auto mb-3 shadow-xs">
-              {redirectType === 'whatsapp' ? (
-                <MessageSquare className="w-7 h-7 text-emerald-600 animate-pulse" />
-              ) : (
-                <ExternalLink className="w-7 h-7 text-brand-600 animate-pulse" />
-              )}
+              <ExternalLink className="w-7 h-7 text-brand-600 animate-pulse" />
             </div>
             
             <h3 className="text-base font-extrabold text-slate-900 mb-1">
-              {redirectType === 'whatsapp'
-                ? 'Sampaikan Masukan di WhatsApp'
-                : 'Beri Ulasan di Google Maps'}
+              Beri Ulasan di Google Maps
             </h3>
             
             <p className="text-xs text-slate-500 mb-5 max-w-xs mx-auto leading-relaxed">
-              {redirectType === 'whatsapp'
-                ? 'Silakan kirim pesan Anda di WhatsApp. Saat Anda kembali ke halaman ini, sistem akan memverifikasi masukan Anda.'
-                : 'Silakan berikan rating bintang 5 di Google Maps. Saat Anda kembali ke halaman ini, sistem akan memverifikasi ulasan Anda.'}
+              Silakan berikan rating bintang 5 di Google Maps. Saat Anda kembali ke halaman ini, sistem akan memverifikasi ulasan Anda.
             </p>
 
             <button
               type="button"
-              onClick={() => startPlaceboLoading(redirectType)}
+              onClick={() => startPlaceboLoading('maps')}
               className="w-full py-3.5 px-4 rounded-2xl bg-[#1A73E8] hover:bg-blue-600 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <CheckCircle2 className="w-4 h-4" />
-              <span>
-                {redirectType === 'whatsapp'
-                  ? 'Saya Sudah Mengirim Pesan'
-                  : 'Saya Sudah Memberi Bintang 5'}
-              </span>
+              <span>Saya Sudah Memberi Bintang 5</span>
             </button>
 
             <div className="mt-3.5">
@@ -360,6 +290,7 @@ export default function VisitorScanExperience({
             </div>
           </div>
         )}
+
 
         {/* Stage: PLACEBO_LOADING (Fake loading wait) */}
         {stage === STAGE.PLACEBO_LOADING && (
@@ -484,88 +415,7 @@ export default function VisitorScanExperience({
         </div>
       )}
 
-      {/* Feedback Modal: Rating 1-2 stars */}
-      {stage === STAGE.FEEDBACK && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-md w-full p-6 sm:p-8 animate-in fade-in zoom-in-95 duration-200">
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
-                  <MessageSquare className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="text-base font-bold text-slate-900">Sampaikan Masukan Anda</h3>
-                  <p className="text-xs text-slate-500">Rating: {selectedRating} Bintang</p>
-                </div>
-              </div>
 
-              <p className="text-xs text-slate-600 mb-4 leading-relaxed">
-                Kami memohon maaf atas ketidaknyamanan Anda di <strong>{businessName}</strong>. Masukan Anda akan langsung diteruskan ke dashboard pengelola agar dapat segera dievaluasi.
-              </p>
-
-                {errorMessage && (
-                  <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs mb-4 flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4 shrink-0" />
-                    <span>{errorMessage}</span>
-                  </div>
-                )}
-
-                <form onSubmit={handleSubmitFeedback} className="space-y-3.5">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-800 mb-1">
-                      Keluhan atau Saran <span className="text-rose-500">*</span>
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={feedbackMessage}
-                      onChange={(e) => setFeedbackMessage(e.target.value)}
-                      placeholder="Tuliskan saran atau keluhan Anda di sini..."
-                      required
-                      className="w-full p-3 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1A73E8] bg-slate-50/50"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-800 mb-1">
-                      Nama <span className="text-slate-400 font-normal">(Opsional)</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={customerName}
-                      onChange={(e) => setCustomerName(e.target.value)}
-                      placeholder="Nama Anda"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1A73E8] bg-slate-50/50"
-                    />
-                  </div>
-
-                  <div className="pt-2 flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => { setStage(STAGE.RATING); setSelectedRating(0); }}
-                      className="flex-1 py-2.5 px-4 rounded-xl border border-slate-200 text-slate-700 font-semibold text-xs hover:bg-slate-50 transition-colors"
-                    >
-                      Batal
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={isSubmittingFeedback}
-                      className="flex-1 py-2.5 px-4 rounded-xl bg-[#1A73E8] hover:bg-blue-600 text-white font-bold text-xs shadow-md transition-all inline-flex items-center justify-center gap-1.5 disabled:opacity-50"
-                    >
-                      {isSubmittingFeedback ? (
-                        <span>Mengirimkan...</span>
-                      ) : (
-                        <>
-                          <span>Kirim Masukan</span>
-                          <Send className="w-3.5 h-3.5" />
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </form>
-              </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
