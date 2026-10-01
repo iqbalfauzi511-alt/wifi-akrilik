@@ -1,6 +1,7 @@
 import React from 'react';
 import { redirect } from 'next/navigation';
 import { getCurrentSession } from '@/lib/auth/session';
+import { ensureDatabaseInitialized } from '@/lib/db';
 import { getBusinessesByOwnerId } from '@/lib/db/queries/business';
 import { getQrsByOwnerUserId } from '@/lib/db/queries/qr';
 import { getCustomerStatsByUserId } from '@/lib/db/queries/stats';
