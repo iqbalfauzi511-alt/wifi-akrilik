@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 import { AlertTriangle, ShieldOff, Sparkles, ArrowRight, WifiOff, Star, ExternalLink } from 'lucide-react';
 import { getPublicQrByCode, recordScanLog } from '@/lib/db/queries/qr';
@@ -106,31 +107,9 @@ export default async function VisitorWifiPage({ params }) {
 
   const targetMapsUrl = (qr.googleMapsReviewUrl || qr.googleMapsUrl)?.trim() || 'https://maps.google.com/';
 
-  // Case 4: QR Active but Wi-Fi disabled
+  // Case 4: QR Active but Wi-Fi disabled -> redirect langsung ke Google Maps
   if (!qr.wifiEnabled) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
-        <div className="max-w-md w-full bento-card p-8 text-center">
-          <div className="w-14 h-14 rounded-2xl bg-slate-100 text-slate-600 border border-slate-200 flex items-center justify-center mx-auto mb-4">
-            <WifiOff className="w-7 h-7" />
-          </div>
-          <h2 className="text-xl font-bold text-slate-900 mb-2">Wi-Fi Tidak Tersedia</h2>
-          <p className="text-sm text-slate-500 mb-6 leading-relaxed">
-            Bisnis <strong>{qr.businessName}</strong> saat ini tidak menyediakan akses Wi-Fi publik. Namun Anda tetap dapat mendukung dengan memberikan ulasan di Google Maps!
-          </p>
-          <a
-            href={targetMapsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full inline-flex items-center justify-center gap-2 font-bold rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white py-3 px-5 shadow-md shadow-blue-500/20 text-sm"
-          >
-            <Star className="w-4 h-4 fill-amber-300 text-amber-300" />
-            <span>Beri Rating di Google Maps</span>
-            <ExternalLink className="w-4 h-4 opacity-80" />
-          </a>
-        </div>
-      </div>
-    );
+    redirect(targetMapsUrl);
   }
 
   // Case 5: Wi-Fi Enabled -> Review-to-reveal Wi-Fi Experience!

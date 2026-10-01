@@ -90,7 +90,7 @@ Bogor, ......................... 2026
 
 Pesatnya perkembangan teknologi informasi telah menggeser paradigma pemasaran dari saluran konvensional menuju strategi pemasaran digital (*digital marketing*). Di Indonesia, Usaha Mikro, Kecil, dan Menengah (UMKM)—khususnya yang bergerak di sektor kuliner (*Food and Beverage* / F&B) seperti kafe, kedai kopi, dan restoran—menjadi sektor yang paling terdampak oleh dinamika visibilitas daring. Keberhasilan bisnis fisik pada era pasca-pandemi sangat dipengaruhi oleh reputasi digital di Google Maps (*Google Business Profile*), di mana ulasan dan rating bintang menjadi penentu utama minat kunjungan konsumen baru.
 
-Namun demikian, memasarkan produk teknologi kepada pelaku UMKM di Indonesia menghadirkan tantangan pemasaran B2B (*Business-to-Business*) yang khas. Sebagian besar pemilik usaha fisik memiliki resistensi tinggi terhadap penawaran perangkat lunak berbasis langganan bulanan (*subscription model*), proses registrasi yang rumit, atau solusi yang terasa abstrak. Untuk menjawab kebutuhan tersebut, penulis mengembangkan **Cobascan** ([https://cobascan.my.id](https://cobascan.my.id)), yaitu sebuah inovasi produk *phygital* (penggabungan fisik dan digital) berupa stand akrilik pintar di atas meja yang terhubung dengan chip NFC (*Near Field Communication*) dan QR Code dinamis. Cobascan menyelesaikan masalah ulasan Google Maps melalui mekanisme cerdas: menyaring keluhan bintang 1–2 secara privat ke pemilik toko, mengarahkan ulasan bintang 4–5 ke Google Maps, serta menukarnya dengan akses sandi Wi-Fi otomatis.
+Namun demikian, memasarkan produk teknologi kepada pelaku UMKM di Indonesia menghadirkan tantangan pemasaran B2B (*Business-to-Business*) yang khas. Sebagian besar pemilik usaha fisik memiliki resistensi tinggi terhadap penawaran perangkat lunak berbasis langganan bulanan (*subscription model*), proses registrasi yang rumit, atau solusi yang terasa abstrak. Untuk menjawab kebutuhan tersebut, penulis mengembangkan **Cobascan** ([https://cobascan.my.id](https://cobascan.my.id)), yaitu sebuah inovasi produk *phygital* (penggabungan fisik dan digital) berupa stand akrilik pintar di atas meja yang terhubung dengan chip NFC (*Near Field Communication*) dan QR Code dinamis. Cobascan menyelesaikan masalah rendahnya partisipasi ulasan Google Maps melalui mekanisme cerdas: memfasilitasi pengunjung memilih rating 1–5 bintang yang langsung diarahkan secara transparan ke Google Review resmi (100% patuh terhadap kebijakan Google / ToS Compliant), serta menukarnya dengan akses sandi Wi-Fi otomatis.
 
 Meskipun produk Cobascan telah selesai dibangun secara fungsional (*running product*) dengan sistem web berbasis Next.js 14 dan Supabase PostgreSQL, keberhasilan produk teknologi pada akhirnya ditentukan oleh **kemampuan menjangkau pasar dan mengonversi calon pelanggan (*go-to-market execution*)**. Produk yang unggul secara teknis tidak akan memberikan dampak ekonomi apabila tidak didukung oleh strategi pemasaran digital yang tepat sasaran untuk meyakinkan para pemilik kafe dan UMKM.
 
@@ -164,8 +164,8 @@ Pemasaran digital mencakup pemanfaatan kanal digital, perangkat internet, dan pl
 ### 2.2 Model Funnel Konversi Pemasaran (AIDA & Inbound Marketing)
 
 Model hierarki efek AIDA (*Attention, Interest, Desire, Action*) merupakan kerangka fundamental dalam memetakan psikologi perjalanan konsumen (Strong, 1925; Kotler & Keller, 2016):
-- **Attention (Kesadaran)**: Menarik perhatian pemilik usaha melalui konten yang mengangkat masalah sensitif (misal: "Bahaya toko kena bintang 1 permanen di Google Maps").
-- **Interest (Minat)**: Menjelaskan mekanisme solusi *phygital* Cobascan yang mampu menyaring kritik secara privat dan menukar Wi-Fi dengan ulasan positif.
+- **Attention (Kesadaran)**: Menarik perhatian pemilik usaha melalui konten yang mengangkat masalah sensitif (misal: "Mengapa kafe sepi ulasan Google Maps padahal pengunjung ramai").
+- **Interest (Minat)**: Menjelaskan mekanisme solusi *phygital* Cobascan yang mempermudah tamu menulis ulasan Google Maps resmi secara instan dengan insentif akses Wi-Fi otomatis.
 - **Desire (Keinginan)**: Membangun dorongan membeli melalui penawaran harga sekali bayar seumur hidup tanpa biaya langganan bulanan (*Lifetime Value Proposition*).
 - **Action (Tindakan)**: Memfasilitasi aksi pembelian instan melalui tombol pemesanan di *landing page* atau lokapasar.
 
@@ -215,7 +215,7 @@ $$\text{ROAS} = \frac{\text{Total Pendapatan Penjualan}}{\text{Total Belanja Ikl
 ### 2.7 Karakteristik Produk Phygital Cobascan sebagai Objek Pemasaran
 
 Produk Cobascan memiliki keunikan pemasaran karena memadukan perangkat keras (*hardware acrylic*) dengan perangkat lunak (*cloud dashboard*). Pesan pemasaran (*marketing messaging*) harus menonjolkan tiga pilar nilai:
-1. **Perlindungan Reputasi (*Reputation Shield*)**: Mencegah ulasan bintang 1 masuk ke ruang publik.
+1. **Kepatuhan & Akumulasi Reputasi (*Reputation Growth & Policy Compliance*)**: Mendorong volume ulasan organik Google Maps secara masif dan aman tanpa melanggar aturan review gating Google.
 2. **Kenyamanan Operasional (*Wi-Fi Convenience*)**: Mengurangi beban kerja pelayan toko melayani pertanyaan sandi.
 3. **Keekonomisan (*No Monthly Fee*)**: Model kepemilikan permanen tanpa beban tagihan per bulan.
 
@@ -328,7 +328,7 @@ Arsitektur saluran pemasaran digital Cobascan menghubungkan prospek dari media s
 ### 3.5 Gambaran Produk dan Proposisi Nilai yang Dipasarkan
 
 Dalam materi kampanye pemasaran digital, produk Cobascan diposisikan dengan proposisi nilai utama (*Unique Selling Propositions*):
-1. **Penyelamat Reputasi Toko (*Smart Gatekeeper*)**: Bintang 1–2 masuk privat ke pemilik sehingga dapur/layanan dapat memperbaiki diri tanpa takut skor Google Maps hancur.
+1. **Akselerator Ulasan Organik & 100% Google Compliant**: Menghilangkan friksi pengunjung dalam mencari link review di Google Maps dengan alur interaktif instan dan aman dari penalti Google.
 2. **Otomasi Pembagian Sandi Wi-Fi (*Review-to-Reveal*)**: Menghilangkan pertanyaan berulang ke pelayan dan memberikan insentif barter yang disukai pengunjung.
 3. **Bebas Biaya Langganan (*No Monthly Fee*)**: Cukup beli stand akrilik sekali, nikmati dashboard dan pembaruan sistem seumur hidup.
 4. **Login Anti-Ribet (WhatsApp + PIN)**: Tidak perlu mengingat email atau password rumit.

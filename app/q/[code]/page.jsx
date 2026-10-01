@@ -162,6 +162,11 @@ export default async function VisitorQrPage({ params }) {
     );
   }
 
+  // Jika owner TIDAK menambahkan / mengaktifkan Wi-Fi, langsung arahkan ke Google Maps tanpa harus pilih bintang dulu
+  if (!qr.wifiEnabled) {
+    redirect(mapsValidation.normalized);
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-[#F8FAFC]">
       <VisitorScanExperience

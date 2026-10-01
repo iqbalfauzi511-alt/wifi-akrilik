@@ -55,6 +55,13 @@ export default function VisitorScanExperience({
   const [loadingText, setLoadingText] = useState('Memverifikasi...');
   const placeboTimerRef = useRef(null);
 
+  // If owner did not enable Wi-Fi, immediately redirect directly to Google Maps
+  useEffect(() => {
+    if (!wifiEnabled && targetMapsUrl) {
+      window.location.replace(targetMapsUrl);
+    }
+  }, [wifiEnabled, targetMapsUrl]);
+
   // Cleanup timer on unmount
   useEffect(() => {
     return () => {

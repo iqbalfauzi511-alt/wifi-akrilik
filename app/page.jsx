@@ -236,7 +236,7 @@ export default async function HomePage() {
               <div className="p-6">
                 <h3 className="text-base font-bold text-slate-900 mb-2">Sistem Penilaian Cerdas Terbuka</h3>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  Tamu mengisi rating 1-5 bintang. Bintang 3-5 diarahkan otomatis ke halaman Google Maps. Bintang 1-2 ditampung ke formulir masukan privat yang langsung masuk ke dashboard pemilik tanpa menyebarkan kontak pribadi.
+                  Tamu memilih rating 1–5 bintang dan langsung diarahkan secara otomatis ke halaman Google Maps bisnis Anda. 100% transparan dan patuh penuh terhadap kebijakan Google (ToS Compliant) untuk menumbuhkan ulasan organik.
                 </p>
               </div>
             </div>
@@ -556,7 +556,7 @@ export default async function HomePage() {
                   </div>
                   <div className="flex items-start gap-3">
                     <Check className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-sm font-medium text-slate-700">Filter Rating Otomatis (Cegah Bintang 1)</span>
+                    <span className="text-sm font-medium text-slate-700">Direct Google Maps Review (100% Kebijakan Google)</span>
                   </div>
                   <div className="flex items-start gap-3">
                     <Check className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
