@@ -227,19 +227,19 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
       return;
     }
     setGenerateError('');
+    setGenerateSuccess(false);
     setIsGeneratingLink(true);
     try {
       const { generateReviewLinkAction } = await import('@/lib/actions/maps-actions');
       const res = await generateReviewLinkAction(addDeviceMapsUrl);
       if (res.success) {
         setAddDeviceMapsUrl(res.result);
-        setGenerateSuccess(true);
+        setGenerateSuccess(res.note === 'fallback' ? 'fallback' : true);
       } else {
         setGenerateError(res.error);
-        setGenerateSuccess(false);
       }
-    } catch (e) {
-      setGenerateError('Gagal memproses link.');
+    } catch {
+      setGenerateError('Gagal memproses link. Coba lagi.');
     } finally {
       setIsGeneratingLink(false);
     }
@@ -471,8 +471,11 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
                     </div>
                     {generateError && <p className="mt-1.5 text-xs text-rose-500 font-medium">{generateError}</p>}
                     {generateSuccess && !generateError && (
-                      <p className="mt-1.5 text-[11px] text-emerald-600 font-medium flex items-center gap-1">
-                        <Check className="w-3 h-3" /> Berhasil diproses jadi link Review!
+                      <p className={`mt-1.5 text-[11px] font-medium flex items-center gap-1 ${generateSuccess === 'fallback' ? 'text-amber-600' : 'text-emerald-600'}`}>
+                        <Check className="w-3 h-3" />
+                        {generateSuccess === 'fallback'
+                          ? 'Link disimpan. Pengunjung akan diarahkan ke halaman Maps bisnis Anda.'
+                          : 'Berhasil diproses jadi link Review Google langsung!'}
                       </p>
                     )}
                   </div>
