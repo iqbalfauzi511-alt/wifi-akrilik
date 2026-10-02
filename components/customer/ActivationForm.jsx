@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -11,45 +11,101 @@ import {
 import { ownerRegisterAction, checkWaRegisteredAction } from '@/lib/actions/owner-auth-actions';
 import { activateQrAction } from '@/lib/actions/qr-actions';
 
+// sessionStorage helpers — scoped per QR code so different codes don't bleed
+function draftKey(code) {
+  return `cobascan_activate_${code || 'unknown'}`;
+}
+function readDraft(code) {
+  try {
+    const raw = sessionStorage.getItem(draftKey(code));
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+function saveDraft(code, patch) {
+  try {
+    const existing = readDraft(code);
+    sessionStorage.setItem(draftKey(code), JSON.stringify({ ...existing, ...patch }));
+  } catch {}
+}
+function clearDraft(code) {
+  try { sessionStorage.removeItem(draftKey(code)); } catch {}
+}
+
 export default function ActivationForm({
   code: initialCode = '',
   initialBusiness = null,
   businesses = [],
   userEmail = '',
   batchCode = '',
-  existingOwnerId = null, // already logged in owner
+  existingOwnerId = null,
 }) {
   const router = useRouter();
+
+  // Load persisted draft once on mount (SSR-safe)
+  const draft = useRef(
+    typeof window !== 'undefined' ? readDraft(initialCode) : {}
+  );
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
   const [savedBusinessName, setSavedBusinessName] = useState('');
 
-  // Account fields
-  const [waVal, setWaVal] = useState('');
+  // Account fields — restored from draft if available
+  const [waVal, setWaVal] = useState(draft.current.waVal ?? '');
   const [pinVal, setPinVal] = useState('');
   const [confirmPinVal, setConfirmPinVal] = useState('');
   const [showPin, setShowPin] = useState(false);
-  const [nameVal, setNameVal] = useState('');
-  const [waCheckResult, setWaCheckResult] = useState(null); // null | {registered: bool}
+  const [nameVal, setNameVal] = useState(draft.current.nameVal ?? '');
+  const [waCheckResult, setWaCheckResult] = useState(null);
   const [isCheckingWa, setIsCheckingWa] = useState(false);
   const [createdOwnerId, setCreatedOwnerId] = useState(existingOwnerId);
 
-  // Business fields
+  // Business fields — restored from draft, fall back to server props
   const [targetBusinessId, setTargetBusinessId] = useState(
-    businesses.length > 0 ? businesses[0].id : 'new'
+    draft.current.targetBusinessId ?? (businesses.length > 0 ? businesses[0].id : 'new')
   );
-  
-  const [businessNameVal, setBusinessNameVal] = useState(initialBusiness?.businessName || '');
-  const [codeVal, setCodeVal] = useState(initialCode || '');
-  const [mapsUrlVal, setMapsUrlVal] = useState(initialBusiness?.googleMapsReviewUrl || initialBusiness?.googleMapsUrl || '');
-  const [isWifiEnabled, setIsWifiEnabled] = useState(Boolean(initialBusiness?.wifiEnabled));
-  const [wifiNameVal, setWifiNameVal] = useState(initialBusiness?.wifiName || '');
-  const [wifiPasswordVal, setWifiPasswordVal] = useState(initialBusiness?.wifiPassword || '');
-  const [whatsappBusinessVal, setWhatsappBusinessVal] = useState('');
+  const [businessNameVal, setBusinessNameVal] = useState(
+    draft.current.businessNameVal ?? (initialBusiness?.businessName || '')
+  );
+  const [codeVal, setCodeVal] = useState(
+    draft.current.codeVal ?? (initialCode || '')
+  );
+  const [mapsUrlVal, setMapsUrlVal] = useState(
+    draft.current.mapsUrlVal ?? (initialBusiness?.googleMapsReviewUrl || initialBusiness?.googleMapsUrl || '')
+  );
+  const [isWifiEnabled, setIsWifiEnabled] = useState(
+    draft.current.isWifiEnabled ?? Boolean(initialBusiness?.wifiEnabled)
+  );
+  const [wifiNameVal, setWifiNameVal] = useState(
+    draft.current.wifiNameVal ?? (initialBusiness?.wifiName || '')
+  );
+  const [wifiPasswordVal, setWifiPasswordVal] = useState(
+    draft.current.wifiPasswordVal ?? (initialBusiness?.wifiPassword || '')
+  );
+  const [whatsappBusinessVal, setWhatsappBusinessVal] = useState(
+    draft.current.whatsappBusinessVal ?? ''
+  );
   const [isGeneratingLink, setIsGeneratingLink] = useState(false);
   const [generateError, setGenerateError] = useState('');
   const [generateSuccess, setGenerateSuccess] = useState(false);
+
+  // Auto-save non-sensitive fields to sessionStorage on every change
+  useEffect(() => {
+    saveDraft(initialCode, {
+      waVal, nameVal,
+      businessNameVal, codeVal, mapsUrlVal,
+      isWifiEnabled, wifiNameVal, wifiPasswordVal,
+      whatsappBusinessVal, targetBusinessId,
+      // PIN never persisted for security
+    });
+  }, [
+    initialCode, waVal, nameVal, businessNameVal, codeVal,
+    mapsUrlVal, isWifiEnabled, wifiNameVal, wifiPasswordVal,
+    whatsappBusinessVal, targetBusinessId,
+  ]);
 
   // Check WA registration on blur
   const handleWaBlur = async () => {
@@ -175,6 +231,7 @@ export default function ActivationForm({
     const result = await activateQrAction(null, formData);
 
     if (result?.success) {
+      clearDraft(initialCode); // wipe saved draft on success
       setSavedBusinessName(businessNameVal.trim());
       setIsSubmitting(false);
       setIsSuccess(true);
