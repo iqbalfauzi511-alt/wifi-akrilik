@@ -11,13 +11,13 @@ import {
 import { ownerRegisterAction, checkWaRegisteredAction } from '@/lib/actions/owner-auth-actions';
 import { activateQrAction } from '@/lib/actions/qr-actions';
 
-// sessionStorage helpers — scoped per QR code so different codes don't bleed
+// localStorage helpers — scoped per QR code so different codes don't bleed
 function draftKey(code) {
   return `cobascan_activate_${code || 'unknown'}`;
 }
 function readDraft(code) {
   try {
-    const raw = sessionStorage.getItem(draftKey(code));
+    const raw = localStorage.getItem(draftKey(code));
     return raw ? JSON.parse(raw) : {};
   } catch {
     return {};
@@ -26,11 +26,11 @@ function readDraft(code) {
 function saveDraft(code, patch) {
   try {
     const existing = readDraft(code);
-    sessionStorage.setItem(draftKey(code), JSON.stringify({ ...existing, ...patch }));
+    localStorage.setItem(draftKey(code), JSON.stringify({ ...existing, ...patch }));
   } catch {}
 }
 function clearDraft(code) {
-  try { sessionStorage.removeItem(draftKey(code)); } catch {}
+  try { localStorage.removeItem(draftKey(code)); } catch {}
 }
 
 export default function ActivationForm({
@@ -92,7 +92,7 @@ export default function ActivationForm({
   const [generateError, setGenerateError] = useState('');
   const [generateSuccess, setGenerateSuccess] = useState(false);
 
-  // Auto-save non-sensitive fields to sessionStorage on every change
+  // Auto-save non-sensitive fields to localStorage on every change
   useEffect(() => {
     saveDraft(initialCode, {
       waVal, nameVal,
