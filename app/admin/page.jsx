@@ -245,7 +245,7 @@ export default async function AdminDashboardPage() {
                     <th className="pb-3 font-medium">Perangkat</th>
                     <th className="pb-3 font-medium">Total Scan</th>
                     <th className="pb-3 font-medium">Status Maps</th>
-                    <th className="pb-3 font-medium">Status Akun</th>
+                    <th className="pb-3 font-medium">Status Wi-Fi</th>
                     <th className="pb-3 font-medium text-right">Aksi</th>
                   </tr>
                 </thead>
