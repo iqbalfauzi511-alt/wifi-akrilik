@@ -229,7 +229,7 @@ export default function VisitorScanExperience({
                     onMouseLeave={() => setHoverRating(0)}
                     onClick={() => handleStarClick(star)}
                     title={`${star} Bintang`}
-                    className="p-1 rounded-lg transition-transform hover:scale-125 focus:outline-none focus:ring-2 focus:ring-[#1A73E8]"
+                    className="p-1.5 rounded-lg transition-transform hover:scale-125 focus:outline-none focus:ring-2 focus:ring-[#1A73E8]"
                   >
                     <Star
                       className={`w-8 h-8 transition-colors ${

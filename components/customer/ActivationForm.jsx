@@ -249,7 +249,7 @@ export default function ActivationForm({
   // SUCCESS STATE
   if (isSuccess) {
     return (
-      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xl p-8 text-center max-w-xl mx-auto">
+      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xl p-6 sm:p-8 text-center max-w-xl mx-auto">
         <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4">
           <CheckCircle2 className="w-8 h-8" />
         </div>
@@ -283,7 +283,7 @@ export default function ActivationForm({
   // WA ALREADY REGISTERED STATE
   if (waCheckResult?.registered) {
     return (
-      <div className="bg-white rounded-3xl border border-amber-200 shadow-xl p-8 text-center max-w-xl mx-auto">
+      <div className="bg-white rounded-3xl border border-amber-200 shadow-xl p-6 sm:p-8 text-center max-w-xl mx-auto">
         <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-4">
           <AlertCircle className="w-8 h-8" />
         </div>
@@ -313,7 +313,7 @@ export default function ActivationForm({
 
   return (
     <div className="max-w-xl mx-auto space-y-4">
-      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xl p-7">
+      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xl p-5 sm:p-7">
         <h2 className="text-lg font-black text-slate-900 mb-1">Aktivasi Perangkat</h2>
         <p className="text-xs text-slate-500 mb-5">
           {existingOwnerId 
