@@ -128,13 +128,13 @@ export default async function VisitorQrPage({ params }) {
   }
 
   // Case 4: QR Active!
-  // Record visitor scan asynchronously in scan_logs
+  // Record visitor scan asynchronously in scan_logs (fire and forget for speed)
   try {
     const headersList = headers();
     const userAgent = headersList.get('user-agent') || 'Unknown';
-    await recordScanLog(qr.id, userAgent);
+    recordScanLog(qr.id, userAgent).catch((err) => console.warn('Scan logging error (ignored):', err));
   } catch (err) {
-    console.warn('Scan logging error (ignored):', err);
+    console.warn('Scan headers error (ignored):', err);
   }
 
   // Validate Google Maps Review URL
@@ -167,7 +167,8 @@ export default async function VisitorQrPage({ params }) {
     try {
       const headersList = headers();
       const userAgent = headersList.get('user-agent') || 'Unknown';
-      await recordScanLog(qr.id, userAgent, 'buka_review');
+      // Fire and forget so we redirect instantly
+      recordScanLog(qr.id, userAgent, 'buka_review').catch(() => {});
     } catch (err) {
       console.warn('Scan review logging error:', err);
     }

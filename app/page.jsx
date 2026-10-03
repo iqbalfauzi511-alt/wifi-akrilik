@@ -208,9 +208,9 @@ export default async function HomePage() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative items-start">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative items-stretch">
             {/* Step 01 */}
-            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
               <div className="relative aspect-[4/3] w-full bg-slate-100">
                 <Image src="/images/step-tap-nfc.jpg" alt="Tamu Tap atau Scan" fill sizes="100vw" className="object-cover" />
                 <div className="absolute top-3 left-3 w-8 h-8 rounded-full bg-[#1A73E8] text-white font-bold text-xs flex items-center justify-center shadow">
@@ -226,7 +226,7 @@ export default async function HomePage() {
             </div>
 
             {/* Step 02 */}
-            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
               <div className="relative aspect-[4/3] w-full bg-slate-100">
                 <Image src="/images/step-google-review.jpg" alt="Sistem Penilaian Cerdas Terbuka" fill sizes="100vw" className="object-cover" />
                 <div className="absolute top-3 left-3 w-8 h-8 rounded-full bg-[#EA4335] text-white font-bold text-xs flex items-center justify-center shadow">
@@ -236,13 +236,13 @@ export default async function HomePage() {
               <div className="p-6">
                 <h3 className="text-base font-bold text-slate-900 mb-2">Sistem Penilaian Cerdas Terbuka</h3>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  Tamu memilih rating 1–5 bintang dan langsung diarahkan secara otomatis ke halaman Google Maps bisnis Anda. 100% transparan dan patuh penuh terhadap kebijakan Google (ToS Compliant) untuk menumbuhkan ulasan organik.
+                  Tamu diarahkan secara otomatis ke halaman Google Maps bisnis Anda untuk memberikan ulasan positif.
                 </p>
               </div>
             </div>
 
             {/* Step 03 */}
-            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
               <div className="relative aspect-[4/3] w-full bg-slate-100">
                 <Image src="/images/step-wifi-success.jpg" alt="Akses Wi-Fi Terbuka Otomatis" fill sizes="100vw" className="object-cover" />
                 <div className="absolute top-3 left-3 w-8 h-8 rounded-full bg-[#34A853] text-white font-bold text-xs flex items-center justify-center shadow">
@@ -280,7 +280,7 @@ export default async function HomePage() {
             <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-0.5 bg-slate-200 -translate-y-1/2 z-0" />
 
             {/* Step 1 */}
-            <div className="relative z-10 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center text-center">
+            <div className="relative z-10 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center text-center h-full">
               <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-4 ring-4 ring-white">
                 <Smartphone className="w-5 h-5" />
               </div>
@@ -290,7 +290,7 @@ export default async function HomePage() {
             </div>
 
             {/* Step 2 */}
-            <div className="relative z-10 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center text-center">
+            <div className="relative z-10 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center text-center h-full">
               <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-4 ring-4 ring-white">
                 <UserPlus className="w-5 h-5" />
               </div>
@@ -300,7 +300,7 @@ export default async function HomePage() {
             </div>
 
             {/* Step 3 */}
-            <div className="relative z-10 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center text-center">
+            <div className="relative z-10 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center text-center h-full">
               <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mb-4 ring-4 ring-white">
                 <Store className="w-5 h-5" />
               </div>
@@ -310,7 +310,7 @@ export default async function HomePage() {
             </div>
 
             {/* Step 4 */}
-            <div className="relative z-10 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center text-center">
+            <div className="relative z-10 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center text-center h-full">
               <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mb-4 ring-4 ring-white">
                 <LayoutDashboard className="w-5 h-5" />
               </div>
@@ -448,7 +448,7 @@ export default async function HomePage() {
               Lebih dari 1.000 Pemilik Bisnis Telah Membuktikan
             </h2>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Testimonial 1 */}
             <div className="bg-[#FAFAFA] rounded-2xl border border-slate-200 p-6 flex flex-col justify-between">
@@ -539,12 +539,16 @@ export default async function HomePage() {
               </div>
               <div className="text-center">
                 <h3 className="text-xl font-black text-slate-900 mb-2">Stand Akrilik Pintar</h3>
-                <div className="flex items-end justify-center gap-1 mb-8">
-                  <div className="text-5xl font-black text-[#1A73E8]">Rp 89</div>
-                  <div className="text-xl font-bold text-slate-500 mb-1">.000</div>
-                  <div className="text-sm font-medium text-slate-400 mb-2">/ pcs</div>
+                <div className="flex flex-col items-center mb-8 relative">
+                  <div className="absolute -top-6 -right-2 bg-rose-500 text-white text-[10px] font-black px-2 py-0.5 rounded-lg shadow-sm transform rotate-12">HEMAT 33%</div>
+                  <div className="text-slate-400 font-black text-2xl sm:text-3xl line-through mb-1 decoration-rose-500 decoration-[3px]">Rp 119.000</div>
+                  <div className="flex items-end justify-center gap-1">
+                    <div className="text-5xl font-black text-[#1A73E8]">Rp 79</div>
+                    <div className="text-xl font-bold text-slate-500 mb-1">.000</div>
+                    <div className="text-sm font-medium text-slate-400 mb-2">/ pcs</div>
+                  </div>
                 </div>
-                
+
                 <div className="space-y-4 text-left bg-slate-50 p-6 rounded-2xl border border-slate-100">
                   <div className="flex items-start gap-3">
                     <Check className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
@@ -564,9 +568,9 @@ export default async function HomePage() {
                   </div>
                 </div>
               </div>
-              
+
               <a
-                href={`${whatsappBaseUrl}?text=Halo%2C%20saya%20ingin%20memesan%20Stand%20Akrilik%20COBASCAN%20seharga%20Rp89.000`}
+                href={`${whatsappBaseUrl}?text=Halo%2C%20saya%20ingin%20memesan%20Stand%20Akrilik%20COBASCAN%20seharga%20Rp79.000`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-8 block"
@@ -576,9 +580,9 @@ export default async function HomePage() {
                   <span>Pesan Sekarang via WA</span>
                 </button>
               </a>
-              
+
               <p className="text-[11px] text-slate-400 text-center mt-4">
-                *Beli berapa pun harganya tetap sama. Belum termasuk ongkos kirim.
+                *Beli banyak bisa dapat diskon. Belum termasuk ongkos kirim.
               </p>
             </div>
           </div>

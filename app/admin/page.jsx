@@ -17,7 +17,6 @@ import { db } from '@/lib/db';
 import { businesses, qrCodes, scanLogs } from '@/lib/db/schema';
 import { desc, eq } from 'drizzle-orm';
 import DashboardHeader from '@/components/layout/DashboardHeader';
-import AdminQrManager from '@/components/admin/AdminQrManager';
 import ScanActivityChart from '@/components/charts/ScanActivityChart';
 
 export const dynamic = 'force-dynamic';
@@ -71,73 +70,6 @@ export default async function AdminDashboardPage() {
       status: b.wifiEnabled ? 'Aktif' : 'Nonaktif',
     };
   });
-
-  // Devices needing attention: Blank/Unassigned QR codes
-  const attentionDevices = allQrs
-    .filter((q) => q.status === 'blank' || !q.businessId)
-    .slice(0, 4)
-    .map((q) => ({
-      code: q.code.substring(0, 12) + '...',
-      business: 'Belum Terpasang',
-      issue: 'Siap Digunakan',
-      isAmber: false,
-    }));
-
-  // Fetch recent activity events
-  const dbActivities = await db
-    .select({
-      id: scanLogs.id,
-      actionType: scanLogs.actionType,
-      time: scanLogs.scannedAt,
-      businessName: businesses.businessName,
-      deviceName: qrCodes.deviceName,
-    })
-    .from(scanLogs)
-    .innerJoin(qrCodes, eq(scanLogs.qrId, qrCodes.id))
-    .leftJoin(businesses, eq(qrCodes.businessId, businesses.id))
-    .orderBy(desc(scanLogs.scannedAt))
-    .limit(5)
-    .catch(() => []);
-
-  const getRelativeTime = (date) => {
-    const now = new Date();
-    const diffMs = now - date;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-
-    if (diffMins < 1) return 'Baru saja';
-    if (diffMins < 60) return `${diffMins} menit lalu`;
-    if (diffHours < 24) return `${diffHours} jam lalu`;
-    if (diffDays === 1) return 'Kemarin';
-    return `${diffDays} hari lalu`;
-  };
-
-  const recentActivities = dbActivities.map(act => {
-    let text = 'Scan perangkat';
-    let icon = Sparkles;
-    let color = 'bg-blue-100 text-blue-700';
-    
-    if (act.actionType === 'buka_review') {
-      text = 'Klik Buka Google Review';
-      icon = Star;
-      color = 'bg-amber-100 text-amber-700';
-    } else if (act.actionType === 'lihat_wifi' || act.actionType === 'salin_wifi') {
-      text = 'Akses Wi-Fi';
-      icon = Wifi;
-      color = 'bg-emerald-100 text-emerald-700';
-    }
-
-
-    return {
-      text,
-      business: act.deviceName || act.businessName || 'Perangkat Anonim',
-      time: getRelativeTime(new Date(act.time)),
-      icon,
-      color,
-    };
-  });
-
   return (
     <div className="space-y-6 pb-12">
       {/* Top Header matching Image 3 */}
@@ -185,13 +117,13 @@ export default async function AdminDashboardPage() {
             <div className="text-[10px] text-slate-400 font-medium mt-1">Pengunjung Riil</div>
           </div>
 
-          {/* Card 4: Total Review */}
+          {/* Card 4: Klik Halaman Review */}
           <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-sm flex flex-col justify-between">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
                 <Star className="w-4 h-4 fill-amber-500" />
               </div>
-              <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide">Review</div>
+              <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide">Klik Halaman Review</div>
             </div>
             <div className="text-xl sm:text-2xl font-black text-slate-900 leading-none">{totalReview.toLocaleString('id-ID')}</div>
             <div className="text-[10px] text-slate-400 font-medium mt-1">Klik Terkonversi</div>
@@ -269,7 +201,7 @@ export default async function AdminDashboardPage() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-[#1A73E8]" />
-                  <span className="text-slate-600 font-medium">Buka Google Review</span>
+                  <span className="text-slate-600 font-medium">Klik Halaman Review</span>
                 </div>
                 <div className="font-bold text-slate-900">{stats.actionReview.toLocaleString('id-ID')} <span className="text-slate-400 font-normal">{totalActionScans > 0 ? Math.round((stats.actionReview / totalActionScans) * 100) : 0}%</span></div>
               </div>
@@ -296,7 +228,7 @@ export default async function AdminDashboardPage() {
         {/* Bottom Row: Table + Side Lists matching Image 3 */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Table: Daftar Bisnis Terbaru */}
-          <div className="lg:col-span-8 bg-white rounded-3xl border border-slate-200/90 p-6 shadow-xs">
+          <div className="lg:col-span-12 bg-white rounded-3xl border border-slate-200/90 p-6 shadow-xs">
             <div className="flex items-center justify-between mb-5">
               <h2 className="font-extrabold text-slate-900 text-base">Daftar Bisnis Terbaru</h2>
               <Link href="/admin/users" className="text-xs font-bold text-[#1A73E8] hover:underline">
@@ -312,8 +244,8 @@ export default async function AdminDashboardPage() {
                     <th className="pb-3 font-medium">Nama Bisnis</th>
                     <th className="pb-3 font-medium">Perangkat</th>
                     <th className="pb-3 font-medium">Total Scan</th>
-                    <th className="pb-3 font-medium">Total Review</th>
-                    <th className="pb-3 font-medium">Status</th>
+                    <th className="pb-3 font-medium">Status Maps</th>
+                    <th className="pb-3 font-medium">Status Akun</th>
                     <th className="pb-3 font-medium text-right">Aksi</th>
                   </tr>
                 </thead>
@@ -393,7 +325,7 @@ export default async function AdminDashboardPage() {
                       <div className="font-bold text-slate-700 text-xs">{b.scans}</div>
                     </div>
                     <div>
-                      <div className="text-[10px] text-slate-400 font-medium mb-0.5">Review</div>
+                      <div className="text-[10px] text-slate-400 font-medium mb-0.5">Status Maps</div>
                       <div className="font-bold text-slate-700 text-xs truncate max-w-[80px]" title={b.reviews}>{b.reviews}</div>
                     </div>
                   </div>
@@ -409,79 +341,6 @@ export default async function AdminDashboardPage() {
               ))}
             </div>
           </div>
-
-          {/* Right Side Column (2 Cards) */}
-          <div className="lg:col-span-4 space-y-6">
-            {/* Card 1: Perangkat Perlu Perhatian */}
-            <div className="bg-white rounded-3xl border border-slate-200/90 p-6 shadow-xs">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-extrabold text-slate-900 text-sm">Perangkat Perlu Perhatian</h3>
-                <Link href="/admin/qr" className="text-xs font-bold text-[#1A73E8] hover:underline">
-                  Lihat Semua
-                </Link>
-              </div>
-
-              <div className="space-y-3">
-                {attentionDevices.map((item, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-50 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-xl bg-red-50 text-red-500 flex items-center justify-center shrink-0">
-                        <Smartphone className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <div className="font-bold text-slate-800 text-xs">{item.code}</div>
-                        <div className="text-[11px] text-slate-400">{item.business}</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                        item.isAmber
-                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                          : 'bg-rose-50 text-rose-600 border border-rose-200'
-                      }`}>
-                        {item.issue}
-                      </span>
-                      <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Card 2: Aktivitas Terbaru */}
-            <div className="bg-white rounded-3xl border border-slate-200/90 p-6 shadow-xs">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-extrabold text-slate-900 text-sm">Aktivitas Terbaru</h3>
-                <button className="text-xs font-bold text-[#1A73E8] hover:underline">
-                  Lihat Semua
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                {recentActivities.map((act, idx) => (
-                  <div key={idx} className="flex items-start gap-3">
-                    <div className={`w-8 h-8 rounded-xl ${act.color} flex items-center justify-center shrink-0 mt-0.5`}>
-                      <act.icon className="w-4 h-4" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs font-bold text-slate-800 leading-snug">
-                        {act.text}
-                      </p>
-                      <div className="flex items-center justify-between text-[11px] text-slate-400 mt-1">
-                        <span>{act.business}</span>
-                        <span>{act.time}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Manufacturing & Provisioning Batch Tool below */}
-        <div className="pt-6">
-          <AdminQrManager initialQrs={allQrs} initialBatches={batches} />
         </div>
       </div>
     </div>
