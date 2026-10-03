@@ -313,22 +313,20 @@ export default function VisitorScanExperience({
           </div>
         )}
 
-        {/* Stage: REDIRECTED (Returned from 3-5 star Google Maps or submitted 1-2 star feedback) */}
+        {/* Stage: REDIRECTED (Returned from Google Maps) */}
         {stage === STAGE.REDIRECTED && (
           <div className="mt-6 pt-6 border-t border-slate-100 text-center py-2 animate-in fade-in zoom-in-95 duration-200">
             <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-3">
               <CheckCircle2 className="w-7 h-7" />
             </div>
             <p className="text-sm font-bold text-slate-800">
-              {selectedRating <= 2 ? 'Masukan Anda Telah Diterima' : 'Terima kasih atas ulasan Anda!'}
+              Terima kasih atas ulasan Anda!
             </p>
             
             {wifiEnabled ? (
               <>
                 <p className="text-xs text-slate-500 mt-1 mb-4 leading-relaxed">
-                  {selectedRating <= 2
-                    ? 'Terima kasih telah membantu kami meningkatkan kualitas layanan. Silakan nikmati akses Wi-Fi di tempat kami.'
-                    : 'Klik tombol di bawah untuk melihat nama dan password Wi-Fi.'}
+                  Klik tombol di bawah untuk melihat nama dan password Wi-Fi.
                 </p>
                 <button
                   type="button"
@@ -341,9 +339,7 @@ export default function VisitorScanExperience({
               </>
             ) : (
               <p className="text-xs text-slate-500 mt-2 leading-relaxed">
-                {selectedRating <= 2
-                  ? 'Masukan Anda telah diteruskan langsung ke pihak pengelola untuk evaluasi layanan. Terima kasih atas perhatian Anda.'
-                  : 'Masukan dan ulasan Anda sangat berharga bagi kami.'}
+                Masukan dan ulasan Anda sangat berharga bagi kami.
               </p>
             )}
           </div>

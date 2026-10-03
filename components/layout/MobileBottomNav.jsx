@@ -13,24 +13,13 @@ import {
 export default function MobileBottomNav({ role = 'customer' }) {
   const pathname = usePathname();
 
-  const customerNav = [
-    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, exact: true },
-    { name: 'Perangkat', href: '/dashboard/devices', icon: QrCode },
-    { name: 'Ulasan', href: '/dashboard/reviews', icon: Users },
-    { name: 'Wi-Fi', href: '/dashboard/wifi', icon: Settings },
-    { name: 'Pengaturan', href: '/dashboard/settings', icon: Settings },
-  ];
-
-  const adminNav = [
+  const navItems = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard, exact: true },
     { name: 'Bisnis', href: '/admin/businesses', icon: Users },
     { name: 'Perangkat', href: '/admin/devices', icon: QrCode },
     { name: 'Pengguna', href: '/admin/users', icon: Users },
     { name: 'Pengaturan', href: '/admin/settings', icon: Settings },
   ];
-
-  const isAdminView = role === 'admin' && pathname.startsWith('/admin');
-  const navItems = isAdminView ? adminNav : customerNav;
 
   return (
     <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 shadow-lg px-2 pt-1 pb-[calc(0.25rem+env(safe-area-inset-bottom))] flex items-center justify-around">

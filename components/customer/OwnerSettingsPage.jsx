@@ -245,6 +245,11 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
     }
   };
 
+  const reviewCount = stats.actionReview || 0;
+  const wifiCount = stats.actionWifi || 0;
+  const totalDoughnut = reviewCount + wifiCount;
+  const reviewPercent = totalDoughnut > 0 ? Math.round((reviewCount / totalDoughnut) * 100) : 0;
+
   return (
     <div className="min-h-screen bg-[#F7F8FA]">
       {/* Top Bar */}
@@ -312,22 +317,70 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
                   <Star className="w-4 h-4 sm:w-4.5 sm:h-4.5 fill-amber-500" />
                 </div>
                 <div className="min-w-0">
-                  <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide whitespace-nowrap">Review Google Maps</div>
+                  <div className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide whitespace-nowrap">Klik Halaman Review</div>
                   <div className="sm:hidden text-base font-black text-slate-900 leading-tight mt-0.5">
-                    {totalReview} <span className="text-[10px] font-bold text-amber-600">Klik Review</span>
+                    {totalReview} <span className="text-[10px] font-bold text-amber-600">Klik</span>
                   </div>
                 </div>
               </div>
             </div>
             <div className="hidden sm:block text-xl sm:text-3xl font-black text-slate-900 leading-none">{totalReview}</div>
             <div className="text-[10px] sm:text-xs text-amber-600 font-semibold mt-1.5 flex items-center justify-between sm:justify-start gap-1">
-              <span>Total Klik Google Review</span>
+              <span>Klik Menuju Google Maps</span>
             </div>
           </div>
         </div>
 
-        {/* Aktivitas Scan Chart */}
-        <ScanActivityChart />
+        {/* Charts Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
+          <div className="lg:col-span-2">
+            <ScanActivityChart />
+          </div>
+          <div className="lg:col-span-1 bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex flex-col items-center">
+            <h3 className="text-sm font-bold text-slate-900 w-full mb-6">Distribusi Aktivitas Lanjutan</h3>
+            
+            {totalDoughnut > 0 ? (
+              <div className="flex-1 flex flex-col items-center justify-center w-full">
+                {/* CSS Conic Gradient Doughnut */}
+                <div 
+                  className="w-36 h-36 rounded-full relative flex items-center justify-center shadow-inner mb-6"
+                  style={{
+                    background: `conic-gradient(#f59e0b ${reviewPercent}%, #3b82f6 ${reviewPercent}% 100%)`
+                  }}
+                >
+                  <div className="w-24 h-24 bg-white rounded-full flex flex-col items-center justify-center absolute">
+                    <span className="text-xs text-slate-400 font-medium">Total</span>
+                    <span className="text-xl font-black text-slate-900">{totalDoughnut}</span>
+                  </div>
+                </div>
+
+                <div className="w-full space-y-3">
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-amber-500" />
+                      <span className="text-slate-600 font-medium">Klik Review</span>
+                    </div>
+                    <span className="font-bold text-slate-900">{reviewCount} <span className="text-xs text-slate-400 font-normal ml-1">({reviewPercent}%)</span></span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-blue-500" />
+                      <span className="text-slate-600 font-medium">Salin Wi-Fi</span>
+                    </div>
+                    <span className="font-bold text-slate-900">{wifiCount} <span className="text-xs text-slate-400 font-normal ml-1">({100 - reviewPercent}%)</span></span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex-1 flex flex-col items-center justify-center text-center">
+                <div className="w-24 h-24 rounded-full border-[12px] border-slate-100 flex items-center justify-center mb-4">
+                  <span className="text-slate-300">0</span>
+                </div>
+                <p className="text-xs text-slate-500">Belum ada aktivitas lanjutan tercatat</p>
+              </div>
+            )}
+          </div>
+        </div>
 
         {/* Profil Section */}
         <div className="bg-white rounded-2xl border border-slate-200 p-5 flex items-center justify-between">
