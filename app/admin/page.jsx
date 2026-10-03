@@ -67,7 +67,7 @@ export default async function AdminDashboardPage() {
       devices: bizQrs.length,
       scans: bizScans,
       reviews: b.googleMapsReviewUrl ? 'Tersedia' : 'Belum diatur',
-      status: b.wifiEnabled ? 'Aktif' : 'Nonaktif',
+      status: (b.wifiEnabled || bizQrs.some(q => q.wifiEnabled)) ? 'Aktif' : 'Nonaktif',
     };
   });
   return (
