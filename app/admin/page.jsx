@@ -311,7 +311,7 @@ export default async function AdminDashboardPage() {
                     <span className={`inline-flex items-center px-2 py-1 rounded-lg text-[9px] font-bold uppercase tracking-wider shrink-0 ${
                       b.status === 'Aktif' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-600'
                     }`}>
-                      {b.status}
+                      Wi-Fi: {b.status}
                     </span>
                   </div>
                   
