@@ -192,11 +192,19 @@ export default function ActivationForm({
     setIsSubmitting(true);
 
     if (!existingOwnerId) {
-      const regResult = await ownerRegisterAction({
-        whatsapp: waVal.trim(),
-        pin: pinVal,
-        name: nameVal.trim(),
-      });
+      let regResult = null;
+      try {
+        regResult = await ownerRegisterAction({
+          whatsapp: waVal.trim(),
+          pin: pinVal,
+          name: nameVal.trim(),
+        });
+      } catch (err) {
+        console.error('Register action error:', err);
+        setIsSubmitting(false);
+        setErrorMessage('Koneksi ke server gagal/timeout. Jika Anda menggunakan Supabase, pastikan port database adalah 6543 (Transaction Pooler).');
+        return;
+      }
 
       if (!regResult?.success) {
         setIsSubmitting(false);
@@ -228,7 +236,15 @@ export default function ActivationForm({
     else if (cleanWa && !cleanWa.startsWith('62')) cleanWa = '62' + cleanWa;
     formData.set('whatsappNumber', cleanWa);
 
-    const result = await activateQrAction(null, formData);
+    let result = null;
+    try {
+      result = await activateQrAction(null, formData);
+    } catch (err) {
+      console.error('Activate action error:', err);
+      setIsSubmitting(false);
+      setErrorMessage('Koneksi ke server gagal saat mengaktifkan perangkat. Coba lagi dalam beberapa saat.');
+      return;
+    }
 
     if (result?.success) {
       clearDraft(initialCode); // wipe saved draft on success

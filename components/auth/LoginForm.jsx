@@ -33,7 +33,15 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
     setIsSubmitting(true);
     setErrorMessage('');
 
-    const result = await ownerLoginAction({ whatsapp: waVal.trim(), pin: pinVal, nextUrl });
+    let result = null;
+    try {
+      result = await ownerLoginAction({ whatsapp: waVal.trim(), pin: pinVal, nextUrl });
+    } catch (err) {
+      console.error('Login action error:', err);
+      setIsSubmitting(false);
+      setErrorMessage('Koneksi ke server gagal/timeout. Jika Anda menggunakan Supabase, pastikan port database adalah 6543 (Transaction Pooler).');
+      return;
+    }
 
     if (result?.success) {
       const target = nextUrl && nextUrl !== '/dashboard' ? nextUrl : (result.redirectTo || '/dashboard');
