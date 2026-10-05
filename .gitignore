@@ -11,6 +11,11 @@ node_modules/
 
 # Local data & logs
 .data/
+.pglite/
+*.sqlite
+*.sqlite3
+*.db
+*.pglite
 *.log
 npm-debug.log*
 yarn-debug.log*

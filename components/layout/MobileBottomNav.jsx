@@ -8,6 +8,7 @@ import {
   QrCode,
   Settings,
   Users,
+  Wallet,
 } from 'lucide-react';
 
 export default function MobileBottomNav({ role = 'customer' }) {
@@ -17,6 +18,7 @@ export default function MobileBottomNav({ role = 'customer' }) {
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard, exact: true },
     { name: 'Bisnis', href: '/admin/businesses', icon: Users },
     { name: 'Perangkat', href: '/admin/devices', icon: QrCode },
+    { name: 'Keuangan', href: '/admin/finance', icon: Wallet },
     { name: 'Pengguna', href: '/admin/users', icon: Users },
     { name: 'Pengaturan', href: '/admin/settings', icon: Settings },
   ];

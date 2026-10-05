@@ -15,6 +15,7 @@ import {
   LogOut,
   Star,
   Wifi,
+  Wallet,
 } from 'lucide-react';
 import { logoutAction } from '@/lib/actions/auth-actions';
 
@@ -28,6 +29,7 @@ export default function DashboardSidebar({ role = 'customer', session }) {
         { name: 'Dashboard', href: '/admin', icon: LayoutDashboard, exact: true },
         { name: 'Bisnis', href: '/admin/businesses', icon: Store },
         { name: 'Perangkat', href: '/admin/devices', icon: TabletSmartphone },
+        { name: 'Keuangan', href: '/admin/finance', icon: Wallet },
         { name: 'Pengguna', href: '/admin/users', icon: Users },
         { name: 'Pengaturan', href: '/admin/settings', icon: Settings },
       ]
