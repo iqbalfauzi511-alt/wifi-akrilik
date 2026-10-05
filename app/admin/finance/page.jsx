@@ -1,6 +1,7 @@
 import React from 'react';
 import { requireAdmin } from '@/lib/auth/session';
 import {
+  ensureFinanceTableInitialized,
   getFinanceTransactions,
   getFinanceSummary,
   getJournalEntries,
@@ -32,6 +33,9 @@ export default async function AdminFinancePage({ searchParams }) {
     startDate: dateRange.startDate,
     endDate: dateRange.endDate,
   };
+
+  // Ensure DB schema and tables are ready once before parallel read queries
+  await ensureFinanceTableInitialized();
 
   // Fetch all accounting reports concurrently
   const [
