@@ -664,10 +664,10 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
               <div className="text-center">
                 <h3 className="text-xl font-black text-slate-900 mb-2">Stand Akrilik Pintar</h3>
                 <div className="flex flex-col items-center mb-8 relative">
-                  <div className="absolute -top-6 -right-2 bg-rose-500 text-white text-[10px] font-black px-2 py-0.5 rounded-lg shadow-sm transform rotate-12">HEMAT 33%</div>
-                  <div className="text-slate-400 font-black text-2xl sm:text-3xl line-through mb-1 decoration-rose-500 decoration-[3px]">Rp 119.000</div>
+                  <div className="absolute -top-6 -right-2 bg-rose-500 text-white text-[10px] font-black px-2 py-0.5 rounded-lg shadow-sm transform rotate-12">HEMAT 31%</div>
+                  <div className="text-slate-400 font-black text-2xl sm:text-3xl line-through mb-1 decoration-rose-500 decoration-[3px]">Rp 129.000</div>
                   <div className="flex items-end justify-center gap-1">
-                    <div className="text-5xl font-black text-[#1A73E8]">Rp 79</div>
+                    <div className="text-5xl font-black text-[#1A73E8]">Rp 89</div>
                     <div className="text-xl font-bold text-slate-500 mb-1">.000</div>
                     <div className="text-sm font-medium text-slate-400 mb-2">/ pcs</div>
                   </div>
@@ -694,7 +694,7 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
               </div>
 
               <a
-                href={`${whatsappBaseUrl}?text=Halo%2C%20saya%20ingin%20memesan%20Stand%20Akrilik%20COBASCAN%20seharga%20Rp79.000`}
+                href={`${whatsappBaseUrl}?text=Halo%2C%20saya%20ingin%20memesan%20Stand%20Akrilik%20COBASCAN%20seharga%20Rp89.000`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-8 block"
