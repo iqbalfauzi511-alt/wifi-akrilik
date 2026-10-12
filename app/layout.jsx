@@ -7,12 +7,32 @@ const inter = Inter({
   display: 'swap',
 });
 
+const siteUrl = (
+  process.env.NEXT_PUBLIC_APP_URL && !process.env.NEXT_PUBLIC_APP_URL.includes('localhost')
+    ? process.env.NEXT_PUBLIC_APP_URL
+    : 'https://cobascan.my.id'
+).replace(/\/$/, '');
+
 export const metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://cobascan.my.id'),
+  metadataBase: new URL(siteUrl),
   title: 'Cobascan: Scan, Tap, Connect, Review',
   description:
     'Platform QR + NFC untuk bisnis. Hubungkan pelanggan langsung ke Google Review bisnis Anda dan sediakan akses Wi-Fi dalam satu scan atau tap.',
   keywords: 'cobascan, qr nfc bisnis, google review qr, nfc review, qr wifi, tap nfc, smart qr',
+  alternates: {
+    canonical: '/',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export const viewport = {
