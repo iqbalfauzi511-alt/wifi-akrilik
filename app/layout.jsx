@@ -45,7 +45,7 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="id" className={inter.variable}>
-      <body className="min-h-screen font-sans bg-slate-50/60 text-slate-900 antialiased flex flex-col overflow-x-hidden">
+      <body className="min-h-screen font-sans bg-slate-50/60 text-slate-900 antialiased flex flex-col overflow-x-clip">
         {children}
       </body>
     </html>
