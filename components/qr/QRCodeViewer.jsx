@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import QRCode from 'qrcode';
 import { Download, Copy, Check, ExternalLink } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { generateQrWithLabelDataUrl, generateQrWithLabelSvg } from '@/lib/utils/qr';
 
 export default function QRCodeViewer({
   code,
@@ -63,25 +64,27 @@ export default function QRCodeViewer({
 
   const cleanSuffix = path ? `-${path.replace(/[^a-zA-Z0-9_-]/g, '')}` : '';
 
-  const handleDownloadPng = () => {
-    if (!dataUrl) return;
-    const link = document.createElement('a');
-    link.download = `${code}${cleanSuffix}.png`;
-    link.href = dataUrl;
-    link.click();
+  const handleDownloadPng = async () => {
+    try {
+      const labeledDataUrl = await generateQrWithLabelDataUrl(code, targetUrl, { width: 1000 });
+      const link = document.createElement('a');
+      link.download = `${code}${cleanSuffix}.png`;
+      link.href = labeledDataUrl || dataUrl;
+      link.click();
+    } catch (err) {
+      console.error('Download PNG error:', err);
+      if (dataUrl) {
+        const link = document.createElement('a');
+        link.download = `${code}${cleanSuffix}.png`;
+        link.href = dataUrl;
+        link.click();
+      }
+    }
   };
 
   const handleDownloadSvg = async () => {
     try {
-      const svgString = await QRCode.toString(targetUrl, {
-        type: 'svg',
-        margin: 2,
-        errorCorrectionLevel: 'H',
-        color: {
-          dark: '#0f172a',
-          light: '#ffffff',
-        },
-      });
+      const svgString = await generateQrWithLabelSvg(code, targetUrl);
       const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');

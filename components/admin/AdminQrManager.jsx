@@ -26,6 +26,7 @@ import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Modal from '@/components/ui/Modal';
 import QRCodeViewer from '@/components/qr/QRCodeViewer';
+import { generateQrWithLabelDataUrl } from '@/lib/utils/qr';
 import {
   massGenerateQrAction,
   updateQrStatusAction,
@@ -332,6 +333,29 @@ export default function AdminQrManager({ initialQrs = [] }) {
     }
   };
 
+  // Single QR PNG Download with label
+  const handleDownloadSinglePng = async (qr) => {
+    if (!qr?.code) return;
+    try {
+      const appUrl =
+        typeof window !== 'undefined' && window.location.origin
+          ? window.location.origin
+          : 'https://cobascan.my.id';
+      const cleanOrigin = appUrl.replace(/\/$/, '');
+      const targetUrl = `${cleanOrigin}/q/${qr.code}`;
+      const dataUrl = await generateQrWithLabelDataUrl(qr.code, targetUrl, { width: 1000 });
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = `${qr.code}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } catch (err) {
+      console.error('Download error:', err);
+      alert('Gagal mendownload QR code');
+    }
+  };
+
   // Bulk ZIP Download handler
   const handleBulkDownload = async () => {
     if (filteredQrs.length === 0) {
@@ -353,12 +377,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
 
       for (const qr of filteredQrs) {
         const targetUrl = `${cleanOrigin}/q/${qr.code}`;
-        const dataUrl = await QRCode.toDataURL(targetUrl, {
-          width: 800,
-          margin: 2,
-          errorCorrectionLevel: 'H',
-          color: { dark: '#0f172a', light: '#ffffff' },
-        });
+        const dataUrl = await generateQrWithLabelDataUrl(qr.code, targetUrl, { width: 1000 });
 
         // Strip data:image/png;base64,
         const base64Data = dataUrl.replace(/^data:image\/png;base64,/, '');
@@ -521,12 +540,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
       const items = qrList.filter((q) => selectedIds.has(q.id));
       for (const qr of items) {
         const targetUrl = `${cleanOrigin}/q/${qr.code}`;
-        const dataUrl = await QRCode.toDataURL(targetUrl, {
-          width: 800,
-          margin: 2,
-          errorCorrectionLevel: 'H',
-          color: { dark: '#0f172a', light: '#ffffff' },
-        });
+        const dataUrl = await generateQrWithLabelDataUrl(qr.code, targetUrl, { width: 1000 });
         const base64Data = dataUrl.replace(/^data:image\/png;base64,/, '');
         folder.file(`${qr.code}.png`, base64Data, { base64: true });
       }
