@@ -238,7 +238,7 @@ export default function DeviceList({ qrList = [], business, businessName, defaul
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-slate-800">Wi-Fi Aktif</p>
-                  <p className="text-[11px] text-slate-400">Tamu dapat akses Wi-Fi setelah memberi rating 3–5 bintang.</p>
+                  <p className="text-[11px] text-slate-400">Bagikan akses Wi-Fi otomatis ke pengunjung meja ini.</p>
                 </div>
               </label>
 

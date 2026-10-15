@@ -583,7 +583,7 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
                   {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
                 </div>
                 <p className="text-sm text-slate-700 italic mb-6 leading-relaxed">
-                  &quot;Semenjak pakai COBASCAN di setiap meja kafe, rating Google Maps kami naik drastis dari 4.1 jadi 4.8. Pelanggan seneng dapet Wi-Fi dengan mudah, dan yang komplain masalah pesanan masuknya ke WA, jadi aman gak merusak rating publik!&quot;
+                  &quot;Semenjak pakai COBASCAN di setiap meja kafe, ulasan Google Maps kami bertambah setiap hari dari 4.1 jadi 4.8. Pelanggan senang karena dapat akses Wi-Fi dengan mudah cukup sekali tap HP, dan meja kafe jadi terlihat jauh lebih rapi dan modern!&quot;
                 </p>
               </div>
               <div className="flex items-center gap-3">

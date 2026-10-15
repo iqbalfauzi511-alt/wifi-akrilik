@@ -77,21 +77,13 @@ export default function VisitorScanExperience({
     setStage(STAGE.PLACEBO_LOADING);
     setLoadingProgress(0);
 
-    const DURATION = 5000; // 5 detik total di depan mata pengguna
+    const DURATION = 2000; // 2 detik total di depan mata pengguna
     const startTime = Date.now();
 
     const getStatusText = (progress) => {
-      if (type === 'maps') {
-        if (progress < 25) return 'Mendeteksi Anda telah kembali...';
-        if (progress < 55) return 'Mengecek status ulasan Google Maps...';
-        if (progress < 85) return 'Memverifikasi ulasan bintang 5 Anda...';
-        return 'Ulasan terverifikasi! Menyiapkan akses Wi-Fi...';
-      } else {
-        if (progress < 25) return 'Mendeteksi Anda telah kembali...';
-        if (progress < 55) return 'Menghubungkan ke WhatsApp manajemen...';
-        if (progress < 85) return 'Mengecek status pengiriman pesan...';
-        return 'Laporan diterima! Menyiapkan akses Wi-Fi...';
-      }
+      if (progress < 40) return 'Mendeteksi ulasan Anda...';
+      if (progress < 80) return 'Menyiapkan akses Wi-Fi...';
+      return 'Akses Wi-Fi siap dibuka!';
     };
 
     setLoadingText(getStatusText(0));
@@ -251,7 +243,7 @@ export default function VisitorScanExperience({
             {wifiEnabled && (
               <div className="flex items-center justify-center gap-2 py-2 px-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-500">
                 <LockKeyhole className="w-3.5 h-3.5 shrink-0" />
-                Beri rating di atas untuk membuka Wi-Fi
+                Beri ulasan di atas untuk membuka Wi-Fi
               </div>
             )}
           </div>
@@ -269,7 +261,7 @@ export default function VisitorScanExperience({
             </h3>
             
             <p className="text-xs text-slate-500 mb-5 max-w-xs mx-auto leading-relaxed">
-              Silakan berikan rating bintang 5 di Google Maps. Saat Anda kembali ke halaman ini, sistem akan memverifikasi ulasan Anda.
+              Silakan berikan ulasan di Google Maps. Saat Anda kembali ke halaman ini, akses Wi-Fi akan langsung terbuka.
             </p>
 
             <button
@@ -278,7 +270,7 @@ export default function VisitorScanExperience({
               className="w-full py-3.5 px-4 rounded-2xl bg-[#1A73E8] hover:bg-blue-600 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <CheckCircle2 className="w-4 h-4" />
-              <span>Saya Sudah Memberi Bintang 5</span>
+              <span>Saya Sudah Memberi Ulasan</span>
             </button>
 
             <div className="mt-3.5">

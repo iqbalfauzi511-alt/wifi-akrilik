@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 export default function Loading() {
   return (
-    <div className="min-h-[70vh] w-full flex flex-col items-center justify-center space-y-5">
+    <div className="fixed inset-0 z-50 bg-[#FAFAFA] flex flex-col items-center justify-center space-y-5">
       <div className="relative w-24 h-24">
         {/* Pulsing effect behind */}
         <div className="absolute inset-0 bg-brand-500 rounded-3xl animate-ping opacity-20" />
