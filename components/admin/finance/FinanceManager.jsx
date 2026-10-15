@@ -103,6 +103,7 @@ export default function FinanceManager({
   const [description, setDescription] = useState('');
   const [referenceNumber, setReferenceNumber] = useState('');
   const [formError, setFormError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Manual Journal Modal
   const [isJournalModalOpen, setIsJournalModalOpen] = useState(false);
@@ -117,6 +118,7 @@ export default function FinanceManager({
 
   // Delete Confirm
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
 
   // Handle Period Change
   const handlePeriodChange = (newPeriod) => {
@@ -173,7 +175,8 @@ export default function FinanceManager({
       return;
     }
 
-    startTransition(async () => {
+    setIsSubmitting(true);
+    try {
       const res = await createFinanceTransactionAction({
         type: quickModalType,
         category,
@@ -185,11 +188,19 @@ export default function FinanceManager({
 
       if (!res.success) {
         setFormError(res.error || 'Gagal menyimpan transaksi');
-      } else {
-        setIsQuickModalOpen(false);
-        router.refresh();
+        setIsSubmitting(false);
+        return;
       }
-    });
+
+      setIsQuickModalOpen(false);
+      startTransition(() => {
+        router.refresh();
+      });
+    } catch (err) {
+      setFormError(err?.message || 'Gagal menyimpan transaksi');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Submit Manual Journal
@@ -226,7 +237,8 @@ export default function FinanceManager({
       return;
     }
 
-    startTransition(async () => {
+    setIsSubmitting(true);
+    try {
       const res = await createJournalEntryAction({
         entryDate: journalDate ? new Date(journalDate).toISOString() : new Date().toISOString(),
         description: journalDesc.trim() || 'Jurnal Penyesuaian Manual',
@@ -236,11 +248,19 @@ export default function FinanceManager({
 
       if (!res.success) {
         setJournalError(res.error || 'Gagal menyimpan jurnal umum');
-      } else {
-        setIsJournalModalOpen(false);
-        router.refresh();
+        setIsSubmitting(false);
+        return;
       }
-    });
+
+      setIsJournalModalOpen(false);
+      startTransition(() => {
+        router.refresh();
+      });
+    } catch (err) {
+      setJournalError(err?.message || 'Gagal menyimpan jurnal umum');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const addJournalLine = () => {
@@ -261,15 +281,22 @@ export default function FinanceManager({
   // Delete Cash Transaction
   const handleDelete = async (id) => {
     if (!id) return;
-    startTransition(async () => {
+    setDeletingId(id);
+    try {
       const res = await deleteFinanceTransactionAction(id);
       if (res.success) {
         setDeleteConfirmId(null);
-        router.refresh();
+        startTransition(() => {
+          router.refresh();
+        });
       } else {
         alert(res.error || 'Gagal menghapus transaksi');
       }
-    });
+    } catch (err) {
+      alert(err?.message || 'Gagal menghapus transaksi');
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   // Export Active Tab to CSV
@@ -354,6 +381,12 @@ export default function FinanceManager({
               <Sparkles className="w-3 h-3 text-emerald-600" />
               Jurnal Otomatis Aktif
             </span>
+            {isPending && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200 animate-pulse">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping" />
+                Memperbarui data...
+              </span>
+            )}
           </div>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
             Cukup catat pemasukan / pengeluaran di Pembukuan Kas. Jurnal Umum, Buku Besar, Neraca Saldo, Laba Rugi &amp; Arus Kas terisi secara otomatis.
@@ -747,10 +780,10 @@ export default function FinanceManager({
                               <button
                                 type="button"
                                 onClick={() => handleDelete(tx.id)}
-                                disabled={isPending}
-                                className="px-2 py-1 rounded bg-rose-600 text-white text-[11px] font-bold"
+                                disabled={deletingId === tx.id || isPending}
+                                className="px-2 py-1 rounded bg-rose-600 text-white text-[11px] font-bold disabled:opacity-50"
                               >
-                                Hapus
+                                {deletingId === tx.id ? 'Menghapus...' : 'Hapus'}
                               </button>
                               <button
                                 type="button"
@@ -1396,10 +1429,10 @@ export default function FinanceManager({
             <Button
               type="submit"
               size="sm"
-              disabled={isPending}
+              disabled={isSubmitting || isPending}
               className={quickModalType === 'income' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-rose-600 hover:bg-rose-700'}
             >
-              {isPending ? 'Menyimpan...' : 'Simpan Transaksi'}
+              {isSubmitting ? 'Menyimpan...' : 'Simpan Transaksi'}
             </Button>
           </div>
         </form>
@@ -1544,8 +1577,8 @@ export default function FinanceManager({
             <Button type="button" variant="outline" size="sm" onClick={() => setIsJournalModalOpen(false)}>
               Batal
             </Button>
-            <Button type="submit" size="sm" disabled={isPending} className="bg-[#1A73E8] hover:bg-blue-700 text-white">
-              {isPending ? 'Menyimpan...' : 'Simpan Jurnal'}
+            <Button type="submit" size="sm" disabled={isSubmitting || isPending} className="bg-[#1A73E8] hover:bg-blue-700 text-white">
+              {isSubmitting ? 'Menyimpan...' : 'Simpan Jurnal'}
             </Button>
           </div>
         </form>

@@ -37,23 +37,24 @@ export default async function AdminFinancePage({ searchParams }) {
   // Ensure DB schema and tables are ready once before parallel read queries
   await ensureFinanceTableInitialized();
 
-  // Fetch all accounting reports concurrently
+  // Fetch core accounting datasets concurrently
   const [
     rawTransactions,
     summary,
     rawJournals,
     ledger,
-    trialBalance,
-    incomeStatement,
-    cashFlow,
   ] = await Promise.all([
     getFinanceTransactions({ ...filterParams, limit: 150 }),
     getFinanceSummary(filterParams),
     getJournalEntries({ ...filterParams, limit: 150 }),
     getGeneralLedger(filterParams),
-    getTrialBalance(filterParams),
-    getIncomeStatement(filterParams),
-    getCashFlowStatement(filterParams),
+  ]);
+
+  // Compute downstream financial statements in-memory using the already-fetched ledger
+  const [trialBalance, incomeStatement, cashFlow] = await Promise.all([
+    getTrialBalance(filterParams, ledger),
+    getIncomeStatement(filterParams, ledger),
+    getCashFlowStatement(filterParams, ledger),
   ]);
 
   // Serialize dates to prevent hydration differences
