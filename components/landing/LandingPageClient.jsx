@@ -43,17 +43,17 @@ if (typeof window !== 'undefined') {
 
 export default function LandingPageClient({ whatsappBaseUrl }) {
   const container = useRef();
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [activeDemo, setActiveDemo] = useState(null); // null, 1, or 2
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') setIsVideoModalOpen(false);
+      if (e.key === 'Escape') setActiveDemo(null);
     };
-    if (isVideoModalOpen) {
+    if (activeDemo !== null) {
       window.addEventListener('keydown', handleKeyDown);
     }
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isVideoModalOpen]);
+  }, [activeDemo]);
 
   const waOrderSingle = `${whatsappBaseUrl}?text=${encodeURIComponent(
     "Halo admin COBASCAN, saya ingin pesan Paket COBASCAN Promo Rp89.000 (Plat Akrilik NFC/QR + Stand Penyangga + Perekat 3M Terpasang + Kertas Panduan Aktivasi + Free Ongkir). Boleh info pengirimannya?"
@@ -263,11 +263,19 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
                 </Link>
                 <button
                   type="button"
-                  onClick={() => setIsVideoModalOpen(true)}
-                  className="btn-hover-effect px-4 py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded-xl border border-blue-200/80 inline-flex items-center gap-1.5 text-xs sm:text-sm shadow-xs transition-colors"
+                  onClick={() => setActiveDemo(1)}
+                  className="btn-hover-effect px-3.5 py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded-xl border border-blue-200/80 inline-flex items-center gap-1.5 text-xs sm:text-sm shadow-xs transition-colors"
                 >
                   <Play className="w-3.5 h-3.5 fill-blue-700 text-blue-700" />
-                  <span>Mode Demo</span>
+                  <span>Demo 1</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveDemo(2)}
+                  className="btn-hover-effect px-3.5 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold rounded-xl border border-emerald-200/80 inline-flex items-center gap-1.5 text-xs sm:text-sm shadow-xs transition-colors"
+                >
+                  <Play className="w-3.5 h-3.5 fill-emerald-700 text-emerald-700" />
+                  <span>Demo 2</span>
                 </button>
                 <Link href="#harga">
                   <button className="btn-hover-effect px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl inline-flex items-center gap-1.5 text-xs sm:text-sm transition-colors">
@@ -305,22 +313,39 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
                     priority
                     sizes="(max-width: 768px) 260px, 480px"
                   />
-                  {/* Play Video Demo Trigger (Pojok Kiri) */}
+                  {/* Putar Demo 1 (Kiri Bawah Pojok) */}
                   <button
                     type="button"
-                    onClick={() => setIsVideoModalOpen(true)}
-                    className="absolute top-2.5 left-2.5 sm:top-3.5 sm:left-3.5 z-10 inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-full bg-slate-900/85 hover:bg-blue-600 text-white backdrop-blur-md shadow-lg border border-white/20 transition-all duration-300 hover:scale-105 active:scale-95 group/btn"
-                    aria-label="Tonton video demo produk"
-                    title="Putar Video Demo"
+                    onClick={() => setActiveDemo(1)}
+                    className="absolute bottom-2.5 left-2.5 sm:bottom-3 sm:left-3 z-10 inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-full bg-slate-900/85 hover:bg-blue-600 text-white backdrop-blur-md shadow-lg border border-white/20 transition-all duration-300 hover:scale-105 active:scale-95 group/btn"
+                    aria-label="Putar Video Demo 1"
+                    title="Putar Demo 1"
                   >
-                    <span className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-blue-600 group-hover/btn:bg-white text-white group-hover/btn:text-blue-600 flex items-center justify-center shrink-0 shadow-xs transition-colors">
-                      <Play className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-current translate-x-0.5" />
+                    <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-blue-600 group-hover/btn:bg-white text-white group-hover/btn:text-blue-600 flex items-center justify-center shrink-0 shadow-xs transition-colors">
+                      <Play className="w-2 sm:w-2.5 h-2 sm:h-2.5 fill-current translate-x-0.5" />
                     </span>
-                    <span className="text-[11px] sm:text-xs font-bold tracking-tight pr-1">Putar Demo</span>
+                    <span className="text-[10px] sm:text-xs font-bold tracking-tight pr-0.5">Putar Demo 1</span>
                   </button>
-                </div>
-                <div className="absolute -bottom-1 -right-1 bg-white/95 backdrop-blur-sm border border-slate-200 rounded-xl px-2 sm:px-2.5 py-1 shadow-md text-[10px] sm:text-xs font-bold text-slate-800 rotate-[-3deg]">
-                  Formulir Ulasan Langsung Muncul ⭐
+
+                  {/* Putar Demo 2 (Kanan Bawah Pojok) */}
+                  <button
+                    type="button"
+                    onClick={() => setActiveDemo(2)}
+                    className="absolute bottom-2.5 right-2.5 sm:bottom-3 sm:right-3 z-10 inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-full bg-slate-900/85 hover:bg-emerald-600 text-white backdrop-blur-md shadow-lg border border-white/20 transition-all duration-300 hover:scale-105 active:scale-95 group/btn"
+                    aria-label="Putar Video Demo 2"
+                    title="Putar Demo 2"
+                  >
+                    <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-600 group-hover/btn:bg-white text-white group-hover/btn:text-emerald-600 flex items-center justify-center shrink-0 shadow-xs transition-colors">
+                      <Play className="w-2 sm:w-2.5 h-2 sm:h-2.5 fill-current translate-x-0.5" />
+                    </span>
+                    <span className="text-[10px] sm:text-xs font-bold tracking-tight pr-0.5">Putar Demo 2</span>
+                  </button>
+
+                  {/* Badge Stiker Ulasan (Pojok Kanan Atas di Dalam Foto) */}
+                  <div className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 z-10 bg-white/95 backdrop-blur-md border border-slate-200/90 rounded-xl px-2.5 py-1 sm:px-3 sm:py-1.5 shadow-md text-[10px] sm:text-xs font-bold text-slate-800 flex items-center gap-1 select-none pointer-events-none">
+                    <span>Formulir Ulasan Langsung Muncul</span>
+                    <span>⭐</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -999,24 +1024,26 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
       </aside>
 
       {/* Video Demo Modal */}
-      {isVideoModalOpen && (
+      {activeDemo !== null && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-200"
-          onClick={() => setIsVideoModalOpen(false)}
+          onClick={() => setActiveDemo(null)}
         >
           <div 
-            className="relative w-full max-w-2xl bg-slate-900 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-slate-800 flex flex-col"
+            className={`relative w-full ${activeDemo === 2 ? 'max-w-xs sm:max-w-sm' : 'max-w-2xl'} bg-slate-900 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-slate-800 flex flex-col transition-all duration-300`}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
             <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 border-b border-slate-800 bg-slate-900/95">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-xs sm:text-sm font-bold text-white tracking-wide">Video Demo Produk COBASCAN</span>
+                <span className="text-xs sm:text-sm font-bold text-white tracking-wide">
+                  {activeDemo === 1 ? 'Demo 1: Alur Tap NFC & QR Code' : 'Demo 2: Tampilan di Smartphone'}
+                </span>
               </div>
               <button
                 type="button"
-                onClick={() => setIsVideoModalOpen(false)}
+                onClick={() => setActiveDemo(null)}
                 className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-colors"
                 aria-label="Tutup video demo"
               >
@@ -1024,10 +1051,39 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
               </button>
             </div>
 
+            {/* Switch Tabs inside Modal */}
+            <div className="flex items-center justify-center gap-2 py-2 px-4 bg-slate-950/70 border-b border-slate-800">
+              <button
+                type="button"
+                onClick={() => setActiveDemo(1)}
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${
+                  activeDemo === 1 
+                    ? 'bg-blue-600 text-white shadow-sm' 
+                    : 'bg-slate-800 text-slate-400 hover:text-white'
+                }`}
+              >
+                <Play className="w-2.5 h-2.5 fill-current" />
+                <span>Demo 1</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveDemo(2)}
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${
+                  activeDemo === 2 
+                    ? 'bg-emerald-600 text-white shadow-sm' 
+                    : 'bg-slate-800 text-slate-400 hover:text-white'
+                }`}
+              >
+                <Play className="w-2.5 h-2.5 fill-current" />
+                <span>Demo 2</span>
+              </button>
+            </div>
+
             {/* Video Player Container */}
-            <div className="relative aspect-video w-full bg-black flex items-center justify-center">
+            <div className={`relative ${activeDemo === 2 ? 'aspect-[9/16] max-h-[70vh]' : 'aspect-video'} w-full bg-black flex items-center justify-center`}>
               <video 
-                src="/videos/demo.mp4" 
+                key={activeDemo}
+                src={activeDemo === 1 ? '/videos/demo1.mp4' : '/videos/demo2.mp4'} 
                 controls 
                 autoPlay 
                 playsInline
@@ -1039,10 +1095,10 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
 
             {/* Modal Footer */}
             <div className="px-4 sm:px-6 py-2.5 bg-slate-900/95 border-t border-slate-800 flex items-center justify-between text-[11px] sm:text-xs text-slate-400">
-              <span>Alur tap NFC &amp; scan QR Google Review otomatis</span>
+              <span>{activeDemo === 1 ? 'Demo widescreen 16:9 akrilik' : 'Demo tampilan vertikal 9:16 HP'}</span>
               <button
                 type="button"
-                onClick={() => setIsVideoModalOpen(false)}
+                onClick={() => setActiveDemo(null)}
                 className="text-[11px] font-semibold text-slate-400 hover:text-white transition-colors"
               >
                 Tutup (ESC)
