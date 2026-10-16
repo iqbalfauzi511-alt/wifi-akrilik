@@ -18,6 +18,7 @@ import {
   Wallet,
 } from 'lucide-react';
 import { logoutAction } from '@/lib/actions/auth-actions';
+import ReloadButton from '@/components/ui/ReloadButton';
 
 export default function DashboardSidebar({ role = 'customer', session }) {
   const pathname = usePathname();
@@ -60,6 +61,7 @@ export default function DashboardSidebar({ role = 'customer', session }) {
               COBASCAN
             </span>
           </Link>
+          <ReloadButton />
         </div>
 
         {/* Navigation Links */}

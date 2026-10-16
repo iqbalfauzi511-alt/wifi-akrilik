@@ -90,23 +90,25 @@ export default function AdminBusinessesManager({ initialBusinesses = [] }) {
       )}
 
       {/* Businesses Table */}
-      <Card>
-        <CardHeader
-          title={`Mitra Bisnis (${businesses.length})`}
-          subtitle="Daftar kafe, restoran, dan outlet mitra yang terdaftar di platform"
-          action={
-            <div className="w-full sm:w-72 relative">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={businessSearch}
-                onChange={(e) => setBusinessSearch(e.target.value)}
-                placeholder="Cari bisnis, pemilik, atau SSID..."
-                className="w-full text-xs pl-8 pr-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-brand-500"
-              />
-            </div>
-          }
-        />
+      <Card className="overflow-hidden !p-0 sm:!p-6">
+        <div className="p-4 sm:p-0 border-b sm:border-b-0 border-slate-100">
+          <CardHeader
+            title={`Mitra Bisnis (${businesses.length})`}
+            subtitle="Daftar kafe, restoran, dan outlet mitra yang terdaftar di platform"
+            action={
+              <div className="w-full sm:w-72 relative">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="text"
+                  value={businessSearch}
+                  onChange={(e) => setBusinessSearch(e.target.value)}
+                  placeholder="Cari bisnis, pemilik, atau SSID..."
+                  className="w-full text-xs pl-8 pr-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-brand-500 bg-white"
+                />
+              </div>
+            }
+          />
+        </div>
 
         {/* Desktop Table View */}
         <div className="hidden lg:block overflow-x-auto">
@@ -191,7 +193,7 @@ export default function AdminBusinessesManager({ initialBusinesses = [] }) {
         </div>
 
         {/* Mobile Card View */}
-        <div className="lg:hidden flex flex-col divide-y divide-slate-100">
+        <div className="lg:hidden flex flex-col divide-y divide-slate-100 bg-white">
           {filteredBusinesses.length === 0 ? (
             <div className="p-8 text-center text-xs text-slate-400">
               Tidak ada bisnis yang cocok dengan kriteria pencarian.
@@ -200,43 +202,43 @@ export default function AdminBusinessesManager({ initialBusinesses = [] }) {
             filteredBusinesses.map((b) => {
               const mapsUrl = b.googleMapsReviewUrl || b.googleMapsUrl;
               return (
-                <div key={b.id} className="p-4 bg-white hover:bg-slate-50/60 transition-colors flex flex-col gap-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-2xl bg-blue-100 text-[#1A73E8] font-bold text-sm flex items-center justify-center shrink-0">
+                <div key={b.id} className="p-3.5 sm:p-4 hover:bg-slate-50/60 transition-colors flex flex-col gap-3">
+                  <div className="flex items-start justify-between gap-2.5">
+                    <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-100 text-[#1A73E8] font-bold text-xs sm:text-sm flex items-center justify-center shrink-0">
                         {b.businessName?.substring(0, 2).toUpperCase() || 'CS'}
                       </div>
-                      <div>
-                        <div className="font-bold text-slate-900 leading-tight">{b.businessName}</div>
-                        <div className="text-[10px] text-slate-500 mt-0.5">
+                      <div className="min-w-0 flex-1">
+                        <div className="font-bold text-slate-900 text-xs sm:text-sm leading-tight truncate">{b.businessName}</div>
+                        <div className="text-[10px] text-slate-400 mt-0.5 truncate">
                           Terdaftar: {new Date(b.createdAt).toLocaleDateString('id-ID', { dateStyle: 'medium' })}
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 bg-slate-50/80 rounded-xl p-3 border border-slate-100/80 mt-1">
-                    <div>
+                  <div className="grid grid-cols-2 gap-2 bg-slate-50/80 rounded-xl p-2.5 sm:p-3 border border-slate-100/90 text-xs">
+                    <div className="min-w-0">
                       <div className="text-[10px] text-slate-400 font-medium mb-0.5">Pemilik</div>
                       <div className="font-bold text-slate-700 text-xs truncate">{b.ownerName || '-'}</div>
-                      <div className="text-[9px] text-slate-500 font-mono mt-0.5 truncate">{b.ownerEmail}</div>
+                      <div className="text-[10px] text-slate-400 font-mono mt-0.5 truncate">{b.ownerEmail}</div>
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <div className="text-[10px] text-slate-400 font-medium mb-0.5">Perangkat</div>
                       <div className="font-bold text-slate-700 text-xs">{b.qrCount || 0} unit</div>
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <div className="text-[10px] text-slate-400 font-medium mb-0.5">WhatsApp</div>
-                      <div className="font-bold text-slate-700 text-xs">
+                      <div className="font-bold text-slate-700 text-xs truncate">
                         {b.whatsappNumber ? <span className="font-mono">+{b.whatsappNumber}</span> : <span className="italic font-normal text-slate-400">-</span>}
                       </div>
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <div className="text-[10px] text-slate-400 font-medium mb-0.5">Review Link</div>
-                      <div className="font-bold text-slate-700 text-xs">
+                      <div className="font-bold text-slate-700 text-xs truncate">
                         {mapsUrl ? (
-                          <a href={mapsUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 flex items-center gap-1 hover:underline">
-                            Lihat Link <ExternalLink className="w-3 h-3" />
+                          <a href={mapsUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 inline-flex items-center gap-1 hover:underline">
+                            <span>Buka</span> <ExternalLink className="w-3 h-3 shrink-0" />
                           </a>
                         ) : (
                           <span className="italic font-normal text-slate-400">Belum diatur</span>
@@ -245,13 +247,13 @@ export default function AdminBusinessesManager({ initialBusinesses = [] }) {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-end mt-1">
+                  <div className="flex items-center justify-end pt-2 border-t border-slate-100">
                     <button
                       type="button"
                       onClick={() => setBusinessToDelete(b)}
-                      className="px-3 py-1.5 rounded-lg text-xs font-bold border border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 shadow-sm transition-colors flex items-center gap-1"
+                      className="min-h-[34px] px-2.5 py-1.5 rounded-lg text-xs font-bold border border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 active:bg-rose-200 shadow-2xs transition-colors flex items-center gap-1"
                     >
-                      <Trash2 className="w-3.5 h-3.5" /> Hapus
+                      <Trash2 className="w-3.5 h-3.5" /> <span>Hapus Bisnis</span>
                     </button>
                   </div>
                 </div>

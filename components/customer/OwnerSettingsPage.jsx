@@ -30,6 +30,7 @@ import DeviceList from './DeviceList';
 import LogoUploader from '@/components/ui/LogoUploader';
 import ScanActivityChart from '@/components/charts/ScanActivityChart';
 import PwaInstallPrompt from '@/components/pwa/PwaInstallPrompt';
+import ReloadButton from '@/components/ui/ReloadButton';
 
 function Field({ label, helperText, error, children }) {
   return (
@@ -262,6 +263,7 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
             </div>
             <div className="flex items-center gap-2 min-w-0">
               <span className="font-extrabold text-slate-900 text-base sm:text-lg tracking-tight leading-none block truncate">COBASCAN</span>
+              <ReloadButton />
               <span className="hidden sm:inline-block px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-xs font-medium truncate max-w-[200px]">
                 {userName || 'Pemilik'}
               </span>

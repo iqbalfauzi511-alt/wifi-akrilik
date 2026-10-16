@@ -106,26 +106,26 @@ export default function AdminUsersManager({
   return (
     <div className="space-y-6">
       {/* Metrics Row */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-xs">
-          <div className="text-slate-400 text-xs font-medium">Total Akun</div>
-          <div className="text-2xl font-black text-slate-900 mt-1">{totalUsers}</div>
-          <div className="text-[11px] text-slate-400 mt-0.5">Terdaftar di platform</div>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+        <div className="bg-white rounded-2xl p-3 sm:p-4 border border-slate-200/90 shadow-xs">
+          <div className="text-slate-400 text-[11px] sm:text-xs font-medium">Total Akun</div>
+          <div className="text-xl sm:text-2xl font-black text-slate-900 mt-1">{totalUsers}</div>
+          <div className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate">Terdaftar di platform</div>
         </div>
-        <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-xs">
-          <div className="text-slate-400 text-xs font-medium">Pemilik Bisnis</div>
-          <div className="text-2xl font-black text-brand-600 mt-1">{totalOwners}</div>
-          <div className="text-[11px] text-slate-400 mt-0.5">Mitra kafe &amp; resto</div>
+        <div className="bg-white rounded-2xl p-3 sm:p-4 border border-slate-200/90 shadow-xs">
+          <div className="text-slate-400 text-[11px] sm:text-xs font-medium">Pemilik Bisnis</div>
+          <div className="text-xl sm:text-2xl font-black text-brand-600 mt-1">{totalOwners}</div>
+          <div className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate">Mitra kafe &amp; resto</div>
         </div>
-        <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-xs">
-          <div className="text-slate-400 text-xs font-medium">Admin Cobascan</div>
-          <div className="text-2xl font-black text-slate-900 mt-1">{totalAdmins}</div>
-          <div className="text-[11px] text-slate-400 mt-0.5">Hak akses sistem</div>
+        <div className="bg-white rounded-2xl p-3 sm:p-4 border border-slate-200/90 shadow-xs">
+          <div className="text-slate-400 text-[11px] sm:text-xs font-medium">Admin Cobascan</div>
+          <div className="text-xl sm:text-2xl font-black text-slate-900 mt-1">{totalAdmins}</div>
+          <div className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate">Hak akses sistem</div>
         </div>
-        <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-xs">
-          <div className="text-slate-400 text-xs font-medium">Akses Login Aktif</div>
-          <div className="text-2xl font-black text-emerald-600 mt-1">{verifiedUsers}</div>
-          <div className="text-[11px] text-slate-400 mt-0.5">Dari {totalUsers} akun</div>
+        <div className="bg-white rounded-2xl p-3 sm:p-4 border border-slate-200/90 shadow-xs">
+          <div className="text-slate-400 text-[11px] sm:text-xs font-medium">Akses Login Aktif</div>
+          <div className="text-xl sm:text-2xl font-black text-emerald-600 mt-1">{verifiedUsers}</div>
+          <div className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate">Dari {totalUsers} akun</div>
         </div>
       </div>
 
@@ -153,23 +153,26 @@ export default function AdminUsersManager({
       )}
 
       {/* All Users Table */}
-      <Card>
-        <CardHeader
-          title={`Daftar Pengguna (${users.length})`}
-          subtitle="Kelola seluruh akun pengguna terdaftar, nomor WhatsApp, dan hak akses"
-          action={
-            <div className="w-full sm:w-72 relative">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={userSearch}
-                onChange={(e) => setUserSearch(e.target.value)}
-                placeholder="Cari email, nama, atau bisnis..."
-                className="w-full text-xs pl-8 pr-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-brand-500"
-              />
-            </div>
-          }
-        />
+      <Card className="overflow-hidden !p-0 sm:!p-6">
+        <div className="p-4 sm:p-0 border-b sm:border-b-0 border-slate-100">
+          <CardHeader
+            title={`Daftar Pengguna (${users.length})`}
+            subtitle="Kelola seluruh akun pengguna terdaftar, nomor WhatsApp, dan hak akses"
+            action={
+              <div className="w-full sm:w-72 relative">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="text"
+                  value={userSearch}
+                  onChange={(e) => setUserSearch(e.target.value)}
+                  placeholder="Cari email, nama, atau bisnis..."
+                  className="w-full text-xs pl-8 pr-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-brand-500 bg-white"
+                />
+              </div>
+            }
+          />
+        </div>
+
         {/* Desktop Table View */}
         <div className="hidden lg:block overflow-x-auto">
           <table className="w-full text-left text-xs text-slate-600">
@@ -287,7 +290,7 @@ export default function AdminUsersManager({
         </div>
 
         {/* Mobile Card View */}
-        <div className="lg:hidden flex flex-col divide-y divide-slate-100">
+        <div className="lg:hidden flex flex-col divide-y divide-slate-100 bg-white">
           {filteredUsers.length === 0 ? (
             <div className="p-8 text-center text-xs text-slate-400">
               Tidak ada pengguna yang cocok dengan kriteria pencarian.
@@ -299,34 +302,34 @@ export default function AdminUsersManager({
                 u.email === 'distrapness@gmail.com';
 
               return (
-                <div key={u.id} className="p-4 bg-white hover:bg-slate-50/60 transition-colors flex flex-col gap-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-2xl bg-slate-100 text-slate-700 font-bold text-sm flex items-center justify-center shrink-0">
+                <div key={u.id} className="p-3.5 sm:p-4 hover:bg-slate-50/60 transition-colors flex flex-col gap-3">
+                  <div className="flex items-start justify-between gap-2.5">
+                    <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs sm:text-sm flex items-center justify-center shrink-0">
                         {u.name ? u.name.charAt(0).toUpperCase() : u.email.charAt(0).toUpperCase()}
                       </div>
-                      <div>
-                        <div className="font-bold text-slate-900 leading-tight">{u.name || '-'}</div>
-                        <div className="text-[10px] text-slate-500 font-mono mt-0.5">{u.email}</div>
+                      <div className="min-w-0 flex-1">
+                        <div className="font-bold text-slate-900 text-xs sm:text-sm leading-tight truncate">{u.name || '-'}</div>
+                        <div className="text-[11px] text-slate-400 font-mono mt-0.5 truncate">{u.email}</div>
                       </div>
                     </div>
                     <div className="shrink-0">
                       {u.role === 'admin' ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[9px] font-bold bg-purple-50 text-purple-700 border border-purple-200/60">
-                          <ShieldCheck className="w-2.5 h-2.5" /> Admin
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200/60">
+                          <ShieldCheck className="w-3 h-3" /> Admin
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-200/60">
-                          <User className="w-2.5 h-2.5" /> Pemilik
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200/60">
+                          <User className="w-3 h-3" /> Pemilik
                         </span>
                       )}
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 bg-slate-50/80 rounded-xl p-3 border border-slate-100/80 mt-1">
-                    <div>
+                  <div className="grid grid-cols-2 gap-2 bg-slate-50/80 rounded-xl p-2.5 sm:p-3 border border-slate-100/90 text-xs">
+                    <div className="min-w-0">
                       <div className="text-[10px] text-slate-400 font-medium mb-0.5">WhatsApp</div>
-                      <div className="font-bold text-slate-700 text-xs">
+                      <div className="font-bold text-slate-700 text-xs truncate">
                         {u.whatsappNumber ? (
                           <span className="font-mono">{u.whatsappNumber}</span>
                         ) : (
@@ -334,7 +337,7 @@ export default function AdminUsersManager({
                         )}
                       </div>
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <div className="text-[10px] text-slate-400 font-medium mb-0.5">Bisnis</div>
                       <div className="font-bold text-slate-700 text-xs truncate">
                         {u.businessName ? (
@@ -348,34 +351,36 @@ export default function AdminUsersManager({
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between mt-1">
-                    <div className="text-[10px] text-slate-400 font-medium">
+                  <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100">
+                    <div className="text-[11px] text-slate-400 font-medium whitespace-nowrap">
                       Gabung: {new Date(u.createdAt).toLocaleDateString('id-ID', {
                         day: 'numeric', month: 'short', year: 'numeric',
                       })}
                     </div>
-                    <div>
+                    <div className="flex items-center gap-1.5 ml-auto shrink-0">
                       {isAdmin ? (
                         <span className="text-[10px] font-bold text-slate-400 px-2 py-1 rounded-md bg-slate-100 border border-slate-200">
                           Dilindungi
                         </span>
                       ) : (
-                        <div className="flex items-center gap-2">
+                        <>
                           <button
                             type="button"
                             onClick={() => setUserToReset(u)}
-                            className="px-3 py-1.5 rounded-lg text-xs font-bold border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 shadow-sm transition-colors flex items-center gap-1"
+                            className="min-h-[34px] px-2.5 py-1.5 rounded-lg text-xs font-bold border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 active:bg-blue-200 shadow-2xs transition-colors flex items-center gap-1"
                           >
-                            <KeyRound className="w-3.5 h-3.5" /> Reset
+                            <KeyRound className="w-3.5 h-3.5" />
+                            <span>Reset</span>
                           </button>
                           <button
                             type="button"
                             onClick={() => setUserToDelete(u)}
-                            className="px-3 py-1.5 rounded-lg text-xs font-bold border border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 shadow-sm transition-colors flex items-center gap-1"
+                            className="min-h-[34px] px-2.5 py-1.5 rounded-lg text-xs font-bold border border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 active:bg-rose-200 shadow-2xs transition-colors flex items-center gap-1"
                           >
-                            <Trash2 className="w-3.5 h-3.5" /> Hapus
+                            <Trash2 className="w-3.5 h-3.5" />
+                            <span>Hapus</span>
                           </button>
-                        </div>
+                        </>
                       )}
                     </div>
                   </div>

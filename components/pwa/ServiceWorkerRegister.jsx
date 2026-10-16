@@ -1,19 +1,8 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
-import { RefreshCw } from 'lucide-react';
+import { useEffect } from 'react';
 
 export default function ServiceWorkerRegister() {
-  const [hasUpdate, setHasUpdate] = useState(false);
-  const [waitingWorker, setWaitingWorker] = useState(null);
-
-  const handleUpdateReload = useCallback(() => {
-    if (waitingWorker) {
-      waitingWorker.postMessage({ type: 'SKIP_WAITING' });
-    }
-    window.location.reload();
-  }, [waitingWorker]);
-
   useEffect(() => {
     if (typeof window === 'undefined' || !('serviceWorker' in navigator)) {
       return;
@@ -41,10 +30,9 @@ export default function ServiceWorkerRegister() {
           scope: '/',
         });
 
-        // Check if an updated worker is already waiting
+        // Check if an updated worker is already waiting; activate silently
         if (registration.waiting) {
-          setWaitingWorker(registration.waiting);
-          setHasUpdate(true);
+          registration.waiting.postMessage({ type: 'SKIP_WAITING' });
         }
 
         // Check for updates periodically
@@ -57,8 +45,7 @@ export default function ServiceWorkerRegister() {
               installingWorker.state === 'installed' &&
               navigator.serviceWorker.controller
             ) {
-              setWaitingWorker(installingWorker);
-              setHasUpdate(true);
+              installingWorker.postMessage({ type: 'SKIP_WAITING' });
             }
           });
         });
@@ -84,27 +71,7 @@ export default function ServiceWorkerRegister() {
     };
   }, []);
 
-  if (!hasUpdate) return null;
-
-  return (
-    <div
-      role="status"
-      aria-live="polite"
-      className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2.5 px-3.5 py-1.5 bg-slate-900/95 backdrop-blur-md text-white text-xs rounded-full shadow-xl border border-slate-700/80"
-    >
-      <span className="w-2 h-2 rounded-full bg-emerald-400" />
-      <span className="text-[12px] font-medium text-slate-200">
-        Pembaruan tersedia
-      </span>
-      <button
-        type="button"
-        onClick={handleUpdateReload}
-        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-medium text-[11px] transition-colors"
-      >
-        <RefreshCw className="w-3 h-3" />
-        <span>Muat Ulang</span>
-      </button>
-    </div>
-  );
+  return null;
 }
+
 
