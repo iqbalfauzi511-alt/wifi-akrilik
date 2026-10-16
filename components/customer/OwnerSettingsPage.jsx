@@ -25,6 +25,7 @@ import {
 import Image from 'next/image';
 import { ownerChangePinAction, ownerAddDeviceAction, ownerChangeWaAction } from '@/lib/actions/owner-auth-actions';
 import { logoutAction } from '@/lib/actions/auth-actions';
+import { generateReviewLinkAction } from '@/lib/actions/maps-actions';
 import DeviceList from './DeviceList';
 import LogoUploader from '@/components/ui/LogoUploader';
 import ScanActivityChart from '@/components/charts/ScanActivityChart';
@@ -231,13 +232,12 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
     setGenerateSuccess(false);
     setIsGeneratingLink(true);
     try {
-      const { generateReviewLinkAction } = await import('@/lib/actions/maps-actions');
       const res = await generateReviewLinkAction(addDeviceMapsUrl);
       if (res.success) {
         setAddDeviceMapsUrl(res.result);
         setGenerateSuccess(res.note === 'fallback' ? 'fallback' : true);
       } else {
-        setGenerateError(res.error);
+        setGenerateError(res.error || 'Gagal memproses link.');
       }
     } catch {
       setGenerateError('Gagal memproses link. Coba lagi.');

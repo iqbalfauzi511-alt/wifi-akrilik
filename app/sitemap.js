@@ -15,5 +15,24 @@ export default function sitemap() {
       changeFrequency: 'weekly',
       priority: 1.0,
     },
+    {
+      url: `${baseUrl}/kebijakan-privasi`,
+      lastModified: lastModDate,
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/syarat-ketentuan`,
+      lastModified: lastModDate,
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/kebijakan-garansi`,
+      lastModified: lastModDate,
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
   ];
 }
+

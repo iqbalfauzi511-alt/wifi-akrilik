@@ -947,7 +947,7 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-10 pb-8 sm:pb-12 border-b border-slate-100">
             {/* Col 1 */}
-            <div className="md:col-span-5">
+            <div className="md:col-span-4">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 relative">
                   <Image src="/cobascan-logo.png" alt="COBASCAN" width={32} height={32} className="w-full h-full object-contain" />
@@ -955,12 +955,12 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
                 <span className="font-extrabold text-slate-900 text-xl pt-0.5">COBASCAN</span>
               </div>
               <p className="text-xs sm:text-sm text-slate-500 max-w-sm leading-relaxed">
-                Solusi sederhana untuk pengalaman pelanggan yang lebih baik.
+                Stand akrilik pintar QR Code &amp; NFC untuk ulasan Google Maps dan pembagian sandi Wi-Fi otomatis di meja pelanggan.
               </p>
             </div>
 
             {/* Col 2 */}
-            <div className="md:col-span-3">
+            <div className="md:col-span-2">
               <div className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-4">Menu</div>
               <ul className="space-y-2.5 text-xs sm:text-sm text-slate-600">
                 <li><Link href="#cara-kerja" className="hover:text-blue-600 transition-colors">Cara Kerja</Link></li>
@@ -971,13 +971,25 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
               </ul>
             </div>
 
-            {/* Col 3 */}
-            <div className="md:col-span-4">
+            {/* Col 3: Kebijakan */}
+            <div className="md:col-span-3">
+              <div className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-4">Kebijakan &amp; Legal</div>
+              <ul className="space-y-2.5 text-xs sm:text-sm text-slate-600">
+                <li><Link href="/kebijakan-privasi" className="hover:text-blue-600 transition-colors">Kebijakan Privasi</Link></li>
+                <li><Link href="/syarat-ketentuan" className="hover:text-blue-600 transition-colors">Syarat &amp; Ketentuan</Link></li>
+                <li><Link href="/kebijakan-garansi" className="hover:text-blue-600 transition-colors">Kebijakan Garansi</Link></li>
+              </ul>
+            </div>
+
+            {/* Col 4: Kontak */}
+            <div className="md:col-span-3">
               <div className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-4">Hubungi Kami</div>
               <ul className="space-y-3 text-xs sm:text-sm text-slate-600">
                 <li className="flex items-center gap-2.5">
                   <Phone className="w-4 h-4 text-slate-400 shrink-0" />
-                  <span>+62 858-8815-9265</span>
+                  <a href="https://wa.me/6285888159265" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 transition-colors">
+                    +62 858-8815-9265
+                  </a>
                 </li>
                 <li className="flex items-center gap-2.5">
                   <Instagram className="w-4 h-4 text-slate-400 shrink-0" />
@@ -1000,9 +1012,19 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
 
           <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
             <p>© 2026 COBASCAN. Seluruh hak cipta dilindungi.</p>
-            <p className="flex items-center gap-1">
-              Tap, Review, Connect. <span className="text-red-500">❤️</span>
-            </p>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+              <Link href="/kebijakan-privasi" className="hover:text-blue-600 transition-colors">
+                Privasi
+              </Link>
+              <span className="text-slate-300">•</span>
+              <Link href="/syarat-ketentuan" className="hover:text-blue-600 transition-colors">
+                Syarat &amp; Ketentuan
+              </Link>
+              <span className="text-slate-300">•</span>
+              <Link href="/kebijakan-garansi" className="hover:text-blue-600 transition-colors">
+                Garansi
+              </Link>
+            </div>
           </div>
         </div>
       </footer>

@@ -17,6 +17,7 @@ import {
 import Badge from '@/components/ui/Badge';
 import Modal from '@/components/ui/Modal';
 import { updateDeviceSettingsAction } from '@/lib/actions/qr-actions';
+import { generateReviewLinkAction } from '@/lib/actions/maps-actions';
 
 export default function DeviceList({ qrList = [], business, businessName, defaultWifiEnabled }) {
   const router = useRouter();
@@ -55,13 +56,12 @@ export default function DeviceList({ qrList = [], business, businessName, defaul
     setGenerateError('');
     setIsGeneratingLink(true);
     try {
-      const { generateReviewLinkAction } = await import('@/lib/actions/maps-actions');
       const res = await generateReviewLinkAction(editMapsUrl);
       if (res.success) {
         setEditMapsUrl(res.result);
         setGenerateSuccess(true);
       } else {
-        setGenerateError(res.error);
+        setGenerateError(res.error || 'Gagal memproses link.');
         setGenerateSuccess(false);
       }
     } catch (e) {

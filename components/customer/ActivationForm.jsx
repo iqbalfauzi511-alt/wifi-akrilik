@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { ownerRegisterAction, checkWaRegisteredAction } from '@/lib/actions/owner-auth-actions';
 import { activateQrAction } from '@/lib/actions/qr-actions';
+import { generateReviewLinkAction } from '@/lib/actions/maps-actions';
 
 // localStorage helpers — scoped per QR code so different codes don't bleed
 function draftKey(code) {
@@ -125,13 +126,12 @@ export default function ActivationForm({
     setGenerateError('');
     setIsGeneratingLink(true);
     try {
-      const { generateReviewLinkAction } = await import('@/lib/actions/maps-actions');
       const res = await generateReviewLinkAction(mapsUrlVal);
       if (res.success) {
         setMapsUrlVal(res.result);
         setGenerateSuccess(true);
       } else {
-        setGenerateError(res.error);
+        setGenerateError(res.error || 'Gagal memproses link Google Maps.');
         setGenerateSuccess(false);
       }
     } catch (e) {
