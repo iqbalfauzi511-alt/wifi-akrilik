@@ -28,6 +28,7 @@ import { logoutAction } from '@/lib/actions/auth-actions';
 import DeviceList from './DeviceList';
 import LogoUploader from '@/components/ui/LogoUploader';
 import ScanActivityChart from '@/components/charts/ScanActivityChart';
+import PwaInstallPrompt from '@/components/pwa/PwaInstallPrompt';
 
 function Field({ label, helperText, error, children }) {
   return (
@@ -282,6 +283,9 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
       </div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
+
+        {/* PWA Install Banner */}
+        <PwaInstallPrompt />
 
         {/* Profil Section */}
         <div className="bg-white rounded-2xl border border-slate-200 p-5 flex items-center justify-between">

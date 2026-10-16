@@ -22,6 +22,15 @@ export const metadata = {
   alternates: {
     canonical: '/',
   },
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/icons/apple-touch-icon.png',
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Cobascan',
+  },
   robots: {
     index: true,
     follow: true,
@@ -36,6 +45,7 @@ export const metadata = {
 };
 
 export const viewport = {
+  themeColor: '#4f46e5',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
