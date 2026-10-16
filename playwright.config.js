@@ -1,5 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 import path from 'path';
+import dotenv from 'dotenv';
+
+dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -48,6 +51,7 @@ export default defineConfig({
       PLAYWRIGHT_TEST: '1',
       // Force empty DATABASE_URL so lib/db/index.js uses local PGlite instead of production Supabase
       DATABASE_URL: '',
+      SESSION_SECRET: process.env.SESSION_SECRET || 'cobascan-dev-secret-only-not-for-production-use',
       // Separate PGlite directory for testing
       AWS_LAMBDA_FUNCTION_NAME: 'test_env_bypass_pglite_fs', 
     }

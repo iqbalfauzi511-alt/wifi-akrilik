@@ -4,7 +4,7 @@ import path from 'path';
 
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 
-const FALLBACK_SECRET = 'cobascan-smart-wifi-nfc-secret-key-salt-2025';
+const FALLBACK_SECRET = 'cobascan-dev-secret-only-not-for-production-use';
 const SESSION_SECRET = process.env.SESSION_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY || FALLBACK_SECRET;
 
 export function signSessionPayload(payload) {
