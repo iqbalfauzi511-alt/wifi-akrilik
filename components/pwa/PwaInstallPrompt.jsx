@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Smartphone, Download, X, Share, PlusSquare } from 'lucide-react';
 
 const STORAGE_KEY = 'cobascan_pwa_dismissed';
@@ -89,8 +90,14 @@ export default function PwaInstallPrompt() {
     <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 transition-all">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3.5 min-w-0">
-          <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center shrink-0 text-indigo-600">
-            <Smartphone className="w-5 h-5" />
+          <div className="w-11 h-11 rounded-xl bg-white border border-slate-200 flex items-center justify-center shrink-0 shadow-xs p-1.5 overflow-hidden">
+            <Image
+              src="/icons/icon-192.png"
+              alt="Cobascan App Icon"
+              width={36}
+              height={36}
+              className="w-full h-full object-contain"
+            />
           </div>
           <div className="min-w-0">
             <h3 className="text-sm font-bold text-slate-900 tracking-tight">

@@ -1,5 +1,6 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
+import ServiceWorkerRegister from '@/components/pwa/ServiceWorkerRegister';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -60,8 +61,15 @@ export const metadata = {
     images: ['/cobascan-logo.png'],
   },
   icons: {
-    icon: '/favicon.ico',
-    apple: '/icons/apple-touch-icon.png',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
   },
   appleWebApp: {
     capable: true,
@@ -85,7 +93,7 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: '#4f46e5',
+  themeColor: '#ffffff',
   width: 'device-width',
   initialScale: 1,
 };
@@ -119,6 +127,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className="min-h-screen font-sans bg-slate-50/60 text-slate-900 antialiased flex flex-col overflow-x-clip">
+        <ServiceWorkerRegister />
         {children}
       </body>
     </html>
