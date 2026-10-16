@@ -1,30 +1,21 @@
 import React from 'react';
-import Image from 'next/image';
+
+function Block({ className = '' }) {
+  return <div aria-hidden="true" className={`rounded-lg bg-slate-200/80 motion-safe:animate-pulse ${className}`} />;
+}
 
 export default function Loading() {
   return (
-    <div className="fixed inset-0 z-50 bg-[#FAFAFA] flex flex-col items-center justify-center space-y-5">
-      <div className="relative w-24 h-24">
-        {/* Pulsing effect behind */}
-        <div className="absolute inset-0 bg-brand-500 rounded-3xl animate-ping opacity-20" />
-        
-        {/* Logo Container */}
-        <div className="relative w-full h-full bg-white rounded-3xl shadow-xl border border-slate-100/50 flex items-center justify-center p-4 animate-pulse">
-          <div className="relative w-full h-full">
-            <Image 
-              src="/cobascan-logo.png" 
-              alt="Cobascan Loading" 
-              fill 
-              sizes="(max-width: 768px) 100vw, 96px"
-              className="object-contain drop-shadow-sm"
-              priority
-            />
-          </div>
+    <main aria-busy="true" aria-label="Memuat halaman" className="min-h-screen bg-slate-50/60 px-4 py-8 sm:px-8">
+      <div className="mx-auto w-full max-w-7xl space-y-6">
+        <Block className="h-8 w-56" />
+        <Block className="h-4 w-72 max-w-full" />
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+          {Array.from({ length: 4 }, (_, index) => <Block key={index} className="h-28 rounded-2xl" />)}
         </div>
+        <Block className="h-64 rounded-2xl" />
       </div>
-      <p className="text-sm font-bold text-slate-500 animate-pulse tracking-wide">
-        Memuat...
-      </p>
-    </div>
+      <span className="sr-only">Memuat konten halaman</span>
+    </main>
   );
 }

@@ -31,6 +31,9 @@ export const metadata = {
     statusBarStyle: 'default',
     title: 'Cobascan',
   },
+  other: {
+    'mobile-web-app-capable': 'yes',
+  },
   robots: {
     index: true,
     follow: true,

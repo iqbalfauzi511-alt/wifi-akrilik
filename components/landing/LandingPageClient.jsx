@@ -288,13 +288,13 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
               <div className="hero-stats flex items-center justify-center lg:justify-start gap-2 pt-0.5 text-xs text-slate-500">
                 <div className="flex -space-x-1.5 overflow-hidden">
                   <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full ring-2 ring-white bg-slate-200 overflow-hidden relative shrink-0">
-                    <Image src="/images/cafe-latte.jpg" alt="Pengguna" fill sizes="100vw" className="object-cover" />
+                    <Image src="/images/cafe-latte.jpg" alt="Pengguna" fill sizes="24px" className="object-cover" />
                   </div>
                   <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full ring-2 ring-white bg-slate-200 overflow-hidden relative shrink-0">
-                    <Image src="/images/beauty-clinic.jpg" alt="Pengguna" fill sizes="100vw" className="object-cover" />
+                    <Image src="/images/beauty-clinic.jpg" alt="Pengguna" fill sizes="24px" className="object-cover" />
                   </div>
                   <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full ring-2 ring-white bg-slate-200 overflow-hidden relative shrink-0">
-                    <Image src="/images/restaurant-dish.jpg" alt="Pengguna" fill sizes="100vw" className="object-cover" />
+                    <Image src="/images/restaurant-dish.jpg" alt="Pengguna" fill sizes="24px" className="object-cover" />
                   </div>
                 </div>
                 <span className="text-[11px] sm:text-xs">Dipercaya oleh <strong>1.000+</strong> bisnis di Indonesia</span>
@@ -516,7 +516,7 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
             {/* Step 01 */}
             <div className="step-card bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
               <div className="relative aspect-[16/10] sm:aspect-[4/3] w-full bg-slate-100">
-                <Image src="/images/step-tap-nfc.jpg" alt="Tamu Tap atau Scan" fill sizes="100vw" className="object-cover" />
+                <Image src="/images/step-tap-nfc.jpg" alt="Tamu Tap atau Scan" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 380px" className="object-cover" />
                 <div className="absolute top-3 left-3 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#1A73E8] text-white font-bold text-xs flex items-center justify-center shadow">
                   01
                 </div>
@@ -532,7 +532,7 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
             {/* Step 02 */}
             <div className="step-card bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
               <div className="relative aspect-[16/10] sm:aspect-[4/3] w-full bg-slate-100">
-                <Image src="/images/step-google-review.jpg" alt="Halaman Ulasan Langsung Terbuka" fill sizes="100vw" className="object-cover" />
+                <Image src="/images/step-google-review.jpg" alt="Halaman Ulasan Langsung Terbuka" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 380px" className="object-cover" />
                 <div className="absolute top-3 left-3 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#EA4335] text-white font-bold text-xs flex items-center justify-center shadow">
                   02
                 </div>
@@ -548,7 +548,7 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
             {/* Step 03 */}
             <div className="step-card bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
               <div className="relative aspect-[16/10] sm:aspect-[4/3] w-full bg-slate-100">
-                <Image src="/images/step-wifi-success.jpg" alt="Tamu Berikan Rating & Ulasan" fill sizes="100vw" className="object-cover" />
+                <Image src="/images/step-wifi-success.jpg" alt="Tamu Berikan Rating & Ulasan" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 380px" className="object-cover" />
                 <div className="absolute top-3 left-3 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#34A853] text-white font-bold text-xs flex items-center justify-center shadow">
                   03
                 </div>
@@ -714,7 +714,7 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
           <div className="solutions-container grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-8">
             <div className="solution-card bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
               <div className="relative aspect-[16/9] w-full bg-slate-100">
-                <Image src="/images/cafe-latte.jpg" alt="Kafe & Coffee Shop" fill sizes="100vw" className="object-cover" />
+                <Image src="/images/cafe-latte.jpg" alt="Kafe & Coffee Shop" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 380px" className="object-cover" />
               </div>
               <div className="p-4 sm:p-6">
                 <h3 className="text-sm sm:text-base font-bold text-slate-900 mb-1.5 sm:mb-2">Kafe &amp; Coffee Shop</h3>
@@ -726,7 +726,7 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
 
             <div className="solution-card bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
               <div className="relative aspect-[16/9] w-full bg-slate-100">
-                <Image src="/images/beauty-clinic.jpg" alt="Klinik & Salon Kecantikan" fill sizes="100vw" className="object-cover" />
+                <Image src="/images/beauty-clinic.jpg" alt="Klinik & Salon Kecantikan" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 380px" className="object-cover" />
               </div>
               <div className="p-4 sm:p-6">
                 <h3 className="text-sm sm:text-base font-bold text-slate-900 mb-1.5 sm:mb-2">Klinik &amp; Salon Kecantikan</h3>
@@ -738,7 +738,7 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
 
             <div className="solution-card bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
               <div className="relative aspect-[16/9] w-full bg-slate-100">
-                <Image src="/images/restaurant-dish.jpg" alt="Restoran & Retail Offline" fill sizes="100vw" className="object-cover" />
+                <Image src="/images/restaurant-dish.jpg" alt="Restoran & Retail Offline" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 380px" className="object-cover" />
               </div>
               <div className="p-4 sm:p-6">
                 <h3 className="text-sm sm:text-base font-bold text-slate-900 mb-1.5 sm:mb-2">Restoran &amp; Retail Offline</h3>
@@ -775,7 +775,7 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-200 overflow-hidden relative shrink-0">
-                  <Image src="/images/cafe-latte.jpg" alt="Reviewer" fill sizes="100vw" className="object-cover" />
+                  <Image src="/images/cafe-latte.jpg" alt="Reviewer" fill sizes="40px" className="object-cover" />
                 </div>
                 <div>
                   <div className="font-bold text-xs sm:text-sm text-slate-900">Budi Santoso</div>
@@ -795,7 +795,7 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-200 overflow-hidden relative shrink-0">
-                  <Image src="/images/restaurant-dish.jpg" alt="Reviewer" fill sizes="100vw" className="object-cover" />
+                  <Image src="/images/restaurant-dish.jpg" alt="Reviewer" fill sizes="40px" className="object-cover" />
                 </div>
                 <div>
                   <div className="font-bold text-xs sm:text-sm text-slate-900">Diana Safira</div>
@@ -815,7 +815,7 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-200 overflow-hidden relative shrink-0">
-                  <Image src="/images/beauty-clinic.jpg" alt="Reviewer" fill sizes="100vw" className="object-cover" />
+                  <Image src="/images/beauty-clinic.jpg" alt="Reviewer" fill sizes="40px" className="object-cover" />
                 </div>
                 <div>
                   <div className="font-bold text-xs sm:text-sm text-slate-900">Sari Wulandari</div>
