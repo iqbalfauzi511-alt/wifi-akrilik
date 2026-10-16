@@ -210,7 +210,7 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
               {/* Category Pill */}
               <div className="hero-badge inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/80 text-amber-900 text-xs font-semibold mb-3 sm:mb-6">
                 <Sparkles className="w-3.5 h-3.5 text-amber-500 fill-amber-500 shrink-0" />
-                <span>Plat &amp; Stand Akrilik • Free Ongkir</span>
+                <span>Cobascan • Plat &amp; Stand Akrilik Pintar</span>
               </div>
 
               {/* Main Headline */}
@@ -230,7 +230,7 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
 
               {/* Subheadline */}
               <p className="hero-subtitle text-xs sm:text-base text-slate-600 max-w-xl mx-auto lg:mx-0 mb-4 sm:mb-5 leading-relaxed">
-                Tamu cukup dekatkan smartphone ke plat akrilik—formulir ulasan resmi langsung terbuka dan kata sandi Wi-Fi otomatis tersambung tanpa perlu repot tanya kasir.
+                Cobascan menghadirkan plat akrilik pintar untuk bisnis Anda. Tamu cukup dekatkan smartphone ke akrilik—formulir ulasan resmi langsung terbuka dan kata sandi Wi-Fi otomatis tersambung tanpa perlu repot tanya kasir.
               </p>
 
               {/* 4 Feature Highlights - Sejajar Rapi 2 Kolom di Mobile, 1 Baris di Layar Lebar */}
