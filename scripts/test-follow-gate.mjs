@@ -95,6 +95,7 @@ async function runFollowGateTests() {
       businessData: {
         businessName: 'Kopi Senja Utama',
         instagramUrl: 'https://www.instagram.com/kopisenjautama/',
+        wifiEnabled: true,
         wifiName: 'KopiSenja_Guest',
         wifiPassword: 'kopisenja123secret',
       },

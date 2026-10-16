@@ -161,8 +161,17 @@ async function runTests() {
   const codeEmpty = `EMPTY-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
   await db.insert(qrCodes).values({ code: codeEmpty, status: 'blank' });
 
+  const [testEmptyUser] = await db
+    .insert(users)
+    .values({
+      email: `test-empty-${Date.now()}@example.com`,
+      name: 'Owner Empty Test',
+      role: 'customer',
+    })
+    .returning();
+
   const emptyAct = await activateQrTransaction({
-    userId: testUser.id,
+    userId: testEmptyUser.id,
     qrCodeValue: codeEmpty,
     businessData: {
       businessName: 'Bisnis Tanpa Maps',

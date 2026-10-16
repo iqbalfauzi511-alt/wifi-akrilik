@@ -1,14 +1,22 @@
 import { NextResponse } from 'next/server';
 import { updateSession } from '@/lib/supabase/middleware';
+import { verifySessionPayloadEdge } from '@/lib/auth/token-edge';
 
-const ADMIN_EMAILS = [
-  'distrapness@gmail.com'
-];
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'distrapness@gmail.com')
+  .split(',')
+  .map((e) => e.trim().toLowerCase())
+  .filter(Boolean);
+
+const ADMIN_WA = (process.env.ADMIN_WA || '6285888159265').trim();
 
 function isUserAdmin(email) {
   if (!email) return false;
-  const clean = email.trim().toLowerCase();
-  return ADMIN_EMAILS.includes(clean);
+  return ADMIN_EMAILS.includes(email.trim().toLowerCase());
+}
+
+function isUserAdminWa(wa) {
+  if (!wa) return false;
+  return wa.trim() === ADMIN_WA;
 }
 
 export async function middleware(request) {
@@ -36,37 +44,28 @@ export async function middleware(request) {
     return res;
   }
 
+  // Cryptographically verify smartwifi_session before trusting existence or role
+  let verifiedSession = null;
+  if (devCookie) {
+    verifiedSession = await verifySessionPayloadEdge(devCookie);
+  }
 
-  let isAuthenticated = !!supabaseUser || !!devCookie;
+  const isAuthenticated = Boolean(supabaseUser || verifiedSession);
   let userRole = 'customer';
 
   // Check role from authenticated Supabase user first
-  if (supabaseUser && supabaseUser.email) {
-    if (isUserAdmin(supabaseUser.email)) {
-      userRole = 'admin';
-    }
+  if (supabaseUser?.email && isUserAdmin(supabaseUser.email)) {
+    userRole = 'admin';
   }
 
-  // Check role from verified dev session cookie
-  if (devCookie && userRole !== 'admin') {
-    try {
-      let parsed = null;
-      if (devCookie.includes('.')) {
-        const payloadBase64 = devCookie.split('.')[0];
-        const payloadJson = Buffer.from(payloadBase64, 'base64url').toString('utf8');
-        parsed = JSON.parse(payloadJson);
-      } else {
-        parsed = JSON.parse(decodeURIComponent(devCookie));
-      }
-
-      if (parsed) {
-        if (parsed.role === 'admin' || (parsed.email && isUserAdmin(parsed.email)) || parsed.whatsapp === '6285888159265') {
-          userRole = 'admin';
-        }
-      }
-
-    } catch {
-      // ignore
+  // Check role from cryptographically verified session
+  if (verifiedSession && userRole !== 'admin') {
+    if (
+      verifiedSession.role === 'admin' ||
+      (verifiedSession.email && isUserAdmin(verifiedSession.email)) ||
+      (verifiedSession.whatsapp && isUserAdminWa(verifiedSession.whatsapp))
+    ) {
+      userRole = 'admin';
     }
   }
 

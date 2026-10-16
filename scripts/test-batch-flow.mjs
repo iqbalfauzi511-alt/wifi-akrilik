@@ -37,7 +37,7 @@ async function runBatchTests() {
     // 2. Test Batch Generation
     console.log('\n📦 Test 1: Batch QR Generation (5 QRs per batch):');
     const batchResult = await createBatchWithQrs(5);
-    assert(batchResult.batch && batchResult.batch.batchCode.startsWith('BATCH-'), `Created batch with code: ${batchResult.batch?.batchCode}`);
+    assert(batchResult.batch && (batchResult.batch.batchCode.startsWith('CS-BATCH-') || batchResult.batch.batchCode.startsWith('BATCH-')), `Created batch with code: ${batchResult.batch?.batchCode}`);
     assert(batchResult.qrs.length === 5, 'Generated exactly 5 QR codes');
 
     const uniqueCodes = new Set(batchResult.qrs.map((q) => q.code));

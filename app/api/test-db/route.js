@@ -9,6 +9,11 @@ import { eq } from 'drizzle-orm';
  * Digunakan oleh Playwright untuk memverifikasi isi database (verifikasi integritas)
  */
 export async function POST(request) {
+  // Strictly forbid in production under ANY circumstances
+  if (process.env.NODE_ENV === 'production') {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
   // Next.js dev command forces NODE_ENV=development, so we check a custom PLAYWRIGHT_TEST flag
   if (process.env.NODE_ENV !== 'test' && process.env.PLAYWRIGHT_TEST !== '1') {
     return NextResponse.json({ error: 'Not allowed' }, { status: 403 });

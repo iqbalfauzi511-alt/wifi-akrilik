@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { isUserAdmin } from '@/lib/auth/session';
+import { safeRedirectUrl } from '@/lib/utils/validation';
 
 export async function GET(request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
-  const next = searchParams.get('next') || '/dashboard';
+  const rawNext = searchParams.get('next') || '/dashboard';
+  const next = safeRedirectUrl(rawNext, '/dashboard');
 
   let errorMessage = 'oauth_failed';
 
@@ -14,12 +17,13 @@ export async function GET(request) {
       const { data, error } = await supabase.auth.exchangeCodeForSession(code);
       if (!error) {
         const userEmail = (data?.user?.email || '').toLowerCase().trim();
-        const isAdmin = userEmail === 'distrapness@gmail.com';
+        const isAdmin = isUserAdmin(userEmail);
 
         let targetUrl = next;
         if (targetUrl === '/dashboard' && isAdmin) {
           targetUrl = '/admin';
         }
+        targetUrl = safeRedirectUrl(targetUrl, isAdmin ? '/admin' : '/dashboard');
 
         // We only allow creating a new DB user if they are an admin or activating a device.
         const isActivationFlow = targetUrl.startsWith('/activate/');
