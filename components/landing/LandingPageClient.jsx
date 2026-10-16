@@ -1030,7 +1030,7 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
           onClick={() => setActiveDemo(null)}
         >
           <div 
-            className={`relative w-full ${activeDemo === 2 ? 'max-w-xs sm:max-w-sm' : 'max-w-2xl'} bg-slate-900 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-slate-800 flex flex-col transition-all duration-300`}
+            className="relative w-full max-w-2xl bg-slate-900 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-slate-800 flex flex-col transition-all duration-300"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
@@ -1038,7 +1038,7 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span className="text-xs sm:text-sm font-bold text-white tracking-wide">
-                  {activeDemo === 1 ? 'Demo 1: Alur Tap NFC & QR Code' : 'Demo 2: Tampilan di Smartphone'}
+                  {activeDemo === 1 ? 'Demo 1: Alur Tap NFC & QR Code' : 'Demo 2: Simulasi & Fitur Stand Akrilik'}
                 </span>
               </div>
               <button
@@ -1080,7 +1080,7 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
             </div>
 
             {/* Video Player Container */}
-            <div className={`relative ${activeDemo === 2 ? 'aspect-[9/16] max-h-[70vh]' : 'aspect-video'} w-full bg-black flex items-center justify-center`}>
+            <div className="relative aspect-video w-full bg-black flex items-center justify-center">
               <video 
                 key={activeDemo}
                 src={activeDemo === 1 ? '/videos/demo1.mp4' : '/videos/demo2.mp4'} 
@@ -1095,7 +1095,7 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
 
             {/* Modal Footer */}
             <div className="px-4 sm:px-6 py-2.5 bg-slate-900/95 border-t border-slate-800 flex items-center justify-between text-[11px] sm:text-xs text-slate-400">
-              <span>{activeDemo === 1 ? 'Demo widescreen 16:9 akrilik' : 'Demo tampilan vertikal 9:16 HP'}</span>
+              <span>{activeDemo === 1 ? 'Demo widescreen 16:9 alur pelanggan' : 'Demo widescreen 16:9 fitur stand'}</span>
               <button
                 type="button"
                 onClick={() => setActiveDemo(null)}
