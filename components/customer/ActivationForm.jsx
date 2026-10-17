@@ -8,7 +8,7 @@ import {
   ExternalLink, Wifi, WifiOff, Building2, Star, AlertCircle,
   KeyRound, User, Info, Check
 } from 'lucide-react';
-import { ownerRegisterAction, checkWaRegisteredAction } from '@/lib/actions/owner-auth-actions';
+import { checkWaRegisteredAction } from '@/lib/actions/owner-auth-actions';
 import { activateQrAction } from '@/lib/actions/qr-actions';
 import { generateReviewLinkAction } from '@/lib/actions/maps-actions';
 
@@ -50,6 +50,7 @@ export default function ActivationForm({
   );
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
   const [savedBusinessName, setSavedBusinessName] = useState('');
@@ -62,7 +63,6 @@ export default function ActivationForm({
   const [nameVal, setNameVal] = useState(draft.current.nameVal ?? '');
   const [waCheckResult, setWaCheckResult] = useState(null);
   const [isCheckingWa, setIsCheckingWa] = useState(false);
-  const [createdOwnerId, setCreatedOwnerId] = useState(existingOwnerId);
 
   // Business fields — restored from draft, fall back to server props
   const [targetBusinessId, setTargetBusinessId] = useState(
@@ -141,6 +141,20 @@ export default function ActivationForm({
     }
   };
 
+  const handleSwitchAccount = async () => {
+    setIsLoggingOut(true);
+    try {
+      clearDraft(initialCode);
+    } catch {}
+
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch {}
+
+    // Hard navigation to purge cookies and refresh state cleanly
+    window.location.href = `/api/auth/logout?next=/activate/${encodeURIComponent(initialCode)}`;
+  };
+
   const handleUnifiedSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage('');
@@ -176,7 +190,7 @@ export default function ActivationForm({
         return;
       }
       if (waCheckResult?.registered) {
-        setErrorMessage('Nomor WA ini sudah terdaftar. Silakan login ke dashboard untuk tambah perangkat baru.');
+        setErrorMessage('Nomor WA ini sudah terdaftar. Silakan login ke akun Anda untuk mengaktifkan perangkat baru.');
         return;
       }
       if (!pinVal || pinVal.length !== 6) {
@@ -190,29 +204,6 @@ export default function ActivationForm({
     }
 
     setIsSubmitting(true);
-
-    if (!existingOwnerId) {
-      let regResult = null;
-      try {
-        regResult = await ownerRegisterAction({
-          whatsapp: waVal.trim(),
-          pin: pinVal,
-          name: nameVal.trim(),
-        });
-      } catch (err) {
-        console.error('Register action error:', err);
-        setIsSubmitting(false);
-        setErrorMessage('Koneksi ke server gagal/timeout. Jika Anda menggunakan Supabase, pastikan port database adalah 6543 (Transaction Pooler).');
-        return;
-      }
-
-      if (!regResult?.success) {
-        setIsSubmitting(false);
-        setErrorMessage(regResult?.waAlreadyRegistered ? 'Nomor WA sudah terdaftar.' : (regResult?.error || 'Gagal membuat akun.'));
-        return;
-      }
-      setCreatedOwnerId(regResult.userId);
-    }
 
     const formData = new FormData();
     formData.set('code', targetCode);
@@ -236,6 +227,12 @@ export default function ActivationForm({
     else if (cleanWa && !cleanWa.startsWith('62')) cleanWa = '62' + cleanWa;
     formData.set('whatsappNumber', cleanWa);
 
+    if (!existingOwnerId) {
+      formData.set('whatsapp', cleanWa);
+      formData.set('pin', pinVal);
+      formData.set('ownerName', nameVal.trim());
+    }
+
     let result = null;
     try {
       result = await activateQrAction(null, formData);
@@ -248,17 +245,21 @@ export default function ActivationForm({
 
     if (result?.success) {
       clearDraft(initialCode); // wipe saved draft on success
-      setSavedBusinessName(businessNameVal.trim());
+      setSavedBusinessName(result.businessName || businessNameVal.trim());
       setIsSubmitting(false);
       setIsSuccess(true);
-      
+
       // Otomatis pindah ke dashboard setelah 2.5 detik
       setTimeout(() => {
         window.location.href = '/dashboard';
       }, 2500);
     } else {
       setIsSubmitting(false);
-      setErrorMessage(result?.error || 'Gagal mengaktifkan Cobascan. Coba lagi.');
+      if (result?.waAlreadyRegistered) {
+        setWaCheckResult({ registered: true });
+      } else {
+        setErrorMessage(result?.error || 'Gagal mengaktifkan Cobascan. Coba lagi.');
+      }
     }
   };
 
@@ -349,12 +350,13 @@ export default function ActivationForm({
             <span className="text-xs font-semibold text-slate-600">
               Anda masuk sebagai: <span className="font-bold text-slate-900">{userEmail || 'Owner'}</span>
             </span>
-            <button 
+            <button
               type="button"
-              onClick={() => router.push('/api/auth/logout')} 
-              className="text-xs font-bold text-rose-600 hover:text-rose-700 underline"
+              onClick={handleSwitchAccount}
+              disabled={isLoggingOut}
+              className="text-xs font-bold text-rose-600 hover:text-rose-700 underline disabled:opacity-50"
             >
-              Ganti Akun / Logout
+              {isLoggingOut ? 'Sedang keluar...' : 'Ganti Akun / Logout'}
             </button>
           </div>
         )}

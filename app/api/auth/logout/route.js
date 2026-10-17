@@ -58,15 +58,59 @@ export async function POST(request) {
 }
 
 export async function GET(request) {
-  const res = await POST(request);
-  const redirectResponse = NextResponse.redirect(new URL('/login', request.url));
+  const cookieStore = cookies();
+  const url = new URL(request.url);
+  const next = url.searchParams.get('next') || '/login';
   
-  // Copy Set-Cookie headers from logout POST response
-  res.headers.forEach((val, key) => {
-    if (key.toLowerCase() === 'set-cookie') {
-      redirectResponse.headers.append(key, val);
-    }
+  // Safe redirect path validation
+  const safeNext = (next.startsWith('/') && !next.startsWith('//')) ? next : '/login';
+  const redirectResponse = NextResponse.redirect(new URL(safeNext, request.url));
+
+  // Explicitly clear smartwifi_session on cookieStore
+  try {
+    cookieStore.delete({ name: 'smartwifi_session', path: '/' });
+    cookieStore.set('smartwifi_session', '', {
+      path: '/',
+      maxAge: 0,
+      expires: new Date(0),
+      httpOnly: true,
+      sameSite: 'lax',
+    });
+  } catch {}
+
+  // Explicitly clear smartwifi_session on redirect response
+  redirectResponse.cookies.set('smartwifi_session', '', {
+    path: '/',
+    maxAge: 0,
+    expires: new Date(0),
+    httpOnly: true,
+    sameSite: 'lax',
   });
+
+  // Clear all Supabase cookies and other auth cookies on response
+  try {
+    const allCookies = request.cookies.getAll();
+    for (const c of allCookies) {
+      if (c.name.startsWith('sb-') || c.name.includes('session') || c.name.includes('token')) {
+        try {
+          cookieStore.delete({ name: c.name, path: '/' });
+          cookieStore.set(c.name, '', { path: '/', maxAge: 0, expires: new Date(0) });
+        } catch {}
+        redirectResponse.cookies.set(c.name, '', {
+          path: '/',
+          maxAge: 0,
+          expires: new Date(0),
+        });
+      }
+    }
+  } catch {}
+
+  const supabase = createClient();
+  if (supabase) {
+    try {
+      await supabase.auth.signOut();
+    } catch {}
+  }
 
   return redirectResponse;
 }
