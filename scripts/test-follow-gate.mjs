@@ -112,8 +112,8 @@ async function runFollowGateTests() {
     assert(activePublicData.wifiPassword === undefined, 'CRITICAL: Public query strictly OMITS wifiPassword on ACTIVE QR!');
     assert(!('wifiPassword' in activePublicData), 'CRITICAL: wifiPassword key does not even exist in active public query result!');
 
-    // 7. Test Reveal API Endpoint on Active QR (After user clicks "Saya Sudah Follow")
-    console.log('\n📱 Test 5: POST /api/q/[code]/reveal on Active QR');
+    // 7. Test Reveal Wi-Fi API Endpoint on Active QR
+    console.log('\n📱 Test 5: POST /api/q/[code]/reveal-wifi on Active QR');
     const revealApi = await simulateReveal(testQr.code);
     assert(revealApi.status === 200, 'Reveal API returns status 200 for active QR');
     assert(revealApi.json.success === true, 'Reveal API returns success: true');

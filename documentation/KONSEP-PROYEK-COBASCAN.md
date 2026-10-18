@@ -413,9 +413,9 @@ Deteksi return pelanggan dilakukan via:
 - **Lockout:** Setelah gagal login beberapa kali → `locked_until` diset
 
 ### Admin (Cobascan Internal)
-- **Login:** Email + Password via Supabase Auth
-- **Session:** Supabase JWT cookie (prefix `sb-`)
-- **Authorization:** Email di-whitelist hardcode di `middleware.js` (`ADMIN_EMAILS`)
+- **Login:** Nomor WhatsApp Superadmin (`ADMIN_WA`) + PIN 6 digit via portal login
+- **Session:** Custom HTTP-only signed HMAC cookie `smartwifi_session`
+- **Authorization:** Verifikasi `ADMIN_WA` dan role `admin` di middleware & session resolver
 
 ### Middleware Route Protection
 File `middleware.js` berjalan di setiap request (Edge Runtime):

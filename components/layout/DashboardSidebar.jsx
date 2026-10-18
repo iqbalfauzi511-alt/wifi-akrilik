@@ -36,17 +36,14 @@ export default function DashboardSidebar({ role = 'customer', session }) {
       ]
     : [
         { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, exact: true },
-        { name: 'Perangkat', href: '/dashboard/devices', icon: TabletSmartphone },
-        { name: 'Statistik', href: '/dashboard/stats', icon: BarChart3 },
-        { name: 'Ulasan', href: '/dashboard/reviews', icon: Star },
-        { name: 'Wi-Fi', href: '/dashboard/wifi', icon: Wifi },
-        { name: 'Pengaturan', href: '/dashboard/settings', icon: Settings },
       ];
 
   const userName = isAdmin
     ? 'Admin Cobascan'
     : session?.user?.name || session?.user?.email?.split('@')[0] || 'Pemilik Bisnis';
-  const userSub = isAdmin ? 'Administrator' : session?.business?.businessName || session?.user?.email || 'Pemilik Bisnis';
+  const userSub = isAdmin
+    ? (session?.user?.whatsappNumber ? `+${session.user.whatsappNumber}` : 'Administrator')
+    : session?.business?.businessName || session?.user?.email || 'Pemilik Bisnis';
 
   return (
     <aside className="hidden lg:flex w-64 bg-white border-r border-slate-200 flex-col shrink-0 min-h-screen sticky top-0 h-screen justify-between z-30">

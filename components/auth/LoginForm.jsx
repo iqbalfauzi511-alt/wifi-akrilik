@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Phone, Eye, EyeOff, AlertCircle, ArrowRight, Lock } from 'lucide-react';
 import { ownerLoginAction } from '@/lib/actions/owner-auth-actions';
 
-const ADMIN_WA = process.env.NEXT_PUBLIC_ADMIN_WA || '6285888159265';
+const ADMIN_WA = (process.env.NEXT_PUBLIC_ADMIN_WA || '').trim();
 
 export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
   const router = useRouter();
@@ -53,9 +53,11 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
     }
   };
 
-  const forgotPinUrl = `https://wa.me/${ADMIN_WA}?text=${encodeURIComponent(
-    `Halo Admin Cobascan, saya lupa PIN untuk nomor WA ${waVal || '[nomor WA Anda]'}. Mohon bantu reset. Terima kasih.`
-  )}`;
+  const forgotPinUrl = ADMIN_WA
+    ? `https://wa.me/${ADMIN_WA}?text=${encodeURIComponent(
+        `Halo Admin Cobascan, saya lupa PIN untuk nomor WA ${waVal || '[nomor WA Anda]'}. Mohon bantu reset. Terima kasih.`
+      )}`
+    : null;
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-center py-12 px-4">
@@ -163,16 +165,18 @@ export default function LoginForm({ nextUrl = '/dashboard', errorParam = '' }) {
           </form>
 
           {/* Lupa PIN */}
-          <div className="mt-5 text-center">
-            <a
-              href={forgotPinUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-slate-500 hover:text-[#1A73E8] transition-colors"
-            >
-              Lupa PIN? Hubungi Admin via WhatsApp →
-            </a>
-          </div>
+          {forgotPinUrl && (
+            <div className="mt-5 text-center">
+              <a
+                href={forgotPinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-slate-500 hover:text-[#1A73E8] transition-colors"
+              >
+                Lupa PIN? Hubungi Admin via WhatsApp →
+              </a>
+            </div>
+          )}
 
           {/* Belum punya akun */}
           <div className="mt-4 pt-4 border-t border-slate-100 text-center">

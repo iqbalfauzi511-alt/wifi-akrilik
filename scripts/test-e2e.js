@@ -14,10 +14,10 @@ async function runEndToEndTests() {
 
   // Test 1: Verify users and seeded data
   console.log('1️⃣ Test Seeded Data:');
-  const adminUser = await db.query.users.findFirst({ where: eq(users.email, 'admin@smartwifi.com') });
+  const adminUser = await db.query.users.findFirst({ where: eq(users.whatsappNumber, '6285888159265') });
   const customerUser = await db.query.users.findFirst({ where: eq(users.email, 'ahmad@kopisenja.com') });
   const business = await getBusinessByOwnerId(customerUser.id);
-  console.log(`   - Admin: ${adminUser.email} (Role: ${adminUser.role})`);
+  console.log(`   - Admin WA: ${adminUser?.whatsappNumber} (Role: ${adminUser?.role})`);
   console.log(`   - Customer: ${customerUser.email} (Role: ${customerUser.role})`);
   console.log(`   - Business: ${business.businessName}, SSID: ${business.wifiName}, PWD: ${business.wifiPassword}`);
 

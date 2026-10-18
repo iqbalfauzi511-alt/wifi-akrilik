@@ -128,6 +128,7 @@ async function runTests() {
   await db.delete(users).where(eq(users.id, testUser.id));
 
   console.log('🎉 ALL SMART WI-FI FLOW TESTS PASSED SUCCESSFULLY! 🚀');
+  process.exit(0);
 }
 
 runTests().catch((err) => {

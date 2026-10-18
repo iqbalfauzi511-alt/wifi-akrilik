@@ -2,8 +2,9 @@ import React from 'react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
-import { AlertTriangle, ShieldOff, Sparkles, ArrowRight } from 'lucide-react';
+import { AlertTriangle, ShieldOff, Sparkles, ArrowRight, MapPin } from 'lucide-react';
 import { getPublicQrByCode, recordScanLog } from '@/lib/db/queries/qr';
+import { validateGoogleMapsUrl } from '@/lib/utils/validation';
 import VisitorScanExperience from '@/components/visitor/VisitorScanExperience';
 import Button from '@/components/ui/Button';
 
@@ -105,7 +106,32 @@ export default async function VisitorWifiPage({ params }) {
     console.warn('Scan logging error (ignored):', err);
   }
 
-  const targetMapsUrl = (qr.googleMapsReviewUrl || qr.googleMapsUrl)?.trim() || 'https://maps.google.com/';
+  // Validate Google Maps Review URL
+  const rawMapsUrl = (qr.googleMapsReviewUrl || qr.googleMapsUrl)?.trim();
+  const mapsValidation = validateGoogleMapsUrl(rawMapsUrl);
+
+  if (!mapsValidation.isValid) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
+        <div className="max-w-md w-full bento-card p-8 text-center">
+          <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center mx-auto mb-4">
+            <MapPin className="w-7 h-7" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-900 mb-2">Tautan Belum Dikonfigurasi</h2>
+          <p className="text-sm text-slate-500 mb-6 leading-relaxed">
+            Pemilik bisnis belum mengatur link Google Maps ulasan yang valid untuk perangkat ini.
+          </p>
+          <Link href="/">
+            <Button variant="outline" className="w-full">
+              Kembali ke Beranda
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const targetMapsUrl = mapsValidation.sanitizedUrl || rawMapsUrl || 'https://maps.google.com/';
 
   // Case 4: QR Active but Wi-Fi disabled -> catat ulasan dan redirect langsung ke Google Maps
   if (!qr.wifiEnabled) {
@@ -121,13 +147,13 @@ export default async function VisitorWifiPage({ params }) {
 
   // Case 5: Wi-Fi Enabled -> Review-to-reveal Wi-Fi Experience!
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
+    <div className="min-h-[100dvh] w-full flex items-center justify-center px-3 py-6 min-[400px]:p-4 sm:p-6 bg-[#F8FAFC]">
       <VisitorScanExperience
         code={qr.code}
         businessName={qr.businessName}
         logoUrl={qr.logoUrl}
-        googleMapsReviewUrl={qr.googleMapsReviewUrl || qr.googleMapsUrl}
-        googleMapsUrl={qr.googleMapsUrl}
+        googleMapsReviewUrl={targetMapsUrl}
+        googleMapsUrl={targetMapsUrl}
         wifiEnabled={true}
         wifiName={qr.wifiName || 'Wi-Fi Tamu'}
         wifiPassword={qr.wifiPassword || ''}

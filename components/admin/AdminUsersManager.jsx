@@ -21,6 +21,7 @@ import { deleteUserAction, resetUserPinAction } from '@/lib/actions/admin-action
 export default function AdminUsersManager({
   initialUsers = [],
   currentAdminEmail = '',
+  currentAdminWa = '',
 }) {
   const router = useRouter();
 
@@ -38,6 +39,7 @@ export default function AdminUsersManager({
     if (!term) return true;
     return (
       u.email?.toLowerCase().includes(term) ||
+      u.whatsappNumber?.includes(term) ||
       u.name?.toLowerCase().includes(term) ||
       u.role?.toLowerCase().includes(term) ||
       u.businessName?.toLowerCase().includes(term)
@@ -56,7 +58,7 @@ export default function AdminUsersManager({
     try {
       setIsDeleting(true);
       const targetId = userToDelete.id;
-      const targetEmail = userToDelete.email;
+      const targetIdentifier = userToDelete.whatsappNumber ? `+${userToDelete.whatsappNumber}` : (userToDelete.email || userToDelete.name);
 
       const res = await deleteUserAction(targetId);
       setIsDeleting(false);
@@ -66,7 +68,7 @@ export default function AdminUsersManager({
         setUsers((prev) => prev.filter((u) => u.id !== targetId));
         setNotification({
           type: 'success',
-          message: `Pengguna ${targetEmail} berhasil dihapus dari sistem.`,
+          message: `Pengguna ${targetIdentifier} berhasil dihapus dari sistem.`,
         });
         router.refresh();
       } else {
@@ -88,9 +90,10 @@ export default function AdminUsersManager({
       setIsResetting(false);
       
       if (res?.success) {
+        const targetLabel = userToReset.whatsappNumber ? `+${userToReset.whatsappNumber}` : (userToReset.email || userToReset.name);
         setNotification({
           type: 'success',
-          message: `PIN berhasil direset ke "123456" untuk ${userToReset.email || userToReset.name}. Akun juga telah di-unlock.`,
+          message: `PIN berhasil direset ke "123456" untuk ${targetLabel}. Akun juga telah di-unlock.`,
         });
       } else {
         alert(res?.error || 'Gagal mereset PIN');
@@ -196,19 +199,20 @@ export default function AdminUsersManager({
               ) : (
                 filteredUsers.map((u) => {
                   const isAdmin =
-                    u.email === currentAdminEmail ||
-                    u.email === 'distrapness@gmail.com';
+                    u.role === 'admin' ||
+                    (currentAdminEmail && u.email && u.email === currentAdminEmail) ||
+                    (currentAdminWa && u.whatsappNumber && u.whatsappNumber === currentAdminWa);
 
                   return (
                     <tr key={u.id} className="hover:bg-slate-50/60 transition-colors">
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center shrink-0">
-                            {u.name ? u.name.charAt(0).toUpperCase() : u.email.charAt(0).toUpperCase()}
+                            {u.name ? u.name.charAt(0).toUpperCase() : (u.whatsappNumber ? 'WA' : (u.email || 'U')).charAt(0).toUpperCase()}
                           </div>
                           <div>
-                            <div className="font-bold text-slate-900">{u.name || '-'}</div>
-                            <div className="text-[11px] text-slate-400 font-mono">{u.email}</div>
+                            <div className="font-bold text-slate-900">{u.name || (u.whatsappNumber ? `+${u.whatsappNumber}` : '-')}</div>
+                            <div className="text-[11px] text-slate-400 font-mono">{u.email || (u.whatsappNumber ? `+${u.whatsappNumber}` : '-')}</div>
                           </div>
                         </div>
                       </td>
@@ -298,19 +302,20 @@ export default function AdminUsersManager({
           ) : (
             filteredUsers.map((u) => {
               const isAdmin =
-                u.email === currentAdminEmail ||
-                u.email === 'distrapness@gmail.com';
+                u.role === 'admin' ||
+                (currentAdminEmail && u.email && u.email === currentAdminEmail) ||
+                (currentAdminWa && u.whatsappNumber && u.whatsappNumber === currentAdminWa);
 
               return (
                 <div key={u.id} className="p-3.5 sm:p-4 hover:bg-slate-50/60 transition-colors flex flex-col gap-3">
                   <div className="flex items-start justify-between gap-2.5">
                     <div className="flex items-center gap-2.5 min-w-0 flex-1">
                       <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs sm:text-sm flex items-center justify-center shrink-0">
-                        {u.name ? u.name.charAt(0).toUpperCase() : u.email.charAt(0).toUpperCase()}
+                        {u.name ? u.name.charAt(0).toUpperCase() : (u.whatsappNumber ? 'WA' : (u.email || 'U')).charAt(0).toUpperCase()}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="font-bold text-slate-900 text-xs sm:text-sm leading-tight truncate">{u.name || '-'}</div>
-                        <div className="text-[11px] text-slate-400 font-mono mt-0.5 truncate">{u.email}</div>
+                        <div className="font-bold text-slate-900 text-xs sm:text-sm leading-tight truncate">{u.name || (u.whatsappNumber ? `+${u.whatsappNumber}` : '-')}</div>
+                        <div className="text-[11px] text-slate-400 font-mono mt-0.5 truncate">{u.email || (u.whatsappNumber ? `+${u.whatsappNumber}` : '-')}</div>
                       </div>
                     </div>
                     <div className="shrink-0">
@@ -404,7 +409,7 @@ export default function AdminUsersManager({
               <AlertTriangle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
               <div>
                 <p className="font-bold text-sm text-rose-900">
-                  Hapus Pengguna {userToDelete.email}?
+                  Hapus Pengguna {userToDelete.whatsappNumber ? `+${userToDelete.whatsappNumber}` : (userToDelete.email || userToDelete.name)}?
                 </p>
                 <p className="mt-1 leading-relaxed text-rose-700">
                   Akun pengguna ini akan dihapus secara permanen beserta data bisnis yang dimilikinya. Seluruh perangkat QR yang terhubung akan dilepas dan dikembalikan ke status BLANK agar dapat digunakan kembali.

@@ -9,7 +9,7 @@ test.describe('Customer Public Flow', () => {
   test('should display 404 for invalid code', async ({ page }) => {
     await page.goto('/q/INVALID-CODE');
     await expect(page.locator('text="Cobascan Tidak Ditemukan"')).toBeVisible();
-    await expect(page.locator('text="tidak terdaftar"')).toBeVisible();
+    await expect(page.getByText('tidak terdaftar')).toBeVisible();
     // Verify no stack trace is visible
     await expect(page.locator('text="Exception"')).not.toBeVisible();
     await expect(page.locator('text="SQL"')).not.toBeVisible();
@@ -35,7 +35,7 @@ test.describe('Customer Public Flow', () => {
     await expect(page).toHaveURL(/maps\.app\.goo\.gl/, { timeout: 10000 });
   });
 
-  test('should show VisitorScanExperience if wifi is enabled and verify wifi data freshness', async ({ page, context }) => {
+  test('should show VisitorScanExperience if wifi is enabled and verify wifi data freshness', async ({ page }) => {
     const qr = await seedQr({ 
       code: 'CS-WIFI-TEST', 
       status: 'active',
@@ -44,14 +44,28 @@ test.describe('Customer Public Flow', () => {
     });
     
     await page.goto(`/q/${qr.code}/wifi`);
+    await expect(page.locator('text="Bagaimana Pengalaman Anda?"')).toBeVisible();
+
+    // Click 5-star rating to trigger review step
+    const [popup1] = await Promise.all([
+      page.waitForEvent('popup').catch(() => null),
+      page.click('button[title="5 Bintang"]'),
+    ]);
+    if (popup1) await popup1.close().catch(() => {});
+
+    // Click return confirmation button
+    await page.click('button:has-text("Saya Sudah Memberi Ulasan")');
+
+    // Wait for the verification to complete and reveal button to appear
+    const revealBtn = page.locator('button:has-text("Lihat Nama & Password Wi-Fi")');
+    await expect(revealBtn).toBeVisible({ timeout: 5000 });
+    await revealBtn.click();
+
+    // Verify WiFi SSID and initial password are now revealed
     await expect(page.locator('text="Wi-Fi Tamu"')).toBeVisible();
-    
-    // Check password
-    await page.click('button:has-text("Lihat Password")');
-    // Note: the reveal-wifi endpoint is called here
     await expect(page.locator('text="TEST_PASSWORD"')).toBeVisible();
 
-    // Now let's simulate the business changing the password in the DB
+    // Simulate the business changing the password in the DB
     await page.request.post('/api/test-db', {
       data: {
         action: 'insertQr',
@@ -64,10 +78,22 @@ test.describe('Customer Public Flow', () => {
       }
     });
     
-    // Customer refreshes
+    // Customer refreshes and triggers reveal again
     await page.reload();
+    await expect(page.locator('text="Bagaimana Pengalaman Anda?"')).toBeVisible();
+
+    const [popup2] = await Promise.all([
+      page.waitForEvent('popup').catch(() => null),
+      page.click('button[title="5 Bintang"]'),
+    ]);
+    if (popup2) await popup2.close().catch(() => {});
+
+    await page.click('button:has-text("Saya Sudah Memberi Ulasan")');
+    const revealBtn2 = page.locator('button:has-text("Lihat Nama & Password Wi-Fi")');
+    await expect(revealBtn2).toBeVisible({ timeout: 5000 });
+    await revealBtn2.click();
+
     await expect(page.locator('text="Wi-Fi Tamu"')).toBeVisible();
-    await page.click('button:has-text("Lihat Password")');
     await expect(page.locator('text="NEW_PASSWORD"')).toBeVisible();
   });
 });

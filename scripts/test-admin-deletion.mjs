@@ -20,16 +20,23 @@ async function runTests() {
   await ensureDatabaseInitialized();
 
   // Setup Admin user
-  const adminEmail = 'distrapness@gmail.com';
-  const [adminUser] = await db
-    .insert(users)
-    .values({
-      email: adminEmail,
-      name: 'Super Admin',
-      role: 'admin',
-    })
-    .onConflictDoNothing()
-    .returning();
+  const adminWa = '6285888159265';
+  let [adminUser] = await db
+    .select()
+    .from(users)
+    .where(eq(users.whatsappNumber, adminWa));
+
+  if (!adminUser) {
+    [adminUser] = await db
+      .insert(users)
+      .values({
+        whatsappNumber: adminWa,
+        name: 'Super Admin',
+        role: 'admin',
+      })
+      .onConflictDoNothing()
+      .returning();
+  }
 
   // ========================================================
   // TEST 1: DELETE SINGLE QR CODE
@@ -128,15 +135,15 @@ async function runTests() {
   // ========================================================
   console.log('--- Test 4: Admin Delete User & Administrator Protection ---');
   // Attempt to delete admin user -> MUST BE BLOCKED
-  const [adminRecord] = await db.select().from(users).where(eq(users.email, adminEmail));
+  const [adminRecord] = await db.select().from(users).where(eq(users.whatsappNumber, adminWa));
   if (adminRecord) {
-    const adminDelAttempt = await deleteUserAdmin(adminRecord.id, adminEmail);
+    const adminDelAttempt = await deleteUserAdmin(adminRecord.id, adminUser?.id || adminRecord.id);
     assert(adminDelAttempt.success === false, 'Deleting admin account must be blocked');
     console.log('Admin deletion protection verified: ' + adminDelAttempt.error);
   }
 
   // Delete customer user -> MUST SUCCEED
-  const custDelRes = await deleteUserAdmin(custUser.id, adminEmail);
+  const custDelRes = await deleteUserAdmin(custUser.id, adminRecord?.id || adminUser?.id);
   assert(custDelRes.success === true, 'Customer user deletion must succeed');
 
   const checkCust = await db.select().from(users).where(eq(users.id, custUser.id));

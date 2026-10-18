@@ -17,6 +17,8 @@ export default async function CustomerDashboardPage() {
   await ensureDatabaseInitialized();
   const session = await getCurrentSession();
 
+  console.log('[DEBUG DASHBOARD PAGE]', { hasSession: !!session, hasUser: !!session?.user, role: session?.role });
+
   if (session?.role === 'admin') {
     redirect('/admin');
   }

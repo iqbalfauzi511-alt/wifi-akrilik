@@ -2,20 +2,19 @@ import { NextResponse } from 'next/server';
 import { updateSession } from '@/lib/supabase/middleware';
 import { verifySessionPayloadEdge } from '@/lib/auth/token-edge';
 
-const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'distrapness@gmail.com')
-  .split(',')
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(',') : [])
   .map((e) => e.trim().toLowerCase())
   .filter(Boolean);
 
-const ADMIN_WA = (process.env.ADMIN_WA || '6285888159265').trim();
+const ADMIN_WA = (process.env.ADMIN_WA || '').trim();
 
 function isUserAdmin(email) {
-  if (!email) return false;
+  if (!email || ADMIN_EMAILS.length === 0) return false;
   return ADMIN_EMAILS.includes(email.trim().toLowerCase());
 }
 
 function isUserAdminWa(wa) {
-  if (!wa) return false;
+  if (!wa || !ADMIN_WA) return false;
   return wa.trim() === ADMIN_WA;
 }
 
@@ -49,6 +48,8 @@ export async function middleware(request) {
   if (devCookie) {
     verifiedSession = await verifySessionPayloadEdge(devCookie);
   }
+
+  console.log('[DEBUG MIDDLEWARE]', pathname, { devCookie: !!devCookie, verifiedSession: !!verifiedSession });
 
   const isAuthenticated = Boolean(supabaseUser || verifiedSession);
   let userRole = 'customer';

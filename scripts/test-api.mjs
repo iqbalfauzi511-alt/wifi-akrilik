@@ -1,7 +1,7 @@
-import { validateInstagramUrl } from '../lib/utils/validation.js';
+import { validateGoogleMapsUrl } from '../lib/utils/validation.js';
 
 async function runTests() {
-  console.log('🚀 Running Complete HTTP Integration & Instagram URL Verification Tests...\n');
+  console.log('🚀 Running Complete HTTP Integration & Google Maps URL Verification Tests...\n');
   const baseUrl = 'http://localhost:3000';
   let passed = 0;
   let failed = 0;
@@ -16,40 +16,34 @@ async function runTests() {
     }
   }
 
-  // Test 1: Instagram URL Validation Unit Tests
-  console.log('1️⃣ Testing Server-Side Instagram URL Validation Rules:');
+  // Test 1: Google Maps URL Validation Unit Tests
+  console.log('1️⃣ Testing Server-Side Google Maps URL Validation Rules:');
   
   // Valid URLs
-  const v1 = validateInstagramUrl('https://instagram.com/kopisenja');
-  assert(v1.isValid && v1.normalized.startsWith('https://'), 'Accepts https://instagram.com/kopisenja');
+  const v1 = validateGoogleMapsUrl('https://maps.app.goo.gl/kopisenja');
+  assert(v1.isValid && v1.normalized.startsWith('https://'), 'Accepts https://maps.app.goo.gl/kopisenja');
 
-  const v2 = validateInstagramUrl('https://www.instagram.com/kopisenja/');
-  assert(v2.isValid && v2.normalized.startsWith('https://'), 'Accepts https://www.instagram.com/kopisenja/');
+  const v2 = validateGoogleMapsUrl('https://maps.google.com/?cid=123');
+  assert(v2.isValid && v2.normalized.startsWith('https://'), 'Accepts https://maps.google.com/?cid=123');
 
-  const v3 = validateInstagramUrl('http://instagram.com/kopisenja');
-  assert(v3.isValid && v3.normalized.startsWith('https://'), 'Accepts and normalizes http:// to https://');
-
-  const v4 = validateInstagramUrl('http://www.instagram.com/kopisenja/');
-  assert(v4.isValid && v4.normalized.startsWith('https://'), 'Accepts and normalizes http://www.instagram.com/');
+  const v3 = validateGoogleMapsUrl('http://maps.google.com/?cid=123');
+  assert(v3.isValid && v3.normalized.startsWith('http://'), 'Accepts http://maps.google.com/?cid=123');
 
   // Invalid URLs (Must be rejected)
-  const inv1 = validateInstagramUrl('kopisenja');
+  const inv1 = validateGoogleMapsUrl('kopisenja');
   assert(!inv1.isValid, 'Rejects plain username "kopisenja"');
 
-  const inv2 = validateInstagramUrl('@kopisenja');
+  const inv2 = validateGoogleMapsUrl('@kopisenja');
   assert(!inv2.isValid, 'Rejects handle with @ "@kopisenja"');
 
-  const inv3 = validateInstagramUrl('instagram.com/kopisenja');
-  assert(!inv3.isValid, 'Rejects URL without protocol "instagram.com/kopisenja"');
+  const inv3 = validateGoogleMapsUrl('maps.app.goo.gl/kopisenja');
+  assert(!inv3.isValid, 'Rejects URL without protocol "maps.app.goo.gl/kopisenja"');
 
-  const inv4 = validateInstagramUrl('https://facebook.com/kopisenja');
-  assert(!inv4.isValid, 'Rejects facebook URL');
-
-  const inv5 = validateInstagramUrl('https://tiktok.com/@kopisenja');
-  assert(!inv5.isValid, 'Rejects tiktok URL');
+  const inv4 = validateGoogleMapsUrl('https://facebook.com/kopisenja');
+  assert(!inv4.isValid, 'Rejects non-Google URL');
 
   assert(
-    inv1.error.includes('Link Instagram tidak valid'),
+    inv1.error.includes('Link Review Google Maps tidak valid'),
     'Returns exact required error message on invalid input'
   );
   console.log('');
@@ -96,9 +90,6 @@ async function runTests() {
   const resLogin = await fetch(`${baseUrl}/login`);
   const htmlLogin = await resLogin.text();
   assert(resLogin.status === 200, 'Login page returns HTTP 200');
-  assert(htmlLogin.includes('Continue with Google'), 'Includes Google Sign-In button');
-  assert(htmlLogin.includes('admin@smartwifi.com'), 'Includes instant test login for Admin');
-  assert(htmlLogin.includes('ahmad@kopisenja.com'), 'Includes instant test login for Customer');
   console.log('');
 
   // Test 6: Route Protection
@@ -148,8 +139,8 @@ async function runTests() {
   console.log('9️⃣ Testing Admin Portal (/admin) with Admin Session:');
   const adminSessionCookie = encodeURIComponent(
     JSON.stringify({
-      email: 'admin@smartwifi.com',
-      name: 'Admin Utama',
+      whatsapp: '6285888159265',
+      name: 'Super Admin',
       role: 'admin',
     })
   );

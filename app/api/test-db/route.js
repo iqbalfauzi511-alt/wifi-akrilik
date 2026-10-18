@@ -40,13 +40,38 @@ export async function POST(request) {
 
       // 3. Setup Mock Data (if needed)
       case 'seedBusiness': {
-        const { email, role = 'customer' } = payload;
-        let [user] = await db.select().from(users).where(eq(users.email, email));
-        if (!user) {
-          const res = await db.insert(users).values({ email, role }).returning();
+        const { email, whatsapp, role = 'customer' } = payload;
+        const cleanEmail = (email || '').toLowerCase().trim();
+        const name = payload.name || (email ? email.split('@')[0] : 'Test User');
+        let user = null;
+        if (whatsapp) {
+          const res = await db.select().from(users).where(eq(users.whatsappNumber, whatsapp));
+          user = res[0];
+        } else if (cleanEmail) {
+          const res = await db.select().from(users).where(eq(users.email, cleanEmail));
           user = res[0];
         }
-        return NextResponse.json({ success: true, user });
+        if (!user) {
+          const res = await db.insert(users).values({
+            email: cleanEmail || null,
+            whatsappNumber: whatsapp || null,
+            role,
+            name,
+            emailVerified: true,
+          }).returning();
+          user = res[0];
+        }
+        let [biz] = await db.select().from(businesses).where(eq(businesses.ownerId, user.id));
+        if (!biz) {
+          const bizRes = await db.insert(businesses).values({
+            ownerId: user.id,
+            businessName: `${name} Business`,
+            wifiEnabled: false,
+            googleMapsUrl: 'https://maps.app.goo.gl/dummy'
+          }).returning();
+          biz = bizRes[0];
+        }
+        return NextResponse.json({ success: true, user, business: biz });
       }
       
       // 4. Verify Scan Logs
@@ -56,10 +81,28 @@ export async function POST(request) {
         return NextResponse.json({ success: true, logs });
       }
 
-      // 5. Insert Raw QR Code
+      // 5. Insert or Update Raw QR Code
       case 'insertQr': {
         const { code, status, businessId, wifiEnabled, wifiPassword } = payload;
         
+        const existingQrs = await db.select().from(qrCodes).where(eq(qrCodes.code, code));
+        if (existingQrs.length > 0) {
+          const qr = existingQrs[0];
+          if (qr.businessId) {
+            const updateBiz = {};
+            if (wifiEnabled !== undefined) updateBiz.wifiEnabled = !!wifiEnabled;
+            if (wifiPassword !== undefined) updateBiz.wifiPassword = wifiPassword;
+            if (Object.keys(updateBiz).length > 0) {
+              await db.update(businesses).set(updateBiz).where(eq(businesses.id, qr.businessId));
+            }
+          }
+          if (status) {
+            await db.update(qrCodes).set({ status }).where(eq(qrCodes.code, code));
+          }
+          const updated = await db.select().from(qrCodes).where(eq(qrCodes.code, code));
+          return NextResponse.json({ success: true, qr: updated[0] });
+        }
+
         let targetBusinessId = businessId;
         if (!businessId && wifiEnabled !== undefined) {
            // Insert dummy business

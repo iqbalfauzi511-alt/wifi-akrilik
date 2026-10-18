@@ -19,6 +19,7 @@ export default async function AdminSettingsPage() {
     .select({
       id: users.id,
       email: users.email,
+      whatsappNumber: users.whatsappNumber,
       name: users.name,
       role: users.role,
       createdAt: users.createdAt,
@@ -56,30 +57,37 @@ export default async function AdminSettingsPage() {
           </div>
 
           <div className="space-y-3">
-            {adminUsers.map((admin) => (
-              <div
-                key={admin.id}
-                className="p-3 sm:p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-2.5"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-8 h-8 rounded-full bg-[#1A73E8] text-white flex items-center justify-center font-bold text-xs shrink-0">
-                    {admin.email?.substring(0, 1).toUpperCase()}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-bold text-slate-900 text-xs truncate">{admin.email}</div>
-                    <div className="text-[11px] text-slate-400 truncate">{admin.name || 'Administrator'}</div>
-                  </div>
-                </div>
+            {adminUsers.map((admin) => {
+              const displayIdentifier = admin.whatsappNumber
+                ? `+${admin.whatsappNumber}`
+                : admin.email || 'Super Admin';
+              const initial = (admin.whatsappNumber ? 'WA' : (admin.email || admin.name || 'A')).substring(0, 1).toUpperCase();
 
-                <span className="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-[#1A73E8] border border-blue-200">
-                  Super Admin
-                </span>
-              </div>
-            ))}
+              return (
+                <div
+                  key={admin.id}
+                  className="p-3 sm:p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-2.5"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-8 h-8 rounded-full bg-[#1A73E8] text-white flex items-center justify-center font-bold text-xs shrink-0">
+                      {initial}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="font-bold text-slate-900 text-xs truncate">{displayIdentifier}</div>
+                      <div className="text-[11px] text-slate-400 truncate">{admin.name || 'Administrator'}</div>
+                    </div>
+                  </div>
+
+                  <span className="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-[#1A73E8] border border-blue-200">
+                    Super Admin
+                  </span>
+                </div>
+              );
+            })}
           </div>
 
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-600 leading-relaxed">
-            💡 <strong>Keamanan:</strong> Akun Admin Cobascan ditentukan berdasarkan whitelist email terenkripsi untuk mencegah eskalasi hak akses yang tidak sah.
+            💡 <strong>Keamanan:</strong> Akun Admin Cobascan ditentukan berdasarkan konfigurasi nomor WhatsApp superadmin yang terlindungi untuk mencegah eskalasi hak akses yang tidak sah.
           </div>
         </div>
 

@@ -176,7 +176,7 @@ export default async function VisitorQrPage({ params }) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-[#F8FAFC]">
+    <div className="min-h-[100dvh] w-full flex items-center justify-center px-3 py-6 min-[400px]:p-4 sm:p-6 bg-[#F8FAFC]">
       <VisitorScanExperience
         code={qr.code}
         businessName={qr.deviceName || qr.businessName}

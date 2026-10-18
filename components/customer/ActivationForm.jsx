@@ -552,6 +552,7 @@ export default function ActivationForm({
                       <div className="absolute left-3.5 text-slate-400 pointer-events-none"><Star className="w-4 h-4" /></div>
                       <input
                         type="url"
+                        name="googleMapsReviewUrl"
                         value={mapsUrlVal}
                         onChange={(e) => {
                           setMapsUrlVal(e.target.value);
@@ -650,11 +651,11 @@ export default function ActivationForm({
           <input type="hidden" name="targetBusinessId" value="new" />
           <input type="hidden" name="isNewBusiness" value="true" />
 
-          {!existingOwnerId && (
+          {!(existingOwnerId && businesses.length > 0) && (
             <button
               type="submit"
               disabled={isSubmitting || waCheckResult?.registered}
-              className="w-full py-3 px-4 rounded-xl bg-[#1A73E8] hover:bg-blue-600 text-white font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-60 transition-all shadow-md shadow-blue-500/20"
+              className="w-full min-h-[48px] py-3.5 px-4 rounded-xl bg-[#1A73E8] hover:bg-blue-600 text-white font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-60 transition-all shadow-md shadow-blue-500/20 cursor-pointer active:scale-98"
             >
               {isSubmitting ? (
                 <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Mengaktifkan...</>

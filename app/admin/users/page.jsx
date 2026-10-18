@@ -48,6 +48,7 @@ export default async function AdminUsersPage() {
       <AdminUsersManager
         initialUsers={allUsersWithBusiness}
         currentAdminEmail={session?.user?.email || ''}
+        currentAdminWa={session?.user?.whatsappNumber || ''}
       />
     </div>
   );

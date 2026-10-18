@@ -181,6 +181,9 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
       wifiEnabled: addDeviceWifiEnabled,
       wifiName: addDeviceWifiName,
       wifiPassword: addDeviceWifiPassword,
+      targetBusinessId: addDeviceMode === 'existing' ? (addDeviceTargetBizId || activeStore?.id) : undefined,
+      isNewBranch: addDeviceMode === 'new',
+      newBranchName: newBranchNameVal,
     });
     setAddDeviceSubmitting(false);
     if (result?.success) {

@@ -8,21 +8,23 @@ async function seed() {
   const db = getDb();
 
   // 1. Create Admin User
+  const adminWa = process.env.ADMIN_WA || '6285888159265';
   let [admin] = await db
     .select()
     .from(users)
-    .where(eq(users.email, 'admin@smartwifi.com'));
+    .where(eq(users.whatsappNumber, adminWa));
 
   if (!admin) {
     [admin] = await db
       .insert(users)
       .values({
-        email: 'admin@smartwifi.com',
-        name: 'Admin Utama',
+        whatsappNumber: adminWa,
+        name: 'Super Admin',
         role: 'admin',
+        emailVerified: true,
       })
       .returning();
-    console.log('✅ Created Admin user:', admin.email);
+    console.log('✅ Created Admin user:', admin.whatsappNumber);
   }
 
   // 2. Create Customer User (Ahmad - Kopi Senja)

@@ -14,6 +14,22 @@ test.describe('Security & Authorization', () => {
     await expect(page).toHaveURL(/\/dashboard/);
   });
 
+  test('Customer cannot access admin users management page', async ({ page, context }) => {
+    await loginAs(context, 'customer@test.com', 'customer');
+    await page.goto('/admin/users');
+    
+    // Non-admin must be redirected to /dashboard
+    await expect(page).toHaveURL(/\/dashboard/);
+  });
+
+  test('Unauthenticated user cannot access protected admin routes', async ({ page }) => {
+    await page.goto('/admin');
+    await expect(page).toHaveURL(/\/login/);
+
+    await page.goto('/admin/users');
+    await expect(page).toHaveURL(/\/login/);
+  });
+
   test('Business Owner cannot access another Business Device', async ({ page, context }) => {
     // Business A context
     await loginAs(context, 'businessA@test.com');
@@ -51,13 +67,37 @@ test.describe('Security & Authorization', () => {
 
     const pageA = await contextA.newPage();
     await pageA.goto('/dashboard');
-    await expect(pageA.locator('text="userA"')).toBeVisible();
+    await expect(pageA.getByRole('heading', { name: 'userA' })).toBeVisible();
 
     const pageB = await contextB.newPage();
     await pageB.goto('/dashboard');
-    await expect(pageB.locator('text="userB"')).toBeVisible();
+    await expect(pageB.getByRole('heading', { name: 'userB' })).toBeVisible();
 
     await contextA.close();
     await contextB.close();
+  });
+
+  test('Tampered or unsigned session cookie strictly rejected from admin access', async ({ page, context }) => {
+    // Attempt 1: Raw JSON without cryptographic signature
+    await context.addCookies([
+      {
+        name: 'smartwifi_session',
+        value: JSON.stringify({ email: 'attacker@evil.com', role: 'admin' }),
+        url: 'http://localhost:3000',
+      },
+    ]);
+    await page.goto('/admin');
+    await expect(page).toHaveURL(/\/login/);
+
+    // Attempt 2: Forged signature
+    await context.addCookies([
+      {
+        name: 'smartwifi_session',
+        value: 'eyJlbWFpbCI6ImF0dGFja2VyQGV2aWwuY29tIiwicm9sZSI6ImFkbWluIn0.forgedsignature1234567890abcdef',
+        url: 'http://localhost:3000',
+      },
+    ]);
+    await page.goto('/admin');
+    await expect(page).toHaveURL(/\/login/);
   });
 });

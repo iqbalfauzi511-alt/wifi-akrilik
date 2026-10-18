@@ -22,11 +22,13 @@ export function signSessionPayload(payload) {
   }
 }
 
-export async function loginAs(context, email, role = 'customer') {
+export async function loginAs(context, identity, role = 'customer') {
+  const isWa = typeof identity === 'string' && /^\d+$/.test(identity);
   const payload = {
-    email,
-    name: email.split('@')[0],
-    role
+    role,
+    ...(isWa
+      ? { whatsapp: identity, name: 'Super Admin', email: `${identity}@admin.cobascan.local` }
+      : { email: identity, name: identity.split('@')[0] })
   };
   
   const token = signSessionPayload(payload);
@@ -35,8 +37,7 @@ export async function loginAs(context, email, role = 'customer') {
     {
       name: 'smartwifi_session',
       value: token,
-      domain: 'localhost',
-      path: '/',
+      url: 'http://localhost:3000',
     }
   ]);
   
@@ -46,7 +47,12 @@ export async function loginAs(context, email, role = 'customer') {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       action: 'seedBusiness',
-      payload: { email, role }
+      payload: { 
+        email: isWa ? null : identity, 
+        whatsapp: isWa ? identity : null,
+        role, 
+        name: payload.name 
+      }
     })
   });
   const data = await res.json();
@@ -65,7 +71,14 @@ export async function seedQr(payload) {
       payload
     })
   });
-  const data = await res.json();
+  const text = await res.text();
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch (err) {
+    console.error('seedQr failed. Status:', res.status, 'Body:', text);
+    throw new Error(`seedQr failed (${res.status}): ${text.slice(0, 300)}`);
+  }
   if (data.error) {
     throw new Error('Test DB Error: ' + data.error);
   }

@@ -69,6 +69,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
   const [isGenerateOpen, setIsGenerateOpen] = useState(false);
   const [generateQuantity, setGenerateQuantity] = useState('5');
   const [generateMode, setGenerateMode] = useState('batch'); // 'batch' | 'individual'
+  const [generateError, setGenerateError] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const [isDownloadingZip, setIsDownloadingZip] = useState(false);
@@ -127,15 +128,16 @@ export default function AdminQrManager({ initialQrs = [] }) {
 
     const qtyNum = Number(generateQuantity);
     if (!generateQuantity || isNaN(qtyNum) || !Number.isInteger(qtyNum) || qtyNum < 1) {
-      alert('Jumlah QR harus berupa angka bulat minimal 1.');
+      setGenerateError('Jumlah QR harus berupa angka bulat minimal 1.');
       return;
     }
     if (qtyNum > 1000) {
-      alert('Maksimum QR yang dapat di-generate sekaligus adalah 1.000 unit.');
+      setGenerateError('Maksimum QR yang dapat di-generate sekaligus adalah 1.000 unit.');
       return;
     }
 
     setIsGenerating(true);
+    setGenerateError('');
     setNotification(null);
     const formData = new FormData();
     formData.set('quantity', String(qtyNum));
@@ -149,6 +151,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
         setQrList((prev) => [...result.newQrs, ...prev]);
       }
       setIsGenerateOpen(false);
+      setGenerateError('');
       const successMsg =
         generateMode === 'individual'
           ? `Berhasil membuat ${result.count || generateQuantity} QR Code Satuan (Aktivasi Mandiri)!`
@@ -157,14 +160,13 @@ export default function AdminQrManager({ initialQrs = [] }) {
         type: 'success',
         message: successMsg,
       });
-      router.refresh();
     } else {
       const errorMsg = result?.error || 'Gagal generate QR';
+      setGenerateError(errorMsg);
       setNotification({
         type: 'error',
         message: errorMsg,
       });
-      alert(errorMsg);
     }
   };
 
@@ -592,7 +594,11 @@ export default function AdminQrManager({ initialQrs = [] }) {
           <Button
             variant="primary"
             size="sm"
-            onClick={() => setIsGenerateOpen(true)}
+            onClick={() => {
+              setGenerateError('');
+              setIsGenerateOpen(true);
+            }}
+            data-testid="admin-qr-generate-button"
             className="text-xs gap-1.5"
           >
             <Plus className="w-3.5 h-3.5" />
@@ -728,7 +734,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
 
       {/* Floating Batch Action Bar when items selected */}
       {selectedIds.size > 0 && (
-        <div className="fixed bottom-[72px] left-4 right-4 lg:static lg:bottom-auto lg:left-auto lg:right-auto z-40 p-4 rounded-2xl bg-slate-900 text-white shadow-2xl lg:shadow-xl border border-slate-800 flex flex-col lg:flex-row items-center justify-between gap-3 lg:gap-4 animate-in fade-in slide-in-from-bottom-4 lg:slide-in-from-top-2 duration-200">
+        <div className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom,0px))] left-3 right-3 sm:left-4 sm:right-4 lg:static lg:bottom-auto lg:left-auto lg:right-auto z-50 p-3.5 sm:p-4 rounded-2xl bg-slate-900 text-white shadow-2xl lg:shadow-xl border border-slate-800 flex flex-col lg:flex-row items-center justify-between gap-3 lg:gap-4 animate-in fade-in slide-in-from-bottom-4 lg:slide-in-from-top-2 duration-200">
           <div className="flex items-center justify-between w-full lg:w-auto">
             <div className="flex items-center gap-2.5">
               <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-brand-500 text-white text-xs font-black">
@@ -1179,7 +1185,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
         title="Generate QR Code Baru"
         description="Pilih tipe pembuatan QR Code dengan status BLANK (siap cetak/jual)."
       >
-        <form onSubmit={handleMassGenerate} className="space-y-4">
+        <form onSubmit={handleMassGenerate} noValidate className="space-y-4">
           {/* Mode Selector */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
@@ -1238,16 +1244,24 @@ export default function AdminQrManager({ initialQrs = [] }) {
 
             <div className="relative">
               <input
+                name="quantity"
+                data-testid="admin-qr-quantity-input"
                 type="number"
                 min="1"
                 max="1000"
                 step="1"
                 required
                 value={generateQuantity}
-                onChange={(e) => setGenerateQuantity(e.target.value)}
+                onChange={(e) => {
+                  setGenerateQuantity(e.target.value);
+                  setGenerateError('');
+                }}
                 placeholder="Masukkan jumlah (misal: 1, 7, 13, 50)"
                 className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm font-semibold text-slate-900 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
               />
+              {generateError && (
+                <p className="mt-1.5 text-xs text-rose-600 font-semibold">{generateError}</p>
+              )}
             </div>
 
             {/* Quick Preset Buttons */}

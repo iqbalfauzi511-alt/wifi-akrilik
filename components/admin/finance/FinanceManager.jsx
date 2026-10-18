@@ -394,44 +394,44 @@ export default function FinanceManager({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 w-full lg:w-auto">
           <Button
             type="button"
             onClick={() => openQuickModal('income')}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2 h-auto shadow-xs"
+            className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 h-auto shadow-xs justify-center"
           >
-            <PlusCircle className="w-4 h-4 mr-1.5" />
-            + Catat Pemasukan
+            <PlusCircle className="w-4 h-4 mr-1.5 shrink-0" />
+            + Pemasukan
           </Button>
 
           <Button
             type="button"
             onClick={() => openQuickModal('expense')}
             variant="outline"
-            className="border-rose-300 text-rose-700 hover:bg-rose-50 font-bold text-xs py-2 h-auto shadow-xs"
+            className="w-full sm:w-auto border-rose-300 text-rose-700 hover:bg-rose-50 font-bold text-xs py-2.5 h-auto shadow-xs justify-center"
           >
-            <MinusCircle className="w-4 h-4 mr-1.5 text-rose-600" />
-            - Catat Pengeluaran
+            <MinusCircle className="w-4 h-4 mr-1.5 text-rose-600 shrink-0" />
+            - Pengeluaran
           </Button>
 
           <Button
             type="button"
             onClick={() => setIsJournalModalOpen(true)}
             variant="ghost"
-            className="text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-bold text-xs py-2 h-auto"
+            className="w-full sm:w-auto text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-bold text-xs py-2.5 h-auto justify-center"
             title="Hanya jika butuh penyesuaian akuntansi non-kas (opsional)"
           >
-            <FileText className="w-4 h-4 mr-1.5 text-slate-400" />
-            + Penyesuaian Manual (Opsional)
+            <FileText className="w-4 h-4 mr-1.5 text-slate-400 shrink-0" />
+            + Penyesuaian
           </Button>
 
           <button
             type="button"
             onClick={handleExportCSV}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-xs font-bold text-slate-700 shadow-xs transition-colors"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-xs font-bold text-slate-700 shadow-xs transition-colors cursor-pointer"
             title="Unduh laporan saat ini dalam format CSV"
           >
-            <Download className="w-4 h-4 text-slate-500" />
+            <Download className="w-4 h-4 text-slate-500 shrink-0" />
             <span>Ekspor CSV</span>
           </button>
         </div>
@@ -477,139 +477,132 @@ export default function FinanceManager({
       {showCustomDateInputs && (
         <form
           onSubmit={handleApplyCustomDate}
-          className="bg-blue-50/70 border border-blue-200 rounded-2xl p-4 flex flex-wrap items-center gap-3 animate-in fade-in slide-in-from-top-2 duration-150"
+          className="bg-blue-50/70 border border-blue-200 rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3 animate-in fade-in slide-in-from-top-2 duration-150"
         >
           <span className="text-xs font-bold text-blue-900">Rentang Tanggal Khusus:</span>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-500">Dari:</span>
+            <span className="text-xs text-slate-500 w-12 sm:w-auto shrink-0">Dari:</span>
             <input
               type="date"
               value={startDateInput}
               onChange={(e) => setStartDateInput(e.target.value)}
-              className="px-3 py-1.5 rounded-xl border border-slate-300 text-xs font-semibold bg-white"
+              className="w-full sm:w-auto px-3 py-1.5 rounded-xl border border-slate-300 text-xs font-semibold bg-white"
               required
             />
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-500">Sampai:</span>
+            <span className="text-xs text-slate-500 w-12 sm:w-auto shrink-0">Sampai:</span>
             <input
               type="date"
               value={endDateInput}
               onChange={(e) => setEndDateInput(e.target.value)}
-              className="px-3 py-1.5 rounded-xl border border-slate-300 text-xs font-semibold bg-white"
+              className="w-full sm:w-auto px-3 py-1.5 rounded-xl border border-slate-300 text-xs font-semibold bg-white"
               required
             />
           </div>
-          <Button type="submit" size="sm" className="bg-[#1A73E8] hover:bg-blue-700 text-white font-bold py-1.5 h-auto">
+          <Button type="submit" size="sm" className="bg-[#1A73E8] hover:bg-blue-700 text-white font-bold py-2 sm:py-1.5 h-auto justify-center">
             Terapkan Filter
           </Button>
         </form>
       )}
 
       {/* 3. Executive KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         {/* Pemasukan */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs">
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-3.5 sm:p-5 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">
               Total Pemasukan
             </span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center">
-              <TrendingUp className="w-4 h-4" />
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0">
+              <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
-          <div className="mt-2.5">
-            <div className="text-2xl font-black text-emerald-600 tracking-tight">
+          <div className="mt-2 sm:mt-2.5">
+            <div className="text-base sm:text-2xl font-black text-emerald-600 tracking-tight truncate">
               {formatRupiah(initialSummary.totalIncome || 0)}
             </div>
-            <p className="text-[11px] text-slate-400 mt-0.5">Penjualan akrilik, setup &amp; SaaS</p>
+            <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate hidden sm:block">Penjualan akrilik, setup &amp; SaaS</p>
           </div>
         </div>
 
         {/* Pengeluaran */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs">
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-3.5 sm:p-5 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">
               Total Pengeluaran
             </span>
-            <div className="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center">
-              <TrendingDown className="w-4 h-4" />
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center shrink-0">
+              <TrendingDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
-          <div className="mt-2.5">
-            <div className="text-2xl font-black text-rose-600 tracking-tight">
+          <div className="mt-2 sm:mt-2.5">
+            <div className="text-base sm:text-2xl font-black text-rose-600 tracking-tight truncate">
               {formatRupiah(initialSummary.totalExpense || 0)}
             </div>
-            <p className="text-[11px] text-slate-400 mt-0.5">HPP akrilik, NFC &amp; operasional</p>
+            <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate hidden sm:block">HPP akrilik, NFC &amp; operasional</p>
           </div>
         </div>
 
         {/* Laba Bersih */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs">
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-3.5 sm:p-5 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-              Laba Bersih (Net Profit)
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              Laba Bersih
             </span>
             <div
-              className={`w-8 h-8 rounded-xl flex items-center justify-center border ${
+              className={`w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center border shrink-0 ${
                 (initialSummary.netProfit || 0) >= 0
                   ? 'bg-blue-50 text-[#1A73E8] border-blue-100'
                   : 'bg-amber-50 text-amber-600 border-amber-100'
               }`}
             >
-              <DollarSign className="w-4 h-4" />
+              <DollarSign className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
-          <div className="mt-2.5 flex items-baseline justify-between">
-            <div>
-              <div
-                className={`text-2xl font-black tracking-tight ${
-                  (initialSummary.netProfit || 0) >= 0 ? 'text-[#1A73E8]' : 'text-amber-600'
-                }`}
-              >
-                {formatRupiah(initialSummary.netProfit || 0)}
-              </div>
-              <p className="text-[11px] text-slate-400 mt-0.5">
-                {(initialSummary.netProfit || 0) >= 0 ? 'Surplus usaha' : 'Defisit usaha'}
-              </p>
+          <div className="mt-2 sm:mt-2.5">
+            <div
+              className={`text-base sm:text-2xl font-black tracking-tight truncate ${
+                (initialSummary.netProfit || 0) >= 0 ? 'text-[#1A73E8]' : 'text-amber-600'
+              }`}
+            >
+              {formatRupiah(initialSummary.netProfit || 0)}
             </div>
-            {initialSummary.totalIncome > 0 && (
-              <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 text-[#1A73E8]">
-                {initialSummary.marginPercentage}% margin
-              </span>
-            )}
+            <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate">
+              {(initialSummary.netProfit || 0) >= 0 ? 'Surplus usaha' : 'Defisit usaha'}
+            </p>
           </div>
         </div>
 
         {/* Saldo Kas & Status Neraca */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs">
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-3.5 sm:p-5 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-              Saldo Kas &amp; Status Neraca
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500 truncate mr-1">
+              Saldo Kas
             </span>
             <div
-              className={`w-8 h-8 rounded-xl flex items-center justify-center border ${
+              className={`w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center border shrink-0 ${
                 initialTrialBalance.isBalanced
                   ? 'bg-emerald-50 text-emerald-600 border-emerald-100'
                   : 'bg-rose-50 text-rose-600 border-rose-100'
               }`}
             >
-              <Scale className="w-4 h-4" />
+              <Scale className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
-          <div className="mt-2.5">
-            <div className="text-xl font-black text-slate-900 tracking-tight">
+          <div className="mt-2 sm:mt-2.5">
+            <div className="text-base sm:text-xl font-black text-slate-900 tracking-tight truncate">
               {formatRupiah(initialCashFlow.endingCashBalance || 0)}
             </div>
-            <div className="flex items-center gap-1.5 mt-1">
+            <div className="flex items-center gap-1 mt-0.5 sm:mt-1 truncate">
               {initialTrialBalance.isBalanced ? (
-                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
+                <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-emerald-600 truncate">
+                  <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
                   Neraca Seimbang
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-rose-600">
-                  <AlertCircle className="w-3.5 h-3.5" />
+                <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-rose-600 truncate">
+                  <AlertCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
                   Selisih: {formatRupiah(initialTrialBalance.difference || 0)}
                 </span>
               )}
@@ -619,15 +612,15 @@ export default function FinanceManager({
       </div>
 
       {/* 4. Tab Navigation Switcher */}
-      <div className="border-b border-slate-200">
-        <nav className="flex space-x-2 overflow-x-auto pb-px" aria-label="Tabs">
+      <div className="border-b border-slate-200 -mx-4 sm:mx-0 px-4 sm:px-0">
+        <nav className="flex space-x-1 sm:space-x-2 overflow-x-auto pb-px scroll-smooth" aria-label="Tabs">
           {[
-            { id: 'cashflow', name: 'Pembukuan Kas', icon: Receipt, count: filteredCashflow.length },
-            { id: 'journal', name: 'Jurnal Umum (Otomatis)', icon: BookOpen, count: initialJournals.length },
-            { id: 'ledger', name: 'Buku Besar', icon: Library },
-            { id: 'trial_balance', name: 'Neraca Saldo', icon: Scale },
-            { id: 'income_statement', name: 'Laba Rugi', icon: LineChart },
-            { id: 'cashflow_statement', name: 'Laporan Arus Kas', icon: Waves },
+            { id: 'cashflow', name: 'Pembukuan Kas', shortName: 'Kas', icon: Receipt, count: filteredCashflow.length },
+            { id: 'journal', name: 'Jurnal Umum (Otomatis)', shortName: 'Jurnal', icon: BookOpen, count: initialJournals.length },
+            { id: 'ledger', name: 'Buku Besar', shortName: 'Buku Besar', icon: Library },
+            { id: 'trial_balance', name: 'Neraca Saldo', shortName: 'Neraca', icon: Scale },
+            { id: 'income_statement', name: 'Laba Rugi', shortName: 'Laba Rugi', icon: LineChart },
+            { id: 'cashflow_statement', name: 'Laporan Arus Kas', shortName: 'Arus Kas', icon: Waves },
           ].map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -636,17 +629,18 @@ export default function FinanceManager({
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 py-3 px-4 border-b-2 font-bold text-xs sm:text-sm whitespace-nowrap transition-all ${
+                className={`flex items-center gap-1.5 sm:gap-2 py-2.5 sm:py-3 px-2.5 sm:px-4 border-b-2 font-bold text-xs sm:text-sm whitespace-nowrap transition-all shrink-0 min-h-[44px] ${
                   isActive
                     ? 'border-[#1A73E8] text-[#1A73E8] bg-blue-50/40 rounded-t-xl'
                     : 'border-transparent text-slate-500 hover:text-slate-900 hover:border-slate-300'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-[#1A73E8]' : 'text-slate-400'}`} />
-                <span>{tab.name}</span>
+                <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${isActive ? 'text-[#1A73E8]' : 'text-slate-400'}`} />
+                <span className="sm:hidden">{tab.shortName}</span>
+                <span className="hidden sm:inline">{tab.name}</span>
                 {typeof tab.count === 'number' && (
                   <span
-                    className={`ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-extrabold ${
+                    className={`ml-0.5 sm:ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-extrabold ${
                       isActive ? 'bg-blue-100 text-[#1A73E8]' : 'bg-slate-100 text-slate-500'
                     }`}
                   >
@@ -719,15 +713,93 @@ export default function FinanceManager({
               </span>
             </div>
 
-            <div className="overflow-x-auto">
-              {filteredCashflow.length === 0 ? (
-                <div className="py-16 text-center">
-                  <Receipt className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                  <h3 className="text-sm font-bold text-slate-800">Tidak ada transaksi kas</h3>
-                  <p className="text-xs text-slate-500 mt-1">Coba sesuaikan filter periode atau catat transaksi baru.</p>
+            {filteredCashflow.length === 0 ? (
+              <div className="py-16 text-center">
+                <Receipt className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                <h3 className="text-sm font-bold text-slate-800">Tidak ada transaksi kas</h3>
+                <p className="text-xs text-slate-500 mt-1">Coba sesuaikan filter periode atau catat transaksi baru.</p>
+              </div>
+            ) : (
+              <>
+                {/* Mobile Card List (< md) */}
+                <div className="md:hidden divide-y divide-slate-100">
+                  {filteredCashflow.map((tx) => {
+                    const isIncome = tx.type === 'income';
+                    return (
+                      <div key={tx.id} className="p-4 space-y-2.5 hover:bg-slate-50/70 transition-colors">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span
+                              className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                                isIncome ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+                              }`}
+                            >
+                              {isIncome ? 'Masuk' : 'Keluar'}
+                            </span>
+                            <span className="font-semibold text-slate-800 text-xs capitalize">
+                              {tx.category.replace(/_/g, ' ')}
+                            </span>
+                            <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-blue-700 bg-blue-50 border border-blue-200/60 px-1.5 py-0.5 rounded">
+                              <Sparkles className="w-2.5 h-2.5 text-blue-600" />
+                              Terjurnal
+                            </span>
+                          </div>
+                          <span className={`font-bold font-mono text-sm shrink-0 ${isIncome ? 'text-emerald-600' : 'text-rose-600'}`}>
+                            {isIncome ? '+' : '-'} {formatRupiah(tx.amount)}
+                          </span>
+                        </div>
+
+                        <div className="text-xs text-slate-700 font-medium">
+                          {tx.description || '-'}
+                        </div>
+
+                        <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+                          <div className="flex items-center gap-2">
+                            <span>{formatDate(tx.transactionDate)}</span>
+                            {tx.referenceNumber && (
+                              <span className="font-mono">Ref: {tx.referenceNumber}</span>
+                            )}
+                          </div>
+                          <div>
+                            {deleteConfirmId === tx.id ? (
+                              <div className="flex items-center gap-1.5">
+                                <button
+                                  type="button"
+                                  onClick={() => handleDelete(tx.id)}
+                                  disabled={deletingId === tx.id || isPending}
+                                  className="px-2.5 py-1 rounded-lg bg-rose-600 text-white text-[11px] font-bold disabled:opacity-50 min-h-[32px]"
+                                >
+                                  {deletingId === tx.id ? 'Hapus...' : 'Hapus'}
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => setDeleteConfirmId(null)}
+                                  className="px-2.5 py-1 rounded-lg bg-slate-200 text-slate-700 text-[11px] font-semibold min-h-[32px]"
+                                >
+                                  Batal
+                                </button>
+                              </div>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => setDeleteConfirmId(tx.id)}
+                                className="p-2 -mr-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 min-w-[36px] min-h-[36px] flex items-center justify-center transition-colors"
+                                title="Hapus Transaksi"
+                                aria-label="Hapus Transaksi"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              ) : (
-                <table className="w-full text-left text-xs border-collapse">
+
+                {/* Desktop Table (>= md) */}
+                <div className="hidden md:block overflow-x-auto">
+                  <table className="w-full text-left text-xs border-collapse">
                   <thead>
                     <tr className="border-b border-slate-100 bg-slate-50/70 text-slate-500 font-bold uppercase tracking-wider">
                       <th className="py-3 px-4">Tanggal</th>
@@ -809,8 +881,9 @@ export default function FinanceManager({
                   })}
                 </tbody>
               </table>
-            )}
-          </div>
+            </div>
+          </>
+        )}
         </div>
       </div>
       )}
@@ -858,15 +931,83 @@ export default function FinanceManager({
               </span>
             </div>
 
-            <div className="overflow-x-auto">
+            <div>
               {initialJournals.length === 0 ? (
-                <div className="py-16 text-center">
+                <div className="py-12 sm:py-16 text-center px-4">
                   <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-3" />
                   <h3 className="text-sm font-bold text-slate-800">Belum Ada Catatan Jurnal</h3>
-                  <p className="text-xs text-slate-500 mt-1">Setiap kali Anda mencatat pemasukan atau pengeluaran kas, sistem otomatis membuat jurnal berpasangan di sini.</p>
+                  <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">Setiap kali Anda mencatat pemasukan atau pengeluaran kas, sistem otomatis membuat jurnal berpasangan di sini.</p>
                 </div>
               ) : (
-                <table className="w-full text-left text-xs border-collapse">
+                <>
+                  {/* Mobile Cards View (< md) */}
+                  <div className="md:hidden divide-y divide-slate-100">
+                    {initialJournals.map((j) => (
+                      <div key={j.id} className="p-3.5 space-y-2.5 hover:bg-slate-50/60 transition-colors">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="font-mono text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md">
+                              {j.entryNumber}
+                            </span>
+                            {j.transactionType === 'pemasukan' && (
+                              <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-emerald-100 text-emerald-800 uppercase">
+                                Otomatis (Masuk)
+                              </span>
+                            )}
+                            {j.transactionType === 'pengeluaran' && (
+                              <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-rose-100 text-rose-800 uppercase">
+                                Otomatis (Keluar)
+                              </span>
+                            )}
+                            {j.transactionType === 'jurnal_manual' && (
+                              <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-amber-100 text-amber-800 uppercase">
+                                Manual
+                              </span>
+                            )}
+                          </div>
+                          <span className="font-mono text-[11px] text-slate-400 shrink-0">
+                            {formatDate(j.entryDate)}
+                          </span>
+                        </div>
+
+                        <div className="text-xs font-semibold text-slate-800">
+                          {j.description}
+                          {j.referenceNumber && (
+                            <span className="text-slate-400 font-mono text-[10px] ml-1.5 font-normal">
+                              Ref: {j.referenceNumber}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Items breakdown */}
+                        <div className="space-y-1.5 bg-slate-50/80 rounded-xl p-2.5 text-xs font-mono">
+                          {(j.items || []).map((it, idx) => {
+                            const isCredit = it.credit > 0;
+                            return (
+                              <div
+                                key={idx}
+                                className={`flex items-center justify-between gap-2 ${
+                                  isCredit ? 'pl-3 text-slate-600' : 'text-slate-900 font-medium'
+                                }`}
+                              >
+                                <div className="truncate">
+                                  <span className="text-slate-400 mr-1.5 text-[11px]">{it.accountCode}</span>
+                                  <span className="text-[11px] font-sans">{it.accountName}</span>
+                                </div>
+                                <span className={`shrink-0 font-bold ${isCredit ? 'text-rose-600' : 'text-emerald-700'}`}>
+                                  {isCredit ? `(Kr) ${formatRupiah(it.credit)}` : `(Db) ${formatRupiah(it.debit)}`}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Desktop Table View (>= md) */}
+                  <div className="hidden md:block overflow-x-auto">
+                    <table className="w-full text-left text-xs border-collapse">
                   <thead>
                     <tr className="border-b border-slate-200 bg-slate-100 text-slate-600 font-bold uppercase tracking-wider">
                       <th className="py-3 px-4 w-28">Tanggal</th>
@@ -937,8 +1078,10 @@ export default function FinanceManager({
                     ))}
                   </tbody>
                 </table>
-              )}
-            </div>
+              </div>
+            </>
+          )}
+        </div>
           </div>
         </div>
       )}
@@ -948,12 +1091,12 @@ export default function FinanceManager({
         <div className="space-y-4">
           {/* Account Filter */}
           <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <label className="text-xs font-bold text-slate-700">Pilih Akun Buku Besar:</label>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
+              <label className="text-xs font-bold text-slate-700 shrink-0">Pilih Akun Buku Besar:</label>
               <select
                 value={selectedLedgerAccount}
                 onChange={(e) => setSelectedLedgerAccount(e.target.value)}
-                className="px-3 py-1.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#1A73E8]"
+                className="w-full sm:w-auto px-3 py-2 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#1A73E8] bg-white min-h-[42px]"
               >
                 <option value="all">Semua Akun ({CHART_OF_ACCOUNTS.length})</option>
                 {CHART_OF_ACCOUNTS.map((acc) => (
@@ -975,40 +1118,78 @@ export default function FinanceManager({
               .map((l) => (
                 <div key={l.account.code} className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
                   {/* Account Header */}
-                  <div className="p-4 sm:p-5 border-b border-slate-200 bg-slate-50/70 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div className="flex items-center gap-3">
-                      <span className="w-10 h-10 rounded-xl bg-blue-100 text-[#1A73E8] font-mono font-black text-sm flex items-center justify-center">
+                  <div className="p-3.5 sm:p-5 border-b border-slate-200 bg-slate-50/70 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                    <div className="flex items-center gap-2.5 sm:gap-3">
+                      <span className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-100 text-[#1A73E8] font-mono font-black text-xs sm:text-sm flex items-center justify-center shrink-0">
                         {l.account.code}
                       </span>
-                      <div>
-                        <h3 className="text-sm sm:text-base font-extrabold text-slate-900">{l.account.name}</h3>
-                        <div className="flex items-center gap-2 mt-0.5">
+                      <div className="min-w-0">
+                        <h3 className="text-sm sm:text-base font-extrabold text-slate-900 truncate">{l.account.name}</h3>
+                        <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                           <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-200 text-slate-700">
                             {l.account.category}
                           </span>
-                          <span className="text-xs text-slate-400">
+                          <span className="text-[11px] sm:text-xs text-slate-400">
                             Saldo Normal: <strong className="uppercase">{l.account.normalBalance}</strong>
                           </span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="text-right">
-                      <div className="text-xs text-slate-400 font-medium">Saldo Akhir</div>
-                      <div className="text-lg font-black text-[#1A73E8] font-mono">
+                    <div className="flex sm:flex-col items-center sm:items-end justify-between border-t sm:border-t-0 pt-2 sm:pt-0 border-slate-200">
+                      <div className="text-[11px] sm:text-xs text-slate-400 font-medium">Saldo Akhir:</div>
+                      <div className="text-base sm:text-lg font-black text-[#1A73E8] font-mono">
                         {formatRupiah(l.endingBalance)}
                       </div>
                     </div>
                   </div>
 
                   {/* Transactions Table for this Account */}
-                  <div className="overflow-x-auto">
+                  <div>
                     {l.transactions.length === 0 ? (
-                      <div className="py-6 text-center text-xs text-slate-400">
+                      <div className="py-6 sm:py-8 text-center text-xs text-slate-400">
                         Belum ada mutasi transaksi pada akun ini pada periode ini.
                       </div>
                     ) : (
-                      <table className="w-full text-left text-xs border-collapse">
+                      <>
+                        {/* Mobile Ledger Transactions List (< md) */}
+                        <div className="md:hidden divide-y divide-slate-100">
+                          {l.transactions.map((tx, idx) => (
+                            <div key={idx} className="p-3.5 space-y-2 text-xs">
+                              <div className="flex items-center justify-between text-slate-500 font-mono text-[11px]">
+                                <span>{formatDate(tx.entryDate)}</span>
+                                <span className="font-semibold text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded">
+                                  {tx.entryNumber}
+                                </span>
+                              </div>
+                              <div className="font-medium text-slate-800 text-xs">
+                                {tx.description}
+                              </div>
+                              <div className="grid grid-cols-3 gap-1.5 bg-slate-50/80 p-2.5 rounded-xl font-mono text-[11px]">
+                                <div>
+                                  <span className="text-[9px] uppercase font-bold text-slate-400 block">Debit</span>
+                                  <span className="font-bold text-emerald-700">{tx.debit > 0 ? formatRupiah(tx.debit) : '-'}</span>
+                                </div>
+                                <div>
+                                  <span className="text-[9px] uppercase font-bold text-slate-400 block">Kredit</span>
+                                  <span className="font-bold text-rose-700">{tx.credit > 0 ? formatRupiah(tx.credit) : '-'}</span>
+                                </div>
+                                <div className="text-right">
+                                  <span className="text-[9px] uppercase font-bold text-slate-400 block">Saldo</span>
+                                  <span className="font-black text-blue-800">{formatRupiah(tx.runningBalance)}</span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                          <div className="p-3.5 bg-slate-50 flex items-center justify-between text-xs font-bold border-t border-slate-200">
+                            <span className="text-slate-600">Total Saldo Akhir:</span>
+                            <span className="font-mono text-blue-800 font-black">{formatRupiah(l.endingBalance)}</span>
+                          </div>
+                        </div>
+
+                        {/* Desktop Ledger Table (>= md) */}
+                        <div className="hidden md:block overflow-x-auto">
+                          <table className="w-full text-left text-xs border-collapse">
                         <thead>
                           <tr className="border-b border-slate-100 bg-slate-50/40 text-slate-500 font-bold uppercase tracking-wider">
                             <th className="py-2.5 px-4 w-28">Tanggal</th>
@@ -1060,8 +1241,10 @@ export default function FinanceManager({
                           </tr>
                         </tfoot>
                       </table>
-                    )}
-                  </div>
+                    </div>
+                  </>
+                )}
+              </div>
                 </div>
               ))}
           </div>
@@ -1091,13 +1274,57 @@ export default function FinanceManager({
             </div>
           </div>
 
-          <div className="overflow-x-auto">
+          <div>
             {(!initialTrialBalance.rows || initialTrialBalance.rows.length === 0) ? (
-              <div className="py-16 text-center text-xs text-slate-400">
+              <div className="py-12 sm:py-16 text-center text-xs text-slate-400">
                 Belum ada saldo akun untuk neraca saldo pada periode ini.
               </div>
             ) : (
-              <table className="w-full text-left text-xs border-collapse">
+              <>
+                {/* Mobile Cards View (< md) */}
+                <div className="md:hidden divide-y divide-slate-100">
+                  {initialTrialBalance.rows.map((r) => (
+                    <div key={r.code} className="p-3.5 space-y-1.5 hover:bg-slate-50/60 transition-colors">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <span className="font-mono text-xs font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded shrink-0">
+                            {r.code}
+                          </span>
+                          <span className="font-bold text-xs text-slate-900 truncate">
+                            {r.name}
+                          </span>
+                        </div>
+                        <span className="uppercase text-[9px] font-bold text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded shrink-0">
+                          {r.category}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-xs font-mono pt-1">
+                        <div>
+                          <span className="text-[10px] text-slate-400 mr-1">Debit:</span>
+                          <span className="font-bold text-slate-800">{r.debit > 0 ? formatRupiah(r.debit) : '-'}</span>
+                        </div>
+                        <div>
+                          <span className="text-[10px] text-slate-400 mr-1">Kredit:</span>
+                          <span className="font-bold text-slate-800">{r.credit > 0 ? formatRupiah(r.credit) : '-'}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  <div className="p-3.5 bg-slate-100 border-t-2 border-slate-200 space-y-1 text-xs font-mono">
+                    <div className="flex items-center justify-between font-bold text-slate-700">
+                      <span>Total Debit:</span>
+                      <span className="text-emerald-700">{formatRupiah(initialTrialBalance.totalDebit || 0)}</span>
+                    </div>
+                    <div className="flex items-center justify-between font-bold text-slate-700">
+                      <span>Total Kredit:</span>
+                      <span className="text-rose-700">{formatRupiah(initialTrialBalance.totalCredit || 0)}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Desktop Table View (>= md) */}
+                <div className="hidden md:block overflow-x-auto">
+                  <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="border-b border-slate-200 bg-slate-100 text-slate-600 font-bold uppercase tracking-wider">
                     <th className="py-3 px-4 w-28">Kode Akun</th>
@@ -1138,102 +1365,104 @@ export default function FinanceManager({
                   </tr>
                 </tfoot>
               </table>
-            )}
-          </div>
-        </div>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
       )}
 
       {/* TAB 5: LAPORAN LABA RUGI (Income Statement) */}
       {activeTab === 'income_statement' && (
-        <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 max-w-4xl mx-auto space-y-6">
+        <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-4 sm:p-6 max-w-4xl mx-auto space-y-5 sm:space-y-6">
           <div className="text-center pb-4 border-b border-slate-200">
-            <h2 className="text-lg font-black text-slate-900">LAPORAN LABA RUGI (INCOME STATEMENT)</h2>
+            <h2 className="text-base sm:text-lg font-black text-slate-900">LAPORAN LABA RUGI (INCOME STATEMENT)</h2>
             <p className="text-xs text-slate-500 mt-0.5">Cobascan • Periode: {periodLabel}</p>
           </div>
 
           {/* A. PENDAPATAN OPERASIONAL */}
           <div className="space-y-2">
-            <div className="flex items-center justify-between pb-1 border-b border-slate-100 font-bold text-xs uppercase tracking-wider text-slate-700">
-              <span>A. Pendapatan Operasional</span>
-              <span>Jumlah</span>
+            <div className="flex items-center justify-between pb-1 border-b border-slate-100 font-bold text-[11px] sm:text-xs uppercase tracking-wider text-slate-700">
+              <span className="truncate pr-2">A. Pendapatan Operasional</span>
+              <span className="shrink-0">Jumlah</span>
             </div>
             {(initialIncomeStatement.revenues || []).length === 0 ? (
-              <div className="text-xs text-slate-400 py-1 pl-4">Belum ada pendapatan tercatat</div>
+              <div className="text-xs text-slate-400 py-1 pl-2 sm:pl-4">Belum ada pendapatan tercatat</div>
             ) : (
               (initialIncomeStatement.revenues || []).map((r) => (
-                <div key={r.code} className="flex items-center justify-between text-xs py-1 pl-4">
-                  <span className="text-slate-600">{r.name}</span>
-                  <span className="font-mono font-medium text-slate-900">{formatRupiah(r.amount)}</span>
+                <div key={r.code} className="flex items-center justify-between text-xs py-1 pl-2 sm:pl-4 gap-2">
+                  <span className="text-slate-600 truncate">{r.name}</span>
+                  <span className="font-mono font-medium text-slate-900 shrink-0">{formatRupiah(r.amount)}</span>
                 </div>
               ))
             )}
-            <div className="flex items-center justify-between pt-2 border-t border-slate-200 font-bold text-xs text-slate-900">
-              <span>Total Pendapatan Operasional:</span>
-              <span className="font-mono text-emerald-600">{formatRupiah(initialIncomeStatement.totalRevenue || 0)}</span>
+            <div className="flex items-center justify-between pt-2 border-t border-slate-200 font-bold text-xs text-slate-900 gap-2">
+              <span className="truncate pr-2">Total Pendapatan Operasional:</span>
+              <span className="font-mono text-emerald-600 shrink-0">{formatRupiah(initialIncomeStatement.totalRevenue || 0)}</span>
             </div>
           </div>
 
           {/* B. BEBAN POKOK PENJUALAN (HPP) */}
           <div className="space-y-2 pt-2">
-            <div className="flex items-center justify-between pb-1 border-b border-slate-100 font-bold text-xs uppercase tracking-wider text-slate-700">
-              <span>B. Beban Pokok Penjualan (HPP)</span>
-              <span>Jumlah</span>
+            <div className="flex items-center justify-between pb-1 border-b border-slate-100 font-bold text-[11px] sm:text-xs uppercase tracking-wider text-slate-700">
+              <span className="truncate pr-2">B. Beban Pokok Penjualan (HPP)</span>
+              <span className="shrink-0">Jumlah</span>
             </div>
             {(initialIncomeStatement.costOfGoodsSold || []).length === 0 ? (
-              <div className="text-xs text-slate-400 py-1 pl-4">Belum ada HPP tercatat</div>
+              <div className="text-xs text-slate-400 py-1 pl-2 sm:pl-4">Belum ada HPP tercatat</div>
             ) : (
               (initialIncomeStatement.costOfGoodsSold || []).map((c) => (
-                <div key={c.code} className="flex items-center justify-between text-xs py-1 pl-4">
-                  <span className="text-slate-600">{c.name}</span>
-                  <span className="font-mono font-medium text-slate-900">{formatRupiah(c.amount)}</span>
+                <div key={c.code} className="flex items-center justify-between text-xs py-1 pl-2 sm:pl-4 gap-2">
+                  <span className="text-slate-600 truncate">{c.name}</span>
+                  <span className="font-mono font-medium text-slate-900 shrink-0">{formatRupiah(c.amount)}</span>
                 </div>
               ))
             )}
-            <div className="flex items-center justify-between pt-2 border-t border-slate-200 font-bold text-xs text-slate-900">
-              <span>Total Beban Pokok Penjualan:</span>
-              <span className="font-mono text-rose-600">({formatRupiah(initialIncomeStatement.totalCOGS || 0)})</span>
+            <div className="flex items-center justify-between pt-2 border-t border-slate-200 font-bold text-xs text-slate-900 gap-2">
+              <span className="truncate pr-2">Total Beban Pokok Penjualan:</span>
+              <span className="font-mono text-rose-600 shrink-0">({formatRupiah(initialIncomeStatement.totalCOGS || 0)})</span>
             </div>
           </div>
 
           {/* LABA KOTOR */}
-          <div className="p-3 rounded-xl bg-slate-50 flex items-center justify-between font-black text-xs sm:text-sm text-slate-900 border border-slate-200">
+          <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 font-black text-xs sm:text-sm text-slate-900 border border-slate-200">
             <span>LABA KOTOR (GROSS PROFIT):</span>
-            <span className="font-mono text-[#1A73E8]">{formatRupiah(initialIncomeStatement.grossProfit || 0)}</span>
+            <span className="font-mono text-[#1A73E8] text-sm sm:text-base">{formatRupiah(initialIncomeStatement.grossProfit || 0)}</span>
           </div>
 
           {/* C. BEBAN OPERASIONAL */}
           <div className="space-y-2 pt-2">
-            <div className="flex items-center justify-between pb-1 border-b border-slate-100 font-bold text-xs uppercase tracking-wider text-slate-700">
-              <span>C. Beban Operasional &amp; Administrasi</span>
-              <span>Jumlah</span>
+            <div className="flex items-center justify-between pb-1 border-b border-slate-100 font-bold text-[11px] sm:text-xs uppercase tracking-wider text-slate-700">
+              <span className="truncate pr-2">C. Beban Operasional &amp; Administrasi</span>
+              <span className="shrink-0">Jumlah</span>
             </div>
             {(initialIncomeStatement.operatingExpenses || []).length === 0 ? (
-              <div className="text-xs text-slate-400 py-1 pl-4">Belum ada beban operasional tercatat</div>
+              <div className="text-xs text-slate-400 py-1 pl-2 sm:pl-4">Belum ada beban operasional tercatat</div>
             ) : (
               (initialIncomeStatement.operatingExpenses || []).map((o) => (
-                <div key={o.code} className="flex items-center justify-between text-xs py-1 pl-4">
-                  <span className="text-slate-600">{o.name}</span>
-                  <span className="font-mono font-medium text-slate-900">{formatRupiah(o.amount)}</span>
+                <div key={o.code} className="flex items-center justify-between text-xs py-1 pl-2 sm:pl-4 gap-2">
+                  <span className="text-slate-600 truncate">{o.name}</span>
+                  <span className="font-mono font-medium text-slate-900 shrink-0">{formatRupiah(o.amount)}</span>
                 </div>
               ))
             )}
-            <div className="flex items-center justify-between pt-2 border-t border-slate-200 font-bold text-xs text-slate-900">
-              <span>Total Beban Operasional:</span>
-              <span className="font-mono text-rose-600">({formatRupiah(initialIncomeStatement.totalOperatingExpense || 0)})</span>
+            <div className="flex items-center justify-between pt-2 border-t border-slate-200 font-bold text-xs text-slate-900 gap-2">
+              <span className="truncate pr-2">Total Beban Operasional:</span>
+              <span className="font-mono text-rose-600 shrink-0">({formatRupiah(initialIncomeStatement.totalOperatingExpense || 0)})</span>
             </div>
           </div>
 
           {/* LABA BERSIH */}
-          <div className="p-4 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-between font-black text-sm sm:text-base text-slate-900">
-            <div className="flex items-center gap-2">
+          <div className="p-3.5 sm:p-4 rounded-2xl bg-blue-50 border border-blue-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 font-black text-xs sm:text-base text-slate-900">
+            <div className="flex items-center gap-2 flex-wrap">
               <span>LABA BERSIH USAHA (NET INCOME):</span>
               {initialIncomeStatement.totalRevenue > 0 && (
-                <span className="px-2 py-0.5 rounded-full text-xs bg-white text-[#1A73E8] border border-blue-200">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white text-[#1A73E8] border border-blue-200">
                   {initialIncomeStatement.netMargin}% Margin
                 </span>
               )}
             </div>
-            <span className="font-mono text-xl font-black text-[#1A73E8]">
+            <span className="font-mono text-lg sm:text-xl font-black text-[#1A73E8] self-end sm:self-auto">
               {formatRupiah(initialIncomeStatement.netIncome || 0)}
             </span>
           </div>
@@ -1242,36 +1471,36 @@ export default function FinanceManager({
 
       {/* TAB 6: LAPORAN ARUS KAS (Cash Flow Statement) */}
       {activeTab === 'cashflow_statement' && (
-        <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 max-w-4xl mx-auto space-y-6">
+        <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-4 sm:p-6 max-w-4xl mx-auto space-y-5 sm:space-y-6">
           <div className="text-center pb-4 border-b border-slate-200">
-            <h2 className="text-lg font-black text-slate-900">LAPORAN ARUS KAS (STATEMENT OF CASH FLOWS)</h2>
+            <h2 className="text-base sm:text-lg font-black text-slate-900">LAPORAN ARUS KAS (STATEMENT OF CASH FLOWS)</h2>
             <p className="text-xs text-slate-500 mt-0.5">Cobascan • Periode: {periodLabel}</p>
           </div>
 
           {/* 1. ARUS KAS AKTIVITAS OPERASI */}
           <div className="space-y-3">
-            <h3 className="font-bold text-xs uppercase tracking-wider text-slate-700 pb-1 border-b border-slate-100">
+            <h3 className="font-bold text-[11px] sm:text-xs uppercase tracking-wider text-slate-700 pb-1 border-b border-slate-100">
               1. Arus Kas dari Aktivitas Operasi
             </h3>
 
-            <div className="space-y-1 pl-4">
-              <div className="flex items-center justify-between text-xs py-1">
-                <span className="text-slate-700 font-medium">Penerimaan Kas dari Pelanggan:</span>
-                <span className="font-mono font-bold text-emerald-600">
+            <div className="space-y-1 pl-2 sm:pl-4">
+              <div className="flex items-center justify-between text-xs py-1 gap-2">
+                <span className="text-slate-700 font-medium truncate">Penerimaan Kas dari Pelanggan:</span>
+                <span className="font-mono font-bold text-emerald-600 shrink-0">
                   +{formatRupiah(initialCashFlow.totalOperatingReceipts || 0)}
                 </span>
               </div>
-              <div className="flex items-center justify-between text-xs py-1">
-                <span className="text-slate-700 font-medium">Pengeluaran Kas untuk HPP &amp; Beban Usaha:</span>
-                <span className="font-mono font-bold text-rose-600">
+              <div className="flex items-center justify-between text-xs py-1 gap-2">
+                <span className="text-slate-700 font-medium truncate">Pengeluaran Kas HPP &amp; Beban:</span>
+                <span className="font-mono font-bold text-rose-600 shrink-0">
                   -{formatRupiah(initialCashFlow.totalOperatingPayments || 0)}
                 </span>
               </div>
             </div>
 
-            <div className="flex items-center justify-between pt-2 border-t border-slate-200 font-bold text-xs text-slate-900">
-              <span>Arus Kas Bersih dari Aktivitas Operasi:</span>
-              <span className="font-mono text-sm text-[#1A73E8]">
+            <div className="flex items-center justify-between pt-2 border-t border-slate-200 font-bold text-xs text-slate-900 gap-2">
+              <span className="truncate pr-2">Arus Kas Bersih Aktivitas Operasi:</span>
+              <span className="font-mono text-xs sm:text-sm text-[#1A73E8] shrink-0">
                 {formatRupiah(initialCashFlow.netOperatingCashFlow || 0)}
               </span>
             </div>
@@ -1279,25 +1508,25 @@ export default function FinanceManager({
 
           {/* 2. ARUS KAS AKTIVITAS PENDANAAN */}
           <div className="space-y-3 pt-2">
-            <h3 className="font-bold text-xs uppercase tracking-wider text-slate-700 pb-1 border-b border-slate-100">
+            <h3 className="font-bold text-[11px] sm:text-xs uppercase tracking-wider text-slate-700 pb-1 border-b border-slate-100">
               2. Arus Kas dari Aktivitas Pendanaan &amp; Modal
             </h3>
-            <div className="space-y-1 pl-4">
-              <div className="flex items-center justify-between text-xs py-1">
-                <span className="text-slate-700 font-medium">Penerimaan Modal Pemilik / Prive Bersih:</span>
-                <span className="font-mono text-slate-600">{formatRupiah(initialCashFlow.totalFinancing || 0)}</span>
+            <div className="space-y-1 pl-2 sm:pl-4">
+              <div className="flex items-center justify-between text-xs py-1 gap-2">
+                <span className="text-slate-700 font-medium truncate">Penerimaan Modal Pemilik / Prive Bersih:</span>
+                <span className="font-mono text-slate-600 shrink-0">{formatRupiah(initialCashFlow.totalFinancing || 0)}</span>
               </div>
             </div>
-            <div className="flex items-center justify-between pt-2 border-t border-slate-200 font-bold text-xs text-slate-900">
-              <span>Arus Kas Bersih Aktivitas Pendanaan:</span>
-              <span className="font-mono text-slate-900">{formatRupiah(initialCashFlow.totalFinancing || 0)}</span>
+            <div className="flex items-center justify-between pt-2 border-t border-slate-200 font-bold text-xs text-slate-900 gap-2">
+              <span className="truncate pr-2">Arus Kas Bersih Aktivitas Pendanaan:</span>
+              <span className="font-mono text-slate-900 shrink-0">{formatRupiah(initialCashFlow.totalFinancing || 0)}</span>
             </div>
           </div>
 
           {/* 3. SALDO KAS AKHIR */}
-          <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-between font-black text-sm sm:text-base text-slate-900">
+          <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-50 border border-emerald-200 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 font-black text-xs sm:text-base text-slate-900">
             <span>SALDO KAS &amp; BANK AKHIR:</span>
-            <span className="font-mono text-xl font-black text-emerald-700">
+            <span className="font-mono text-lg sm:text-xl font-black text-emerald-700 self-end sm:self-auto">
               {formatRupiah(initialCashFlow.endingCashBalance || 0)}
             </span>
           </div>

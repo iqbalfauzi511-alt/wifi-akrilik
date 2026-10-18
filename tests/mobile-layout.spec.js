@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { signSessionPayload } from './utils';
+import { loginAs } from './utils';
 
 const mobileViewports = [
   { name: 'Galaxy Fold (narrow)', width: 320, height: 653 },
@@ -14,21 +14,7 @@ test.describe('Mobile Navigation & Settings Layout', () => {
   for (const vp of mobileViewports) {
     test(`Pengaturan and bottom nav are fully visible without cut-off on ${vp.name}`, async ({ context, page }) => {
       await page.setViewportSize({ width: vp.width, height: vp.height });
-
-      const token = signSessionPayload({
-        email: 'distrapness@gmail.com',
-        name: 'Administrator',
-        role: 'admin',
-      });
-
-      await context.addCookies([
-        {
-          name: 'smartwifi_session',
-          value: token,
-          domain: 'localhost',
-          path: '/',
-        },
-      ]);
+      await loginAs(context, '6285888159265', 'admin');
 
       await page.goto('/admin/settings');
       await expect(page).toHaveURL(/\/admin\/settings/);
@@ -68,7 +54,7 @@ test.describe('Mobile Navigation & Settings Layout', () => {
 
       // Specifically check Pengaturan text element
       const pengaturanLink = bottomNav.locator('a[href="/admin/settings"]');
-      const pengaturanText = pengaturanLink.locator('span');
+      const pengaturanText = pengaturanLink.locator('span', { hasText: 'Pengaturan' });
       await expect(pengaturanText).toHaveText('Pengaturan');
       const textBox = await pengaturanText.boundingBox();
       expect(textBox).not.toBeNull();
@@ -89,21 +75,7 @@ test.describe('Mobile Navigation & Settings Layout', () => {
 
   test('All admin pages render properly on iPhone SE without horizontal overflow', async ({ context, page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
-
-    const token = signSessionPayload({
-      email: 'distrapness@gmail.com',
-      name: 'Administrator',
-      role: 'admin',
-    });
-
-    await context.addCookies([
-      {
-        name: 'smartwifi_session',
-        value: token,
-        domain: 'localhost',
-        path: '/',
-      },
-    ]);
+    await loginAs(context, '6285888159265', 'admin');
 
     const routes = [
       '/admin',

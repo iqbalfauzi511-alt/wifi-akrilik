@@ -185,11 +185,11 @@ export default function VisitorScanExperience({
 
   // ------- RENDER -------
   return (
-    <div className="max-w-md w-full mx-auto space-y-4">
+    <div className="max-w-sm sm:max-w-md w-full mx-auto space-y-4">
       {/* Business Card */}
-      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xl shadow-slate-200/50 p-6 sm:p-8 text-center">
+      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xl shadow-slate-200/50 px-4.5 py-6 sm:px-8 sm:py-8 text-center">
         {/* Logo */}
-        <div className="w-16 h-16 rounded-2xl bg-white border border-slate-200/80 mx-auto flex items-center justify-center mb-4 p-3 shadow-xs overflow-hidden">
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white border border-slate-200/80 mx-auto flex items-center justify-center mb-3 sm:mb-4 p-2.5 sm:p-3 shadow-xs overflow-hidden">
           {logoUrl ? (
             <Image src={logoUrl} alt={businessName} width={64} height={64} unoptimized className="w-full h-full object-contain" />
           ) : (
@@ -197,10 +197,10 @@ export default function VisitorScanExperience({
           )}
         </div>
 
-        <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+        <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight break-words">
           {businessName}
         </h1>
-        <p className="text-xs text-slate-500 mt-1">
+        <p className="text-xs text-slate-500 mt-1 max-w-[280px] sm:max-w-xs mx-auto leading-relaxed text-balance">
           {wifiEnabled
             ? 'Beri ulasan di Google Maps untuk membuka akses Wi-Fi gratis.'
             : 'Selamat datang! Berikan ulasan pengalaman Anda di Google Maps.'}
@@ -208,9 +208,9 @@ export default function VisitorScanExperience({
 
         {/* Stage: RATING */}
         {stage === STAGE.RATING && (
-          <div className="mt-6 pt-6 border-t border-slate-100">
+          <div className="mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-slate-100">
             <div className="text-xs font-bold text-slate-800 mb-2">Bagaimana Pengalaman Anda?</div>
-            <div className="flex items-center justify-center gap-2 mb-2">
+            <div className="flex items-center justify-center gap-1 sm:gap-2 mb-2">
               {[1, 2, 3, 4, 5].map((star) => {
                 const isFilled = (hoverRating || selectedRating) >= star;
                 return (
@@ -221,10 +221,10 @@ export default function VisitorScanExperience({
                     onMouseLeave={() => setHoverRating(0)}
                     onClick={() => handleStarClick(star)}
                     title={`${star} Bintang`}
-                    className="p-1.5 rounded-lg transition-transform hover:scale-125 focus:outline-none focus:ring-2 focus:ring-[#1A73E8]"
+                    className="p-1 sm:p-1.5 rounded-xl transition-all hover:scale-120 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#1A73E8] touch-manipulation cursor-pointer"
                   >
                     <Star
-                      className={`w-8 h-8 transition-colors ${
+                      className={`w-7.5 h-7.5 min-[360px]:w-8 min-[360px]:h-8 sm:w-9 sm:h-9 transition-colors ${
                         isFilled ? 'fill-amber-400 text-amber-400' : 'text-slate-300 hover:text-amber-200'
                       }`}
                     />
@@ -241,9 +241,9 @@ export default function VisitorScanExperience({
             </div>
 
             {wifiEnabled && (
-              <div className="flex items-center justify-center gap-2 py-2 px-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-500">
-                <LockKeyhole className="w-3.5 h-3.5 shrink-0" />
-                Beri ulasan di atas untuk membuka Wi-Fi
+              <div className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-2xl bg-slate-50 border border-slate-200 text-[11px] min-[360px]:text-xs text-slate-500 font-medium whitespace-nowrap">
+                <LockKeyhole className="w-3.5 h-3.5 shrink-0 text-slate-400" />
+                <span>Beri ulasan di atas untuk membuka Wi-Fi</span>
               </div>
             )}
           </div>
@@ -251,25 +251,25 @@ export default function VisitorScanExperience({
 
         {/* Stage: WAITING_RETURN (Waiting for user to return from Google Maps) */}
         {stage === STAGE.WAITING_RETURN && (
-          <div className="mt-6 pt-6 border-t border-slate-100 text-center py-2 animate-in fade-in zoom-in-95 duration-200">
-            <div className="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 border border-brand-100 flex items-center justify-center mx-auto mb-3 shadow-xs">
-              <ExternalLink className="w-7 h-7 text-brand-600 animate-pulse" />
+          <div className="mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-slate-100 text-center py-2 animate-in fade-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-brand-50 text-brand-600 border border-brand-100 flex items-center justify-center mx-auto mb-3 shadow-xs">
+              <ExternalLink className="w-6 h-6 sm:w-7 sm:h-7 text-brand-600 animate-pulse" />
             </div>
             
-            <h3 className="text-base font-extrabold text-slate-900 mb-1">
+            <h3 className="text-sm sm:text-base font-extrabold text-slate-900 mb-1">
               Beri Ulasan di Google Maps
             </h3>
             
-            <p className="text-xs text-slate-500 mb-5 max-w-xs mx-auto leading-relaxed">
+            <p className="text-xs text-slate-500 mb-4 sm:mb-5 max-w-[280px] sm:max-w-xs mx-auto leading-relaxed text-balance">
               Silakan berikan ulasan di Google Maps. Saat Anda kembali ke halaman ini, akses Wi-Fi akan langsung terbuka.
             </p>
 
             <button
               type="button"
               onClick={() => startPlaceboLoading('maps')}
-              className="w-full py-3.5 px-4 rounded-2xl bg-[#1A73E8] hover:bg-blue-600 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full min-h-[46px] py-3 px-4 rounded-2xl bg-[#1A73E8] hover:bg-blue-600 active:scale-98 text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer touch-manipulation"
             >
-              <CheckCircle2 className="w-4 h-4" />
+              <CheckCircle2 className="w-4 h-4 shrink-0" />
               <span>Saya Sudah Memberi Ulasan</span>
             </button>
 
@@ -291,7 +291,7 @@ export default function VisitorScanExperience({
 
         {/* Stage: PLACEBO_LOADING (Fake loading wait) */}
         {stage === STAGE.PLACEBO_LOADING && (
-          <div className="mt-6 pt-6 border-t border-slate-100 text-center py-4">
+          <div className="mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-slate-100 text-center py-4">
             <div className="w-12 h-12 rounded-full border-4 border-slate-100 border-t-brand-600 animate-spin mx-auto mb-4" />
             <h3 className="text-sm font-bold text-slate-900 mb-1">{loadingText}</h3>
             <p className="text-[11px] text-slate-500 mb-4">Mohon jangan tutup halaman ini.</p>
@@ -307,7 +307,7 @@ export default function VisitorScanExperience({
 
         {/* Stage: REDIRECTED (Returned from Google Maps) */}
         {stage === STAGE.REDIRECTED && (
-          <div className="mt-6 pt-6 border-t border-slate-100 text-center py-2 animate-in fade-in zoom-in-95 duration-200">
+          <div className="mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-slate-100 text-center py-2 animate-in fade-in zoom-in-95 duration-200">
             <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-3">
               <CheckCircle2 className="w-7 h-7" />
             </div>
@@ -317,20 +317,20 @@ export default function VisitorScanExperience({
             
             {wifiEnabled ? (
               <>
-                <p className="text-xs text-slate-500 mt-1 mb-4 leading-relaxed">
+                <p className="text-xs text-slate-500 mt-1 mb-4 leading-relaxed text-balance">
                   Klik tombol di bawah untuk melihat nama dan password Wi-Fi.
                 </p>
                 <button
                   type="button"
                   onClick={handleRevealWifi}
-                  className="w-full py-3 px-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full min-h-[46px] py-3 px-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 active:scale-98 text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer touch-manipulation"
                 >
-                  <UnlockKeyhole className="w-4 h-4" />
+                  <UnlockKeyhole className="w-4 h-4 shrink-0" />
                   <span>Lihat Nama &amp; Password Wi-Fi</span>
                 </button>
               </>
             ) : (
-              <p className="text-xs text-slate-500 mt-2 leading-relaxed">
+              <p className="text-xs text-slate-500 mt-2 leading-relaxed text-balance">
                 Masukan dan ulasan Anda sangat berharga bagi kami.
               </p>
             )}
@@ -339,12 +339,12 @@ export default function VisitorScanExperience({
 
         {/* Stage: DONE (Completed rating) */}
         {stage === STAGE.DONE && !wifiEnabled && (
-          <div className="mt-6 pt-6 border-t border-slate-100 text-center">
+          <div className="mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-slate-100 text-center">
             <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-2">
               <CheckCircle2 className="w-6 h-6" />
             </div>
             <p className="text-sm font-bold text-slate-800">Terima kasih!</p>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-slate-500 mt-1 text-balance">
               {selectedRating <= 2
                 ? 'Masukan Anda sangat berarti untuk meningkatkan kualitas layanan kami.'
                 : 'Ulasan Anda sangat berarti untuk meningkatkan kualitas layanan kami.'}

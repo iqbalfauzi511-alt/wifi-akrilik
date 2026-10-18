@@ -1,5 +1,5 @@
 import { getDb, ensureDatabaseInitialized } from '../lib/db/index.js';
-import { users, businesses, qrCodes, scanLogs, customerFeedback } from '../lib/db/schema.js';
+import { users, businesses, qrCodes, scanLogs } from '../lib/db/schema.js';
 import { eq, like, inArray } from 'drizzle-orm';
 
 async function tidyDatabase() {
@@ -152,42 +152,6 @@ async function tidyDatabase() {
       await db.insert(scanLogs).values(scanEntries);
       console.log(`✅ Inserted ${scanEntries.length} realistic scan logs for accurate charts & tables.`);
     }
-  }
-
-  // 8. Seed sample customer feedback (rating 1-2 with complaints and 4-5)
-  const existingFeedback = await db.select().from(customerFeedback).where(eq(customerFeedback.businessId, biz.id));
-  if (existingFeedback.length === 0 && myQrs.length > 0) {
-    console.log('Seeding initial customer feedback...');
-    await db.insert(customerFeedback).values([
-      {
-        businessId: biz.id,
-        qrId: myQrs[0].id,
-        rating: 1,
-        message: 'Pelayanan agak lama saat jam makan siang, mohon staf ditambah.',
-        customerName: 'Budi Santoso',
-        customerPhone: '08123456789',
-        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 4),
-      },
-      {
-        businessId: biz.id,
-        qrId: myQrs[1]?.id || myQrs[0].id,
-        rating: 2,
-        message: 'Wi-Fi sempat lambat saat meja outdoor penuh.',
-        customerName: 'Siti Rahma',
-        customerPhone: '08198765432',
-        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 28),
-      },
-      {
-        businessId: biz.id,
-        qrId: myQrs[0].id,
-        rating: 5,
-        message: 'Kopi senja mantap, tempat nyaman buat WFC!',
-        customerName: 'Dimas',
-        customerPhone: null,
-        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 50),
-      },
-    ]);
-    console.log('✅ Seeded customer feedback entries.');
   }
 
   console.log('✨ Database tidying complete!');
