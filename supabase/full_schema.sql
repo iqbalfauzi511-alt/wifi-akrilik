@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS businesses (
     google_maps_url TEXT,
     wifi_enabled BOOLEAN DEFAULT false,
     wifi_name VARCHAR(255),
+    wifi_username VARCHAR(255),
     wifi_password VARCHAR(255),
     whatsapp_number VARCHAR(32),
     instagram_url TEXT,
@@ -58,6 +59,7 @@ CREATE TABLE IF NOT EXISTS qr_codes (
     google_maps_url TEXT,
     wifi_enabled BOOLEAN,
     wifi_name VARCHAR(255),
+    wifi_username VARCHAR(255),
     wifi_password VARCHAR(255),
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
@@ -127,3 +129,30 @@ CREATE INDEX IF NOT EXISTS idx_finance_date ON finance_transactions(transaction_
 CREATE INDEX IF NOT EXISTS idx_journal_entries_date ON journal_entries(entry_date);
 CREATE INDEX IF NOT EXISTS idx_journal_items_entry_id ON journal_items(entry_id);
 CREATE INDEX IF NOT EXISTS idx_journal_items_account ON journal_items(account_code);
+
+-- =========================================================
+-- INITIAL SUPER ADMIN PROVISIONING (PIN: 654321)
+-- =========================================================
+INSERT INTO users (
+    name, 
+    whatsapp_number, 
+    role, 
+    email_verified, 
+    pin_hash,
+    failed_login_attempts,
+    locked_until
+)
+VALUES (
+    'Super Admin',
+    '6285888159265',
+    'admin',
+    true,
+    'pbkdf2:210000:5240144c4621874a4e341f1751d3d8a0:4bbea58528abe768a1b6a6b618f9360c6f121aa5825c73e3fa11a69b6f2a8556f8e2a4763260e548952894fddb0d971b5c78dccb82e4f61d59c2f1fb09269820',
+    0,
+    null
+)
+ON CONFLICT (whatsapp_number) DO UPDATE SET
+    role = 'admin',
+    pin_hash = 'pbkdf2:210000:5240144c4621874a4e341f1751d3d8a0:4bbea58528abe768a1b6a6b618f9360c6f121aa5825c73e3fa11a69b6f2a8556f8e2a4763260e548952894fddb0d971b5c78dccb82e4f61d59c2f1fb09269820',
+    failed_login_attempts = 0,
+    locked_until = null;

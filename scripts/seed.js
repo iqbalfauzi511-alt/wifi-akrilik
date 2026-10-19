@@ -1,6 +1,7 @@
 import { getDb, ensureDatabaseInitialized } from '../lib/db/index.js';
 import { users, businesses, qrCodes, scanLogs } from '../lib/db/schema.js';
 import { eq } from 'drizzle-orm';
+import { hashPassword } from '../lib/auth/password.js';
 
 async function seed() {
   console.log('🌱 Starting database seed...');
@@ -14,6 +15,8 @@ async function seed() {
     .from(users)
     .where(eq(users.whatsappNumber, adminWa));
 
+  const adminPinHash = hashPassword('654321');
+
   if (!admin) {
     [admin] = await db
       .insert(users)
@@ -21,28 +24,56 @@ async function seed() {
         whatsappNumber: adminWa,
         name: 'Super Admin',
         role: 'admin',
+        pinHash: adminPinHash,
         emailVerified: true,
       })
       .returning();
     console.log('✅ Created Admin user:', admin.whatsappNumber);
+  } else if (!admin.pinHash || admin.role !== 'admin') {
+    [admin] = await db
+      .update(users)
+      .set({
+        pinHash: admin.pinHash || adminPinHash,
+        role: 'admin',
+        failedLoginAttempts: 0,
+        lockedUntil: null,
+      })
+      .where(eq(users.id, admin.id))
+      .returning();
+    console.log('✅ Updated Admin user with pin_hash:', admin.whatsappNumber);
   }
 
   // 2. Create Customer User (Ahmad - Kopi Senja)
+  const customerWa = '6281234567890';
   let [customer] = await db
     .select()
     .from(users)
-    .where(eq(users.email, 'ahmad@kopisenja.com'));
+    .where(eq(users.whatsappNumber, customerWa));
+
+  const customerPinHash = hashPassword('123456');
 
   if (!customer) {
     [customer] = await db
       .insert(users)
       .values({
+        whatsappNumber: customerWa,
         email: 'ahmad@kopisenja.com',
         name: 'Ahmad',
         role: 'customer',
+        pinHash: customerPinHash,
+        emailVerified: true,
       })
       .returning();
-    console.log('✅ Created Customer user:', customer.email);
+    console.log('✅ Created Customer user:', customer.whatsappNumber);
+  } else if (!customer.pinHash) {
+    [customer] = await db
+      .update(users)
+      .set({
+        pinHash: customerPinHash,
+      })
+      .where(eq(users.id, customer.id))
+      .returning();
+    console.log('✅ Updated Customer user with pin_hash:', customer.whatsappNumber);
   }
 
   // 3. Create Business for Kopi Senja
