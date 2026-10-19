@@ -366,39 +366,41 @@ export default function FinanceManager({
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6 w-full min-w-0">
       {/* 1. Header & Primary Action Buttons */}
       <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 flex-wrap">
-            <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 tracking-tight leading-tight">
               Sistem Pembukuan &amp; Akuntansi
             </h1>
-            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-blue-100 text-blue-800">
-              Admin Suite
-            </span>
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-emerald-100 text-emerald-800">
-              <Sparkles className="w-3 h-3 text-emerald-600" />
-              Jurnal Otomatis Aktif
-            </span>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-extrabold bg-blue-100 text-blue-800">
+                Admin Suite
+              </span>
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-extrabold bg-emerald-100 text-emerald-800">
+                <Sparkles className="w-3 h-3 text-emerald-600" />
+                Jurnal Otomatis Aktif
+              </span>
+            </div>
             {isPending && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200 animate-pulse">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200 animate-pulse">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping" />
                 Memperbarui data...
               </span>
             )}
           </div>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+          <p className="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed">
             Cukup catat pemasukan / pengeluaran di Pembukuan Kas. Jurnal Umum, Buku Besar, Neraca Saldo, Laba Rugi &amp; Arus Kas terisi secara otomatis.
           </p>
         </div>
 
         {/* Action Buttons */}
-        <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 w-full lg:w-auto">
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 w-full xl:w-auto">
           <Button
             type="button"
             onClick={() => openQuickModal('income')}
-            className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 h-auto shadow-xs justify-center"
+            className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 px-3 min-h-[42px] shadow-xs justify-center active:scale-95"
           >
             <PlusCircle className="w-4 h-4 mr-1.5 shrink-0" />
             + Pemasukan
@@ -408,7 +410,7 @@ export default function FinanceManager({
             type="button"
             onClick={() => openQuickModal('expense')}
             variant="outline"
-            className="w-full sm:w-auto border-rose-300 text-rose-700 hover:bg-rose-50 font-bold text-xs py-2.5 h-auto shadow-xs justify-center"
+            className="w-full sm:w-auto border-rose-300 text-rose-700 hover:bg-rose-50 font-bold text-xs py-2.5 px-3 min-h-[42px] shadow-xs justify-center active:scale-95"
           >
             <MinusCircle className="w-4 h-4 mr-1.5 text-rose-600 shrink-0" />
             - Pengeluaran
@@ -417,31 +419,32 @@ export default function FinanceManager({
           <Button
             type="button"
             onClick={() => setIsJournalModalOpen(true)}
-            variant="ghost"
-            className="w-full sm:w-auto text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-bold text-xs py-2.5 h-auto justify-center"
+            variant="outline"
+            className="w-full sm:w-auto border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs py-2.5 px-3 min-h-[42px] shadow-xs justify-center active:scale-95"
             title="Hanya jika butuh penyesuaian akuntansi non-kas (opsional)"
           >
-            <FileText className="w-4 h-4 mr-1.5 text-slate-400 shrink-0" />
+            <FileText className="w-4 h-4 mr-1.5 text-slate-500 shrink-0" />
             + Penyesuaian
           </Button>
 
-          <button
+          <Button
             type="button"
             onClick={handleExportCSV}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-xs font-bold text-slate-700 shadow-xs transition-colors cursor-pointer"
+            variant="outline"
+            className="w-full sm:w-auto border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs py-2.5 px-3 min-h-[42px] shadow-xs justify-center active:scale-95"
             title="Unduh laporan saat ini dalam format CSV"
           >
-            <Download className="w-4 h-4 text-slate-500 shrink-0" />
+            <Download className="w-4 h-4 text-slate-500 mr-1.5 shrink-0" />
             <span>Ekspor CSV</span>
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* 2. Global Period Filter Bar */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div className="bg-white rounded-2xl border border-slate-200/90 p-3.5 sm:p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
         {/* Period Selector Pills */}
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-xs font-bold text-slate-500 mr-1 flex items-center gap-1">
+          <span className="text-xs font-bold text-slate-500 mr-1 flex items-center gap-1 shrink-0">
             <Calendar className="w-3.5 h-3.5 text-slate-400" />
             Periode:
           </span>
@@ -452,7 +455,7 @@ export default function FinanceManager({
                 key={opt.id}
                 type="button"
                 onClick={() => handlePeriodChange(opt.id)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                className={`px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all min-h-[36px] flex items-center justify-center select-none active:scale-95 cursor-pointer ${
                   isActive
                     ? 'bg-[#1A73E8] text-white shadow-xs'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
@@ -465,9 +468,9 @@ export default function FinanceManager({
         </div>
 
         {/* Active Period Label */}
-        <div className="text-xs text-slate-500 flex items-center gap-1.5 font-medium">
-          <span>Menampilkan:</span>
-          <span className="font-bold text-slate-800 bg-slate-100 px-2.5 py-1 rounded-lg">
+        <div className="text-xs text-slate-500 flex items-center gap-1.5 font-medium pt-1 md:pt-0 border-t md:border-t-0 border-slate-100">
+          <span className="shrink-0">Menampilkan:</span>
+          <span className="font-bold text-slate-800 bg-slate-100 px-2.5 py-1 rounded-lg truncate">
             {periodLabel}
           </span>
         </div>
@@ -477,30 +480,30 @@ export default function FinanceManager({
       {showCustomDateInputs && (
         <form
           onSubmit={handleApplyCustomDate}
-          className="bg-blue-50/70 border border-blue-200 rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3 animate-in fade-in slide-in-from-top-2 duration-150"
+          className="bg-blue-50/70 border border-blue-200 rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3 animate-in fade-in slide-in-from-top-2 duration-150"
         >
-          <span className="text-xs font-bold text-blue-900">Rentang Tanggal Khusus:</span>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-500 w-12 sm:w-auto shrink-0">Dari:</span>
+          <span className="text-xs font-bold text-blue-900 shrink-0">Rentang Tanggal Khusus:</span>
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <span className="text-xs text-slate-500 w-10 sm:w-auto shrink-0 font-medium">Dari:</span>
             <input
               type="date"
               value={startDateInput}
               onChange={(e) => setStartDateInput(e.target.value)}
-              className="w-full sm:w-auto px-3 py-1.5 rounded-xl border border-slate-300 text-xs font-semibold bg-white"
+              className="w-full min-w-0 px-2.5 py-1.5 rounded-xl border border-slate-300 text-xs font-semibold bg-white focus:outline-none focus:ring-1 focus:ring-[#1A73E8]"
               required
             />
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-500 w-12 sm:w-auto shrink-0">Sampai:</span>
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <span className="text-xs text-slate-500 w-10 sm:w-auto shrink-0 font-medium">Sampai:</span>
             <input
               type="date"
               value={endDateInput}
               onChange={(e) => setEndDateInput(e.target.value)}
-              className="w-full sm:w-auto px-3 py-1.5 rounded-xl border border-slate-300 text-xs font-semibold bg-white"
+              className="w-full min-w-0 px-2.5 py-1.5 rounded-xl border border-slate-300 text-xs font-semibold bg-white focus:outline-none focus:ring-1 focus:ring-[#1A73E8]"
               required
             />
           </div>
-          <Button type="submit" size="sm" className="bg-[#1A73E8] hover:bg-blue-700 text-white font-bold py-2 sm:py-1.5 h-auto justify-center">
+          <Button type="submit" size="sm" className="bg-[#1A73E8] hover:bg-blue-700 text-white font-bold py-2 sm:py-1.5 h-auto justify-center shrink-0">
             Terapkan Filter
           </Button>
         </form>
@@ -509,17 +512,17 @@ export default function FinanceManager({
       {/* 3. Executive KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         {/* Pemasukan */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 p-3.5 sm:p-5 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">
-              Total Pemasukan
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-3 sm:p-4 lg:p-5 shadow-xs flex flex-col justify-between min-w-0">
+          <div className="flex items-center justify-between gap-1.5">
+            <span className="text-[11px] sm:text-xs font-semibold text-slate-600 truncate">
+              Pemasukan
             </span>
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0">
+            <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0">
               <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
           <div className="mt-2 sm:mt-2.5">
-            <div className="text-base sm:text-2xl font-black text-emerald-600 tracking-tight truncate">
+            <div className="text-sm sm:text-xl lg:text-2xl font-black text-emerald-600 tracking-tight truncate font-mono">
               {formatRupiah(initialSummary.totalIncome || 0)}
             </div>
             <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate hidden sm:block">Penjualan akrilik, setup &amp; SaaS</p>
@@ -527,17 +530,17 @@ export default function FinanceManager({
         </div>
 
         {/* Pengeluaran */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 p-3.5 sm:p-5 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">
-              Total Pengeluaran
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-3 sm:p-4 lg:p-5 shadow-xs flex flex-col justify-between min-w-0">
+          <div className="flex items-center justify-between gap-1.5">
+            <span className="text-[11px] sm:text-xs font-semibold text-slate-600 truncate">
+              Pengeluaran
             </span>
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center shrink-0">
+            <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center shrink-0">
               <TrendingDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
           <div className="mt-2 sm:mt-2.5">
-            <div className="text-base sm:text-2xl font-black text-rose-600 tracking-tight truncate">
+            <div className="text-sm sm:text-xl lg:text-2xl font-black text-rose-600 tracking-tight truncate font-mono">
               {formatRupiah(initialSummary.totalExpense || 0)}
             </div>
             <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate hidden sm:block">HPP akrilik, NFC &amp; operasional</p>
@@ -545,13 +548,13 @@ export default function FinanceManager({
         </div>
 
         {/* Laba Bersih */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 p-3.5 sm:p-5 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-3 sm:p-4 lg:p-5 shadow-xs flex flex-col justify-between min-w-0">
+          <div className="flex items-center justify-between gap-1.5">
+            <span className="text-[11px] sm:text-xs font-semibold text-slate-600 truncate">
               Laba Bersih
             </span>
             <div
-              className={`w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center border shrink-0 ${
+              className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl flex items-center justify-center border shrink-0 ${
                 (initialSummary.netProfit || 0) >= 0
                   ? 'bg-blue-50 text-[#1A73E8] border-blue-100'
                   : 'bg-amber-50 text-amber-600 border-amber-100'
@@ -562,7 +565,7 @@ export default function FinanceManager({
           </div>
           <div className="mt-2 sm:mt-2.5">
             <div
-              className={`text-base sm:text-2xl font-black tracking-tight truncate ${
+              className={`text-sm sm:text-xl lg:text-2xl font-black tracking-tight truncate font-mono ${
                 (initialSummary.netProfit || 0) >= 0 ? 'text-[#1A73E8]' : 'text-amber-600'
               }`}
             >
@@ -575,13 +578,13 @@ export default function FinanceManager({
         </div>
 
         {/* Saldo Kas & Status Neraca */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 p-3.5 sm:p-5 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500 truncate mr-1">
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-3 sm:p-4 lg:p-5 shadow-xs flex flex-col justify-between min-w-0">
+          <div className="flex items-center justify-between gap-1.5">
+            <span className="text-[11px] sm:text-xs font-semibold text-slate-600 truncate">
               Saldo Kas
             </span>
             <div
-              className={`w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center border shrink-0 ${
+              className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl flex items-center justify-center border shrink-0 ${
                 initialTrialBalance.isBalanced
                   ? 'bg-emerald-50 text-emerald-600 border-emerald-100'
                   : 'bg-rose-50 text-rose-600 border-rose-100'
@@ -591,7 +594,7 @@ export default function FinanceManager({
             </div>
           </div>
           <div className="mt-2 sm:mt-2.5">
-            <div className="text-base sm:text-xl font-black text-slate-900 tracking-tight truncate">
+            <div className="text-sm sm:text-lg lg:text-xl font-black text-slate-900 tracking-tight truncate font-mono">
               {formatRupiah(initialCashFlow.endingCashBalance || 0)}
             </div>
             <div className="flex items-center gap-1 mt-0.5 sm:mt-1 truncate">
@@ -612,8 +615,11 @@ export default function FinanceManager({
       </div>
 
       {/* 4. Tab Navigation Switcher */}
-      <div className="border-b border-slate-200 -mx-4 sm:mx-0 px-4 sm:px-0">
-        <nav className="flex space-x-1 sm:space-x-2 overflow-x-auto pb-px scroll-smooth" aria-label="Tabs">
+      <div className="bg-slate-100/90 p-1 sm:p-1.5 rounded-2xl border border-slate-200/80 shadow-2xs">
+        <nav
+          className="flex items-center gap-1 overflow-x-auto scrollbar-none no-scrollbar overscroll-x-contain touch-pan-x"
+          aria-label="Tabs Keuangan"
+        >
           {[
             { id: 'cashflow', name: 'Pembukuan Kas', shortName: 'Kas', icon: Receipt, count: filteredCashflow.length },
             { id: 'journal', name: 'Jurnal Umum (Otomatis)', shortName: 'Jurnal', icon: BookOpen, count: initialJournals.length },
@@ -629,10 +635,10 @@ export default function FinanceManager({
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-1.5 sm:gap-2 py-2.5 sm:py-3 px-2.5 sm:px-4 border-b-2 font-bold text-xs sm:text-sm whitespace-nowrap transition-all shrink-0 min-h-[44px] ${
+                className={`flex items-center gap-1.5 py-2 px-3 sm:px-3.5 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all shrink-0 min-h-[40px] cursor-pointer select-none active:scale-95 ${
                   isActive
-                    ? 'border-[#1A73E8] text-[#1A73E8] bg-blue-50/40 rounded-t-xl'
-                    : 'border-transparent text-slate-500 hover:text-slate-900 hover:border-slate-300'
+                    ? 'bg-white text-[#1A73E8] shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
                 }`}
               >
                 <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${isActive ? 'text-[#1A73E8]' : 'text-slate-400'}`} />
@@ -641,7 +647,7 @@ export default function FinanceManager({
                 {typeof tab.count === 'number' && (
                   <span
                     className={`ml-0.5 sm:ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-extrabold ${
-                      isActive ? 'bg-blue-100 text-[#1A73E8]' : 'bg-slate-100 text-slate-500'
+                      isActive ? 'bg-blue-100 text-[#1A73E8]' : 'bg-slate-200/80 text-slate-600'
                     }`}
                   >
                     {tab.count}
@@ -659,30 +665,32 @@ export default function FinanceManager({
       {activeTab === 'cashflow' && (
         <div className="space-y-4">
           {/* Driver Info Banner */}
-          <div className="bg-emerald-50/80 border border-emerald-200/80 rounded-2xl p-4 flex items-start gap-3 shadow-xs">
-            <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
-              <Sparkles className="w-4 h-4" />
-            </div>
-            <div className="flex-1 text-xs">
-              <div className="font-bold text-emerald-900 flex items-center gap-1.5">
-                <span>Pencatatan Kas Utama (Driver Otomatis)</span>
-                <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-200 text-emerald-900 font-extrabold">
-                  ⚡ Auto-Journal Active
-                </span>
+          <div className="bg-emerald-50/80 border border-emerald-200/80 rounded-2xl p-3 sm:p-3.5 flex items-center justify-between gap-2.5 shadow-2xs">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600" />
               </div>
-              <p className="text-emerald-800/90 mt-0.5 leading-relaxed">
-                Anda hanya perlu mencatat kas masuk dan keluar di sini. Sistem secara otomatis membuat ayat <strong>Jurnal Umum</strong> (Debit &amp; Kredit), mem-posting ke <strong>Buku Besar</strong>, dan menyusun <strong>Laba Rugi</strong> serta <strong>Arus Kas</strong> secara otomatis.
-              </p>
+              <div className="min-w-0">
+                <div className="font-bold text-emerald-950 text-xs sm:text-sm truncate">
+                  Pencatatan Kas Utama
+                </div>
+                <div className="text-[11px] text-emerald-800/80 hidden sm:block truncate">
+                  Transaksi kas otomatis tercatat ke Jurnal Umum, Buku Besar, dan Laporan Keuangan.
+                </div>
+              </div>
             </div>
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-200 text-emerald-900 shrink-0 whitespace-nowrap">
+              ⚡ Jurnal Otomatis
+            </span>
           </div>
 
           <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
-            <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/50">
-              <div className="inline-flex rounded-xl bg-slate-200/60 p-1 text-xs font-semibold text-slate-600">
+            <div className="p-3.5 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/50">
+              <div className="grid grid-cols-3 sm:inline-flex rounded-xl bg-slate-200/60 p-1 text-xs font-semibold text-slate-600 gap-1 sm:gap-0 w-full sm:w-auto">
                 <button
                   type="button"
                   onClick={() => setCashflowTypeFilter('all')}
-                  className={`px-3 py-1.5 rounded-lg transition-all ${
+                  className={`px-2 sm:px-3 py-1.5 rounded-lg transition-all text-center min-h-[36px] flex items-center justify-center cursor-pointer select-none ${
                     cashflowTypeFilter === 'all' ? 'bg-white text-slate-900 shadow-xs font-bold' : 'hover:text-slate-900'
                   }`}
                 >
@@ -691,7 +699,7 @@ export default function FinanceManager({
                 <button
                   type="button"
                   onClick={() => setCashflowTypeFilter('income')}
-                  className={`px-3 py-1.5 rounded-lg transition-all ${
+                  className={`px-2 sm:px-3 py-1.5 rounded-lg transition-all text-center min-h-[36px] flex items-center justify-center cursor-pointer select-none ${
                     cashflowTypeFilter === 'income' ? 'bg-white text-emerald-700 shadow-xs font-bold' : 'hover:text-slate-900'
                   }`}
                 >
@@ -700,7 +708,7 @@ export default function FinanceManager({
                 <button
                   type="button"
                   onClick={() => setCashflowTypeFilter('expense')}
-                  className={`px-3 py-1.5 rounded-lg transition-all ${
+                  className={`px-2 sm:px-3 py-1.5 rounded-lg transition-all text-center min-h-[36px] flex items-center justify-center cursor-pointer select-none ${
                     cashflowTypeFilter === 'expense' ? 'bg-white text-rose-700 shadow-xs font-bold' : 'hover:text-slate-900'
                   }`}
                 >
@@ -726,7 +734,7 @@ export default function FinanceManager({
                   {filteredCashflow.map((tx) => {
                     const isIncome = tx.type === 'income';
                     return (
-                      <div key={tx.id} className="p-4 space-y-2.5 hover:bg-slate-50/70 transition-colors">
+                      <div key={tx.id} className="p-3.5 sm:p-4 space-y-2.5 hover:bg-slate-50/70 transition-colors">
                         <div className="flex items-start justify-between gap-3">
                           <div className="flex items-center gap-2 flex-wrap">
                             <span
@@ -892,21 +900,21 @@ export default function FinanceManager({
       {activeTab === 'journal' && (
         <div className="space-y-4">
           {/* Realtime Auto-Sync Info Banner */}
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/80 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
-            <div className="flex items-start gap-3">
-              <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs mt-0.5">
-                <Sparkles className="w-5 h-5" />
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/80 rounded-2xl p-3 sm:p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
+                <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </div>
-              <div className="text-xs">
-                <div className="font-bold text-blue-900 flex items-center gap-1.5">
-                  <span>Jurnal Umum Otomatis Terhubung ke Pembukuan Kas</span>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] bg-blue-200/80 text-blue-900 font-extrabold">
+              <div className="min-w-0">
+                <div className="font-bold text-blue-950 text-xs sm:text-sm flex items-center gap-1.5 flex-wrap">
+                  <span>Jurnal Umum Terhubung ke Kas</span>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] bg-blue-200/80 text-blue-900 font-bold">
                     ⚡ Auto-Synced
                   </span>
                 </div>
-                <p className="text-blue-800/90 mt-0.5 leading-relaxed">
-                  Setiap transaksi kas yang dicatat di Pembukuan langsung otomatis dijurnal berpasangan (Double-Entry Debit &amp; Kredit) di bawah ini. Anda tidak perlu membuat jurnal manual untuk transaksi kas harian.
-                </p>
+                <div className="text-[11px] text-blue-800/80 hidden sm:block truncate mt-0.5">
+                  Setiap transaksi kas otomatis dijurnal berpasangan (Debit &amp; Kredit).
+                </div>
               </div>
             </div>
             <Button
@@ -914,19 +922,19 @@ export default function FinanceManager({
               variant="outline"
               size="sm"
               onClick={() => setIsJournalModalOpen(true)}
-              className="text-xs font-bold text-slate-700 bg-white border-slate-300 hover:bg-slate-50 shrink-0 self-end sm:self-auto"
+              className="w-full sm:w-auto text-xs font-bold text-slate-700 bg-white border-slate-300 hover:bg-slate-50 shrink-0 justify-center min-h-[36px]"
             >
-              + Penyesuaian Manual (Non-Kas)
+              + Penyesuaian Non-Kas
             </Button>
           </div>
 
           <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
-            <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-              <div>
-                <h2 className="text-sm font-bold text-slate-900">Ayat Jurnal Umum (General Journal)</h2>
-                <p className="text-xs text-slate-500">Pencatatan berpasangan debit dan kredit setiap transaksi.</p>
+            <div className="p-3.5 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 gap-2">
+              <div className="min-w-0">
+                <h2 className="text-sm font-bold text-slate-900 truncate">Ayat Jurnal Umum (General Journal)</h2>
+                <p className="text-xs text-slate-500 truncate">Pencatatan berpasangan debit dan kredit setiap transaksi.</p>
               </div>
-              <span className="text-xs text-slate-400 font-mono font-semibold">
+              <span className="text-xs text-slate-400 font-mono font-semibold shrink-0">
                 {initialJournals.length} Jurnal
               </span>
             </div>
@@ -970,7 +978,7 @@ export default function FinanceManager({
                           </span>
                         </div>
 
-                        <div className="text-xs font-semibold text-slate-800">
+                        <div className="text-xs font-semibold text-slate-800 break-words">
                           {j.description}
                           {j.referenceNumber && (
                             <span className="text-slate-400 font-mono text-[10px] ml-1.5 font-normal">
@@ -986,13 +994,13 @@ export default function FinanceManager({
                             return (
                               <div
                                 key={idx}
-                                className={`flex items-center justify-between gap-2 ${
-                                  isCredit ? 'pl-3 text-slate-600' : 'text-slate-900 font-medium'
+                                className={`flex items-start justify-between gap-2 ${
+                                  isCredit ? 'pl-2 text-slate-600' : 'text-slate-900 font-medium'
                                 }`}
                               >
-                                <div className="truncate">
-                                  <span className="text-slate-400 mr-1.5 text-[11px]">{it.accountCode}</span>
-                                  <span className="text-[11px] font-sans">{it.accountName}</span>
+                                <div className="min-w-0 flex-1">
+                                  <span className="text-slate-400 mr-1 text-[11px] shrink-0">{it.accountCode}</span>
+                                  <span className="text-[11px] font-sans break-words">{it.accountName}</span>
                                 </div>
                                 <span className={`shrink-0 font-bold ${isCredit ? 'text-rose-600' : 'text-emerald-700'}`}>
                                   {isCredit ? `(Kr) ${formatRupiah(it.credit)}` : `(Db) ${formatRupiah(it.debit)}`}
@@ -1090,13 +1098,13 @@ export default function FinanceManager({
       {activeTab === 'ledger' && (
         <div className="space-y-4">
           {/* Account Filter */}
-          <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-3.5 sm:p-4 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 w-full sm:w-auto min-w-0">
               <label className="text-xs font-bold text-slate-700 shrink-0">Pilih Akun Buku Besar:</label>
               <select
                 value={selectedLedgerAccount}
                 onChange={(e) => setSelectedLedgerAccount(e.target.value)}
-                className="w-full sm:w-auto px-3 py-2 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#1A73E8] bg-white min-h-[42px]"
+                className="w-full sm:w-auto max-w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#1A73E8] bg-white min-h-[42px] truncate"
               >
                 <option value="all">Semua Akun ({CHART_OF_ACCOUNTS.length})</option>
                 {CHART_OF_ACCOUNTS.map((acc) => (
@@ -1119,7 +1127,7 @@ export default function FinanceManager({
                 <div key={l.account.code} className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
                   {/* Account Header */}
                   <div className="p-3.5 sm:p-5 border-b border-slate-200 bg-slate-50/70 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                    <div className="flex items-center gap-2.5 sm:gap-3">
+                    <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
                       <span className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-100 text-[#1A73E8] font-mono font-black text-xs sm:text-sm flex items-center justify-center shrink-0">
                         {l.account.code}
                       </span>
@@ -1162,21 +1170,21 @@ export default function FinanceManager({
                                   {tx.entryNumber}
                                 </span>
                               </div>
-                              <div className="font-medium text-slate-800 text-xs">
+                              <div className="font-medium text-slate-800 text-xs break-words">
                                 {tx.description}
                               </div>
                               <div className="grid grid-cols-3 gap-1.5 bg-slate-50/80 p-2.5 rounded-xl font-mono text-[11px]">
-                                <div>
+                                <div className="min-w-0">
                                   <span className="text-[9px] uppercase font-bold text-slate-400 block">Debit</span>
-                                  <span className="font-bold text-emerald-700">{tx.debit > 0 ? formatRupiah(tx.debit) : '-'}</span>
+                                  <span className="font-bold text-emerald-700 truncate block">{tx.debit > 0 ? formatRupiah(tx.debit) : '-'}</span>
                                 </div>
-                                <div>
+                                <div className="min-w-0">
                                   <span className="text-[9px] uppercase font-bold text-slate-400 block">Kredit</span>
-                                  <span className="font-bold text-rose-700">{tx.credit > 0 ? formatRupiah(tx.credit) : '-'}</span>
+                                  <span className="font-bold text-rose-700 truncate block">{tx.credit > 0 ? formatRupiah(tx.credit) : '-'}</span>
                                 </div>
-                                <div className="text-right">
+                                <div className="text-right min-w-0">
                                   <span className="text-[9px] uppercase font-bold text-slate-400 block">Saldo</span>
-                                  <span className="font-black text-blue-800">{formatRupiah(tx.runningBalance)}</span>
+                                  <span className="font-black text-blue-800 truncate block">{formatRupiah(tx.runningBalance)}</span>
                                 </div>
                               </div>
                             </div>
@@ -1254,20 +1262,20 @@ export default function FinanceManager({
       {/* TAB 4: NERACA SALDO (Trial Balance) */}
       {activeTab === 'trial_balance' && (
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
-          <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/50">
-            <div>
-              <h2 className="text-sm font-bold text-slate-900">Neraca Saldo (Trial Balance)</h2>
-              <p className="text-xs text-slate-500">Ringkasan saldo akhir debit dan kredit untuk menguji keseimbangan buku besar.</p>
+          <div className="p-3.5 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/50">
+            <div className="min-w-0">
+              <h2 className="text-sm font-bold text-slate-900 truncate">Neraca Saldo (Trial Balance)</h2>
+              <p className="text-xs text-slate-500 truncate">Ringkasan saldo akhir debit dan kredit untuk menguji keseimbangan buku besar.</p>
             </div>
-            <div>
+            <div className="shrink-0">
               {initialTrialBalance.isBalanced ? (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-100 text-emerald-800 text-xs font-bold">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  Neraca Saldo Seimbang (Balanced)
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  Neraca Saldo Seimbang
                 </span>
               ) : (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-100 text-rose-800 text-xs font-bold">
-                  <AlertCircle className="w-4 h-4 text-rose-600" />
+                  <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
                   Selisih: {formatRupiah(initialTrialBalance.difference || 0)}
                 </span>
               )}
@@ -1286,7 +1294,7 @@ export default function FinanceManager({
                   {initialTrialBalance.rows.map((r) => (
                     <div key={r.code} className="p-3.5 space-y-1.5 hover:bg-slate-50/60 transition-colors">
                       <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-1.5 min-w-0">
+                        <div className="flex items-center gap-1.5 min-w-0 flex-1">
                           <span className="font-mono text-xs font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded shrink-0">
                             {r.code}
                           </span>
@@ -1298,14 +1306,14 @@ export default function FinanceManager({
                           {r.category}
                         </span>
                       </div>
-                      <div className="flex items-center justify-between text-xs font-mono pt-1">
-                        <div>
+                      <div className="flex items-center justify-between text-xs font-mono pt-1 gap-2">
+                        <div className="min-w-0">
                           <span className="text-[10px] text-slate-400 mr-1">Debit:</span>
-                          <span className="font-bold text-slate-800">{r.debit > 0 ? formatRupiah(r.debit) : '-'}</span>
+                          <span className="font-bold text-slate-800 truncate">{r.debit > 0 ? formatRupiah(r.debit) : '-'}</span>
                         </div>
-                        <div>
+                        <div className="text-right min-w-0">
                           <span className="text-[10px] text-slate-400 mr-1">Kredit:</span>
-                          <span className="font-bold text-slate-800">{r.credit > 0 ? formatRupiah(r.credit) : '-'}</span>
+                          <span className="font-bold text-slate-800 truncate">{r.credit > 0 ? formatRupiah(r.credit) : '-'}</span>
                         </div>
                       </div>
                     </div>
@@ -1313,11 +1321,11 @@ export default function FinanceManager({
                   <div className="p-3.5 bg-slate-100 border-t-2 border-slate-200 space-y-1 text-xs font-mono">
                     <div className="flex items-center justify-between font-bold text-slate-700">
                       <span>Total Debit:</span>
-                      <span className="text-emerald-700">{formatRupiah(initialTrialBalance.totalDebit || 0)}</span>
+                      <span className="text-emerald-700 font-bold">{formatRupiah(initialTrialBalance.totalDebit || 0)}</span>
                     </div>
                     <div className="flex items-center justify-between font-bold text-slate-700">
                       <span>Total Kredit:</span>
-                      <span className="text-rose-700">{formatRupiah(initialTrialBalance.totalCredit || 0)}</span>
+                      <span className="text-rose-700 font-bold">{formatRupiah(initialTrialBalance.totalCredit || 0)}</span>
                     </div>
                   </div>
                 </div>
@@ -1376,15 +1384,15 @@ export default function FinanceManager({
       {activeTab === 'income_statement' && (
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-4 sm:p-6 max-w-4xl mx-auto space-y-5 sm:space-y-6">
           <div className="text-center pb-4 border-b border-slate-200">
-            <h2 className="text-base sm:text-lg font-black text-slate-900">LAPORAN LABA RUGI (INCOME STATEMENT)</h2>
-            <p className="text-xs text-slate-500 mt-0.5">Cobascan • Periode: {periodLabel}</p>
+            <h2 className="text-base sm:text-lg font-bold text-slate-900">Laporan Laba Rugi</h2>
+            <p className="text-xs text-slate-500 mt-0.5">Income Statement • Cobascan • Periode: {periodLabel}</p>
           </div>
 
           {/* A. PENDAPATAN OPERASIONAL */}
           <div className="space-y-2">
-            <div className="flex items-center justify-between pb-1 border-b border-slate-100 font-bold text-[11px] sm:text-xs uppercase tracking-wider text-slate-700">
+            <div className="flex items-center justify-between pb-1.5 border-b border-slate-200 font-bold text-xs text-slate-800">
               <span className="truncate pr-2">A. Pendapatan Operasional</span>
-              <span className="shrink-0">Jumlah</span>
+              <span className="shrink-0 text-slate-400 font-semibold text-[11px]">Jumlah</span>
             </div>
             {(initialIncomeStatement.revenues || []).length === 0 ? (
               <div className="text-xs text-slate-400 py-1 pl-2 sm:pl-4">Belum ada pendapatan tercatat</div>
@@ -1404,9 +1412,9 @@ export default function FinanceManager({
 
           {/* B. BEBAN POKOK PENJUALAN (HPP) */}
           <div className="space-y-2 pt-2">
-            <div className="flex items-center justify-between pb-1 border-b border-slate-100 font-bold text-[11px] sm:text-xs uppercase tracking-wider text-slate-700">
+            <div className="flex items-center justify-between pb-1.5 border-b border-slate-200 font-bold text-xs text-slate-800">
               <span className="truncate pr-2">B. Beban Pokok Penjualan (HPP)</span>
-              <span className="shrink-0">Jumlah</span>
+              <span className="shrink-0 text-slate-400 font-semibold text-[11px]">Jumlah</span>
             </div>
             {(initialIncomeStatement.costOfGoodsSold || []).length === 0 ? (
               <div className="text-xs text-slate-400 py-1 pl-2 sm:pl-4">Belum ada HPP tercatat</div>
@@ -1425,16 +1433,16 @@ export default function FinanceManager({
           </div>
 
           {/* LABA KOTOR */}
-          <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 font-black text-xs sm:text-sm text-slate-900 border border-slate-200">
-            <span>LABA KOTOR (GROSS PROFIT):</span>
-            <span className="font-mono text-[#1A73E8] text-sm sm:text-base">{formatRupiah(initialIncomeStatement.grossProfit || 0)}</span>
+          <div className="p-3 sm:p-3.5 rounded-xl bg-slate-50 flex items-center justify-between gap-1.5 font-bold text-xs sm:text-sm text-slate-900 border border-slate-200">
+            <span>Laba Kotor (Gross Profit)</span>
+            <span className="font-mono text-[#1A73E8] font-bold text-sm sm:text-base">{formatRupiah(initialIncomeStatement.grossProfit || 0)}</span>
           </div>
 
           {/* C. BEBAN OPERASIONAL */}
           <div className="space-y-2 pt-2">
-            <div className="flex items-center justify-between pb-1 border-b border-slate-100 font-bold text-[11px] sm:text-xs uppercase tracking-wider text-slate-700">
+            <div className="flex items-center justify-between pb-1.5 border-b border-slate-200 font-bold text-xs text-slate-800">
               <span className="truncate pr-2">C. Beban Operasional &amp; Administrasi</span>
-              <span className="shrink-0">Jumlah</span>
+              <span className="shrink-0 text-slate-400 font-semibold text-[11px]">Jumlah</span>
             </div>
             {(initialIncomeStatement.operatingExpenses || []).length === 0 ? (
               <div className="text-xs text-slate-400 py-1 pl-2 sm:pl-4">Belum ada beban operasional tercatat</div>
@@ -1453,16 +1461,16 @@ export default function FinanceManager({
           </div>
 
           {/* LABA BERSIH */}
-          <div className="p-3.5 sm:p-4 rounded-2xl bg-blue-50 border border-blue-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 font-black text-xs sm:text-base text-slate-900">
+          <div className="p-3.5 sm:p-4 rounded-2xl bg-blue-50/80 border border-blue-200 flex items-center justify-between gap-2 font-bold text-xs sm:text-sm text-slate-900">
             <div className="flex items-center gap-2 flex-wrap">
-              <span>LABA BERSIH USAHA (NET INCOME):</span>
+              <span>Laba Bersih Usaha (Net Income)</span>
               {initialIncomeStatement.totalRevenue > 0 && (
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white text-[#1A73E8] border border-blue-200">
                   {initialIncomeStatement.netMargin}% Margin
                 </span>
               )}
             </div>
-            <span className="font-mono text-lg sm:text-xl font-black text-[#1A73E8] self-end sm:self-auto">
+            <span className="font-mono text-base sm:text-lg font-bold text-[#1A73E8] self-end sm:self-auto">
               {formatRupiah(initialIncomeStatement.netIncome || 0)}
             </span>
           </div>
@@ -1473,13 +1481,13 @@ export default function FinanceManager({
       {activeTab === 'cashflow_statement' && (
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-4 sm:p-6 max-w-4xl mx-auto space-y-5 sm:space-y-6">
           <div className="text-center pb-4 border-b border-slate-200">
-            <h2 className="text-base sm:text-lg font-black text-slate-900">LAPORAN ARUS KAS (STATEMENT OF CASH FLOWS)</h2>
-            <p className="text-xs text-slate-500 mt-0.5">Cobascan • Periode: {periodLabel}</p>
+            <h2 className="text-base sm:text-lg font-bold text-slate-900">Laporan Arus Kas</h2>
+            <p className="text-xs text-slate-500 mt-0.5">Statement of Cash Flows • Cobascan • Periode: {periodLabel}</p>
           </div>
 
           {/* 1. ARUS KAS AKTIVITAS OPERASI */}
           <div className="space-y-3">
-            <h3 className="font-bold text-[11px] sm:text-xs uppercase tracking-wider text-slate-700 pb-1 border-b border-slate-100">
+            <h3 className="font-bold text-xs text-slate-800 pb-1.5 border-b border-slate-200">
               1. Arus Kas dari Aktivitas Operasi
             </h3>
 
@@ -1508,7 +1516,7 @@ export default function FinanceManager({
 
           {/* 2. ARUS KAS AKTIVITAS PENDANAAN */}
           <div className="space-y-3 pt-2">
-            <h3 className="font-bold text-[11px] sm:text-xs uppercase tracking-wider text-slate-700 pb-1 border-b border-slate-100">
+            <h3 className="font-bold text-xs text-slate-800 pb-1.5 border-b border-slate-200">
               2. Arus Kas dari Aktivitas Pendanaan &amp; Modal
             </h3>
             <div className="space-y-1 pl-2 sm:pl-4">
@@ -1524,9 +1532,9 @@ export default function FinanceManager({
           </div>
 
           {/* 3. SALDO KAS AKHIR */}
-          <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-50 border border-emerald-200 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 font-black text-xs sm:text-base text-slate-900">
-            <span>SALDO KAS &amp; BANK AKHIR:</span>
-            <span className="font-mono text-lg sm:text-xl font-black text-emerald-700 self-end sm:self-auto">
+          <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-between gap-1.5 font-bold text-xs sm:text-sm text-slate-900">
+            <span>Saldo Kas &amp; Bank Akhir</span>
+            <span className="font-mono text-base sm:text-lg font-bold text-emerald-700 self-end sm:self-auto">
               {formatRupiah(initialCashFlow.endingCashBalance || 0)}
             </span>
           </div>
@@ -1549,14 +1557,11 @@ export default function FinanceManager({
           )}
 
           {/* Auto Journal Callout */}
-          <div className="bg-blue-50/70 border border-blue-200/60 rounded-xl p-3 flex items-start gap-2.5 text-xs text-blue-900">
-            <Sparkles className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-            <div>
-              <span className="font-bold">Otomatis Terjurnal ke Akuntansi:</span>{' '}
-              <span className="text-blue-800/90">
-                Data yang Anda simpan di sini langsung membuat ayat Jurnal Umum (Debit/Kredit Kas vs Akun Terkait) dan mem-posting ke Buku Besar &amp; Laba Rugi tanpa perlu input manual.
-              </span>
-            </div>
+          <div className="bg-blue-50/70 border border-blue-200/60 rounded-xl p-2.5 sm:p-3 flex items-center gap-2 text-[11px] sm:text-xs text-blue-900">
+            <Sparkles className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+            <p className="leading-snug">
+              <span className="font-bold">Otomatis Terjurnal:</span> Langsung tercatat di Jurnal Umum, Buku Besar &amp; Laba Rugi.
+            </p>
           </div>
 
           <div>
@@ -1719,78 +1724,81 @@ export default function FinanceManager({
 
           {/* Journal Lines Table */}
           <div className="border border-slate-200 rounded-xl overflow-hidden">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="bg-slate-100 text-slate-600 font-bold uppercase tracking-wider border-b border-slate-200">
-                  <th className="py-2 px-3">Akun</th>
-                  <th className="py-2 px-3 w-36 text-right">Debit (Rp)</th>
-                  <th className="py-2 px-3 w-36 text-right">Kredit (Rp)</th>
-                  <th className="py-2 px-2 w-10 text-center"></th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {journalLines.map((line, idx) => (
-                  <tr key={idx}>
-                    <td className="p-2">
-                      <select
-                        value={line.accountCode}
-                        onChange={(e) => updateJournalLine(idx, 'accountCode', e.target.value)}
-                        className="w-full px-2 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-[#1A73E8]"
-                      >
-                        {CHART_OF_ACCOUNTS.map((acc) => (
-                          <option key={acc.code} value={acc.code}>
-                            {acc.code} - {acc.name} ({acc.category})
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td className="p-2">
-                      <input
-                        type="text"
-                        value={line.debit ? Number(line.debit).toLocaleString('id-ID') : ''}
-                        onChange={(e) => updateJournalLine(idx, 'debit', e.target.value.replace(/[^0-9]/g, ''))}
-                        placeholder="0"
-                        className="w-full px-2 py-1.5 rounded-lg border border-slate-200 text-right font-mono text-xs font-bold focus:outline-none focus:ring-1 focus:ring-[#1A73E8]"
-                      />
-                    </td>
-                    <td className="p-2">
-                      <input
-                        type="text"
-                        value={line.credit ? Number(line.credit).toLocaleString('id-ID') : ''}
-                        onChange={(e) => updateJournalLine(idx, 'credit', e.target.value.replace(/[^0-9]/g, ''))}
-                        placeholder="0"
-                        className="w-full px-2 py-1.5 rounded-lg border border-slate-200 text-right font-mono text-xs font-bold focus:outline-none focus:ring-1 focus:ring-[#1A73E8]"
-                      />
-                    </td>
-                    <td className="p-2 text-center">
-                      {journalLines.length > 2 && (
-                        <button
-                          type="button"
-                          onClick={() => removeJournalLine(idx)}
-                          className="text-slate-400 hover:text-rose-600"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      )}
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[480px] text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-100 text-slate-600 font-bold uppercase tracking-wider border-b border-slate-200">
+                    <th className="py-2 px-3">Akun</th>
+                    <th className="py-2 px-3 w-32 text-right">Debit (Rp)</th>
+                    <th className="py-2 px-3 w-32 text-right">Kredit (Rp)</th>
+                    <th className="py-2 px-2 w-10 text-center"></th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {journalLines.map((line, idx) => (
+                    <tr key={idx}>
+                      <td className="p-2">
+                        <select
+                          value={line.accountCode}
+                          onChange={(e) => updateJournalLine(idx, 'accountCode', e.target.value)}
+                          className="w-full px-2 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-[#1A73E8]"
+                        >
+                          {CHART_OF_ACCOUNTS.map((acc) => (
+                            <option key={acc.code} value={acc.code}>
+                              {acc.code} - {acc.name} ({acc.category})
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="p-2">
+                        <input
+                          type="text"
+                          value={line.debit ? Number(line.debit).toLocaleString('id-ID') : ''}
+                          onChange={(e) => updateJournalLine(idx, 'debit', e.target.value.replace(/[^0-9]/g, ''))}
+                          placeholder="0"
+                          className="w-full px-2 py-1.5 rounded-lg border border-slate-200 text-right font-mono text-xs font-bold focus:outline-none focus:ring-1 focus:ring-[#1A73E8]"
+                        />
+                      </td>
+                      <td className="p-2">
+                        <input
+                          type="text"
+                          value={line.credit ? Number(line.credit).toLocaleString('id-ID') : ''}
+                          onChange={(e) => updateJournalLine(idx, 'credit', e.target.value.replace(/[^0-9]/g, ''))}
+                          placeholder="0"
+                          className="w-full px-2 py-1.5 rounded-lg border border-slate-200 text-right font-mono text-xs font-bold focus:outline-none focus:ring-1 focus:ring-[#1A73E8]"
+                        />
+                      </td>
+                      <td className="p-2 text-center">
+                        {journalLines.length > 2 && (
+                          <button
+                            type="button"
+                            onClick={() => removeJournalLine(idx)}
+                            className="text-slate-400 hover:text-rose-600 p-1"
+                            title="Hapus baris"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <button
               type="button"
               onClick={addJournalLine}
-              className="text-xs font-bold text-[#1A73E8] hover:underline inline-flex items-center gap-1"
+              className="text-xs font-bold text-[#1A73E8] hover:underline inline-flex items-center gap-1 self-start min-h-[32px]"
             >
               <Plus className="w-3.5 h-3.5" />
               Tambah Baris Akun
             </button>
 
             {/* Sum comparison */}
-            <div className="text-right text-xs">
+            <div className="text-left sm:text-right text-xs">
               <span className="text-slate-500 mr-2">Total Debit vs Kredit:</span>
               <span className="font-mono font-bold text-slate-900">
                 {formatRupiah(journalLines.reduce((acc, l) => acc + (Number(l.debit) || 0), 0))}

@@ -185,6 +185,7 @@ export default async function VisitorQrPage({ params }) {
         googleMapsUrl={mapsValidation.normalized}
         wifiEnabled={Boolean(qr.wifiEnabled)}
         wifiName={qr.wifiName || 'Wi-Fi Tamu'}
+        wifiUsername={qr.wifiUsername || ''}
       />
     </div>
   );

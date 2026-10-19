@@ -20,6 +20,7 @@ import { deleteUserAction, resetUserPinAction } from '@/lib/actions/admin-action
 
 export default function AdminUsersManager({
   initialUsers = [],
+  currentAdminId = '',
   currentAdminEmail = '',
   currentAdminWa = '',
 }) {
@@ -198,9 +199,9 @@ export default function AdminUsersManager({
                 </tr>
               ) : (
                 filteredUsers.map((u) => {
-                  const isAdmin =
-                    u.role === 'admin' ||
-                    (currentAdminEmail && u.email && u.email === currentAdminEmail) ||
+                  const isProtectedAdmin =
+                    (currentAdminId && u.id === currentAdminId) ||
+                    (currentAdminEmail && u.email && u.email.toLowerCase() === currentAdminEmail.toLowerCase()) ||
                     (currentAdminWa && u.whatsappNumber && u.whatsappNumber === currentAdminWa);
 
                   return (
@@ -258,7 +259,7 @@ export default function AdminUsersManager({
                         })}
                       </td>
                       <td className="py-3.5 px-4 text-right">
-                        {isAdmin ? (
+                        {isProtectedAdmin ? (
                           <span className="text-[10px] font-bold text-slate-400 px-2 py-1 rounded-md bg-slate-100 border border-slate-200">
                             Dilindungi
                           </span>
@@ -301,9 +302,9 @@ export default function AdminUsersManager({
             </div>
           ) : (
             filteredUsers.map((u) => {
-              const isAdmin =
-                u.role === 'admin' ||
-                (currentAdminEmail && u.email && u.email === currentAdminEmail) ||
+              const isProtectedAdmin =
+                (currentAdminId && u.id === currentAdminId) ||
+                (currentAdminEmail && u.email && u.email.toLowerCase() === currentAdminEmail.toLowerCase()) ||
                 (currentAdminWa && u.whatsappNumber && u.whatsappNumber === currentAdminWa);
 
               return (
@@ -363,7 +364,7 @@ export default function AdminUsersManager({
                       })}
                     </div>
                     <div className="flex items-center gap-1.5 ml-auto shrink-0">
-                      {isAdmin ? (
+                      {isProtectedAdmin ? (
                         <span className="text-[10px] font-bold text-slate-400 px-2 py-1 rounded-md bg-slate-100 border border-slate-200">
                           Dilindungi
                         </span>
@@ -409,10 +410,10 @@ export default function AdminUsersManager({
               <AlertTriangle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
               <div>
                 <p className="font-bold text-sm text-rose-900">
-                  Hapus Pengguna {userToDelete.whatsappNumber ? `+${userToDelete.whatsappNumber}` : (userToDelete.email || userToDelete.name)}?
+                  Hapus {userToDelete.role === 'admin' ? 'Akun Admin' : 'Pengguna'} {userToDelete.whatsappNumber ? `+${userToDelete.whatsappNumber}` : (userToDelete.email || userToDelete.name)}?
                 </p>
                 <p className="mt-1 leading-relaxed text-rose-700">
-                  Akun pengguna ini akan dihapus secara permanen beserta data bisnis yang dimilikinya. Seluruh perangkat QR yang terhubung akan dilepas dan dikembalikan ke status BLANK agar dapat digunakan kembali.
+                  Akun {userToDelete.role === 'admin' ? 'admin' : 'pengguna'} ini akan dihapus secara permanen dari sistem beserta seluruh data terkait.
                 </p>
               </div>
             </div>

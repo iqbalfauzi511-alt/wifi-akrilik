@@ -21,6 +21,7 @@ import {
   Plus,
   ShieldCheck,
   MapPin,
+  User,
 } from 'lucide-react';
 import Image from 'next/image';
 import { ownerChangePinAction, ownerAddDeviceAction, ownerChangeWaAction } from '@/lib/actions/owner-auth-actions';
@@ -100,6 +101,7 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
   const [addDeviceMapsUrl, setAddDeviceMapsUrl] = useState('');
   const [addDeviceWifiEnabled, setAddDeviceWifiEnabled] = useState(false);
   const [addDeviceWifiName, setAddDeviceWifiName] = useState('');
+  const [addDeviceWifiUsername, setAddDeviceWifiUsername] = useState('');
   const [addDeviceWifiPassword, setAddDeviceWifiPassword] = useState('');
   const [addDeviceSubmitting, setAddDeviceSubmitting] = useState(false);
   const [addDeviceMsg, setAddDeviceMsg] = useState(null);
@@ -128,6 +130,7 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
     setAddDeviceMapsUrl(activeStore?.googleMapsReviewUrl || activeStore?.googleMapsUrl || '');
     setAddDeviceWifiEnabled(Boolean(activeStore?.wifiEnabled));
     setAddDeviceWifiName(activeStore?.wifiName || '');
+    setAddDeviceWifiUsername(activeStore?.wifiUsername || '');
     setAddDeviceWifiPassword(activeStore?.wifiPassword || '');
     setAddDeviceMsg(null);
     setGenerateError('');
@@ -180,6 +183,7 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
       googleMapsReviewUrl: addDeviceMapsUrl,
       wifiEnabled: addDeviceWifiEnabled,
       wifiName: addDeviceWifiName,
+      wifiUsername: addDeviceWifiUsername,
       wifiPassword: addDeviceWifiPassword,
       targetBusinessId: addDeviceMode === 'existing' ? (addDeviceTargetBizId || activeStore?.id) : undefined,
       isNewBranch: addDeviceMode === 'new',
@@ -576,6 +580,21 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
                               type="text"
                               value={addDeviceWifiName}
                               onChange={(e) => setAddDeviceWifiName(e.target.value)}
+                              className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 bg-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-colors"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
+                            Username / ID Voucher <span className="text-slate-400 font-normal lowercase">(opsional)</span>
+                          </label>
+                          <div className="relative flex items-center">
+                            <div className="absolute left-3 text-slate-400 pointer-events-none"><User className="w-3.5 h-3.5" /></div>
+                            <input
+                              type="text"
+                              value={addDeviceWifiUsername}
+                              onChange={(e) => setAddDeviceWifiUsername(e.target.value)}
+                              placeholder="Khusus Wi-Fi voucher / captive portal..."
                               className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 bg-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-colors"
                             />
                           </div>

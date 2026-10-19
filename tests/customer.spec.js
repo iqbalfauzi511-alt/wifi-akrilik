@@ -56,12 +56,8 @@ test.describe('Customer Public Flow', () => {
     // Click return confirmation button
     await page.click('button:has-text("Saya Sudah Memberi Ulasan")');
 
-    // Wait for the verification to complete and reveal button to appear
-    const revealBtn = page.locator('button:has-text("Lihat Nama & Password Wi-Fi")');
-    await expect(revealBtn).toBeVisible({ timeout: 5000 });
-    await revealBtn.click();
-
-    // Verify WiFi SSID and initial password are now revealed
+    // Wait for the verification to complete and WiFi credentials to be automatically revealed
+    await expect(page.locator('text="Terima kasih atas ulasan Anda!"')).toBeVisible({ timeout: 5000 });
     await expect(page.locator('text="Wi-Fi Tamu"')).toBeVisible();
     await expect(page.locator('text="TEST_PASSWORD"')).toBeVisible();
 
@@ -89,9 +85,7 @@ test.describe('Customer Public Flow', () => {
     if (popup2) await popup2.close().catch(() => {});
 
     await page.click('button:has-text("Saya Sudah Memberi Ulasan")');
-    const revealBtn2 = page.locator('button:has-text("Lihat Nama & Password Wi-Fi")');
-    await expect(revealBtn2).toBeVisible({ timeout: 5000 });
-    await revealBtn2.click();
+    await expect(page.locator('text="Terima kasih atas ulasan Anda!"')).toBeVisible({ timeout: 5000 });
 
     await expect(page.locator('text="Wi-Fi Tamu"')).toBeVisible();
     await expect(page.locator('text="NEW_PASSWORD"')).toBeVisible();

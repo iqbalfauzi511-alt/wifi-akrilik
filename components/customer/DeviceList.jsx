@@ -254,6 +254,18 @@ export default function DeviceList({ qrList = [], business, businessName, defaul
                   />
                 </div>
                 <div>
+                  <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
+                    Username / ID Voucher <span className="text-slate-400 font-normal lowercase">(opsional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="wifiUsername"
+                    defaultValue={editQr.wifiUsername || business?.wifiUsername || ''}
+                    placeholder="Khusus Wi-Fi voucher / captive portal..."
+                    className="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-all"
+                  />
+                </div>
+                <div>
                   <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Password Wi-Fi</label>
                   <input
                     type="text"

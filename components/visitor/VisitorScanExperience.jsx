@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import {
+  Wifi,
   Star,
   Copy,
   Check,
@@ -30,6 +31,7 @@ export default function VisitorScanExperience({
   googleMapsUrl,
   wifiEnabled = false,
   wifiName = 'Wi-Fi Tamu',
+  wifiUsername = '',
   wifiPassword = '',
   whatsappNumber = '',
 }) {
@@ -39,10 +41,12 @@ export default function VisitorScanExperience({
   const [stage, setStage] = useState(STAGE.RATING);
   const [selectedRating, setSelectedRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
-  const [copied, setCopied] = useState(false);
-  // True once visitor goes through Google Maps path
+  const [copiedField, setCopiedField] = useState(null); // 'ssid' | 'username' | 'password' | null
+
+  // True once visitor goes through Google Maps path or 2-tap bypass
   const [wifiEarned, setWifiEarned] = useState(false);
   const [revealedPassword, setRevealedPassword] = useState(wifiPassword || '');
+  const [revealedUsername, setRevealedUsername] = useState(wifiUsername || '');
   const [revealedSsid, setRevealedSsid] = useState(wifiName || 'Wi-Fi Tamu');
   const [isRevealingWifi, setIsRevealingWifi] = useState(false);
 
@@ -52,6 +56,58 @@ export default function VisitorScanExperience({
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [loadingText, setLoadingText] = useState('Memverifikasi...');
   const placeboTimerRef = useRef(null);
+
+  // 2-Tap Bypass & Prompt rating state (NO timer)
+  const [isPromptingRating, setIsPromptingRating] = useState(false);
+  const [bypassArmed, setBypassArmed] = useState(false);
+  const starsContainerRef = useRef(null);
+
+  const fetchWifiCredentials = useCallback(async () => {
+    if (!wifiEnabled) return;
+    if (revealedPassword) return;
+    setIsRevealingWifi(true);
+    try {
+      const res = await fetch(`/api/q/${encodeURIComponent(code)}/reveal-wifi`, {
+        method: 'POST',
+      });
+      const data = await res.json();
+      if (data?.success && data?.wifi_password) {
+        setRevealedPassword(data.wifi_password);
+        if (data.wifi_name) setRevealedSsid(data.wifi_name);
+        if (data.wifi_username) setRevealedUsername(data.wifi_username);
+      }
+    } catch (err) {
+      console.error('Failed to reveal wifi:', err);
+    } finally {
+      setIsRevealingWifi(false);
+    }
+  }, [code, wifiEnabled, revealedPassword]);
+
+  // Direct unlock helper: reveals password immediately and tracks action
+  const unlockWifiDirectly = useCallback(() => {
+    setBypassArmed(false);
+    setIsPromptingRating(false);
+
+    setWifiEarned(true);
+    setStage(STAGE.DONE);
+    fetchWifiCredentials();
+    trackVisitorAction(code, 'buka_wifi_langsung').catch(() => {});
+  }, [code, fetchWifiCredentials]);
+
+  const handleWifiButtonClick = useCallback(() => {
+    if (!bypassArmed) {
+      // --- TAP 1: Nudge rating without timer ---
+      setBypassArmed(true);
+      setIsPromptingRating(true);
+
+      if (starsContainerRef.current) {
+        starsContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    } else {
+      // --- TAP 2: "Lanjut Buka Sandi" -> reveal Wi-Fi immediately ---
+      unlockWifiDirectly();
+    }
+  }, [bypassArmed, unlockWifiDirectly]);
 
   // If owner did not enable Wi-Fi, immediately redirect directly to Google Maps
   useEffect(() => {
@@ -69,8 +125,8 @@ export default function VisitorScanExperience({
     };
   }, []);
 
-  // Placebo Loading Runner: runs for exactly 5 seconds IN FRONT OF THE USER once they return
-  const startPlaceboLoading = useCallback((type = 'maps') => {
+  // Placebo Loading Runner: runs for exactly 2 seconds IN FRONT OF THE USER once they return
+  const startPlaceboLoading = useCallback(() => {
     if (placeboTimerRef.current) {
       clearInterval(placeboTimerRef.current);
     }
@@ -81,9 +137,11 @@ export default function VisitorScanExperience({
     const startTime = Date.now();
 
     const getStatusText = (progress) => {
-      if (progress < 40) return 'Mendeteksi ulasan Anda...';
-      if (progress < 80) return 'Menyiapkan akses Wi-Fi...';
-      return 'Akses Wi-Fi siap dibuka!';
+      if (wifiEnabled) {
+        if (progress < 50) return 'Menyimpan ulasan Anda...';
+        return 'Menyiapkan akses Wi-Fi...';
+      }
+      return 'Menyimpan ulasan Anda...';
     };
 
     setLoadingText(getStatusText(0));
@@ -97,10 +155,15 @@ export default function VisitorScanExperience({
       if (progress >= 100) {
         clearInterval(placeboTimerRef.current);
         placeboTimerRef.current = null;
-        setStage(STAGE.REDIRECTED);
+        if (wifiEnabled) {
+          setWifiEarned(true);
+          fetchWifiCredentials();
+          trackVisitorAction(code, 'lihat_wifi').catch(() => {});
+        }
+        setStage(STAGE.DONE);
       }
     }, 100);
-  }, []);
+  }, [wifiEnabled, fetchWifiCredentials, code]);
 
   // DETECT RETURN: When user returns to tab from Google Maps or WhatsApp, start Placebo Loading!
   useEffect(() => {
@@ -108,12 +171,12 @@ export default function VisitorScanExperience({
 
     const handleTabReturn = () => {
       if (document.visibilityState === 'visible') {
-        startPlaceboLoading(redirectType);
+        startPlaceboLoading();
       }
     };
 
     const handleWindowFocus = () => {
-      startPlaceboLoading(redirectType);
+      startPlaceboLoading();
     };
 
     document.addEventListener('visibilitychange', handleTabReturn);
@@ -123,36 +186,15 @@ export default function VisitorScanExperience({
       document.removeEventListener('visibilitychange', handleTabReturn);
       window.removeEventListener('focus', handleWindowFocus);
     };
-  }, [stage, redirectType, startPlaceboLoading]);
+  }, [stage, startPlaceboLoading]);
 
-  const fetchWifiCredentials = useCallback(async () => {
-    if (!wifiEnabled) return;
-    if (revealedPassword) return;
-    setIsRevealingWifi(true);
+  const handleCopy = (text, field) => {
+    if (!text) return;
     try {
-      const res = await fetch(`/api/q/${encodeURIComponent(code)}/reveal-wifi`, {
-        method: 'POST',
-      });
-      const data = await res.json();
-      if (data?.success && data?.wifi_password) {
-        setRevealedPassword(data.wifi_password);
-        if (data.wifi_name) setRevealedSsid(data.wifi_name);
-      }
-    } catch (err) {
-      console.error('Failed to reveal wifi:', err);
-    } finally {
-      setIsRevealingWifi(false);
-    }
-  }, [code, wifiEnabled, revealedPassword]);
-
-  const handleCopyPassword = () => {
-    const pw = revealedPassword || wifiPassword;
-    if (!pw) return;
-    try {
-      navigator.clipboard.writeText(pw);
+      navigator.clipboard.writeText(text);
     } catch {
       const el = document.createElement('textarea');
-      el.value = pw;
+      el.value = text;
       el.style.position = 'absolute';
       el.style.left = '-9999px';
       document.body.appendChild(el);
@@ -160,34 +202,46 @@ export default function VisitorScanExperience({
       document.execCommand('copy');
       document.body.removeChild(el);
     }
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
-    // Track Salin Password
-    trackVisitorAction(code, 'salin_wifi').catch(() => {});
+    setCopiedField(field);
+    setTimeout(() => {
+      setCopiedField((curr) => (curr === field ? null : curr));
+    }, 2200);
+    // Track Salin Wi-Fi
+    trackVisitorAction(code, `salin_${field}`).catch(() => {});
   };
 
   // Star click handler — all ratings go to Google Maps
   const handleStarClick = (value) => {
+    setBypassArmed(false);
+    setIsPromptingRating(false);
+
     setSelectedRating(value);
     const trackUrl = `/api/q/${encodeURIComponent(code)}/track?action=buka_review&url=${encodeURIComponent(targetMapsUrl)}`;
     window.open(trackUrl, '_blank', 'noopener,noreferrer');
     setStage(STAGE.WAITING_RETURN);
   };
 
-  // Reveal WiFi: called from REDIRECTED stage
-  const handleRevealWifi = () => {
+  // Reveal WiFi
+  const handleRevealWifi = useCallback(() => {
     setWifiEarned(true);
     setStage(STAGE.DONE);
     fetchWifiCredentials();
     // Track Lihat WiFi
     trackVisitorAction(code, 'lihat_wifi').catch(() => {});
-  };
+  }, [code, fetchWifiCredentials]);
+
+  // If somehow reached REDIRECTED, auto-reveal WiFi and transition to DONE
+  useEffect(() => {
+    if (stage === STAGE.REDIRECTED) {
+      handleRevealWifi();
+    }
+  }, [stage, handleRevealWifi]);
 
   // ------- RENDER -------
   return (
-    <div className="max-w-sm sm:max-w-md w-full mx-auto space-y-4">
-      {/* Business Card */}
-      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xl shadow-slate-200/50 px-4.5 py-6 sm:px-8 sm:py-8 text-center">
+    <div className="max-w-sm sm:max-w-md w-full mx-auto">
+      {/* Single Unified Card */}
+      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xl shadow-slate-200/50 px-5 py-6 sm:px-8 sm:py-8 text-center">
         {/* Logo */}
         <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white border border-slate-200/80 mx-auto flex items-center justify-center mb-3 sm:mb-4 p-2.5 sm:p-3 shadow-xs overflow-hidden">
           {logoUrl ? (
@@ -200,27 +254,52 @@ export default function VisitorScanExperience({
         <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight break-words">
           {businessName}
         </h1>
-        <p className="text-xs text-slate-500 mt-1 max-w-[280px] sm:max-w-xs mx-auto leading-relaxed text-balance">
-          {wifiEnabled
-            ? 'Beri ulasan di Google Maps untuk membuka akses Wi-Fi gratis.'
-            : 'Selamat datang! Berikan ulasan pengalaman Anda di Google Maps.'}
-        </p>
 
         {/* Stage: RATING */}
         {stage === STAGE.RATING && (
           <div className="mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-slate-100">
-            <div className="text-xs font-bold text-slate-800 mb-2">Bagaimana Pengalaman Anda?</div>
-            <div className="flex items-center justify-center gap-1 sm:gap-2 mb-2">
+            {bypassArmed ? (
+              <div className="animate-in fade-in duration-200">
+                <div className="text-sm font-bold text-amber-800 sm:text-base">
+                  Kami Sangat Berharap Dukungan Anda
+                </div>
+                <p className="text-xs text-slate-600 mt-1 max-w-[290px] sm:max-w-xs mx-auto leading-relaxed text-balance">
+                  Satu ulasan dari Anda sangat berharga bagi kami
+                </p>
+              </div>
+            ) : (
+              <div>
+                <div className="text-sm font-bold text-slate-800 sm:text-base">
+                  Bagaimana pengalaman Anda?
+                </div>
+                <p className="text-xs text-slate-500 mt-1 max-w-[280px] sm:max-w-xs mx-auto leading-relaxed text-balance">
+                  Yuk, bagikan pengalaman Anda di Google Maps!
+                </p>
+              </div>
+            )}
+
+            <div
+              ref={starsContainerRef}
+              className={`flex items-center justify-center gap-1 sm:gap-2 mt-3 mb-2 p-2 rounded-2xl transition-all duration-300 ${
+                isPromptingRating
+                  ? 'ring-2 ring-amber-400 bg-amber-50/90 shadow-md shadow-amber-300/30 scale-[1.02]'
+                  : ''
+              }`}
+            >
               {[1, 2, 3, 4, 5].map((star) => {
                 const isFilled = (hoverRating || selectedRating) >= star;
                 return (
                   <button
                     key={star}
                     type="button"
-                    onMouseEnter={() => setHoverRating(star)}
+                    onMouseEnter={() => {
+                      setHoverRating(star);
+                      if (isPromptingRating) setIsPromptingRating(false);
+                    }}
                     onMouseLeave={() => setHoverRating(0)}
                     onClick={() => handleStarClick(star)}
                     title={`${star} Bintang`}
+                    aria-label={`Beri ulasan ${star} bintang dari 5`}
                     className="p-1 sm:p-1.5 rounded-xl transition-all hover:scale-120 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#1A73E8] touch-manipulation cursor-pointer"
                   >
                     <Star
@@ -232,7 +311,7 @@ export default function VisitorScanExperience({
                 );
               })}
             </div>
-            <div className="text-[11px] text-slate-400 h-4 mb-4">
+            <div className="text-[11px] text-slate-400 h-4 mb-1">
               {(hoverRating || selectedRating) === 1 && 'Sangat Kurang'}
               {(hoverRating || selectedRating) === 2 && 'Kurang Puas'}
               {(hoverRating || selectedRating) === 3 && 'Cukup Baik'}
@@ -240,10 +319,47 @@ export default function VisitorScanExperience({
               {(hoverRating || selectedRating) === 5 && 'Sangat Puas!'}
             </div>
 
+            {/* Wi-Fi Action Area inside the SAME unified card */}
             {wifiEnabled && (
-              <div className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-2xl bg-slate-50 border border-slate-200 text-[11px] min-[360px]:text-xs text-slate-500 font-medium whitespace-nowrap">
-                <LockKeyhole className="w-3.5 h-3.5 shrink-0 text-slate-400" />
-                <span>Beri ulasan di atas untuk membuka Wi-Fi</span>
+              <div className="mt-4 pt-4 border-t border-slate-100">
+                <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-2">
+                  <div className="flex items-center justify-center gap-1.5 text-slate-700">
+                    <Wifi className="w-4 h-4 text-[#1A73E8]" />
+                    <span className="text-xs font-bold text-slate-800">Akses Wi-Fi</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleWifiButtonClick}
+                    className={`w-full min-h-[46px] py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer touch-manipulation active:scale-[0.98] ${
+                      bypassArmed
+                        ? 'bg-slate-900 hover:bg-slate-800 text-white shadow-slate-900/25 ring-2 ring-slate-900/10'
+                        : 'bg-[#1A73E8] hover:bg-blue-600 text-white shadow-blue-500/20'
+                    }`}
+                  >
+                    {bypassArmed ? (
+                      <>
+                        <UnlockKeyhole className="w-4 h-4 shrink-0 text-emerald-400" />
+                        <span>Lanjut Buka Sandi</span>
+                      </>
+                    ) : (
+                      <>
+                        <LockKeyhole className="w-4 h-4 shrink-0" />
+                        <span>Buka Sandi Wi-Fi</span>
+                      </>
+                    )}
+                  </button>
+
+                  {bypassArmed ? (
+                    <p className="text-[11px] text-slate-500 leading-snug animate-in fade-in duration-200">
+                      Ketuk tombol di atas jika ingin langsung melihat sandi.
+                    </p>
+                  ) : (
+                    <p className="text-[11px] text-slate-400 leading-snug">
+                      Dapatkan nama jaringan dan sandi Wi-Fi di meja ini.
+                    </p>
+                  )}
+                </div>
               </div>
             )}
           </div>
@@ -305,81 +421,73 @@ export default function VisitorScanExperience({
           </div>
         )}
 
-        {/* Stage: REDIRECTED (Returned from Google Maps) */}
-        {stage === STAGE.REDIRECTED && (
-          <div className="mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-slate-100 text-center py-2 animate-in fade-in zoom-in-95 duration-200">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-3">
+        {/* Stage: DONE / REDIRECTED with revealed credentials inside the SAME card */}
+        {(stage === STAGE.DONE || stage === STAGE.REDIRECTED) && (
+          <div className="mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-slate-100 text-center space-y-4 animate-in fade-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto shadow-2xs">
               <CheckCircle2 className="w-7 h-7" />
             </div>
-            <p className="text-sm font-bold text-slate-800">
-              Terima kasih atas ulasan Anda!
-            </p>
-            
-            {wifiEnabled ? (
-              <>
-                <p className="text-xs text-slate-500 mt-1 mb-4 leading-relaxed text-balance">
-                  Klik tombol di bawah untuk melihat nama dan password Wi-Fi.
-                </p>
+            <div>
+              <h2 className="text-base sm:text-lg font-bold text-slate-800">
+                {selectedRating ? 'Terima kasih atas ulasan Anda!' : 'Wi-Fi Terbuka! 🎉'}
+              </h2>
+              <p className="text-xs text-slate-500 mt-1 max-w-[280px] sm:max-w-xs mx-auto leading-relaxed text-balance">
+                {selectedRating
+                  ? 'Masukan dan penilaian Anda sangat berarti bagi kami.'
+                  : 'Silakan gunakan akses internet Wi-Fi di bawah ini.'}
+              </p>
+            </div>
+
+            {/* Credentials area */}
+            {wifiEnabled && wifiEarned && (
+              <div className="text-left p-4 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-3">
+                {/* Row 1: SSID (NO COPY BUTTON) */}
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[11px] font-semibold text-slate-400">Nama Wi-Fi (SSID)</div>
+                    <div className="text-sm font-bold text-slate-900 mt-0.5 truncate">{revealedSsid || wifiName || 'Wi-Fi Tamu'}</div>
+                  </div>
+                </div>
+
+                {/* Row 2: Username / ID Voucher (ADAPTIVE - only if present) */}
+            {Boolean(revealedUsername) && (
+              <div className="pt-3 border-t border-slate-200/60 flex items-center justify-between gap-3">
+                <div className="min-w-0 flex-1">
+                  <div className="text-[11px] font-semibold text-slate-400">Username / ID Voucher</div>
+                  <div className="font-mono text-sm font-extrabold text-slate-900 tracking-wider mt-0.5 truncate">
+                    {revealedUsername}
+                  </div>
+                </div>
                 <button
                   type="button"
-                  onClick={handleRevealWifi}
-                  className="w-full min-h-[46px] py-3 px-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 active:scale-98 text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer touch-manipulation"
+                  onClick={() => handleCopy(revealedUsername, 'username')}
+                  className="px-3 py-1.5 min-h-[36px] rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-xs font-bold text-slate-800 shadow-2xs transition-all inline-flex items-center gap-1.5 cursor-pointer shrink-0 active:scale-95"
+                  title="Salin Username Voucher"
                 >
-                  <UnlockKeyhole className="w-4 h-4 shrink-0" />
-                  <span>Lihat Nama &amp; Password Wi-Fi</span>
+                  {copiedField === 'username' ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-600" />
+                      <span className="text-emerald-700 font-bold">Tersalin!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5 text-slate-500" />
+                      <span>Salin Username</span>
+                    </>
+                  )}
                 </button>
-              </>
-            ) : (
-              <p className="text-xs text-slate-500 mt-2 leading-relaxed text-balance">
-                Masukan dan ulasan Anda sangat berharga bagi kami.
-              </p>
+              </div>
             )}
-          </div>
-        )}
 
-        {/* Stage: DONE (Completed rating) */}
-        {stage === STAGE.DONE && !wifiEnabled && (
-          <div className="mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-slate-100 text-center">
-            <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-2">
-              <CheckCircle2 className="w-6 h-6" />
-            </div>
-            <p className="text-sm font-bold text-slate-800">Terima kasih!</p>
-            <p className="text-xs text-slate-500 mt-1 text-balance">
-              {selectedRating <= 2
-                ? 'Masukan Anda sangat berarti untuk meningkatkan kualitas layanan kami.'
-                : 'Ulasan Anda sangat berarti untuk meningkatkan kualitas layanan kami.'}
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* WiFi Section: ONLY shown when wifiEnabled AND wifi was earned */}
-      {wifiEnabled && wifiEarned && stage === STAGE.DONE && (
-        <div className="bg-white rounded-3xl border border-emerald-200 shadow-xl shadow-emerald-100/50 p-6 sm:p-7 animate-in fade-in slide-in-from-bottom-2 duration-300">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-              <UnlockKeyhole className="w-5 h-5" />
-            </div>
-            <div>
-              <h2 className="text-sm font-bold text-slate-900">Wi-Fi Terbuka!</h2>
-              <p className="text-[11px] text-emerald-600 font-medium">Akses internet untuk pelanggan</p>
-            </div>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-3">
-            <div>
-              <div className="text-[11px] font-semibold text-slate-400">Nama Wi-Fi (SSID)</div>
-              <div className="text-sm font-bold text-slate-900 mt-0.5">{revealedSsid || wifiName || 'Wi-Fi Tamu'}</div>
-            </div>
-
-            <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between gap-3">
-              <div>
+            {/* Row 3: Password */}
+            <div className="pt-3 border-t border-slate-200/60 flex items-center justify-between gap-3">
+              <div className="min-w-0 flex-1">
                 <div className="text-[11px] font-semibold text-slate-400">Password Wi-Fi</div>
-                <div className="font-mono text-sm font-extrabold text-slate-900 tracking-wider mt-0.5">
+                <div className="font-mono text-sm font-extrabold text-slate-900 tracking-wider mt-0.5 truncate">
                   {isRevealingWifi ? (
                     <span className="text-xs text-slate-400 animate-pulse font-normal">Mengambil akses Wi-Fi...</span>
                   ) : (
-                    (revealedPassword || wifiPassword) || '(tidak ada password)'
+                    (revealedPassword || wifiPassword) || '(tanpa kata sandi)'
                   )}
                 </div>
               </div>
@@ -387,13 +495,14 @@ export default function VisitorScanExperience({
               {(revealedPassword || wifiPassword) && !isRevealingWifi && (
                 <button
                   type="button"
-                  onClick={handleCopyPassword}
-                  className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-xs font-bold text-slate-800 shadow-xs transition-all inline-flex items-center gap-1.5 cursor-pointer shrink-0"
+                  onClick={() => handleCopy(revealedPassword || wifiPassword, 'password')}
+                  className="px-3 py-1.5 min-h-[36px] rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-xs font-bold text-slate-800 shadow-2xs transition-all inline-flex items-center gap-1.5 cursor-pointer shrink-0 active:scale-95"
+                  title="Salin Password Wi-Fi"
                 >
-                  {copied ? (
+                  {copiedField === 'password' ? (
                     <>
                       <Check className="w-3.5 h-3.5 text-emerald-600" />
-                      <span className="text-emerald-700">Tersalin!</span>
+                      <span className="text-emerald-700 font-bold">Tersalin!</span>
                     </>
                   ) : (
                     <>
@@ -405,10 +514,10 @@ export default function VisitorScanExperience({
               )}
             </div>
           </div>
-        </div>
-      )}
-
-
-    </div>
-  );
+        )}
+      </div>
+    )}
+  </div>
+</div>
+);
 }

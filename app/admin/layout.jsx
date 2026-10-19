@@ -21,7 +21,7 @@ export default async function AdminLayout({ children }) {
   return (
     <div className="min-h-screen flex bg-slate-50/60">
       <DashboardSidebar role="admin" session={session} />
-      <div className="flex-1 flex flex-col min-w-0 h-screen h-[100dvh] overflow-y-auto">
+      <div className="flex-1 flex flex-col min-w-0 h-screen h-[100dvh] overflow-y-auto overflow-x-hidden">
         {/* Mobile Top Bar (Admin) */}
         <div className="lg:hidden bg-white border-b border-slate-200 sticky top-0 z-10 shrink-0">
           <div className="px-4 h-14 flex items-center justify-between">
@@ -39,7 +39,7 @@ export default async function AdminLayout({ children }) {
           </div>
         </div>
 
-        <main className="flex-1 pb-24 lg:pb-8 w-full">
+        <main className="flex-1 pb-24 lg:pb-8 w-full min-w-0 overflow-x-hidden">
           {children}
         </main>
       </div>

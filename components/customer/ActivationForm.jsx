@@ -83,6 +83,9 @@ export default function ActivationForm({
   const [wifiNameVal, setWifiNameVal] = useState(
     draft.current.wifiNameVal ?? (initialBusiness?.wifiName || '')
   );
+  const [wifiUsernameVal, setWifiUsernameVal] = useState(
+    draft.current.wifiUsernameVal ?? (initialBusiness?.wifiUsername || '')
+  );
   const [wifiPasswordVal, setWifiPasswordVal] = useState(
     draft.current.wifiPasswordVal ?? (initialBusiness?.wifiPassword || '')
   );
@@ -98,13 +101,13 @@ export default function ActivationForm({
     saveDraft(initialCode, {
       waVal, nameVal,
       businessNameVal, codeVal, mapsUrlVal,
-      isWifiEnabled, wifiNameVal, wifiPasswordVal,
+      isWifiEnabled, wifiNameVal, wifiUsernameVal, wifiPasswordVal,
       whatsappBusinessVal, targetBusinessId,
       // PIN never persisted for security
     });
   }, [
     initialCode, waVal, nameVal, businessNameVal, codeVal,
-    mapsUrlVal, isWifiEnabled, wifiNameVal, wifiPasswordVal,
+    mapsUrlVal, isWifiEnabled, wifiNameVal, wifiUsernameVal, wifiPasswordVal,
     whatsappBusinessVal, targetBusinessId,
   ]);
 
@@ -214,6 +217,7 @@ export default function ActivationForm({
       formData.set('googleMapsReviewUrl', mapsUrlVal.trim());
       formData.set('wifiEnabled', isWifiEnabled ? 'true' : 'false');
       formData.set('wifiName', wifiNameVal.trim());
+      formData.set('wifiUsername', wifiUsernameVal.trim());
       formData.set('wifiPassword', wifiPasswordVal.trim());
       formData.set('isNewBusiness', 'true');
     } else {
@@ -623,6 +627,22 @@ export default function ActivationForm({
                             className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-white text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1A73E8]"
                           />
                         </div>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">
+                          Username / ID Voucher <span className="text-slate-400 font-normal lowercase">(opsional)</span>
+                        </label>
+                        <div className="relative flex items-center">
+                          <div className="absolute left-3.5 text-slate-400 pointer-events-none"><User className="w-4 h-4" /></div>
+                          <input
+                            type="text"
+                            value={wifiUsernameVal}
+                            onChange={(e) => setWifiUsernameVal(e.target.value)}
+                            placeholder="Khusus Wi-Fi voucher / captive portal"
+                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-white text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1A73E8]"
+                          />
+                        </div>
+                        <p className="text-[11px] text-slate-400 mt-1">Kosongkan jika Wi-Fi standar (hanya perlu nama Wi-Fi & sandi).</p>
                       </div>
                       <div>
                         <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">

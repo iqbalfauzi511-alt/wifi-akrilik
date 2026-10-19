@@ -63,6 +63,7 @@ export async function POST(request, { params }) {
     const code = rawCode.trim().toUpperCase().replace(/[\u2013\u2014\u2212]/g, '-');
 
     const result = await getQrWifiCredentials(code);
+    console.log('REVEAL ROUTE RESULT:', JSON.stringify(result));
 
     if (result.error === 'notFound') {
       return NextResponse.json(
@@ -102,6 +103,7 @@ export async function POST(request, { params }) {
     return NextResponse.json({
       success: true,
       wifi_name: result.wifi_name,
+      wifi_username: result.wifi_username || null,
       wifi_password: result.wifi_password,
     });
   } catch (err) {

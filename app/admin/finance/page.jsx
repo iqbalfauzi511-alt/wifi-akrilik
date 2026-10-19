@@ -81,7 +81,7 @@ export default async function AdminFinancePage({ searchParams }) {
   }));
 
   return (
-    <div className="p-3.5 sm:p-6 lg:p-8 max-w-7xl mx-auto">
+    <div className="px-4 sm:px-8 py-6 max-w-7xl mx-auto w-full min-w-0 overflow-x-hidden space-y-6">
       <FinanceManager
         initialTransactions={transactions}
         initialSummary={summary}
