@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getPublicQrByCode, recordScanLog } from '@/lib/db/queries/qr';
 import { validateGoogleMapsUrl, safeRedirectUrl } from '@/lib/utils/validation.js';
+import { normalizeQrCode } from '@/lib/utils/code-generator.js';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,7 +16,7 @@ export async function GET(request, { params }) {
     let safeFallbackUrl = '/';
 
     if (rawCode) {
-      const code = rawCode.trim().toUpperCase().replace(/[\u2013\u2014\u2212]/g, '-');
+      const code = normalizeQrCode(rawCode);
       safeFallbackUrl = `/q/${code}`;
       qr = await getPublicQrByCode(code);
       

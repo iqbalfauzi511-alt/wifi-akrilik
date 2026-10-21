@@ -5,6 +5,7 @@ import { headers } from 'next/headers';
 import { AlertTriangle, ShieldOff, Sparkles, ArrowRight, MapPin } from 'lucide-react';
 import { getPublicQrByCode, recordScanLog } from '@/lib/db/queries/qr';
 import { validateGoogleMapsUrl } from '@/lib/utils/validation';
+import { normalizeQrCode } from '@/lib/utils/code-generator';
 import VisitorScanExperience from '@/components/visitor/VisitorScanExperience';
 import Button from '@/components/ui/Button';
 
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }) {
 
 export default async function VisitorWifiPage({ params }) {
   const { code } = params;
-  const normalizedCode = code?.trim().toUpperCase().replace(/[\u2013\u2014\u2212]/g, '-') || '';
+  const normalizedCode = normalizeQrCode(code);
   const qr = await getPublicQrByCode(normalizedCode);
 
   // Case 1: QR not found

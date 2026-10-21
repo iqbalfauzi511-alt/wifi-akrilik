@@ -14,6 +14,7 @@ import {
   QrCode,
   MapPin,
   Phone,
+  Wifi,
   User,
   X,
 } from 'lucide-react';
@@ -173,6 +174,7 @@ export default function AdminBusinessesManager({ initialBusinesses = [] }) {
                 <th className="py-3 px-4 font-semibold">Pemilik</th>
                 <th className="py-3 px-4 font-semibold text-center">Perangkat</th>
                 <th className="py-3 px-4 font-semibold">WhatsApp</th>
+                <th className="py-3 px-4 font-semibold text-slate-800">Wi-Fi Default</th>
                 <th className="py-3 px-4 font-semibold">Review Google</th>
                 <th className="py-3 px-4 font-semibold text-right">Aksi</th>
               </tr>
@@ -180,7 +182,7 @@ export default function AdminBusinessesManager({ initialBusinesses = [] }) {
             <tbody className="divide-y divide-slate-100">
               {filteredBusinesses.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-slate-400">
+                  <td colSpan={8} className="py-8 text-center text-slate-400">
                     Tidak ada bisnis yang cocok dengan kriteria pencarian.
                   </td>
                 </tr>
@@ -234,6 +236,19 @@ export default function AdminBusinessesManager({ initialBusinesses = [] }) {
                           <span className="text-slate-400 italic text-[11px]">-</span>
                         )}
                       </td>
+                      <td className="py-3.5 px-4 text-xs text-slate-600">
+                        {b.wifiEnabled ? (
+                          <div className="space-y-0.5">
+                            <div className="font-semibold text-slate-900">{b.wifiName || '-'}</div>
+                            {b.wifiUsername && (
+                              <div className="text-[10px] text-slate-500 font-mono italic">User: {b.wifiUsername}</div>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="text-slate-400 italic">-</span>
+                        )}
+                      </td>
+
 
                       <td className="py-3.5 px-4">
                         {hasMaps ? (
@@ -245,7 +260,7 @@ export default function AdminBusinessesManager({ initialBusinesses = [] }) {
                               className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-brand-50 hover:bg-brand-100 text-brand-700 rounded-lg text-xs font-semibold border border-brand-200 transition-colors"
                               title="Buka link ulasan Google"
                             >
-                              <span>Buka Review</span>
+                              <span>Buka Link Review</span>
                               <ExternalLink className="w-3 h-3 text-brand-500" />
                             </a>
                             <button
@@ -357,6 +372,24 @@ export default function AdminBusinessesManager({ initialBusinesses = [] }) {
                       </div>
                     </div>
 
+                    {/* Wi-Fi Default Block */}
+                    <div className="flex items-start gap-2 pt-2 border-t border-slate-200/50">
+                      <Wifi className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Wi-Fi Default</div>
+                        {b.wifiEnabled ? (
+                          <>
+                            <div className="font-semibold text-slate-800 text-xs truncate">{b.wifiName || '-'}</div>
+                            <div className="text-[11px] text-slate-500 font-mono truncate">
+                              {b.wifiUsername ? `User: ${b.wifiUsername}` : 'Tanpa username'}
+                            </div>
+                          </>
+                        ) : (
+                          <span className="text-slate-400 italic font-normal text-xs">Wi-Fi tidak diaktifkan</span>
+                        )}
+                      </div>
+                    </div>
+
                     {/* Google Maps Review Block */}
                     <div className="pt-2 border-t border-slate-200/50 space-y-1.5">
                       <div className="flex items-center justify-between gap-2">
@@ -386,7 +419,7 @@ export default function AdminBusinessesManager({ initialBusinesses = [] }) {
                             className="flex-1 min-h-[44px] px-3.5 py-2 rounded-xl bg-brand-50 hover:bg-brand-100 text-brand-700 font-semibold text-xs border border-brand-200/80 inline-flex items-center justify-center gap-1.5 active:bg-brand-200 transition-colors"
                           >
                             <ExternalLink className="w-3.5 h-3.5 shrink-0" />
-                            <span>Buka Review</span>
+                            <span>Buka Link Review</span>
                           </a>
                           <button
                             type="button"

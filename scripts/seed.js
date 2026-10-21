@@ -4,6 +4,14 @@ import { eq } from 'drizzle-orm';
 import { hashPassword } from '../lib/auth/password.js';
 
 async function seed() {
+  const dbUrl = process.env.DATABASE_URL || '';
+  const isRemote = dbUrl && !dbUrl.includes('localhost') && !dbUrl.includes('127.0.0.1');
+  if (isRemote && process.env.ALLOW_REMOTE_SEED !== 'true') {
+    console.error('⛔ DATABASE_URL mengarah ke database remote. Seed dibatalkan untuk melindungi data produksi.');
+    console.error('   Jika Anda yakin ingin menjalankan seed ke server remote, jalankan: ALLOW_REMOTE_SEED=true npm run db:seed');
+    process.exit(1);
+  }
+
   console.log('🌱 Starting database seed...');
   await ensureDatabaseInitialized();
   const db = getDb();

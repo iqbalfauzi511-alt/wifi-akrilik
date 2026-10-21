@@ -90,45 +90,59 @@ async function runTests() {
   assert(wifiCreds.success === true, 'Reveal credentials should succeed');
   assert(wifiCreds.wifi_name === 'KopiSore-FreeWiFi', 'Correct SSID returned');
   assert(wifiCreds.wifi_password === 'kopisorelovers', 'Correct password returned');
-  console.log('  3. Password Wi-Fi terbuka: SSID=' + wifiCreds.wifi_name + ', Password=' + wifiCreds.wifi_password);
+  console.log('  3. Password Wi-Fi terbuka: SSID=' + wifiCreds.wifi_name + ', Password=[REDACTED]');
   console.log('✓ Test 2 Passed: Jika memilih Wi-Fi, tampil halaman review gate lalu password terbuka.\n');
 
   // ========================================================
   // SCENARIO 3: EDIT SETTINGS (TOGGLE WI-FI DI DASHBOARD)
   // ========================================================
   console.log('--- Test 3: Pengubahan Pengaturan Wi-Fi di Dashboard (QR Meja Tetap Sama) ---');
-  // Matikan Wi-Fi untuk Kopi Sore Cafe
+  // Matikan Wi-Fi untuk Kopi Sore Cafe. Sibling device follows business defaults.
+  const siblingCode = `WIFI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+  await db.insert(qrCodes).values({ code: siblingCode, status: 'blank' });
+  const siblingActivation = await activateQrTransaction({
+    userId: testUser.id,
+    qrCodeValue: siblingCode,
+    businessData: {
+      targetBusinessId: actWifi.business.id,
+      businessName: 'Kopi Sore Cafe',
+    },
+  });
+  assert(siblingActivation.success, 'Additional device should activate against existing business');
+
   await updateBusinessDetails(actWifi.business.id, testUser.id, {
     wifiEnabled: false,
   });
 
   const publicWifiSwitched = await getPublicQrByCode(codeWithWifi);
   assert(publicWifiSwitched.wifiEnabled === false, 'wifiEnabled should now be false');
-  console.log('Setelah Wi-Fi dimatikan di settings: QR ' + codeWithWifi + ' otomatis berubah menjadi DIRECT REDIRECT');
+  const publicSiblingSwitched = await getPublicQrByCode(siblingCode);
+  assert(publicSiblingSwitched.wifiEnabled === false, 'Business Wi-Fi change propagates to sibling device');
 
-  // Nyalakan kembali Wi-Fi untuk Toko Kue Manis
+  // Changes must remain limited to selected business/branch.
+  const publicMapsUnchanged = await getPublicQrByCode(codeMapsOnly);
+  assert(publicMapsUnchanged.wifiEnabled === false, 'Other business Wi-Fi setting remains unchanged');
+
+  // Nyalakan kembali Wi-Fi untuk Toko Kue Manis.
   await updateBusinessDetails(actMapsOnly.business.id, testUser.id, {
     wifiEnabled: true,
     wifiName: 'TokoKue-WiFi',
     wifiPassword: 'kuemanisrasanya',
   });
-
   const publicMapsSwitched = await getPublicQrByCode(codeMapsOnly);
   assert(publicMapsSwitched.wifiEnabled === true, 'wifiEnabled should now be true');
-  console.log('Setelah Wi-Fi dinyalakan di settings: QR ' + codeMapsOnly + ' otomatis menampilkan HALAMAN REVIEW-TO-WIFI');
 
   console.log('✓ Test 3 Passed: Pengaturan dinamis berfungsi sempurna dengan QR fisik yang sama.\n');
 
-  // Clean up
   console.log('Cleaning up test data...');
   await db.delete(qrCodes).where(eq(qrCodes.code, codeMapsOnly));
   await db.delete(qrCodes).where(eq(qrCodes.code, codeWithWifi));
+  await db.delete(qrCodes).where(eq(qrCodes.code, siblingCode));
   await db.delete(businesses).where(eq(businesses.id, actMapsOnly.business.id));
   await db.delete(businesses).where(eq(businesses.id, actWifi.business.id));
   await db.delete(users).where(eq(users.id, testUser.id));
 
-  console.log('🎉 ALL SMART WI-FI FLOW TESTS PASSED SUCCESSFULLY! 🚀');
-  process.exit(0);
+  console.log('🎉 ALL SMART WI-FI FLOW TESTS PASSED SUCCESSFULLY!');
 }
 
 runTests().catch((err) => {

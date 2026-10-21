@@ -681,7 +681,7 @@ export default function LandingPageClient({ whatsappBaseUrl }) {
               </div>
               <h3 className="text-xs sm:text-base font-bold text-slate-900 mb-1 sm:mb-2">Tahan Air &amp; Noda</h3>
               <p className="text-[11px] sm:text-xs sm:text-sm text-slate-600 leading-snug sm:leading-relaxed">
-                QR &amp; chip tertanam dalam akrilik, aman dari tumpahan kopi dan mudah dilap.
+                Chip NFC dipasang di belakang akrilik sehingga terlindungi dari tumpahan, dan permukaannya mudah dilap.
               </p>
             </div>
 

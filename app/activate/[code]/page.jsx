@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { QrCode, AlertCircle, ArrowLeft, CheckCircle2, ExternalLink } from 'lucide-react';
 import { getCurrentSession } from '@/lib/auth/session';
+import { normalizeQrCode } from '@/lib/utils/code-generator';
 import { getQrByCode } from '@/lib/db/queries/qr';
 import { getBusinessesByOwnerId } from '@/lib/db/queries/business';
 import ActivationForm from '@/components/customer/ActivationForm';
@@ -17,7 +18,7 @@ export const metadata = {
 
 export default async function ActivateQrPage({ params }) {
   const { code } = params;
-  const normalizedCode = code?.trim().toUpperCase().replace(/[\u2013\u2014\u2212]/g, '-') || '';
+  const normalizedCode = normalizeQrCode(code);
   const session = await getCurrentSession();
 
   // Only real customer owners can prefill and attach to existing owner business.

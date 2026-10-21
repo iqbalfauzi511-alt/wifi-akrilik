@@ -794,7 +794,7 @@ export default function AdminQrManager({ initialQrs = [] }) {
             <div className="w-6.5 h-6.5 sm:w-7 sm:h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
               <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
-            <div className="text-[10.5px] sm:text-xs font-medium text-slate-500 uppercase tracking-wide leading-tight break-words">
+            <div className="text-[10.5px] sm:text-xs font-medium text-slate-500 uppercase tracking-wide leading-tight truncate">
               Antrean Cetak
             </div>
           </div>
@@ -1391,8 +1391,8 @@ export default function AdminQrManager({ initialQrs = [] }) {
                             <span>Stok Gudang (Siap Kirim)</span>
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-amber-50/80 border border-amber-200/70 text-amber-800 text-[11px] font-medium">
-                            <Clock className="w-3 h-3 text-amber-600 shrink-0" />
+                          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-amber-50/80 border border-amber-200/70 text-amber-800 text-[10px] font-medium whitespace-nowrap">
+                            <Clock className="w-2.5 h-2.5 text-amber-600 shrink-0" />
                             <span>Antrean Cetak</span>
                           </span>
                         )}
@@ -1619,8 +1619,8 @@ export default function AdminQrManager({ initialQrs = [] }) {
                             Stok Gudang (Siap Kirim)
                           </span>
                         ) : (
-                          <span className="text-amber-800 font-medium text-[11px] flex items-center gap-1">
-                            <Clock className="w-3 h-3 text-amber-600 shrink-0" />
+                          <span className="text-amber-800 font-medium text-[10px] flex items-center gap-1 whitespace-nowrap">
+                            <Clock className="w-2.5 h-2.5 text-amber-600 shrink-0" />
                             Antrean Cetak
                           </span>
                         )}

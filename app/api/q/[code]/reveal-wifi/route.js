@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getQrWifiCredentials } from '@/lib/db/queries/qr';
+import { normalizeQrCode } from '@/lib/utils/code-generator';
 
 export const dynamic = 'force-dynamic';
 
@@ -60,10 +61,9 @@ export async function POST(request, { params }) {
       );
     }
 
-    const code = rawCode.trim().toUpperCase().replace(/[\u2013\u2014\u2212]/g, '-');
+    const code = normalizeQrCode(rawCode);
 
     const result = await getQrWifiCredentials(code);
-    console.log('REVEAL ROUTE RESULT:', JSON.stringify(result));
 
     if (result.error === 'notFound') {
       return NextResponse.json(

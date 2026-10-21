@@ -19,7 +19,7 @@ async function runEndToEndTests() {
   const business = await getBusinessByOwnerId(customerUser.id);
   console.log(`   - Admin WA: ${adminUser?.whatsappNumber} (Role: ${adminUser?.role})`);
   console.log(`   - Customer: ${customerUser.email} (Role: ${customerUser.role})`);
-  console.log(`   - Business: ${business.businessName}, SSID: ${business.wifiName}, PWD: ${business.wifiPassword}`);
+  console.log(`   - Business: ${business.businessName}, Wi-Fi configured: ${Boolean(business.wifiName && business.wifiPassword)}`);
 
   if (!adminUser || !customerUser || !business) {
     throw new Error('Test 1 failed: seed data incomplete');
@@ -62,13 +62,13 @@ async function runEndToEndTests() {
   const updatedBiz = await updateBusinessDetails(business.id, customerUser.id, {
     wifiPassword: newPassword,
   });
-  console.log(`   - Updated Password in DB: ${updatedBiz.wifiPassword}`);
+  console.log(`   - Wi-Fi password update persisted: ${Boolean(updatedBiz.wifiPassword)}`);
 
   // Visitor re-scans both QRs and verifies new password is immediately reflected
   const recheckQr1 = await getQrByCode('SW-KOP001');
   const recheckQr2 = await getQrByCode('SW-BLANK1');
-  console.log(`   - Visitor scan SW-KOP001 reveals: ${recheckQr1.wifiPassword}`);
-  console.log(`   - Visitor scan SW-BLANK1 reveals: ${recheckQr2.wifiPassword}`);
+  console.log(`   - Visitor scan SW-KOP001 matches new password: ${recheckQr1.wifiPassword === newPassword}`);
+  console.log(`   - Visitor scan SW-BLANK1 matches new password: ${recheckQr2.wifiPassword === newPassword}`);
 
   if (recheckQr1.wifiPassword !== newPassword || recheckQr2.wifiPassword !== newPassword) {
     throw new Error('Test 4 failed: updated Wi-Fi password was not served');

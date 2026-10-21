@@ -22,6 +22,7 @@ import { generateReviewLinkAction } from '@/lib/actions/maps-actions';
 export default function DeviceList({ qrList = [], business, businessName, defaultWifiEnabled }) {
   const router = useRouter();
   const [editQr, setEditQr] = useState(null);
+  const [isWifiEnabled, setIsWifiEnabled] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [notification, setNotification] = useState(null);
   const [editMapsUrl, setEditMapsUrl] = useState('');
@@ -146,6 +147,7 @@ export default function DeviceList({ qrList = [], business, businessName, defaul
                   type="button"
                   onClick={() => {
                     setEditQr(qr);
+                    setIsWifiEnabled(qr.wifiEnabled ?? business?.wifiEnabled ?? false);
                     setEditMapsUrl(qr.googleMapsReviewUrl || qr.googleMapsUrl || business?.googleMapsReviewUrl || business?.googleMapsUrl || '');
                     setGenerateError('');
                     setGenerateSuccess(false);
@@ -230,7 +232,8 @@ export default function DeviceList({ qrList = [], business, businessName, defaul
                     type="checkbox"
                     name="wifiEnabled"
                     value="true"
-                    defaultChecked={editQr.wifiEnabled ?? business?.wifiEnabled ?? false}
+                    checked={isWifiEnabled}
+                    onChange={(e) => setIsWifiEnabled(e.target.checked)}
                     className="sr-only peer"
                     id="wifi-toggle"
                   />
@@ -242,7 +245,7 @@ export default function DeviceList({ qrList = [], business, businessName, defaul
                 </div>
               </label>
 
-              <div className="space-y-2.5 pt-1">
+              {isWifiEnabled && <div className="space-y-2.5 pt-1">
                 <div>
                   <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nama Wi-Fi (SSID)</label>
                   <input
@@ -275,7 +278,7 @@ export default function DeviceList({ qrList = [], business, businessName, defaul
                     className="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-all"
                   />
                 </div>
-              </div>
+              </div>}
             </div>
 
             {/* Actions */}

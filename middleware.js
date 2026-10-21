@@ -49,8 +49,6 @@ export async function middleware(request) {
     verifiedSession = await verifySessionPayloadEdge(devCookie);
   }
 
-  console.log('[DEBUG MIDDLEWARE]', pathname, { devCookie: !!devCookie, verifiedSession: !!verifiedSession });
-
   const isAuthenticated = Boolean(supabaseUser || verifiedSession);
   let userRole = 'customer';
 
