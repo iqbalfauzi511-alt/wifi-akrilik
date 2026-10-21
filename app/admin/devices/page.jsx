@@ -15,7 +15,7 @@ export default async function AdminDevicesPage() {
   ]);
 
   return (
-    <div className="px-4 sm:px-8 py-6 max-w-7xl mx-auto w-full">
+    <div className="px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 max-w-7xl mx-auto w-full space-y-4 sm:space-y-6">
       <AdminQrManager initialQrs={qrList} initialBatches={batches} />
     </div>
   );

@@ -3,24 +3,28 @@ import { db, ensureDatabaseInitialized } from '@/lib/db';
 import { businesses, users, qrCodes } from '@/lib/db/schema';
 import { eq, sql } from 'drizzle-orm';
 import AdminBusinessesManager from '@/components/admin/AdminBusinessesManager';
+import { autoConvertMapsUrl } from '@/lib/utils/maps';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Bisnis: Cobascan Admin',
+  title: 'Mitra Bisnis | Cobascan Admin',
 };
 
 export default async function AdminBusinessesPage() {
   await ensureDatabaseInitialized();
 
-  // Fetch all businesses with owner details and QR count
-  const allBusinesses = await db
+  // Fetch all businesses with owner details, device review links, and QR count
+  // Zero-mutation read query: combines business & hardware QR settings seamlessly
+  const rawBusinesses = await db
     .select({
       id: businesses.id,
       businessName: businesses.businessName,
       logoUrl: businesses.logoUrl,
       googleMapsReviewUrl: businesses.googleMapsReviewUrl,
       googleMapsUrl: businesses.googleMapsUrl,
+      deviceReviewUrl: sql`max(nullif(${qrCodes.googleMapsReviewUrl}, ''))`,
+      deviceMapsUrl: sql`max(nullif(${qrCodes.googleMapsUrl}, ''))`,
       wifiEnabled: businesses.wifiEnabled,
       wifiName: businesses.wifiName,
       whatsappNumber: businesses.whatsappNumber,
@@ -45,17 +49,51 @@ export default async function AdminBusinessesPage() {
       users.email,
       users.name
     )
-    .catch(() => []);
+    .catch((err) => {
+      console.error('Error fetching admin businesses:', err);
+      return [];
+    });
+
+  // Read-layer synchronization:
+  // If business doesn't have an explicit review URL, synchronize with device URL.
+  // Auto-convert standard Maps URLs to direct write-review URLs without modifying database.
+  const allBusinesses = rawBusinesses.map((b) => {
+    const bizUrl = (b.googleMapsReviewUrl || b.googleMapsUrl || '').trim();
+    const devUrl = (b.deviceReviewUrl || b.deviceMapsUrl || '').trim();
+
+    let rawReviewUrl = '';
+    let mapsSource = 'none'; // 'business' | 'device' | 'none'
+
+    if (bizUrl) {
+      rawReviewUrl = bizUrl;
+      mapsSource = 'business';
+    } else if (devUrl) {
+      rawReviewUrl = devUrl;
+      mapsSource = 'device';
+    }
+
+    const convertedReviewUrl = rawReviewUrl ? autoConvertMapsUrl(rawReviewUrl) : null;
+
+    return {
+      ...b,
+      rawReviewUrl: rawReviewUrl || null,
+      effectiveReviewUrl: convertedReviewUrl || rawReviewUrl || null,
+      mapsSource,
+      isAutoConverted: Boolean(convertedReviewUrl && convertedReviewUrl !== rawReviewUrl),
+    };
+  });
 
   return (
-    <div className="px-4 sm:px-8 py-6 max-w-7xl mx-auto w-full space-y-6">
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-none">
-          Mitra Bisnis Terdaftar
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-500 mt-2">
-          Kelola seluruh profil bisnis, kafe, dan restoran yang menggunakan platform Cobascan.
-        </p>
+    <div className="px-3 sm:px-6 lg:px-8 py-5 sm:py-6 max-w-7xl mx-auto w-full space-y-5 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-200/60 pb-4">
+        <div>
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 tracking-tight leading-tight">
+            Mitra Bisnis Terdaftar
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            Kelola data mitra, verifikasi sinkronisasi Google Review, dan perangkat Cobascan yang aktif.
+          </p>
+        </div>
       </div>
 
       <AdminBusinessesManager initialBusinesses={allBusinesses} />
