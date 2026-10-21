@@ -64,12 +64,15 @@ export default async function AdminBusinessesPage() {
     let rawReviewUrl = '';
     let mapsSource = 'none'; // 'business' | 'device' | 'none'
 
-    if (bizUrl) {
-      rawReviewUrl = bizUrl;
-      mapsSource = 'business';
-    } else if (devUrl) {
+    // Read-layer synchronization:
+    // Prioritize device URL (latest settings updated by owner on their hardware)
+    // Fall back to business-level registration URL
+    if (devUrl) {
       rawReviewUrl = devUrl;
       mapsSource = 'device';
+    } else if (bizUrl) {
+      rawReviewUrl = bizUrl;
+      mapsSource = 'business';
     }
 
     const convertedReviewUrl = rawReviewUrl ? autoConvertMapsUrl(rawReviewUrl) : null;
