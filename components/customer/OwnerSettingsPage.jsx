@@ -24,7 +24,7 @@ import {
   User,
 } from 'lucide-react';
 import Image from 'next/image';
-import { ownerChangePinAction, ownerAddDeviceAction, ownerChangeWaAction } from '@/lib/actions/owner-auth-actions';
+import { ownerChangeNameAction, ownerChangePinAction, ownerAddDeviceAction, ownerChangeWaAction } from '@/lib/actions/owner-auth-actions';
 import { logoutAction } from '@/lib/actions/auth-actions';
 import { generateReviewLinkAction } from '@/lib/actions/maps-actions';
 import DeviceList from './DeviceList';
@@ -81,6 +81,12 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
   const [branchSubmitting, setBranchSubmitting] = useState(false);
   const [branchMsg, setBranchMsg] = useState(null);
   const [branchWifiEnabled, setBranchWifiEnabled] = useState(Boolean(activeStore?.wifiEnabled));
+
+  // Name change state
+  const [showNameSection, setShowNameSection] = useState(false);
+  const [newName, setNewName] = useState(userName || '');
+  const [nameSubmitting, setNameSubmitting] = useState(false);
+  const [nameMsg, setNameMsg] = useState(null);
 
   // PIN change state
   const [showPinSection, setShowPinSection] = useState(false);
@@ -147,6 +153,20 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
       await logoutAction();
     } catch {}
     window.location.href = '/login';
+  };
+
+  const handleChangeName = async (e) => {
+    e.preventDefault();
+    setNameMsg(null);
+    setNameSubmitting(true);
+    const result = await ownerChangeNameAction({ newName });
+    setNameSubmitting(false);
+    if (result?.success) {
+      setNameMsg({ type: 'success', text: result.message });
+      setTimeout(() => { setShowNameSection(false); router.refresh(); }, 1200);
+    } else {
+      setNameMsg({ type: 'error', text: result?.error || 'Gagal ganti nama.' });
+    }
   };
 
   const handleChangePin = async (e) => {
@@ -637,10 +657,73 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
         )}
 
 
-        {/* Settings: PIN & WA side-by-side on desktop */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-start">
-          {/* PIN Change Section */}
-          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+        {/* Pengaturan Akun: Nama, PIN, dan WhatsApp */}
+        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+          <div className="px-5 py-4 border-b border-slate-100">
+            <h2 className="text-sm font-bold text-slate-900">Pengaturan Akun</h2>
+            <p className="text-[11px] text-slate-400 mt-0.5">Kelola nama profil, PIN keamanan, dan nomor WhatsApp login Anda.</p>
+          </div>
+
+          <div className="divide-y divide-slate-100">
+            {/* Ganti Nama Section */}
+            <div>
+              <button
+                type="button"
+                onClick={() => { setShowNameSection((v) => !v); setNameMsg(null); }}
+                className="w-full px-5 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0">
+                    <User className="w-4 h-4" />
+                  </div>
+                  <div className="text-left min-w-0">
+                    <p className="text-sm font-bold text-slate-900 truncate">Ganti Nama</p>
+                    <p className="text-[11px] text-slate-400">Nama ini akan tampil di dashboard dan halaman admin</p>
+                  </div>
+                </div>
+                <span className="text-xs text-slate-400 ml-2">{showNameSection ? '▲' : '▼'}</span>
+              </button>
+
+              {showNameSection && (
+                <div className="px-5 pb-5 border-t border-slate-100">
+                  {nameMsg && (
+                    <div className={`mt-4 p-3 rounded-xl text-xs flex items-center gap-2 ${
+                      nameMsg.type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'
+                    }`}>
+                      {nameMsg.type === 'success' ? <Check className="w-4 h-4 shrink-0" /> : <AlertCircle className="w-4 h-4 shrink-0" />}
+                      <span>{nameMsg.text}</span>
+                    </div>
+                  )}
+                  <form onSubmit={handleChangeName} className="mt-4 space-y-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Nama Owner</label>
+                      <div className="relative flex items-center">
+                        <div className="absolute left-3.5 text-slate-400 pointer-events-none"><User className="w-4 h-4" /></div>
+                        <input
+                          type="text"
+                          value={newName}
+                          onChange={(e) => setNewName(e.target.value)}
+                          maxLength={80}
+                          placeholder="Nama pemilik akun"
+                          required
+                          className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1A73E8]"
+                        />
+                      </div>
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={nameSubmitting || !newName.trim()}
+                      className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-60 transition-colors mt-2"
+                    >
+                      {nameSubmitting ? <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Memproses...</> : 'Simpan Nama Baru'}
+                    </button>
+                  </form>
+                </div>
+              )}
+            </div>
+
+            {/* PIN Change Section */}
+            <div>
             <button
               type="button"
               onClick={() => { setShowPinSection((v) => !v); setPinMsg(null); }}
@@ -703,7 +786,7 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
           </div>
 
           {/* Ganti WA Section */}
-          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+          <div>
             <button
               type="button"
               onClick={() => { setShowWaSection((v) => !v); setWaMsg(null); }}
@@ -771,8 +854,8 @@ export default function OwnerSettingsPage({ business, businesses = [], userEmail
             )}
           </div>
         </div>
-
       </div>
+    </div>
     </div>
   );
 }

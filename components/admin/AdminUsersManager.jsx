@@ -213,7 +213,11 @@ export default function AdminUsersManager({
                           </div>
                           <div>
                             <div className="font-bold text-slate-900">{u.name || (u.whatsappNumber ? `+${u.whatsappNumber}` : '-')}</div>
-                            <div className="text-[11px] text-slate-400 font-mono">{u.email || (u.whatsappNumber ? `+${u.whatsappNumber}` : '-')}</div>
+                            <div className="text-[11px] text-slate-400 font-mono">
+                              {u.email && !u.email.endsWith('@owner.cobascan.local') && !u.email.endsWith('@admin.cobascan.local')
+                                ? u.email
+                                : (u.whatsappNumber ? `+${u.whatsappNumber}` : '-')}
+                            </div>
                           </div>
                         </div>
                       </td>
@@ -316,7 +320,11 @@ export default function AdminUsersManager({
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="font-bold text-slate-900 text-xs sm:text-sm leading-tight truncate">{u.name || (u.whatsappNumber ? `+${u.whatsappNumber}` : '-')}</div>
-                        <div className="text-[11px] text-slate-400 font-mono mt-0.5 truncate">{u.email || (u.whatsappNumber ? `+${u.whatsappNumber}` : '-')}</div>
+                        <div className="text-[11px] text-slate-400 font-mono mt-0.5 truncate">
+                          {u.email && !u.email.endsWith('@owner.cobascan.local') && !u.email.endsWith('@admin.cobascan.local')
+                            ? u.email
+                            : (u.whatsappNumber ? `+${u.whatsappNumber}` : '-')}
+                        </div>
                       </div>
                     </div>
                     <div className="shrink-0">

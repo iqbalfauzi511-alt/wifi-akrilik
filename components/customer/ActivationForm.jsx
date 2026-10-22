@@ -375,10 +375,10 @@ export default function ActivationForm({
                 <h3 className="font-bold text-slate-800">Akun Pengelola</h3>
               </div>
               
-              {/* Nama (opsional) */}
+              {/* Nama */}
               <div>
                 <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">
-                  Nama <span className="text-slate-400 normal-case font-normal">(Opsional)</span>
+                  Nama
                 </label>
                 <div className="relative flex items-center">
                   <div className="absolute left-3.5 text-slate-400 pointer-events-none"><User className="w-4 h-4" /></div>

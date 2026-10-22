@@ -211,7 +211,6 @@ export default function AdminBusinessesManager({ initialBusinesses = [] }) {
 
                       <td className="py-3.5 px-4">
                         <div className="font-semibold text-slate-800">{b.ownerName || '-'}</div>
-                        <div className="text-[11px] text-slate-400 font-mono">{b.ownerEmail}</div>
                       </td>
 
                       <td className="py-3.5 px-4 text-center">
@@ -348,7 +347,6 @@ export default function AdminBusinessesManager({ initialBusinesses = [] }) {
                       <div className="min-w-0 flex-1">
                         <div className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Pemilik</div>
                         <div className="font-semibold text-slate-800 text-xs truncate">{b.ownerName || '-'}</div>
-                        <div className="text-[11px] text-slate-500 font-mono truncate">{b.ownerEmail}</div>
                       </div>
                     </div>
                     {/* WhatsApp Block */}
